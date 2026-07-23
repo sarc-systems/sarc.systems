@@ -1,0 +1,17 @@
+{{ define "body-class" }}taxonomy{{ end }}
+
+{{ define "main" }}
+<div class="wrap">
+  <header class="page-head">
+    <p class="eyebrow">{{ .Data.Plural | title }}</p>
+    <h1 class="page-title">{{ .Title }}</h1>
+    {{- with .Content }}<div class="page-intro">{{ . }}</div>{{ end }}
+    <p class="taxonomy-count">{{ len .Pages }} {{ cond (eq (len .Pages) 1) "entry" "entries" }}</p>
+  </header>
+
+  {{- $entries := (where .Pages "Draft" false).ByDate.Reverse }}
+  <ol class="journal-index" reversed>
+    {{ range $entries }}{{ partial "entry-summary.html" . }}{{ end }}
+  </ol>
+</div>
+{{ end }}

@@ -1,0 +1,17 @@
+{{- /* Native audio player — no JS library, preload="none".
+
+  Usage:
+    {{< audio src="example.mp3" title="Pi → CV, first pass" >}}
+*/ -}}
+{{- $src := .Get "src" -}}
+{{- if not $src }}{{ errorf "audio shortcode: missing src (%s)" .Position }}{{ end -}}
+{{- $res := or ($.Page.Resources.GetMatch $src) (resources.Get $src) -}}
+{{- $url := $src -}}
+{{- with $res }}{{ $url = .RelPermalink }}{{ end -}}
+{{- $title := .Get "title" -}}
+<figure class="audio-figure">
+  {{- with $title }}<figcaption class="audio-title">{{ . }}</figcaption>{{ end }}
+  <audio controls preload="none" src="{{ $url }}">
+    <a href="{{ $url }}">Download audio</a>
+  </audio>
+</figure>

@@ -1,0 +1,15 @@
+# Hugo build output — never edited by hand, never committed.
+/public/
+# Hugo resource cache + local scratch (incl. large source downloads like the
+# Colorplan swatch ZIP, which is not a build input — see the Colorplan section
+# of CLAUDE.md). The committed palette source is scripts/colorplan-source.json.
+/resources/
+.hugo_build.lock
+
+# Deploy credentials / targets live outside the repo.
+deploy.env
+
+# OS / editor cruft
+.DS_Store
+*.swp
+Thumbs.db

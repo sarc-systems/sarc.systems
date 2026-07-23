@@ -1,0 +1,38 @@
+{{- /* Responsive figure with caption, using Hugo image processing.
+
+  Source image is resolved against the page bundle first, then site assets, then
+  treated as an external/absolute URL. Emits width/height + srcset + lazy load.
+  Figures may extend wider than the text column via class="wide" | "full".
+
+  Usage:
+    {{< figure src="diagram.svg" alt="…" caption="…" >}}
+    {{< figure src="cover.jpg" alt="…" caption="…" class="wide" >}}
+*/ -}}
+{{- $src := .Get "src" -}}
+{{- if not $src }}{{ errorf "figure shortcode: missing src (%s)" .Position }}{{ end -}}
+{{- $alt := .Get "alt" | default "" -}}
+{{- $caption := .Get "caption" -}}
+{{- $class := .Get "class" -}}
+{{- $res := or ($.Page.Resources.GetMatch $src) (resources.Get $src) -}}
+
+<figure class="figure{{ with $class }} figure-{{ . }}{{ end }}">
+  {{- if $res -}}
+    {{- $isRaster := in (slice "image/jpeg" "image/png" "image/webp") $res.MediaType.Type -}}
+    {{- if $isRaster -}}
+      {{- $w := $res.Width -}}
+      {{- $s1 := $res.Resize "800x q82 webp" -}}
+      {{- $s2 := $res.Resize (printf "%dx q82 webp" (cond (gt $w 1600) 1600 $w)) -}}
+      <img src="{{ ($res.Resize "1000x q82").RelPermalink }}"
+           srcset="{{ $s1.RelPermalink }} 800w, {{ $s2.RelPermalink }} {{ $s2.Width }}w"
+           sizes="(min-width: 60rem) min(60rem, 100vw), 100vw"
+           width="{{ $res.Width }}" height="{{ $res.Height }}"
+           alt="{{ $alt }}" loading="lazy" decoding="async">
+    {{- else -}}
+      {{- /* SVG / vector: embed by reference, no raster processing. */ -}}
+      <img src="{{ $res.RelPermalink }}" alt="{{ $alt }}" loading="lazy" decoding="async">
+    {{- end -}}
+  {{- else -}}
+    <img src="{{ $src }}" alt="{{ $alt }}" loading="lazy" decoding="async">
+  {{- end -}}
+  {{- with $caption }}<figcaption>{{ . | markdownify }}</figcaption>{{ end -}}
+</figure>

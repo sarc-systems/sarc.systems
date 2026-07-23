@@ -1,0 +1,18 @@
+{{- /* Auto-generated related entries by shared projects/topics/series.
+       Uses Hugo's built-in related-content index (configured in hugo.toml). */ -}}
+{{- $related := first 4 (where (site.RegularPages.Related .) "Draft" false) -}}
+{{- with $related }}
+<nav class="entry-related" aria-label="Related entries">
+  <h2 class="related-title">Related</h2>
+  <ul>
+    {{- range . }}
+    <li>
+      <a href="{{ .RelPermalink }}">
+        <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "02 Jan 2006" | upper }}</time>
+        <span class="related-entry-title">{{ .Title }}</span>
+      </a>
+    </li>
+    {{- end }}
+  </ul>
+</nav>
+{{- end }}

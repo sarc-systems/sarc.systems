@@ -1,0 +1,18 @@
+{{ define "body-class" }}page section-list{{ end }}
+
+{{ define "main" }}
+<div class="wrap">
+  <header class="page-head">
+    <h1 class="page-title">{{ .Title }}</h1>
+    {{- with .Content }}<div class="page-intro">{{ . }}</div>{{ end }}
+  </header>
+
+  {{- with (where .Pages "Draft" false) }}
+  <ul class="plain-list">
+    {{- range . }}
+    <li><a href="{{ .RelPermalink }}">{{ .Title }}</a></li>
+    {{- end }}
+  </ul>
+  {{- end }}
+</div>
+{{ end }}

@@ -1,0 +1,38 @@
+{{- /* Metadata block for a single journal entry — dates, type, project, topics.
+       Precise dates and metadata are treated as visual elements. */ -}}
+<dl class="entry-meta">
+  <div class="meta-row">
+    <dt>Date</dt>
+    <dd><time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "02 January 2006" }}</time></dd>
+  </div>
+  {{- if and .Lastmod (ne (.Lastmod.Format "2006-01-02") (.Date.Format "2006-01-02")) }}
+  <div class="meta-row">
+    <dt>Updated</dt>
+    <dd><time datetime="{{ .Lastmod.Format "2006-01-02" }}">{{ .Lastmod.Format "02 January 2006" }}</time></dd>
+  </div>
+  {{- end }}
+  {{- with .Params.entry_type }}
+  <div class="meta-row">
+    <dt>Type</dt>
+    <dd>{{ . | title }}</dd>
+  </div>
+  {{- end }}
+  {{- with .Params.projects }}
+  <div class="meta-row">
+    <dt>Project</dt>
+    <dd>{{ range $i, $p := . }}{{ if $i }}, {{ end }}<a href="{{ (printf "/projects/%s/" ($p | urlize)) | relURL }}">{{ $p | upper }}</a>{{ end }}</dd>
+  </div>
+  {{- end }}
+  {{- with .Params.series }}
+  <div class="meta-row">
+    <dt>Series</dt>
+    <dd>{{ range $i, $s := . }}{{ if $i }}, {{ end }}<a href="{{ (printf "/series/%s/" ($s | urlize)) | relURL }}">{{ $s | title }}</a>{{ end }}</dd>
+  </div>
+  {{- end }}
+  {{- with .Params.topics }}
+  <div class="meta-row">
+    <dt>Topics</dt>
+    <dd class="meta-topics">{{ range $i, $t := . }}{{ if $i }}<span class="dot" aria-hidden="true">·</span> {{ end }}<a href="{{ (printf "/topics/%s/" ($t | urlize)) | relURL }}">{{ $t }}</a>{{ end }}</dd>
+  </div>
+  {{- end }}
+</dl>

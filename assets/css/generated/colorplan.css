@@ -1,0 +1,122 @@
+/*
+ * GENERATED FILE — do not edit by hand.
+ * Colorplan palette custom properties.
+ * Source:    https://www.jukeboxprint.com/print-guide/paper/colorplan
+ * Retrieved: 2026-07-23
+ * Regenerate with `make colorplan`.
+ *
+ * For each colour: --colorplan-<slug> is the paper colour and
+ * --colorplan-<slug>-fg is the recommended text colour on it.
+ */
+:root {
+  --colorplan-pristine-white: #fafaf6;
+  --colorplan-pristine-white-fg: #000000;
+  --colorplan-ice-white: #f5f5f5;
+  --colorplan-ice-white-fg: #000000;
+  --colorplan-natural: #f5f1e2;
+  --colorplan-natural-fg: #000000;
+  --colorplan-vellum-white: #f3e0d1;
+  --colorplan-vellum-white-fg: #000000;
+  --colorplan-white-frost: #f2f4f8;
+  --colorplan-white-frost-fg: #000000;
+  --colorplan-bright-white: #fcfcfb;
+  --colorplan-bright-white-fg: #000000;
+  --colorplan-china-white: #f5e4bb;
+  --colorplan-china-white-fg: #000000;
+  --colorplan-cool-grey: #ede8ed;
+  --colorplan-cool-grey-fg: #000000;
+  --colorplan-pale-grey: #cccac1;
+  --colorplan-pale-grey-fg: #000000;
+  --colorplan-mist: #f5eddc;
+  --colorplan-mist-fg: #000000;
+  --colorplan-real-grey: #c0c3b9;
+  --colorplan-real-grey-fg: #000000;
+  --colorplan-smoke: #817d7e;
+  --colorplan-smoke-fg: #000000;
+  --colorplan-dark-grey: #6a6766;
+  --colorplan-dark-grey-fg: #ffffff;
+  --colorplan-slate: #454b4f;
+  --colorplan-slate-fg: #ffffff;
+  --colorplan-amethyst: #4f4355;
+  --colorplan-amethyst-fg: #ffffff;
+  --colorplan-ebony: #000000;
+  --colorplan-ebony-fg: #ffffff;
+  --colorplan-sorbet-yellow: #f4eaa5;
+  --colorplan-sorbet-yellow-fg: #000000;
+  --colorplan-factory-yellow: #fcdc13;
+  --colorplan-factory-yellow-fg: #000000;
+  --colorplan-citrine: #fab53a;
+  --colorplan-citrine-fg: #000000;
+  --colorplan-chartreuse: #bdb141;
+  --colorplan-chartreuse-fg: #000000;
+  --colorplan-mandarin: #f37736;
+  --colorplan-mandarin-fg: #000000;
+  --colorplan-stone: #e8d5ad;
+  --colorplan-stone-fg: #000000;
+  --colorplan-harvest: #b29471;
+  --colorplan-harvest-fg: #000000;
+  --colorplan-nubuck-brown: #816d5b;
+  --colorplan-nubuck-brown-fg: #ffffff;
+  --colorplan-rust: #c96846;
+  --colorplan-rust-fg: #000000;
+  --colorplan-bitter-chocolate: #554942;
+  --colorplan-bitter-chocolate-fg: #ffffff;
+  --colorplan-bagdad-brown: #5b4b42;
+  --colorplan-bagdad-brown-fg: #ffffff;
+  --colorplan-candy-pink: #f8c2c7;
+  --colorplan-candy-pink-fg: #000000;
+  --colorplan-fuchsia-pink: #cc548c;
+  --colorplan-fuchsia-pink-fg: #000000;
+  --colorplan-hot-pink: #e34c73;
+  --colorplan-hot-pink-fg: #000000;
+  --colorplan-vermillion: #b4464d;
+  --colorplan-vermillion-fg: #ffffff;
+  --colorplan-bright-red: #d02d30;
+  --colorplan-bright-red-fg: #ffffff;
+  --colorplan-scarlet: #9e444d;
+  --colorplan-scarlet-fg: #ffffff;
+  --colorplan-claret: #603f45;
+  --colorplan-claret-fg: #ffffff;
+  --colorplan-cool-blue: #dce5e8;
+  --colorplan-cool-blue-fg: #000000;
+  --colorplan-azure-blue: #abc5de;
+  --colorplan-azure-blue-fg: #000000;
+  --colorplan-turquoise: #47e4d9;
+  --colorplan-turquoise-fg: #000000;
+  --colorplan-adriatic: #377aaa;
+  --colorplan-adriatic-fg: #ffffff;
+  --colorplan-tabriz-blue: #0088b5;
+  --colorplan-tabriz-blue-fg: #000000;
+  --colorplan-new-blue: #88a1ba;
+  --colorplan-new-blue-fg: #000000;
+  --colorplan-sapphire: #40567d;
+  --colorplan-sapphire-fg: #ffffff;
+  --colorplan-cobalt: #45576d;
+  --colorplan-cobalt-fg: #ffffff;
+  --colorplan-imperial-blue: #404755;
+  --colorplan-imperial-blue-fg: #ffffff;
+  --colorplan-royal-blue: #484882;
+  --colorplan-royal-blue-fg: #ffffff;
+  --colorplan-lavender: #beafd9;
+  --colorplan-lavender-fg: #000000;
+  --colorplan-purple: #6c4e9a;
+  --colorplan-purple-fg: #ffffff;
+  --colorplan-pistachio: #e0eacd;
+  --colorplan-pistachio-fg: #000000;
+  --colorplan-powder-green: #e2eddb;
+  --colorplan-powder-green-fg: #000000;
+  --colorplan-park-green: #ace2bb;
+  --colorplan-park-green-fg: #000000;
+  --colorplan-marrs-green: #008882;
+  --colorplan-marrs-green-fg: #000000;
+  --colorplan-mid-green: #78826a;
+  --colorplan-mid-green-fg: #000000;
+  --colorplan-lockwood-green: #2c6e49;
+  --colorplan-lockwood-green-fg: #ffffff;
+  --colorplan-emerald: #43887b;
+  --colorplan-emerald-fg: #000000;
+  --colorplan-forest: #375e4c;
+  --colorplan-forest-fg: #ffffff;
+  --colorplan-racing-green: #404e4e;
+  --colorplan-racing-green-fg: #ffffff;
+}

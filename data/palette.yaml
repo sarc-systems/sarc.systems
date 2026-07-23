@@ -1,0 +1,24 @@
+# Colorplan palette assignments (central — never hardcode colours in templates).
+# Values are Colorplan slugs from data/colorplan.json. Only paper-legible
+# (dark) colours belong here, since section colours are used as text/accents on
+# the warm-white background. Resolution order (see partials/palette-vars.html):
+#   1. page front-matter `palette.primary`
+#   2. project (first match below)
+#   3. section
+#   4. default (neutral SARC house colour)
+
+# Neutral SARC default — a near-neutral warm dark. Keeps the base monochrome.
+default: bitter-chocolate
+
+# Institutional section colours (coded signals, not colour fields).
+sections:
+  journal: slate
+  # Future departments (assigned when they launch):
+  # sarc-100: cobalt
+  # studio: bagdad-brown
+  # label: vermillion
+  # library: forest
+
+# Project colours. A project keeps its identity across entry types.
+projects:
+  sarc-100: cobalt

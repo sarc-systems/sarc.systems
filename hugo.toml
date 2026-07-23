@@ -1,0 +1,122 @@
+# hugo.toml — Studio for Advanced Research in Cybernetics
+# Hugo Extended is required (image processing + resource pipeline).
+
+baseURL = "https://sarc.systems/"
+locale = "en-US"
+title = "SARC — Studio for Advanced Research in Cybernetics"
+enableGitInfo = false
+enableEmoji = false
+
+# Clean URLs, canonical hosts.
+canonifyURLs = false
+disableKinds = []
+
+# Draft/future handling is controlled per-command in the Makefile.
+buildDrafts = false
+buildFuture = false
+buildExpired = false
+
+summaryLength = 40
+timeout = "60s"
+
+# ---------------------------------------------------------------------------
+# Taxonomies — only what the Journal actually uses (see CLAUDE.md).
+# ---------------------------------------------------------------------------
+[taxonomies]
+  topic   = "topics"
+  project = "projects"
+  series  = "series"
+
+# ---------------------------------------------------------------------------
+# Navigation — built from a menu definition so the future department nav is a
+# config change, not a redesign. `weight` orders left-to-right.
+# ---------------------------------------------------------------------------
+[menus]
+  [[menus.main]]
+    name   = "Journal"
+    url    = "/journal/"
+    weight = 10
+  [[menus.main]]
+    name   = "About"
+    url    = "/about/"
+    weight = 20
+  [[menus.main]]
+    name   = "YouTube"
+    url    = "https://www.youtube.com/@SARC-systems"
+    weight = 90
+    [menus.main.params]
+      external = true
+
+# ---------------------------------------------------------------------------
+# Markup: goldmark (unsafe on for our own trusted shortcodes/HTML) + Chroma
+# build-time syntax highlighting (no client-side library).
+# ---------------------------------------------------------------------------
+[markup]
+  [markup.goldmark.renderer]
+    unsafe = true
+  [markup.goldmark.parser]
+    [markup.goldmark.parser.attribute]
+      block = true
+      title = true
+  [markup.highlight]
+    style = "bw"          # restrained; recoloured in CSS to match the palette
+    noClasses = false     # emit classes so CSS controls the theme
+    lineNos = false
+    tabWidth = 2
+    guessSyntax = true
+  [markup.tableOfContents]
+    startLevel = 2
+    endLevel   = 3
+
+# ---------------------------------------------------------------------------
+# Outputs — home also emits RSS (full journal feed) alongside HTML.
+# ---------------------------------------------------------------------------
+[outputs]
+  home = ["HTML", "RSS"]
+  section = ["HTML", "RSS"]
+
+[services]
+  [services.rss]
+    limit = -1            # full feed, no truncation
+
+# ---------------------------------------------------------------------------
+# Image processing defaults (Hugo Extended).
+# ---------------------------------------------------------------------------
+[imaging]
+  resampleFilter = "Lanczos"
+  quality = 82
+  anchor = "smart"
+
+[params]
+  description = "Documentation and working records of the Studio for Advanced Research in Cybernetics — experimental systems, the SARC-100, and associated research."
+  author = "SARC"
+  # Sitewide social-preview fallback image lives in static/ once supplied.
+  ogImage = ""
+  youtube = "https://www.youtube.com/@SARC-systems"
+
+# ---------------------------------------------------------------------------
+# Related content — auto-generated "Related entries" by shared taxonomy.
+# ---------------------------------------------------------------------------
+[related]
+  threshold = 60
+  includeNewer = true
+  toLower = true
+  [[related.indices]]
+    name = "projects"
+    weight = 80
+  [[related.indices]]
+    name = "series"
+    weight = 70
+  [[related.indices]]
+    name = "topics"
+    weight = 50
+  [[related.indices]]
+    name = "date"
+    weight = 10
+
+[sitemap]
+  changefreq = "weekly"
+  priority = 0.5
+
+[pagination]
+  pagerSize = 25

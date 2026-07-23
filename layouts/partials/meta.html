@@ -1,0 +1,52 @@
+{{- /* Structured titles, meta description, canonical, Open Graph + Twitter. */ -}}
+
+{{- $isHome := .IsHome -}}
+{{- $title := "" -}}
+{{- if $isHome -}}
+  {{- $title = site.Title -}}
+{{- else -}}
+  {{- $title = printf "%s — SARC" (.Title | default site.Title) -}}
+{{- end -}}
+<title>{{ $title }}</title>
+
+{{- /* Description: page summary > page description > site description. */ -}}
+{{- $desc := "" -}}
+{{- with .Params.summary -}}{{ $desc = . -}}
+{{- else -}}{{ with .Description }}{{ $desc = . }}{{ else }}{{ $desc = site.Params.description }}{{ end -}}
+{{- end -}}
+<meta name="description" content="{{ $desc | plainify | chomp }}">
+<meta name="author" content="{{ site.Params.author }}">
+
+<link rel="canonical" href="{{ .Permalink }}">
+
+{{- /* Social preview image: page image (bundle) > site fallback. */ -}}
+{{- $ogImage := "" -}}
+{{- with .Params.image -}}
+  {{- with ($.Resources.GetMatch .) -}}{{ $ogImage = .Permalink -}}{{- else -}}{{ $ogImage = (absURL .) }}{{- end -}}
+{{- else -}}
+  {{- /* Fallback: the SARC mark (already on a black ground — a good card). */ -}}
+  {{- with resources.Get "img/rect15_larger.png" -}}
+    {{- $ogImage = (.Resize "1200x png").Permalink -}}
+  {{- else -}}
+    {{- with site.Params.ogImage }}{{ $ogImage = (absURL .) }}{{ end -}}
+  {{- end -}}
+{{- end -}}
+
+<meta property="og:site_name" content="SARC — Studio for Advanced Research in Cybernetics">
+<meta property="og:type" content="{{ if .IsPage }}article{{ else }}website{{ end }}">
+<meta property="og:title" content="{{ if $isHome }}{{ site.Title }}{{ else }}{{ .Title }}{{ end }}">
+<meta property="og:description" content="{{ $desc | plainify | chomp }}">
+<meta property="og:url" content="{{ .Permalink }}">
+{{- with $ogImage }}
+<meta property="og:image" content="{{ . }}">
+{{- end }}
+{{- if .IsPage }}
+<meta property="article:published_time" content="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}">
+{{- with .Lastmod }}<meta property="article:modified_time" content="{{ .Format "2006-01-02T15:04:05Z07:00" }}">{{ end }}
+{{- range .Params.projects }}<meta property="article:tag" content="{{ . }}">{{ end }}
+{{- end }}
+
+<meta name="twitter:card" content="{{ if $ogImage }}summary_large_image{{ else }}summary{{ end }}">
+<meta name="twitter:title" content="{{ if $isHome }}{{ site.Title }}{{ else }}{{ .Title }}{{ end }}">
+<meta name="twitter:description" content="{{ $desc | plainify | chomp }}">
+{{- with $ogImage }}<meta name="twitter:image" content="{{ . }}">{{ end }}

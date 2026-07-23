@@ -1,0 +1,1332 @@
+{
+  "_generated": {
+    "url": "https://www.jukeboxprint.com/print-guide/paper/colorplan",
+    "retrieved": "2026-07-23",
+    "generator": "scripts/import-colorplan.mjs",
+    "note": "GENERATED FILE — do not edit by hand. Run `make colorplan` to regenerate."
+  },
+  "count": 55,
+  "smallTextUnsafe": [],
+  "colors": [
+    {
+      "name": "Pristine White",
+      "slug": "pristine-white",
+      "hex": "#FAFAF6",
+      "rgb": {
+        "r": 250,
+        "g": 250,
+        "b": 246
+      },
+      "cmyk": {
+        "c": 0,
+        "m": 0,
+        "y": 1,
+        "k": 0
+      },
+      "pantone": "9100 C",
+      "contrast": {
+        "onWhiteText": 1.05,
+        "onBlackText": 20.07
+      },
+      "foreground": "#000000",
+      "foregroundName": "black",
+      "smallTextSafe": true
+    },
+    {
+      "name": "Ice White",
+      "slug": "ice-white",
+      "hex": "#F5F5F5",
+      "rgb": {
+        "r": 245,
+        "g": 245,
+        "b": 245
+      },
+      "cmyk": {
+        "c": 0,
+        "m": 1,
+        "y": 2,
+        "k": 0
+      },
+      "pantone": "9101 C",
+      "contrast": {
+        "onWhiteText": 1.09,
+        "onBlackText": 19.26
+      },
+      "foreground": "#000000",
+      "foregroundName": "black",
+      "smallTextSafe": true
+    },
+    {
+      "name": "Natural",
+      "slug": "natural",
+      "hex": "#F5F1E2",
+      "rgb": {
+        "r": 245,
+        "g": 241,
+        "b": 226
+      },
+      "cmyk": {
+        "c": 0,
+        "m": 0,
+        "y": 3,
+        "k": 0
+      },
+      "pantone": "9102 C",
+      "contrast": {
+        "onWhiteText": 1.13,
+        "onBlackText": 18.56
+      },
+      "foreground": "#000000",
+      "foregroundName": "black",
+      "smallTextSafe": true
+    },
+    {
+      "name": "Vellum White",
+      "slug": "vellum-white",
+      "hex": "#F3E0D1",
+      "rgb": {
+        "r": 243,
+        "g": 224,
+        "b": 209
+      },
+      "cmyk": {
+        "c": 0,
+        "m": 2,
+        "y": 4,
+        "k": 0
+      },
+      "pantone": "9182 C",
+      "contrast": {
+        "onWhiteText": 1.28,
+        "onBlackText": 16.39
+      },
+      "foreground": "#000000",
+      "foregroundName": "black",
+      "smallTextSafe": true
+    },
+    {
+      "name": "White Frost",
+      "slug": "white-frost",
+      "hex": "#F2F4F8",
+      "rgb": {
+        "r": 242,
+        "g": 244,
+        "b": 248
+      },
+      "cmyk": {
+        "c": 3,
+        "m": 0,
+        "y": 1,
+        "k": 0
+      },
+      "pantone": "9100 C",
+      "contrast": {
+        "onWhiteText": 1.1,
+        "onBlackText": 19.07
+      },
+      "foreground": "#000000",
+      "foregroundName": "black",
+      "smallTextSafe": true
+    },
+    {
+      "name": "Bright White",
+      "slug": "bright-white",
+      "hex": "#FCFCFB",
+      "rgb": {
+        "r": 252,
+        "g": 252,
+        "b": 251
+      },
+      "cmyk": {
+        "c": 0,
+        "m": 0,
+        "y": 4,
+        "k": 0
+      },
+      "pantone": "9100 C",
+      "contrast": {
+        "onWhiteText": 1.03,
+        "onBlackText": 20.46
+      },
+      "foreground": "#000000",
+      "foregroundName": "black",
+      "smallTextSafe": true
+    },
+    {
+      "name": "China White",
+      "slug": "china-white",
+      "hex": "#F5E4BB",
+      "rgb": {
+        "r": 245,
+        "g": 228,
+        "b": 187
+      },
+      "cmyk": {
+        "c": 0,
+        "m": 3,
+        "y": 13,
+        "k": 0
+      },
+      "pantone": "9181 C",
+      "contrast": {
+        "onWhiteText": 1.26,
+        "onBlackText": 16.7
+      },
+      "foreground": "#000000",
+      "foregroundName": "black",
+      "smallTextSafe": true
+    },
+    {
+      "name": "Cool Grey",
+      "slug": "cool-grey",
+      "hex": "#EDE8ED",
+      "rgb": {
+        "r": 237,
+        "g": 232,
+        "b": 237
+      },
+      "cmyk": {
+        "c": 4,
+        "m": 2,
+        "y": 3,
+        "k": 0
+      },
+      "pantone": "Cool Gray 1 C",
+      "contrast": {
+        "onWhiteText": 1.21,
+        "onBlackText": 17.37
+      },
+      "foreground": "#000000",
+      "foregroundName": "black",
+      "smallTextSafe": true
+    },
+    {
+      "name": "Pale Grey",
+      "slug": "pale-grey",
+      "hex": "#CCCAC1",
+      "rgb": {
+        "r": 204,
+        "g": 202,
+        "b": 193
+      },
+      "cmyk": {
+        "c": 3,
+        "m": 4,
+        "y": 7,
+        "k": 0
+      },
+      "pantone": "9183 C",
+      "contrast": {
+        "onWhiteText": 1.64,
+        "onBlackText": 12.79
+      },
+      "foreground": "#000000",
+      "foregroundName": "black",
+      "smallTextSafe": true
+    },
+    {
+      "name": "Mist",
+      "slug": "mist",
+      "hex": "#F5EDDC",
+      "rgb": {
+        "r": 245,
+        "g": 237,
+        "b": 220
+      },
+      "cmyk": {
+        "c": 5,
+        "m": 7,
+        "y": 13,
+        "k": 0
+      },
+      "pantone": "9183 C",
+      "contrast": {
+        "onWhiteText": 1.16,
+        "onBlackText": 18.03
+      },
+      "foreground": "#000000",
+      "foregroundName": "black",
+      "smallTextSafe": true
+    },
+    {
+      "name": "Real Grey",
+      "slug": "real-grey",
+      "hex": "#C0C3B9",
+      "rgb": {
+        "r": 192,
+        "g": 195,
+        "b": 185
+      },
+      "cmyk": {
+        "c": 23,
+        "m": 15,
+        "y": 21,
+        "k": 0
+      },
+      "pantone": "Cool Gray 6 C",
+      "contrast": {
+        "onWhiteText": 1.79,
+        "onBlackText": 11.75
+      },
+      "foreground": "#000000",
+      "foregroundName": "black",
+      "smallTextSafe": true
+    },
+    {
+      "name": "Smoke",
+      "slug": "smoke",
+      "hex": "#817D7E",
+      "rgb": {
+        "r": 129,
+        "g": 125,
+        "b": 126
+      },
+      "cmyk": {
+        "c": 46,
+        "m": 38,
+        "y": 37,
+        "k": 5
+      },
+      "pantone": "7541 C",
+      "contrast": {
+        "onWhiteText": 4.06,
+        "onBlackText": 5.17
+      },
+      "foreground": "#000000",
+      "foregroundName": "black",
+      "smallTextSafe": true
+    },
+    {
+      "name": "Dark Grey",
+      "slug": "dark-grey",
+      "hex": "#6A6766",
+      "rgb": {
+        "r": 106,
+        "g": 103,
+        "b": 102
+      },
+      "cmyk": {
+        "c": 62,
+        "m": 45,
+        "y": 63,
+        "k": 21
+      },
+      "pantone": "424 C",
+      "contrast": {
+        "onWhiteText": 5.61,
+        "onBlackText": 3.74
+      },
+      "foreground": "#FFFFFF",
+      "foregroundName": "white",
+      "smallTextSafe": true
+    },
+    {
+      "name": "Slate",
+      "slug": "slate",
+      "hex": "#454B4F",
+      "rgb": {
+        "r": 69,
+        "g": 75,
+        "b": 79
+      },
+      "cmyk": {
+        "c": 46,
+        "m": 38,
+        "y": 37,
+        "k": 5
+      },
+      "pantone": "432 C",
+      "contrast": {
+        "onWhiteText": 8.85,
+        "onBlackText": 2.37
+      },
+      "foreground": "#FFFFFF",
+      "foregroundName": "white",
+      "smallTextSafe": true
+    },
+    {
+      "name": "Amethyst",
+      "slug": "amethyst",
+      "hex": "#4F4355",
+      "rgb": {
+        "r": 79,
+        "g": 67,
+        "b": 85
+      },
+      "cmyk": {
+        "c": 83,
+        "m": 80,
+        "y": 56,
+        "k": 44
+      },
+      "pantone": "5265 C",
+      "contrast": {
+        "onWhiteText": 9.27,
+        "onBlackText": 2.27
+      },
+      "foreground": "#FFFFFF",
+      "foregroundName": "white",
+      "smallTextSafe": true
+    },
+    {
+      "name": "Ebony",
+      "slug": "ebony",
+      "hex": "#000000",
+      "rgb": {
+        "r": 0,
+        "g": 0,
+        "b": 0
+      },
+      "cmyk": {
+        "c": 75,
+        "m": 76,
+        "y": 78,
+        "k": 67
+      },
+      "pantone": "Black 6 C",
+      "contrast": {
+        "onWhiteText": 21,
+        "onBlackText": 1
+      },
+      "foreground": "#FFFFFF",
+      "foregroundName": "white",
+      "smallTextSafe": true
+    },
+    {
+      "name": "Sorbet Yellow",
+      "slug": "sorbet-yellow",
+      "hex": "#F4EAA5",
+      "rgb": {
+        "r": 244,
+        "g": 234,
+        "b": 165
+      },
+      "cmyk": {
+        "c": 5,
+        "m": 0,
+        "y": 50,
+        "k": 0
+      },
+      "pantone": "101 C",
+      "contrast": {
+        "onWhiteText": 1.22,
+        "onBlackText": 17.16
+      },
+      "foreground": "#000000",
+      "foregroundName": "black",
+      "smallTextSafe": true
+    },
+    {
+      "name": "Factory Yellow",
+      "slug": "factory-yellow",
+      "hex": "#FCDC13",
+      "rgb": {
+        "r": 252,
+        "g": 220,
+        "b": 19
+      },
+      "cmyk": {
+        "c": 3,
+        "m": 3,
+        "y": 97,
+        "k": 0
+      },
+      "pantone": "Yellow C",
+      "contrast": {
+        "onWhiteText": 1.36,
+        "onBlackText": 15.39
+      },
+      "foreground": "#000000",
+      "foregroundName": "black",
+      "smallTextSafe": true
+    },
+    {
+      "name": "Citrine",
+      "slug": "citrine",
+      "hex": "#FAB53A",
+      "rgb": {
+        "r": 250,
+        "g": 181,
+        "b": 58
+      },
+      "cmyk": {
+        "c": 0,
+        "m": 21,
+        "y": 96,
+        "k": 0
+      },
+      "pantone": "124 C",
+      "contrast": {
+        "onWhiteText": 1.79,
+        "onBlackText": 11.74
+      },
+      "foreground": "#000000",
+      "foregroundName": "black",
+      "smallTextSafe": true
+    },
+    {
+      "name": "Chartreuse",
+      "slug": "chartreuse",
+      "hex": "#BDB141",
+      "rgb": {
+        "r": 189,
+        "g": 177,
+        "b": 65
+      },
+      "cmyk": {
+        "c": 10,
+        "m": 5,
+        "y": 75,
+        "k": 0
+      },
+      "pantone": "390 C",
+      "contrast": {
+        "onWhiteText": 2.2,
+        "onBlackText": 9.53
+      },
+      "foreground": "#000000",
+      "foregroundName": "black",
+      "smallTextSafe": true
+    },
+    {
+      "name": "Mandarin",
+      "slug": "mandarin",
+      "hex": "#F37736",
+      "rgb": {
+        "r": 243,
+        "g": 119,
+        "b": 54
+      },
+      "cmyk": {
+        "c": 0,
+        "m": 71,
+        "y": 92,
+        "k": 0
+      },
+      "pantone": "165 C",
+      "contrast": {
+        "onWhiteText": 2.8,
+        "onBlackText": 7.5
+      },
+      "foreground": "#000000",
+      "foregroundName": "black",
+      "smallTextSafe": true
+    },
+    {
+      "name": "Stone",
+      "slug": "stone",
+      "hex": "#E8D5AD",
+      "rgb": {
+        "r": 232,
+        "g": 213,
+        "b": 173
+      },
+      "cmyk": {
+        "c": 6,
+        "m": 16,
+        "y": 29,
+        "k": 0
+      },
+      "pantone": "7503 C",
+      "contrast": {
+        "onWhiteText": 1.44,
+        "onBlackText": 14.55
+      },
+      "foreground": "#000000",
+      "foregroundName": "black",
+      "smallTextSafe": true
+    },
+    {
+      "name": "Harvest",
+      "slug": "harvest",
+      "hex": "#B29471",
+      "rgb": {
+        "r": 178,
+        "g": 148,
+        "b": 113
+      },
+      "cmyk": {
+        "c": 24,
+        "m": 29,
+        "y": 69,
+        "k": 2
+      },
+      "pantone": "729 C",
+      "contrast": {
+        "onWhiteText": 2.85,
+        "onBlackText": 7.37
+      },
+      "foreground": "#000000",
+      "foregroundName": "black",
+      "smallTextSafe": true
+    },
+    {
+      "name": "Nubuck Brown",
+      "slug": "nubuck-brown",
+      "hex": "#816D5B",
+      "rgb": {
+        "r": 129,
+        "g": 109,
+        "b": 91
+      },
+      "cmyk": {
+        "c": 34,
+        "m": 46,
+        "y": 68,
+        "k": 12
+      },
+      "pantone": "7526 C",
+      "contrast": {
+        "onWhiteText": 4.92,
+        "onBlackText": 4.27
+      },
+      "foreground": "#FFFFFF",
+      "foregroundName": "white",
+      "smallTextSafe": true
+    },
+    {
+      "name": "Rust",
+      "slug": "rust",
+      "hex": "#C96846",
+      "rgb": {
+        "r": 201,
+        "g": 104,
+        "b": 70
+      },
+      "cmyk": {
+        "c": 20,
+        "m": 60,
+        "y": 80,
+        "k": 10
+      },
+      "pantone": "7526 C",
+      "contrast": {
+        "onWhiteText": 3.78,
+        "onBlackText": 5.55
+      },
+      "foreground": "#000000",
+      "foregroundName": "black",
+      "smallTextSafe": true
+    },
+    {
+      "name": "Bitter Chocolate",
+      "slug": "bitter-chocolate",
+      "hex": "#554942",
+      "rgb": {
+        "r": 85,
+        "g": 73,
+        "b": 66
+      },
+      "cmyk": {
+        "c": 70,
+        "m": 66,
+        "y": 92,
+        "k": 61
+      },
+      "pantone": "412 C",
+      "contrast": {
+        "onWhiteText": 8.69,
+        "onBlackText": 2.42
+      },
+      "foreground": "#FFFFFF",
+      "foregroundName": "white",
+      "smallTextSafe": true
+    },
+    {
+      "name": "Bagdad Brown",
+      "slug": "bagdad-brown",
+      "hex": "#5B4B42",
+      "rgb": {
+        "r": 91,
+        "g": 75,
+        "b": 66
+      },
+      "cmyk": {
+        "c": 53,
+        "m": 69,
+        "y": 97,
+        "k": 49
+      },
+      "pantone": "476 C",
+      "contrast": {
+        "onWhiteText": 8.3,
+        "onBlackText": 2.53
+      },
+      "foreground": "#FFFFFF",
+      "foregroundName": "white",
+      "smallTextSafe": true
+    },
+    {
+      "name": "Candy Pink",
+      "slug": "candy-pink",
+      "hex": "#F8C2C7",
+      "rgb": {
+        "r": 248,
+        "g": 194,
+        "b": 199
+      },
+      "cmyk": {
+        "c": 0,
+        "m": 19,
+        "y": 8,
+        "k": 0
+      },
+      "pantone": "698 C",
+      "contrast": {
+        "onWhiteText": 1.55,
+        "onBlackText": 13.53
+      },
+      "foreground": "#000000",
+      "foregroundName": "black",
+      "smallTextSafe": true
+    },
+    {
+      "name": "Fuchsia Pink",
+      "slug": "fuchsia-pink",
+      "hex": "#CC548C",
+      "rgb": {
+        "r": 204,
+        "g": 84,
+        "b": 140
+      },
+      "cmyk": {
+        "c": 8,
+        "m": 86,
+        "y": 5,
+        "k": 0
+      },
+      "pantone": "Rhodamine Red C",
+      "contrast": {
+        "onWhiteText": 4.03,
+        "onBlackText": 5.21
+      },
+      "foreground": "#000000",
+      "foregroundName": "black",
+      "smallTextSafe": true
+    },
+    {
+      "name": "Hot Pink",
+      "slug": "hot-pink",
+      "hex": "#E34C73",
+      "rgb": {
+        "r": 227,
+        "g": 76,
+        "b": 115
+      },
+      "cmyk": {
+        "c": 15,
+        "m": 70,
+        "y": 20,
+        "k": 0
+      },
+      "pantone": "7424 C",
+      "contrast": {
+        "onWhiteText": 3.79,
+        "onBlackText": 5.55
+      },
+      "foreground": "#000000",
+      "foregroundName": "black",
+      "smallTextSafe": true
+    },
+    {
+      "name": "Vermillion",
+      "slug": "vermillion",
+      "hex": "#B4464D",
+      "rgb": {
+        "r": 180,
+        "g": 70,
+        "b": 77
+      },
+      "cmyk": {
+        "c": 9,
+        "m": 99,
+        "y": 84,
+        "k": 2
+      },
+      "pantone": "032 C",
+      "contrast": {
+        "onWhiteText": 5.35,
+        "onBlackText": 3.92
+      },
+      "foreground": "#FFFFFF",
+      "foregroundName": "white",
+      "smallTextSafe": true
+    },
+    {
+      "name": "Bright Red",
+      "slug": "bright-red",
+      "hex": "#D02D30",
+      "rgb": {
+        "r": 208,
+        "g": 45,
+        "b": 48
+      },
+      "cmyk": {
+        "c": 0,
+        "m": 98,
+        "y": 87,
+        "k": 0
+      },
+      "pantone": "485 C",
+      "contrast": {
+        "onWhiteText": 5.12,
+        "onBlackText": 4.1
+      },
+      "foreground": "#FFFFFF",
+      "foregroundName": "white",
+      "smallTextSafe": true
+    },
+    {
+      "name": "Scarlet",
+      "slug": "scarlet",
+      "hex": "#9E444D",
+      "rgb": {
+        "r": 158,
+        "g": 68,
+        "b": 77
+      },
+      "cmyk": {
+        "c": 24,
+        "m": 100,
+        "y": 93,
+        "k": 17
+      },
+      "pantone": "200 C",
+      "contrast": {
+        "onWhiteText": 6.2,
+        "onBlackText": 3.39
+      },
+      "foreground": "#FFFFFF",
+      "foregroundName": "white",
+      "smallTextSafe": true
+    },
+    {
+      "name": "Claret",
+      "slug": "claret",
+      "hex": "#603F45",
+      "rgb": {
+        "r": 96,
+        "g": 63,
+        "b": 69
+      },
+      "cmyk": {
+        "c": 47,
+        "m": 92,
+        "y": 83,
+        "k": 52
+      },
+      "pantone": "209 C",
+      "contrast": {
+        "onWhiteText": 9.15,
+        "onBlackText": 2.29
+      },
+      "foreground": "#FFFFFF",
+      "foregroundName": "white",
+      "smallTextSafe": true
+    },
+    {
+      "name": "Cool Blue",
+      "slug": "cool-blue",
+      "hex": "#DCE5E8",
+      "rgb": {
+        "r": 220,
+        "g": 229,
+        "b": 232
+      },
+      "cmyk": {
+        "c": 16,
+        "m": 6,
+        "y": 4,
+        "k": 0
+      },
+      "pantone": "277 C",
+      "contrast": {
+        "onWhiteText": 1.28,
+        "onBlackText": 16.42
+      },
+      "foreground": "#000000",
+      "foregroundName": "black",
+      "smallTextSafe": true
+    },
+    {
+      "name": "Azure Blue",
+      "slug": "azure-blue",
+      "hex": "#ABC5DE",
+      "rgb": {
+        "r": 171,
+        "g": 197,
+        "b": 222
+      },
+      "cmyk": {
+        "c": 23,
+        "m": 5,
+        "y": 1,
+        "k": 0
+      },
+      "pantone": "290 C",
+      "contrast": {
+        "onWhiteText": 1.78,
+        "onBlackText": 11.77
+      },
+      "foreground": "#000000",
+      "foregroundName": "black",
+      "smallTextSafe": true
+    },
+    {
+      "name": "Turquoise",
+      "slug": "turquoise",
+      "hex": "#47E4D9",
+      "rgb": {
+        "r": 71,
+        "g": 228,
+        "b": 217
+      },
+      "cmyk": {
+        "c": 80,
+        "m": 0,
+        "y": 29,
+        "k": 0
+      },
+      "pantone": "3115 C",
+      "contrast": {
+        "onWhiteText": 1.57,
+        "onBlackText": 13.37
+      },
+      "foreground": "#000000",
+      "foregroundName": "black",
+      "smallTextSafe": true
+    },
+    {
+      "name": "Adriatic",
+      "slug": "adriatic",
+      "hex": "#377AAA",
+      "rgb": {
+        "r": 55,
+        "g": 122,
+        "b": 170
+      },
+      "cmyk": {
+        "c": 98,
+        "m": 56,
+        "y": 13,
+        "k": 1
+      },
+      "pantone": "2925 C",
+      "contrast": {
+        "onWhiteText": 4.64,
+        "onBlackText": 4.53
+      },
+      "foreground": "#FFFFFF",
+      "foregroundName": "white",
+      "smallTextSafe": true
+    },
+    {
+      "name": "Tabriz Blue",
+      "slug": "tabriz-blue",
+      "hex": "#0088B5",
+      "rgb": {
+        "r": 0,
+        "g": 136,
+        "b": 181
+      },
+      "cmyk": {
+        "c": 98,
+        "m": 37,
+        "y": 0,
+        "k": 0
+      },
+      "pantone": "2191 C",
+      "contrast": {
+        "onWhiteText": 4.05,
+        "onBlackText": 5.19
+      },
+      "foreground": "#000000",
+      "foregroundName": "black",
+      "smallTextSafe": true
+    },
+    {
+      "name": "New Blue",
+      "slug": "new-blue",
+      "hex": "#88A1BA",
+      "rgb": {
+        "r": 136,
+        "g": 161,
+        "b": 186
+      },
+      "cmyk": {
+        "c": 58,
+        "m": 23,
+        "y": 14,
+        "k": 0
+      },
+      "pantone": "7702 C",
+      "contrast": {
+        "onWhiteText": 2.67,
+        "onBlackText": 7.85
+      },
+      "foreground": "#000000",
+      "foregroundName": "black",
+      "smallTextSafe": true
+    },
+    {
+      "name": "Sapphire",
+      "slug": "sapphire",
+      "hex": "#40567D",
+      "rgb": {
+        "r": 64,
+        "g": 86,
+        "b": 125
+      },
+      "cmyk": {
+        "c": 100,
+        "m": 88,
+        "y": 2,
+        "k": 0
+      },
+      "pantone": "2748 C",
+      "contrast": {
+        "onWhiteText": 7.38,
+        "onBlackText": 2.85
+      },
+      "foreground": "#FFFFFF",
+      "foregroundName": "white",
+      "smallTextSafe": true
+    },
+    {
+      "name": "Cobalt",
+      "slug": "cobalt",
+      "hex": "#45576D",
+      "rgb": {
+        "r": 69,
+        "g": 87,
+        "b": 109
+      },
+      "cmyk": {
+        "c": 93,
+        "m": 69,
+        "y": 51,
+        "k": 31
+      },
+      "pantone": "7684 C",
+      "contrast": {
+        "onWhiteText": 7.4,
+        "onBlackText": 2.84
+      },
+      "foreground": "#FFFFFF",
+      "foregroundName": "white",
+      "smallTextSafe": true
+    },
+    {
+      "name": "Imperial Blue",
+      "slug": "imperial-blue",
+      "hex": "#404755",
+      "rgb": {
+        "r": 64,
+        "g": 71,
+        "b": 85
+      },
+      "cmyk": {
+        "c": 88,
+        "m": 71,
+        "y": 63,
+        "k": 50
+      },
+      "pantone": "533 C",
+      "contrast": {
+        "onWhiteText": 9.33,
+        "onBlackText": 2.25
+      },
+      "foreground": "#FFFFFF",
+      "foregroundName": "white",
+      "smallTextSafe": true
+    },
+    {
+      "name": "Royal Blue",
+      "slug": "royal-blue",
+      "hex": "#484882",
+      "rgb": {
+        "r": 72,
+        "g": 72,
+        "b": 130
+      },
+      "cmyk": {
+        "c": 94,
+        "m": 91,
+        "y": 1,
+        "k": 0
+      },
+      "pantone": "2756 C",
+      "contrast": {
+        "onWhiteText": 8.32,
+        "onBlackText": 2.52
+      },
+      "foreground": "#FFFFFF",
+      "foregroundName": "white",
+      "smallTextSafe": true
+    },
+    {
+      "name": "Lavender",
+      "slug": "lavender",
+      "hex": "#BEAFD9",
+      "rgb": {
+        "r": 190,
+        "g": 175,
+        "b": 217
+      },
+      "cmyk": {
+        "c": 21,
+        "m": 25,
+        "y": 0,
+        "k": 0
+      },
+      "pantone": "5245 C",
+      "contrast": {
+        "onWhiteText": 2.03,
+        "onBlackText": 10.32
+      },
+      "foreground": "#000000",
+      "foregroundName": "black",
+      "smallTextSafe": true
+    },
+    {
+      "name": "Purple",
+      "slug": "purple",
+      "hex": "#6C4E9A",
+      "rgb": {
+        "r": 108,
+        "g": 78,
+        "b": 154
+      },
+      "cmyk": {
+        "c": 76,
+        "m": 93,
+        "y": 0,
+        "k": 0
+      },
+      "pantone": "2665 C",
+      "contrast": {
+        "onWhiteText": 6.57,
+        "onBlackText": 3.19
+      },
+      "foreground": "#FFFFFF",
+      "foregroundName": "white",
+      "smallTextSafe": true
+    },
+    {
+      "name": "Pistachio",
+      "slug": "pistachio",
+      "hex": "#E0EACD",
+      "rgb": {
+        "r": 224,
+        "g": 234,
+        "b": 205
+      },
+      "cmyk": {
+        "c": 12,
+        "m": 0,
+        "y": 26,
+        "k": 0
+      },
+      "pantone": "9561 C",
+      "contrast": {
+        "onWhiteText": 1.25,
+        "onBlackText": 16.82
+      },
+      "foreground": "#000000",
+      "foregroundName": "black",
+      "smallTextSafe": true
+    },
+    {
+      "name": "Powder Green",
+      "slug": "powder-green",
+      "hex": "#E2EDDB",
+      "rgb": {
+        "r": 226,
+        "g": 237,
+        "b": 219
+      },
+      "cmyk": {
+        "c": 10,
+        "m": 0,
+        "y": 12,
+        "k": 0
+      },
+      "pantone": "9560 C",
+      "contrast": {
+        "onWhiteText": 1.21,
+        "onBlackText": 17.37
+      },
+      "foreground": "#000000",
+      "foregroundName": "black",
+      "smallTextSafe": true
+    },
+    {
+      "name": "Park Green",
+      "slug": "park-green",
+      "hex": "#ACE2BB",
+      "rgb": {
+        "r": 172,
+        "g": 226,
+        "b": 187
+      },
+      "cmyk": {
+        "c": 32,
+        "m": 0,
+        "y": 32,
+        "k": 0
+      },
+      "pantone": "563 C",
+      "contrast": {
+        "onWhiteText": 1.46,
+        "onBlackText": 14.35
+      },
+      "foreground": "#000000",
+      "foregroundName": "black",
+      "smallTextSafe": true
+    },
+    {
+      "name": "Marrs Green",
+      "slug": "marrs-green",
+      "hex": "#008882",
+      "rgb": {
+        "r": 0,
+        "g": 136,
+        "b": 130
+      },
+      "cmyk": {
+        "c": 75,
+        "m": 0,
+        "y": 40,
+        "k": 0
+      },
+      "pantone": "3278 C",
+      "contrast": {
+        "onWhiteText": 4.34,
+        "onBlackText": 4.84
+      },
+      "foreground": "#000000",
+      "foregroundName": "black",
+      "smallTextSafe": true
+    },
+    {
+      "name": "Mid Green",
+      "slug": "mid-green",
+      "hex": "#78826A",
+      "rgb": {
+        "r": 120,
+        "g": 130,
+        "b": 106
+      },
+      "cmyk": {
+        "c": 69,
+        "m": 35,
+        "y": 82,
+        "k": 18
+      },
+      "pantone": "5767 C",
+      "contrast": {
+        "onWhiteText": 4.04,
+        "onBlackText": 5.2
+      },
+      "foreground": "#000000",
+      "foregroundName": "black",
+      "smallTextSafe": true
+    },
+    {
+      "name": "Lockwood Green",
+      "slug": "lockwood-green",
+      "hex": "#2C6E49",
+      "rgb": {
+        "r": 44,
+        "g": 110,
+        "b": 73
+      },
+      "cmyk": {
+        "c": 100,
+        "m": 26,
+        "y": 94,
+        "k": 15
+      },
+      "pantone": "364 C",
+      "contrast": {
+        "onWhiteText": 6.12,
+        "onBlackText": 3.43
+      },
+      "foreground": "#FFFFFF",
+      "foregroundName": "white",
+      "smallTextSafe": true
+    },
+    {
+      "name": "Emerald",
+      "slug": "emerald",
+      "hex": "#43887B",
+      "rgb": {
+        "r": 67,
+        "g": 136,
+        "b": 123
+      },
+      "cmyk": {
+        "c": 97,
+        "m": 20,
+        "y": 71,
+        "k": 7
+      },
+      "pantone": "554 C",
+      "contrast": {
+        "onWhiteText": 4.16,
+        "onBlackText": 5.05
+      },
+      "foreground": "#000000",
+      "foregroundName": "black",
+      "smallTextSafe": true
+    },
+    {
+      "name": "Forest",
+      "slug": "forest",
+      "hex": "#375E4C",
+      "rgb": {
+        "r": 55,
+        "g": 94,
+        "b": 76
+      },
+      "cmyk": {
+        "c": 96,
+        "m": 45,
+        "y": 100,
+        "k": 43
+      },
+      "pantone": "349 C",
+      "contrast": {
+        "onWhiteText": 7.32,
+        "onBlackText": 2.87
+      },
+      "foreground": "#FFFFFF",
+      "foregroundName": "white",
+      "smallTextSafe": true
+    },
+    {
+      "name": "Racing Green",
+      "slug": "racing-green",
+      "hex": "#404E4E",
+      "rgb": {
+        "r": 64,
+        "g": 78,
+        "b": 78
+      },
+      "cmyk": {
+        "c": 86,
+        "m": 54,
+        "y": 80,
+        "k": 49
+      },
+      "pantone": "5535 C",
+      "contrast": {
+        "onWhiteText": 8.69,
+        "onBlackText": 2.42
+      },
+      "foreground": "#FFFFFF",
+      "foregroundName": "white",
+      "smallTextSafe": true
+    }
+  ]
+}

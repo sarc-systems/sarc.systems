@@ -1,0 +1,17 @@
+{{ define "body-class" }}page{{ end }}
+
+{{ define "main" }}
+<article class="page-full">
+  <div class="wrap">
+    <header class="page-head">
+      <h1 class="page-title">{{ .Title }}</h1>
+      {{- with .Params.summary }}<p class="page-intro">{{ . }}</p>{{ end }}
+    </header>
+    <div class="prose">
+      {{ .Content }}
+    </div>
+  </div>
+</article>
+{{ end }}
+
+{{ define "scripts" }}{{ partial "page-scripts.html" . }}{{ end }}

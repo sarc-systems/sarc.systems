@@ -1,0 +1,67 @@
+{{ define "body-class" }}journal journal-single{{ end }}
+
+{{ define "main" }}
+<article class="entry-full h-entry">
+  <div class="wrap">
+    <header class="entry-header">
+      <p class="eyebrow">
+        <a href="{{ "/journal/" | relURL }}">Journal</a>
+        {{- with .Params.entry_type }} <span class="dot" aria-hidden="true">·</span> {{ . | upper }}{{ end }}
+      </p>
+      <h1 class="entry-full-title p-name">{{ .Title }}</h1>
+      {{- with .Params.summary }}<p class="entry-lede">{{ . }}</p>{{ end }}
+      {{ partial "entry-meta.html" . }}
+    </header>
+  </div>
+
+  {{- /* Optional lead image (bundle-relative), processed responsively. */ -}}
+  {{- with .Params.image }}
+    {{- with ($.Resources.GetMatch .) }}
+      {{- $img := . }}
+      {{- $small := (.Resize "800x q82").RelPermalink }}
+      {{- $large := (.Resize "1600x q82").RelPermalink }}
+    <figure class="entry-lead-figure">
+      <img src="{{ $small }}"
+           srcset="{{ $small }} 800w, {{ $large }} 1600w"
+           sizes="(min-width: 60rem) 60rem, 100vw"
+           width="{{ $img.Width }}" height="{{ $img.Height }}"
+           alt="{{ $.Params.image_alt | default $.Title }}" loading="eager" decoding="async">
+    </figure>
+    {{- end }}
+  {{- end }}
+
+  <div class="wrap">
+    <div class="prose e-content">
+      {{ .Content }}
+    </div>
+
+    {{- with .Params.revision_note }}
+    <aside class="revision-note" aria-label="Revision note">
+      <p><strong>Revision note.</strong> {{ . }}</p>
+    </aside>
+    {{- end }}
+
+    {{ partial "related.html" . }}
+
+    {{- /* Prev/next within the journal, chronologically. */ -}}
+    <nav class="entry-nav" aria-label="Journal navigation">
+      {{- /* In Hugo, PrevInSection is the older entry and NextInSection the
+             newer one (default date-descending order). */ -}}
+      {{- with .NextInSection }}
+      <a class="entry-nav-prev" rel="prev" href="{{ .RelPermalink }}">
+        <span class="entry-nav-dir">← Newer</span>
+        <span class="entry-nav-title">{{ .Title }}</span>
+      </a>
+      {{- end }}
+      {{- with .PrevInSection }}
+      <a class="entry-nav-next" rel="next" href="{{ .RelPermalink }}">
+        <span class="entry-nav-dir">Older →</span>
+        <span class="entry-nav-title">{{ .Title }}</span>
+      </a>
+      {{- end }}
+    </nav>
+  </div>
+</article>
+{{ end }}
+
+{{ define "scripts" }}{{ partial "page-scripts.html" . }}{{ end }}

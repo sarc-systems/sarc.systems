@@ -1,0 +1,26 @@
+{{- /* <head> contents: title, meta, canonical, OG/Twitter, CSS pipeline, feeds. */ -}}
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+{{- /* Flip the no-JS flag as early as possible so CSS can enhance safely. */ -}}
+<script>document.documentElement.removeAttribute('data-nojs');document.documentElement.setAttribute('data-js','');</script>
+
+{{ partial "meta.html" . }}
+
+{{- /* CSS: concatenate the small set of files by concern, then minify+fingerprint. */ -}}
+{{- $order := slice "css/generated/colorplan.css" "css/base.css" "css/layout.css" "css/journal.css" "css/mark.css" "css/print.css" -}}
+{{- $styles := slice -}}
+{{- range $order -}}
+  {{- with resources.Get . -}}{{ $styles = $styles | append . }}{{- end -}}
+{{- end -}}
+{{- $css := $styles | resources.Concat "css/site.css" -}}
+{{- if hugo.IsProduction -}}{{ $css = $css | minify | fingerprint }}{{- end -}}
+<link rel="stylesheet" href="{{ $css.RelPermalink }}"{{ if hugo.IsProduction }} integrity="{{ $css.Data.Integrity }}"{{ end }}>
+
+{{- /* Feeds. */ -}}
+{{ range .AlternativeOutputFormats -}}
+  <link rel="{{ .Rel }}" type="{{ .MediaType.Type }}" href="{{ .Permalink }}" title="{{ $.Site.Title }}">
+{{ end -}}
+
+{{- /* Favicon (SVG mark glyph; drop a PNG/ICO in static/ to override). */ -}}
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">

@@ -1,0 +1,15 @@
+{{- /* One journal entry as it appears in a chronological index.
+       Format: date / entry-type · project / title / summary. */ -}}
+<li class="entry">
+  <a class="entry-link" href="{{ .RelPermalink }}">
+    <time class="entry-date" datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "02 Jan 2006" | upper }}</time>
+    <span class="entry-kicker">
+      {{- with .Params.entry_type }}<span class="entry-type">{{ . | upper }}</span>{{ end -}}
+      {{- with .Params.projects -}}
+        {{- range . }} <span class="dot" aria-hidden="true">·</span> <span class="entry-project">{{ . | upper }}</span>{{ end -}}
+      {{- end -}}
+    </span>
+    <span class="entry-title">{{ .Title }}</span>
+    {{- with .Params.summary }}<span class="entry-summary">{{ . }}</span>{{ end -}}
+  </a>
+</li>

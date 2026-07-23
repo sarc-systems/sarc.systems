@@ -1,0 +1,21 @@
+{{ define "body-class" }}taxonomy terms{{ end }}
+
+{{ define "main" }}
+<div class="wrap">
+  <header class="page-head">
+    <p class="eyebrow">Index</p>
+    <h1 class="page-title">{{ .Title }}</h1>
+    {{- with .Content }}<div class="page-intro">{{ . }}</div>{{ end }}
+  </header>
+
+  {{- $terms := .Data.Terms.Alphabetical }}
+  <ul class="term-list">
+    {{- range $terms }}
+    <li>
+      <a href="{{ .Page.RelPermalink }}">{{ .Page.Title }}</a>
+      <span class="term-count">{{ .Count }}</span>
+    </li>
+    {{- end }}
+  </ul>
+</div>
+{{ end }}

@@ -1,0 +1,69 @@
+{{ define "body-class" }}page cp-preview{{ end }}
+
+{{ define "main" }}
+{{- $cp := hugo.Data.colorplan -}}
+{{- $pal := hugo.Data.palette -}}
+
+{{- /* Dev-only styles: inlined so they never enter the production CSS bundle
+       (this page is a draft and is not built for production anyway). */ -}}
+<style>
+  .cp-preview .wrap { max-width: 72rem; }
+  .cp-meta { font-family: var(--font-mono); font-size: var(--t-xs); color: var(--gray-1); }
+  .cp-assign { margin: 1.5rem 0 2.5rem; font-family: var(--font-mono); font-size: var(--t-sm); }
+  .cp-assign code { background: var(--paper-2); padding: 0.05em 0.3em; }
+  .cp-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr)); gap: 1rem; list-style: none; padding: 0; margin: 0; }
+  .cp-card { border: 1px solid var(--rule); }
+  .cp-swatch { padding: 1rem; min-height: 8.5rem; display: flex; flex-direction: column; justify-content: space-between; }
+  .cp-swatch .lg { font-family: var(--font-sans); font-size: 1.4rem; font-weight: 650; line-height: 1.05; }
+  .cp-swatch .sm { font-family: var(--font-mono); font-size: 0.72rem; margin-top: 0.5rem; }
+  .cp-data { padding: 0.7rem 0.8rem; font-family: var(--font-mono); font-size: 0.7rem; line-height: 1.5; color: var(--ink); }
+  .cp-data dt { color: var(--gray-2); text-transform: uppercase; letter-spacing: 0.06em; }
+  .cp-data .row { display: flex; justify-content: space-between; gap: 0.5rem; }
+  .cp-onpaper { color: var(--cp-self); font-weight: 600; }
+  .cp-flag { color: #b00; font-weight: 700; }
+  .cp-note { font-family: var(--font-mono); font-size: var(--t-xs); color: var(--gray-1); }
+</style>
+
+<div class="wrap">
+  <header class="page-head">
+    <p class="eyebrow">Development only · not published</p>
+    <h1 class="page-title">{{ .Title }}</h1>
+    <p class="page-intro">{{ .Params.summary }}</p>
+    <p class="cp-meta">
+      {{ $cp.count }} colours · imported from
+      <a href="{{ $cp._generated.url }}">{{ $cp._generated.url }}</a>
+      · retrieved {{ $cp._generated.retrieved }}
+      {{ with $cp.smallTextUnsafe }} · <span class="cp-flag">{{ len . }} unsafe for small text</span>{{ else }} · all pass AA small-text either-way{{ end }}
+    </p>
+  </header>
+
+  <section class="cp-assign">
+    <strong>Current assignments</strong> (from <code>data/palette.yaml</code>)<br>
+    default: <code>{{ $pal.default }}</code>
+    {{- range $sec, $slug := $pal.sections }} · section/{{ $sec }}: <code>{{ $slug }}</code>{{ end }}
+    {{- range $proj, $slug := $pal.projects }} · project/{{ $proj }}: <code>{{ $slug }}</code>{{ end }}
+    <br><span class="cp-note">Release pairs in use: none yet (Label unlaunched).</span>
+  </section>
+
+  <ol class="cp-grid">
+    {{- range $cp.colors }}
+    <li class="cp-card" style="--cp-self: var(--colorplan-{{ .slug }});">
+      <div class="cp-swatch" style="background: var(--colorplan-{{ .slug }}); color: var(--colorplan-{{ .slug }}-fg);">
+        <div class="lg">{{ .name }}</div>
+        <div class="sm">Small sample · fg {{ .foregroundName }} · {{ .hex }}</div>
+      </div>
+      <dl class="cp-data">
+        <div class="row"><dt>slug</dt><dd>{{ .slug }}</dd></div>
+        <div class="row"><dt>hex</dt><dd>{{ .hex }}</dd></div>
+        <div class="row"><dt>rgb</dt><dd>{{ .rgb.r }} {{ .rgb.g }} {{ .rgb.b }}</dd></div>
+        <div class="row"><dt>cmyk</dt><dd>{{ .cmyk.c }} {{ .cmyk.m }} {{ .cmyk.y }} {{ .cmyk.k }}</dd></div>
+        <div class="row"><dt>pantone</dt><dd>{{ .pantone }}</dd></div>
+        <div class="row"><dt>on white / black</dt><dd>{{ .contrast.onWhiteText }} / {{ .contrast.onBlackText }}</dd></div>
+        <div class="row"><dt>as text here</dt><dd class="cp-onpaper">The quick brown fox</dd></div>
+        {{- if not .smallTextSafe }}<div class="row"><dt>flag</dt><dd class="cp-flag">small text unsafe</dd></div>{{ end }}
+      </dl>
+    </li>
+    {{- end }}
+  </ol>
+</div>
+{{ end }}

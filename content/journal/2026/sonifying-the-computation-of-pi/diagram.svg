@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 200" role="img" aria-label="Signal path from master clock to control voltage">
+  <style>
+    .box { fill: none; stroke: #17150f; stroke-width: 1.5; }
+    .lbl { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; font-size: 13px; fill: #17150f; }
+    .sub { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; font-size: 10px; fill: #6c675d; letter-spacing: 0.05em; }
+    .wire { stroke: #17150f; stroke-width: 1.5; fill: none; marker-end: url(#arrow); }
+  </style>
+  <defs>
+    <marker id="arrow" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto">
+      <path d="M0,0 L7,3 L0,6 Z" fill="#17150f"/>
+    </marker>
+  </defs>
+
+  <!-- Clock -->
+  <rect class="box" x="16" y="70" width="120" height="60"/>
+  <text class="lbl" x="76" y="96" text-anchor="middle">MASTER CLK</text>
+  <text class="sub" x="76" y="114" text-anchor="middle">40–2000 ms</text>
+
+  <!-- Register -->
+  <rect class="box" x="216" y="70" width="140" height="60"/>
+  <text class="lbl" x="286" y="96" text-anchor="middle">π REGISTER</text>
+  <text class="sub" x="286" y="114" text-anchor="middle">spigot state</text>
+
+  <!-- DAC -->
+  <rect class="box" x="436" y="70" width="120" height="60"/>
+  <text class="lbl" x="496" y="104" text-anchor="middle">DAC</text>
+
+  <!-- SARC-100 -->
+  <rect class="box" x="636" y="70" width="108" height="60"/>
+  <text class="lbl" x="690" y="96" text-anchor="middle">SARC‑100</text>
+  <text class="sub" x="690" y="114" text-anchor="middle">CV in</text>
+
+  <!-- Wires -->
+  <path class="wire" d="M136,100 L210,100"/>
+  <path class="wire" d="M356,100 L430,100"/>
+  <path class="wire" d="M556,100 L630,100"/>
+  <text class="sub" x="393" y="90" text-anchor="middle">latch</text>
+  <text class="sub" x="593" y="90" text-anchor="middle">0–5 V</text>
+</svg>

@@ -1,0 +1,35 @@
+{{- /* Resolve the page's Colorplan signal colour and emit it as an inline
+       custom-property override for --signal. Central assignments live in
+       data/palette.yaml; templates never hardcode colours.
+
+       Resolution order (first match wins):
+         1. page front-matter  palette.primary
+         2. project            (first of .Params.projects with a mapping)
+         3. section            (.Section)
+         4. default            (neutral SARC house colour)
+
+       Returns a value suitable for a style="" attribute, e.g.
+       "--signal:var(--colorplan-cobalt);--signal-ink:var(--colorplan-cobalt);"
+       Emits nothing extra when the resolved colour equals the site default
+       (the base stylesheet already carries it). */ -}}
+{{- $pal := hugo.Data.palette -}}
+{{- $slug := "" -}}
+
+{{- /* 1. explicit page palette */ -}}
+{{- with .Params.palette }}{{ with .primary }}{{ $slug = . }}{{ end }}{{ end -}}
+
+{{- /* 2. project */ -}}
+{{- if not $slug }}{{ with .Params.projects }}
+  {{- range . }}{{ if not $slug }}{{ with index $pal.projects . }}{{ $slug = . }}{{ end }}{{ end }}{{ end -}}
+{{- end }}{{ end -}}
+
+{{- /* 3. section */ -}}
+{{- if not $slug }}{{ with .Section }}{{ with index $pal.sections . }}{{ $slug = . }}{{ end }}{{ end }}{{ end -}}
+
+{{- /* 4. default */ -}}
+{{- if not $slug }}{{ $slug = $pal.default }}{{ end -}}
+
+{{- /* Only emit an override when it differs from the base default. */ -}}
+{{- if and $slug (ne $slug $pal.default) -}}
+--signal:var(--colorplan-{{ $slug }});--signal-ink:var(--colorplan-{{ $slug }});
+{{- end -}}

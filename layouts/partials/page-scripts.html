@@ -1,0 +1,9 @@
+{{- /* Conditionally load the YouTube facade enhancer only on pages that embed a
+       video. Kept out of the global bundle so most pages ship zero JS. */ -}}
+{{- if .HasShortcode "youtube" -}}
+  {{- with resources.Get "js/youtube.js" -}}
+    {{- $js := . -}}
+    {{- if hugo.IsProduction }}{{ $js = $js | minify | fingerprint }}{{ end -}}
+    <script src="{{ $js.RelPermalink }}"{{ if hugo.IsProduction }} integrity="{{ $js.Data.Integrity }}"{{ end }} defer></script>
+  {{- end -}}
+{{- end -}}

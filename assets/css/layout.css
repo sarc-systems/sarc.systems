@@ -1,0 +1,111 @@
+/* layout.css — container, header/nav, footer, page scaffolding. */
+
+.wrap {
+  width: 100%;
+  max-width: var(--wrap);
+  margin-inline: auto;
+  padding-inline: clamp(1.2rem, 5vw, 3rem);
+}
+
+/* --- Site header --------------------------------------------------------- */
+.site-header {
+  border-bottom: 1px solid var(--rule);
+  background: var(--paper);
+}
+.site-header-inner {
+  max-width: var(--wrap);
+  margin-inline: auto;
+  padding: 0.9rem clamp(1.2rem, 5vw, 3rem);
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+}
+.wordmark {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 1.15rem;
+  letter-spacing: 0.22em;
+  color: var(--ink);
+  text-decoration: none;
+}
+.wordmark:hover { color: var(--ink); }
+
+/* Navigation — plain wrapping list, no JS. */
+.nav-menu ul {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.9rem 1.5rem;
+  margin: 0; padding: 0;
+  justify-content: flex-end;
+}
+.nav-menu a {
+  font-family: var(--font-mono);
+  font-size: var(--t-xs);
+  letter-spacing: 0.12em;
+  color: var(--gray-1);
+  text-decoration: none;
+}
+.nav-menu a:hover,
+.nav-menu a[aria-current="page"] { color: var(--ink); }
+.nav-menu a[aria-current="page"] { border-bottom: 2px solid var(--signal); padding-bottom: 2px; }
+.nav-menu .ext { color: var(--gray-2); }
+
+@media (max-width: 26rem) {
+  .site-header-inner { flex-wrap: wrap; gap: 0.5rem 1rem; }
+  .nav-menu ul { justify-content: flex-start; }
+}
+
+/* --- Generic page head --------------------------------------------------- */
+.page-head { padding: clamp(2rem, 6vw, 4rem) 0 1.6rem; }
+.page-title { font-size: var(--t-2xl); }
+.page-intro {
+  max-width: var(--measure);
+  color: var(--gray-1);
+  font-size: var(--t-md);
+  line-height: 1.5;
+  margin-top: 0.6rem;
+}
+.page-intro p { margin: 0 0 0.6em; }
+
+.plain-list { list-style: none; padding: 0; }
+.plain-list li { padding: 0.4rem 0; border-bottom: 1px solid var(--rule); }
+
+/* --- Footer -------------------------------------------------------------- */
+.site-footer {
+  margin-top: 5rem;
+  border-top: 1px solid var(--rule);
+  background: var(--paper);
+}
+.site-footer-inner {
+  max-width: var(--wrap);
+  margin-inline: auto;
+  padding: 2.2rem clamp(1.2rem, 5vw, 3rem) 3rem;
+  display: grid;
+  gap: 0.8rem;
+}
+.footer-inst { margin: 0; font-family: var(--font-sans); }
+.footer-inst strong { letter-spacing: 0.18em; }
+.footer-nav ul {
+  list-style: none; display: flex; flex-wrap: wrap;
+  gap: 1.2rem; margin: 0; padding: 0;
+}
+.footer-nav a {
+  font-family: var(--font-mono);
+  font-size: var(--t-xs);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--gray-1);
+  text-decoration: none;
+}
+.footer-nav a:hover { color: var(--signal); }
+.footer-meta {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: var(--t-xs);
+  color: var(--gray-2);
+}
+
+/* --- 404 ----------------------------------------------------------------- */
+.error-wrap { padding-block: clamp(3rem, 12vh, 8rem); max-width: var(--measure); }

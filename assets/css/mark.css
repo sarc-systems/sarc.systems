@@ -1,0 +1,52 @@
+/* mark.css — homepage masthead + the live four-row SARC mark.
+   The mark sits on its own black institutional plate. Its luminous quality is
+   contained here and never propagated into the rest of the interface. */
+
+.masthead {
+  /* Pure black plate to match the mark's ground; blend mode drops any edge. */
+  background: #000;
+  color: var(--paper);
+  padding: clamp(3rem, 9vw, 7rem) 0 clamp(2.5rem, 6vw, 5rem);
+}
+
+/* The mark — masthead / institutional-plate scale. Substantial space, no
+   aggressive cropping, no colour effects. Its glow stays inside this plate. */
+.mark {
+  max-width: 34rem;
+  margin-inline: auto;
+  padding-inline: clamp(1.2rem, 5vw, 3rem);
+}
+.mark-img {
+  display: block;
+  width: 100%;
+  height: auto;
+  /* Drop the raster's black ground onto the plate; keep the luminous mark. */
+  mix-blend-mode: screen;
+}
+
+/* Institutional name + statement, directly beneath the mark (no "Enter"). */
+.masthead-inst {
+  max-width: var(--wrap);
+  margin: clamp(1.8rem, 5vw, 3rem) auto 0;
+  padding-inline: clamp(1.2rem, 5vw, 3rem);
+}
+.inst-name {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: clamp(1.3rem, 3.2vw, var(--t-xl));
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+  max-width: 20ch;
+  margin: 0;
+  color: var(--paper);
+}
+.inst-statement {
+  max-width: var(--measure);
+  margin-top: 1rem;
+  color: #cfc9ba;
+  font-size: var(--t-md);
+  line-height: 1.5;
+}
+.inst-statement p { margin: 0 0 0.7em; }
+.inst-statement a { color: var(--paper); text-decoration-thickness: 1px; }
+.inst-statement a:hover { color: #fff; }

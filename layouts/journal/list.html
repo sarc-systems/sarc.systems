@@ -1,0 +1,20 @@
+{{ define "body-class" }}journal journal-list{{ end }}
+
+{{ define "main" }}
+<div class="wrap">
+  <header class="page-head">
+    <p class="eyebrow">Journal</p>
+    <h1 class="page-title">{{ .Title }}</h1>
+    {{- with .Content }}<div class="page-intro">{{ . }}</div>{{ end }}
+  </header>
+
+  {{- $entries := (where .Pages "Draft" false).ByDate.Reverse -}}
+  {{- with $entries }}
+  <ol class="journal-index" reversed>
+    {{ range . }}{{ partial "entry-summary.html" . }}{{ end }}
+  </ol>
+  {{- else }}
+  <p class="empty-note">No published entries yet.</p>
+  {{- end }}
+</div>
+{{ end }}

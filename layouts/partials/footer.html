@@ -1,0 +1,20 @@
+{{- /* Site footer: institutional line, feed link, quiet colophon. */ -}}
+<footer class="site-footer">
+  <div class="site-footer-inner">
+    <p class="footer-inst">
+      <strong>SARC</strong> — Studio for Advanced Research in Cybernetics
+    </p>
+    <nav class="footer-nav" aria-label="Footer">
+      <ul>
+        <li><a href="{{ "/journal/" | relURL }}">Journal</a></li>
+        <li><a href="{{ "/about/" | relURL }}">About</a></li>
+        <li><a href="{{ with site.Params.youtube }}{{ . }}{{ end }}" rel="noopener" target="_blank">YouTube ↗</a></li>
+        <li><a href="{{ "/index.xml" | relURL }}">RSS</a></li>
+      </ul>
+    </nav>
+    <p class="footer-meta">
+      <time datetime="{{ now.Format "2006" }}">{{ now.Format "2006" }}</time> ·
+      Built with Hugo · Static, no tracking.
+    </p>
+  </div>
+</footer>
