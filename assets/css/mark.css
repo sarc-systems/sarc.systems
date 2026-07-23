@@ -10,18 +10,58 @@
 }
 
 /* The mark — masthead / institutional-plate scale. Substantial space, no
-   aggressive cropping, no colour effects. Its glow stays inside this plate. */
+   aggressive cropping, no colour effects. Its glow stays inside this plate.
+   This is the live SVG reconstruction (see CLAUDE.md): Row 1 stable, Row 2 the
+   active transform layer, Rows 3-4 derived reflections. */
 .mark {
-  max-width: 34rem;
+  max-width: 40rem;
   margin-inline: auto;
   padding-inline: clamp(1.2rem, 5vw, 3rem);
+  /* A touch of blur softens edges the darken-blend leaves slightly aliased. */
+  filter: blur(0.5px);
 }
-.mark-img {
+.mark-svg {
   display: block;
   width: 100%;
   height: auto;
-  /* Drop the raster's black ground onto the plate; keep the luminous mark. */
-  mix-blend-mode: screen;
+  overflow: visible;
+  /* Isolate so the rows' darken-blend applies among themselves, not against
+     the black plate behind the SVG. */
+  isolation: isolate;
+}
+
+/* Where rows overlap, take the darker value so the dark outline of the letter
+   underneath shows through the fill of the letter on top (coupling lines from
+   both letters), instead of the upper letter simply occluding the lower. */
+.mark-row-stable,
+.mark-row-active,
+.mark-reflected {
+  mix-blend-mode: darken;
+}
+
+/* Letterforms: warm white with a thin dark outline. The outline is painted
+   over the fill so it also draws the coupling lines where the overlapping rows
+   meet, and a soft luminous edge sits outside it (echoing the raster). */
+.mk-glyph path {
+  fill: #f2eede;
+  stroke: #0c0c0b;
+  stroke-width: 11;          /* font units; scales down with the mark */
+  stroke-linejoin: round;
+}
+.mark-row-stable .mk-glyph path,
+.mark-row-active .mk-glyph path {
+  filter: drop-shadow(0 0 6px rgba(238, 232, 214, 0.28));
+}
+
+/* Row 2 letters transform about their own centre, slowly. */
+.mark-row-active .mk-glyph {
+  transform-box: fill-box;
+  transform-origin: center;
+  transition: transform 520ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mark-row-active .mk-glyph { transition: none; }
 }
 
 /* Institutional name + statement, directly beneath the mark (no "Enter"). */

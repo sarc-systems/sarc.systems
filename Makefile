@@ -8,7 +8,7 @@ DEPLOY_HOST   ?=
 DEPLOY_PATH   ?=
 DEPLOY_RSYNC  ?= rsync -avz --delete --exclude '.DS_Store'
 
-.PHONY: dev build check new-post deploy clean colorplan
+.PHONY: dev build check new-post deploy clean colorplan mark
 
 ## dev — local server with drafts and future-dated posts
 dev:
@@ -47,6 +47,12 @@ deploy: check
 ## normal builds never run this.
 colorplan:
 	node scripts/import-colorplan.mjs
+
+## mark — regenerate the four-row mark SVG partial from the Nasalization font
+## (layouts/partials/mark.html). Committed output; re-run only when the mark
+## letterforms change. Requires: pip install fonttools Pillow.
+mark:
+	python3 scripts/generate-mark.py
 
 ## clean — remove build artifacts
 clean:

@@ -2,23 +2,9 @@
 
 {{ define "main" }}
 <section class="masthead">
-  {{- /* The supplied SARC four-row mark (original grayscale raster), used at
-         institutional-plate scale. mix-blend-mode: screen drops its black
-         ground onto the plate so there is no visible box edge. The planned
-         responsive-SVG reconstruction (see CLAUDE.md) is future work. */ -}}
-  <div class="mark">
-    {{- with resources.Get "img/rect15_larger.png" -}}
-      {{- $x1 := .Resize "620x webp q90" -}}
-      {{- $x2 := .Resize "1240x webp q90" -}}
-      <img class="mark-img"
-           src="{{ $x1.RelPermalink }}"
-           srcset="{{ $x1.RelPermalink }} 620w, {{ $x2.RelPermalink }} 1240w"
-           sizes="(min-width: 40rem) 34rem, 88vw"
-           width="{{ $x1.Width }}" height="{{ $x1.Height }}"
-           alt="SARC — Studio for Advanced Research in Cybernetics"
-           loading="eager" decoding="async" fetchpriority="high">
-    {{- end -}}
-  </div>
+  {{- /* The live SVG reconstruction of the SARC four-row mark (see CLAUDE.md).
+         Progressive: with no JS it stays in its readable canonical state. */ -}}
+  {{ partial "mark.html" . }}
 
   {{- /* Institutional name + primary statement sit directly beneath the mark.
          No "Enter" screen. */ -}}
@@ -45,5 +31,13 @@
   <p class="empty-note">No published entries yet.</p>
   {{- end }}
 </section>
+{{ end }}
+
+{{ define "scripts" }}
+{{- with resources.Get "js/mark.js" -}}
+  {{- $j := . -}}
+  {{- if hugo.IsProduction }}{{ $j = $j | minify | fingerprint }}{{ end -}}
+  <script src="{{ $j.RelPermalink }}"{{ if hugo.IsProduction }} integrity="{{ $j.Data.Integrity }}"{{ end }} defer></script>
+{{- end -}}
 {{ end }}
 
