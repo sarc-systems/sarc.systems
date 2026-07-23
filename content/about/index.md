@@ -20,10 +20,13 @@ This site keeps two kinds of writing, deliberately distinct:
 ## Departments
 
 The studio is organised as one institution with several departments. Only the
-**Journal** is public today. The **SARC‑100**, **Studio**, **Label**, and
-**Library** open as their work becomes ready to show. Nothing here is a
-placeholder for something that does not yet exist.
+**Journal** is public today. **Systems** (hardware and software development,
+home of the SARC‑100), **Studio**, **Label**, and **Library** open as their work
+becomes ready to show. Nothing here is a placeholder for something that does not
+yet exist.
 
 ## Contact
 
 Video work is published on [YouTube](https://www.youtube.com/@SARC-systems).
+Hardware and software development is on
+[GitHub](https://github.com/sarc-systems).

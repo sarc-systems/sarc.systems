@@ -46,6 +46,12 @@ timeout = "60s"
     weight = 90
     [menus.main.params]
       external = true
+  [[menus.main]]
+    name   = "GitHub"
+    url    = "https://github.com/sarc-systems"
+    weight = 95
+    [menus.main.params]
+      external = true
 
 # ---------------------------------------------------------------------------
 # Markup: goldmark (unsafe on for our own trusted shortcodes/HTML) + Chroma
@@ -93,6 +99,7 @@ timeout = "60s"
   # Sitewide social-preview fallback image lives in static/ once supplied.
   ogImage = ""
   youtube = "https://www.youtube.com/@SARC-systems"
+  github = "https://github.com/sarc-systems"
 
 # ---------------------------------------------------------------------------
 # Related content — auto-generated "Related entries" by shared taxonomy.

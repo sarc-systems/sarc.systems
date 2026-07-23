@@ -14,11 +14,12 @@ default: bitter-chocolate
 sections:
   journal: slate
   # Future departments (assigned when they launch):
-  # sarc-100: cobalt
+  # systems: cobalt        # hardware/software dev; home of the SARC-100
   # studio: bagdad-brown
   # label: vermillion
   # library: forest
 
-# Project colours. A project keeps its identity across entry types.
+# Project colours. A project keeps its identity across entry types. SARC-100 is
+# a system within the Systems department, but stays its own project for colour.
 projects:
   sarc-100: cobalt

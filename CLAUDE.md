@@ -10,8 +10,10 @@ existing web hosting for that domain.
 
 Phase one is a **Journal** documenting current SARC work — especially the
 SARC-100 system and associated YouTube videos. The site is architected as one
-institutional site with eventual departments (Journal, SARC-100, Studio, Label,
-Library) but only the Journal, Home, and About are public now.
+institutional site with eventual departments (Journal, Systems, Studio, Label,
+Library) but only the Journal, Home, and About are public now. **Systems** is
+the department for hardware and software development; the **SARC-100 lives under
+Systems** (as a system/project within it), not as its own top-level department.
 
 Two kinds of content, kept conceptually distinct:
 
@@ -20,6 +22,13 @@ Two kinds of content, kept conceptually distinct:
 2. **Reference pages** (future: module pages, releases, essays) — living
    documents describing current state, which link back to journal entries via
    shared taxonomy.
+
+**External references:**
+
+- GitHub org: <https://github.com/sarc-systems>
+- SARC-100 source/development: <https://github.com/sarc-systems/SARC-100>
+
+This website repo is separate from the SARC-100 hardware/software repo above.
 
 ## Technology
 
@@ -60,8 +69,9 @@ content/
         diagram.svg
         example.mp3
   about/index.md
-  sarc-100/_index.md         # reserved, draft/unlinked
-  sarc-100/modules/_index.md
+  systems/_index.md              # reserved, draft/unlinked (hardware/software dept)
+  systems/sarc-100/_index.md     # SARC-100 lives under Systems
+  systems/sarc-100/modules/_index.md
   studio/_index.md
   studio/projects/_index.md
   label/_index.md
@@ -146,10 +156,11 @@ optional revision note.
 
 Header wordmark is the plain text **SARC** (not the four-row image).
 
-Current desktop nav: `SARC | JOURNAL | ABOUT | YOUTUBE` (YouTube is an external
-link to the SARC channel). Future: `SARC | JOURNAL | SARC-100 | STUDIO | LABEL |
-LIBRARY | ABOUT` — build the nav partial from a menu definition so this is a
-config change, not a redesign.
+Current desktop nav: `SARC | JOURNAL | ABOUT | YOUTUBE | GITHUB` (YouTube and
+GitHub are external links to the SARC channel and GitHub org). Future:
+`SARC | JOURNAL | SYSTEMS | STUDIO | LABEL | LIBRARY | ABOUT` (plus the external
+YouTube/GitHub links) — build the nav partial from a menu definition so this is
+a config change, not a redesign.
 
 Small screens: simple, accessible menu (works without JS — e.g. details/summary
 or a no-JS-fallback pattern). No animated navigation systems.
@@ -230,7 +241,7 @@ like `yellow-1` or `green-3`.
 
 Colorplan operates in two related systems:
 
-**Site sections.** Each institutional section (Journal, SARC-100, Studio,
+**Site sections.** Each institutional section (Journal, Systems, Studio,
 Label, Library) may have one assigned Colorplan color, stored centrally (site
 config/data), never hardcoded in templates. A section color may drive: active
 nav, rules, metadata, links, selection, index markers, Open Graph graphics.
@@ -374,5 +385,6 @@ placeholder pages for unlaunched departments.
   original SARC mark raster.
 - Journal entries are historical records — do not rewrite published entries;
   use `lastmod` and `revision_note` for meaningful updates.
-- Keep future-section structure intact (`sarc-100/`, `studio/`, `label/`,
-  `library/`) but unpublished until those departments are real.
+- Keep future-section structure intact (`systems/` — with `systems/sarc-100/`,
+  `studio/`, `label/`, `library/`) but unpublished until those departments are
+  real.
