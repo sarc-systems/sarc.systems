@@ -107,16 +107,22 @@ h1, h2, h3, h4, h5, h6 {
   font-size: var(--t-base);
   line-height: var(--lede-lh);
 }
-.prose > * + * { margin-top: 1.05em; }
+/* Block rhythm (lobotomised-owl flow). Reset every direct child to no margin,
+   then add a top gap before each subsequent block. The gap must clearly exceed
+   the line-height leading so consecutive paragraphs read as separate (no indent
+   is used). NOTE: the per-type resets below must NOT set `margin` (a `.prose p`
+   margin would out-specify this owl and kill the spacing) — set only what they
+   need (padding, etc.). Headings override the top gap to strengthen hierarchy. */
+.prose > * { margin: 0; }
+.prose > * + * { margin-top: 1.5em; }
 .prose h2 {
   font-size: var(--t-lg);
   margin-top: 2.2em;
   padding-top: 0.4em;
 }
 .prose h3 { font-size: var(--t-md); margin-top: 1.8em; }
-.prose p { margin: 0; }
 .prose a { text-decoration: underline; }
-.prose ul, .prose ol { padding-left: 1.3em; margin: 0; }
+.prose ul, .prose ol { padding-left: 1.3em; }
 .prose li + li { margin-top: 0.35em; }
 .prose blockquote {
   margin: 1.4em 0;
