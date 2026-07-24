@@ -4,7 +4,7 @@ creator: "Stafford Beer"
 year: 1974
 publisher: "John Wiley & Sons"
 isbn: "9780471062202"
-summary: "Beer's CBC Massey Lectures on why institutions fail for cybernetic reasons — and how the science of effective organization could be used to redesign them."
+summary: "Beer's CBC Massey Lectures analyze why institutions fail through the lens of cybernetics — and how the science of effective organization could be used to redesign them."
 
 library:
   include: true
@@ -34,8 +34,7 @@ Delivered as the 1973 CBC Massey Lectures and published the following year,
 *Designing Freedom* is Stafford Beer's most accessible statement of management
 cybernetics: institutions fail, he argues, not through bad intentions but
 through bad *organization* — and cybernetics, "the science of effective
-organization," gives us the tools to diagnose and redesign them. For a studio
-named for advanced research in cybernetics, it is a foundational text: it treats
+organization," gives us the tools to diagnose and redesign them. Beer treats
 viability, regulation, and control as design problems, at the scale of social
 systems rather than circuits, and insists that the same principles run through
 both.

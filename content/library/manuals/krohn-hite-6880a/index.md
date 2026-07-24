@@ -1,6 +1,6 @@
 ---
 title: "Krohn-Hite 6880A Distortion Analyzer — Maintenance Manual"
-summary: "Maintenance and service documentation for the Krohn-Hite 6880A programmable distortion analyzer — a 64-page scanned manual covering the oscillator, filter, control, null-detector, and output boards."
+summary: "64-page scanned manual"
 creator: "Krohn-Hite Corporation"
 manufacturer: "Krohn-Hite"
 models:
@@ -29,11 +29,5 @@ rights:
 draft: false
 ---
 
-Maintenance and service documentation for the **Krohn-Hite 6880A**, a
-programmable distortion analyzer used to measure harmonic distortion in audio
-equipment. The manual covers the instrument's board-level architecture —
-oscillator, filtering, control, input, null-detector, output, and opto-isolator
-sections — with the procedures needed to service and calibrate it.
-
-Held here as a working reference for a long-discontinued instrument. SARC hosts
-it as an archival service; see the rights note below.
+The **Krohn-Hite 6880A** is a programmable distortion analyzer used to measure harmonic distortion in audio
+equipment.
