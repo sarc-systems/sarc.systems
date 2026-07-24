@@ -36,7 +36,10 @@
 {{ define "scripts" }}
 {{- with resources.Get "js/mark.js" -}}
   {{- $j := . -}}
-  {{- if hugo.IsProduction }}{{ $j = $j | minify | fingerprint }}{{ end -}}
+  {{- if hugo.IsProduction }}{{ $j = $j | minify }}{{ end -}}
+  {{- /* Fingerprint in dev too so the content-hashed URL busts the browser
+         cache on every change (the dev server sends no Cache-Control). */ -}}
+  {{- $j = $j | fingerprint -}}
   <script src="{{ $j.RelPermalink }}"{{ if hugo.IsProduction }} integrity="{{ $j.Data.Integrity }}"{{ end }} defer></script>
 {{- end -}}
 {{ end }}

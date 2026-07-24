@@ -21,15 +21,20 @@
   justify-content: space-between;
   gap: 1rem;
 }
+/* Wordmark — the actual Nasalization "SARC" logotype, baked to SVG outlines
+   (see scripts/generate-mark.py). Monochrome, inherits colour via currentColor. */
 .wordmark {
-  font-family: var(--font-sans);
-  font-weight: 700;
-  font-size: 1.15rem;
-  letter-spacing: 0.22em;
+  display: inline-flex;
   color: var(--ink);
   text-decoration: none;
 }
 .wordmark:hover { color: var(--ink); }
+.wordmark-svg {
+  display: block;
+  height: 1.15rem;          /* header logotype size */
+  width: auto;
+  fill: currentColor;
+}
 
 /* Navigation — plain wrapping list, no JS. */
 .nav-menu ul {
@@ -56,6 +61,14 @@
   .site-header-inner { flex-wrap: wrap; gap: 0.5rem 1rem; }
   .nav-menu ul { justify-content: flex-start; }
 }
+
+/* Journal pages carry a faint wash of the Journal's section colour, so the
+   reading area reads as distinct from the neutral (paper) header/footer bands.
+   Kept very low (a coded signal, not a saturated colour field); the header and
+   footer stay on solid paper to frame it. */
+body.journal { background: color-mix(in srgb, var(--signal) 10%, var(--paper)); }
+body.journal .site-header,
+body.journal .site-footer { background: var(--paper); }
 
 /* --- Generic page head --------------------------------------------------- */
 .page-head { padding: clamp(2rem, 6vw, 4rem) 0 1.6rem; }
@@ -86,7 +99,13 @@
   gap: 0.8rem;
 }
 .footer-inst { margin: 0; font-family: var(--font-sans); }
-.footer-inst strong { letter-spacing: 0.18em; }
+.footer-inst .wordmark-svg {
+  display: inline-block;
+  height: 0.82em;
+  width: auto;
+  fill: currentColor;
+  vertical-align: -0.02em;
+}
 .footer-nav ul {
   list-style: none; display: flex; flex-wrap: wrap;
   gap: 1.2rem; margin: 0; padding: 0;

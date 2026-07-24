@@ -1,18 +1,24 @@
-// Live landing mark — animates ONLY Row 2 letters. Rows 3 and 4 are SVG <use>
-// mirrors and follow automatically. Slow, irregular, frequently returns to the
-// fully readable state. Respects prefers-reduced-motion (stays canonical).
+// Live landing mark — Rows 2 and 3 are independently animated: one letter at a
+// time (from either row) mutates to a permitted transform, with no coupling
+// between the two rows. Row 1 is stable; Row 4 is a static <use> mirror of
+// Row 1. Slow, irregular. Respects prefers-reduced-motion (stays canonical).
 (function () {
   "use strict";
 
   var root = document.querySelector("[data-mark]");
   if (!root) return;
   var activeRow = root.querySelector("[data-mark-active]");
-  if (!activeRow) return;
+  var mirrorRow = root.querySelector("[data-mark-mirror]");
+  if (!activeRow || !mirrorRow) return;
 
-  var letters = Array.prototype.slice.call(activeRow.querySelectorAll(".mk-letter"));
+  // Every letter in Rows 2 and 3 is an independent, individually mutable unit.
+  var letters = Array.prototype.slice.call(
+    root.querySelectorAll("[data-mark-active] .mk-letter, [data-mark-mirror] .mk-letter")
+  );
+  if (!letters.length) return;
 
-  // Permitted transforms for Row 2 letters only, about each letter's own centre
-  // (CSS transform-box: fill-box). canonical / H-reflect / V-reflect / 180°.
+  // Permitted transforms about each letter's own centre (transform-box: fill-box):
+  // canonical / horizontal reflection / vertical reflection / 180° rotation.
   var STATES = ["", "scaleX(-1)", "scaleY(-1)", "rotate(180deg)"];
 
   var reduce = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -20,7 +26,8 @@
   var timer = null;
 
   function glyph(l) { return l.querySelector(".mk-glyph"); }
-  function setState(l, css) { glyph(l).style.transform = css; }
+  function currentState(l) { return glyph(l).style.transform || ""; }
+  function setState(l, s) { glyph(l).style.transform = s; }
   function restoreAll() { letters.forEach(function (l) { setState(l, ""); }); }
 
   // Pick any state other than the current one — including canonical (""), so a
@@ -30,10 +37,8 @@
     return opts[Math.floor(Math.random() * opts.length)];
   }
 
-  function mutateOne() {
-    var l = letters[Math.floor(Math.random() * letters.length)];
-    setState(l, nextState(glyph(l).style.transform || ""));
-  }
+  function mutate(l) { setState(l, nextState(currentState(l))); }
+  function mutateOne() { mutate(letters[Math.floor(Math.random() * letters.length)]); }
 
   function step() {
     mutateOne();
@@ -46,15 +51,16 @@
     timer = setTimeout(step, 3500 + Math.random() * 5500); // slow, irregular
   }
 
-  // Interaction
+  // Interaction: click a letter -> transform it; click a row -> mutate one.
   letters.forEach(function (l) {
     l.style.cursor = "pointer";
     l.addEventListener("click", function (ev) {
       ev.stopPropagation();
-      setState(l, nextState(glyph(l).style.transform || ""));
+      mutate(l);
     });
   });
   activeRow.addEventListener("click", function () { mutateOne(); });
+  mirrorRow.addEventListener("click", function () { mutateOne(); });
   root.addEventListener("pointerenter", function () { paused = true; clearTimeout(timer); });
   root.addEventListener("pointerleave", function () { paused = false; schedule(); });
 

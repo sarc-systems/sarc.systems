@@ -6,7 +6,7 @@
   /* Pure black plate to match the mark's ground; blend mode drops any edge. */
   background: #000;
   color: var(--paper);
-  padding: clamp(3rem, 9vw, 7rem) 0 clamp(2.5rem, 6vw, 5rem);
+  padding: clamp(2rem, 6vw, 4.5rem) 0 clamp(3rem, 7vw, 5.5rem);
 }
 
 /* The mark — masthead / institutional-plate scale. Substantial space, no
@@ -35,6 +35,7 @@
    both letters), instead of the upper letter simply occluding the lower. */
 .mark-row-stable,
 .mark-row-active,
+.mark-row-mirror,
 .mark-reflected {
   mix-blend-mode: darken;
 }
@@ -49,12 +50,16 @@
   stroke-linejoin: round;
 }
 .mark-row-stable .mk-glyph path,
-.mark-row-active .mk-glyph path {
+.mark-row-active .mk-glyph path,
+.mark-row-mirror .mk-glyph path {
   filter: drop-shadow(0 0 6px rgba(238, 232, 214, 0.28));
 }
 
-/* Row 2 letters transform about their own centre, slowly. */
-.mark-row-active .mk-glyph {
+/* Row 2 and its mirror Row 3 transform about each letter's own centre, slowly.
+   Row 3 is driven in opposition to Row 2 (see mark.js) so the coupled pair
+   never reads as one rigid piece. */
+.mark-row-active .mk-glyph,
+.mark-row-mirror .mk-glyph {
   transform-box: fill-box;
   transform-origin: center;
   transition: transform 520ms cubic-bezier(0.4, 0, 0.2, 1);
@@ -67,16 +72,19 @@
 /* Institutional name + statement, directly beneath the mark (no "Enter"). */
 .masthead-inst {
   max-width: var(--wrap);
-  margin: clamp(1.8rem, 5vw, 3rem) auto 0;
+  margin: clamp(2.4rem, 6vw, 3.6rem) auto 0;
   padding-inline: clamp(1.2rem, 5vw, 3rem);
 }
 .inst-name {
   font-family: var(--font-sans);
   font-weight: 600;
-  font-size: clamp(1.3rem, 3.2vw, var(--t-xl));
+  /* Sized to fit the full name on one line across viewport widths (the vw
+     term and cap leave headroom so it never wraps between mobile and the
+     64rem wrap). */
+  font-size: clamp(0.62rem, 2.9vw, 2.4rem);
   line-height: 1.1;
   letter-spacing: -0.01em;
-  max-width: 20ch;
+  white-space: nowrap;
   margin: 0;
   color: var(--paper);
 }

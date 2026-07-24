@@ -1,6 +1,6 @@
 ---
 title: "About"
-summary: "The Studio for Advanced Research in Cybernetics — what it is, what it builds, and how this archive is organised."
+summary: "The Studio for Advanced Research in Cybernetics"
 ---
 
 The **Studio for Advanced Research in Cybernetics (SARC)** is an independent
@@ -9,24 +9,21 @@ studio for the design, construction, and documentation of experimental systems
 
 ## The archive
 
-This site keeps two kinds of writing, deliberately distinct:
+This site keeps two distinct kinds of writing:
 
 - **Journal entries** are dated historical records. Once published they are not
-  rewritten; meaningful updates are noted, not silently applied.
-- **Reference pages** — module descriptions, releases, essays — are living
-  documents describing current state, linked back to the journal through shared
-  projects and topics.
+  rewritten.
+- **Reference pages** are living documents describing current state of projects.
 
-## Departments
+## Structure
 
-The studio is organised as one institution with several departments. Only the
-**Journal** is public today. **Systems** (hardware and software development,
-home of the SARC‑100), **Studio**, **Label**, and **Library** open as their work
-becomes ready to show. Nothing here is a placeholder for something that does not
-yet exist.
+- [**Journal**]({{< relref "journal" >}}) - updates on SARC projects and documents
+- **Library** - SARC publications, recommended reading, links
+- **Systems** - hardware and software development
+- **Studio** - information on the SARC studio 
+- **Label** - recorded media
 
 ## Contact
 
-Video work is published on [YouTube](https://www.youtube.com/@SARC-systems).
-Hardware and software development is on
-[GitHub](https://github.com/sarc-systems).
+- Video work is published on [YouTube](https://www.youtube.com/@SARC-systems).
+- Hardware and software development is on [GitHub](https://github.com/sarc-systems).
