@@ -23,7 +23,7 @@ make dev        # hugo server with drafts (-D) + future posts, local dev
 make build      # production build (minified, correct baseURL) -> public/
 make check      # production build + required-output and link checks
 make new-post SLUG=my-entry   # new journal bundle from the archetype
-make deploy     # check + rsync public/ to the host (deploy from main only)
+make deploy     # check, then push main; GitHub Actions publishes to Pages
 ```
 
 ## Structure
@@ -52,14 +52,13 @@ and used as the social/Open-Graph preview image. See `assets/img/README.md`.
 
 ## Deploy
 
-`make deploy` runs `make check` then rsyncs `public/` to the host docroot.
-Credentials/targets are **not** in the repo — set them in a gitignored
-`deploy.env`:
+Hosted on **GitHub Pages**. Pushing to `main` triggers
+`.github/workflows/deploy.yml`, which builds the site with the pinned Hugo
+version and publishes it. `make deploy` runs `make check` first, then pushes
+`main` (build/publish happens on the runner, not locally).
 
-```
-DEPLOY_HOST=user@host.example.com
-DEPLOY_PATH=/var/www/sarc.systems/public_html/
-```
-
-then `set -a; . ./deploy.env; set +a; make deploy` (or export them in your
-shell). Deploy from `main` only; `public/` is gitignored and never hand-edited.
+The custom domain (`sarc.systems`) is pinned by `static/CNAME`, and GitHub
+issues/renews the HTTPS certificate. DNS + email live on **Fastmail**: the apex
+`A` records point at GitHub Pages while MX/DKIM/SPF stay on Fastmail — never
+touch the mail records when editing DNS. Deploy from `main` only; `public/` is
+gitignored and never hand-edited.

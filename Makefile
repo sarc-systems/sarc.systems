@@ -2,11 +2,6 @@
 # Short and legible on purpose. Not a task runner.
 
 HUGO ?= hugo
-# Deploy target lives OUTSIDE the repo (no secrets checked in). Set these in
-# your shell or a gitignored deploy.env sourced before `make deploy`.
-DEPLOY_HOST   ?=
-DEPLOY_PATH   ?=
-DEPLOY_RSYNC  ?= rsync -avz --delete --exclude '.DS_Store'
 
 .PHONY: dev build check new-post deploy clean colorplan mark
 
@@ -36,11 +31,11 @@ new-post:
 	$(HUGO) new "journal/$(or $(YEAR),$(shell date +%Y))/$(SLUG)/index.md"
 	@echo "==> edit content/journal/$(or $(YEAR),$(shell date +%Y))/$(SLUG)/index.md"
 
-## deploy — production build then rsync public/ to the host (deploy from main)
+## deploy — validate locally, then push main to publish. GitHub Actions builds
+## and deploys to GitHub Pages (.github/workflows/deploy.yml). Deploy from main.
 deploy: check
-	@test -n "$(DEPLOY_HOST)" || { echo "set DEPLOY_HOST (and DEPLOY_PATH), e.g. in deploy.env"; exit 1; }
-	@test -n "$(DEPLOY_PATH)" || { echo "set DEPLOY_PATH"; exit 1; }
-	$(DEPLOY_RSYNC) public/ "$(DEPLOY_HOST):$(DEPLOY_PATH)"
+	@test "$$(git rev-parse --abbrev-ref HEAD)" = main || { echo "deploy from main only"; exit 1; }
+	git push origin main
 
 ## colorplan — regenerate Colorplan palette outputs from the source snapshot
 ## (data/colorplan.json + assets/css/generated/colorplan.css). Committed output;

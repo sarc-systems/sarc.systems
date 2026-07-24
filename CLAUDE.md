@@ -5,8 +5,8 @@ Project-level instructions for Claude Code. Read this before changing anything.
 ## What this is
 
 The website of the **Studio for Advanced Research in Cybernetics (SARC)**.
-Production domain: `https://sarc.systems`. Deployed as static files to the
-existing web hosting for that domain.
+Production domain: `https://sarc.systems`. Deployed as static files to GitHub
+Pages (custom domain); see Deployment below.
 
 Phase one is a **Journal** documenting current SARC work — especially the
 SARC-100 system and associated YouTube videos. The site is architected as one
@@ -48,7 +48,7 @@ make dev        # hugo server with drafts (-D), local dev
 make build      # production build (minified, correct baseURL)
 make check      # production build + validation and link checks
 make new-post   # new journal page bundle from archetype
-make deploy     # production build + rsync public/ to the web host
+make deploy     # check, then push main; GitHub Actions publishes to Pages
 make colorplan  # regenerate Colorplan palette outputs from the source ASE
 ```
 
@@ -361,12 +361,27 @@ click-to-load facade. Optimized images via Hugo image processing.
 
 ## Deployment
 
-The site deploys to the existing web hosting for sarc.systems: `hugo --gc
---minify` produces `public/`, and `make deploy` copies it to the host's
-docroot via rsync (or SFTP if rsync is unavailable). The Hugo version used
-locally should be pinned/documented in the README. Nothing server-side; the
-site is fully static, so the host only serves files. Deploy from `main` only;
-`public/` is gitignored and never edited by hand.
+The site is hosted on **GitHub Pages** and deploys automatically: pushing to
+`main` triggers `.github/workflows/deploy.yml`, which builds with the pinned
+Hugo Extended version (`hugo --gc --minify`) and publishes `public/` to Pages.
+`make deploy` runs `make check` locally, then pushes `main`. Deploy from `main`
+only; `public/` is gitignored and never edited by hand. Nothing server-side —
+the site is fully static.
+
+Hosting facts (discovered when the site first went live):
+
+- **Domain:** registered at Namecheap — domain only, no web hosting.
+- **DNS + email:** Fastmail is the authoritative DNS host (nameservers
+  `ns1`/`ns2.messagingengine.com`) and runs email for `@sarc.systems`. The apex
+  `A` records point at GitHub Pages (`185.199.108–111.153`); **MX, DKIM, and SPF
+  stay on Fastmail — never change the mail records when editing DNS.**
+- **Site host:** GitHub Pages, repo `sarc-systems/sarc.systems` (public — Pages
+  on a free plan requires a public repo; the repo carries no secrets by design).
+  The custom domain is pinned by `static/CNAME`; GitHub issues/renews the HTTPS
+  certificate (Let's Encrypt) once the domain's DNS verifies.
+- Fastmail can also host static sites from file storage, but Pages is used for
+  git-push deploys, CI build, and CDN. (Namecheap Advanced DNS is **not**
+  authoritative — DNS is edited in Fastmail.)
 
 ## Validation
 
