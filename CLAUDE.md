@@ -354,7 +354,7 @@ Availability is always carried by **text**, never colour alone.
 
 ```yaml
 rights:
-  status: sarc-owned   # sarc-owned | public-domain | licensed | permitted | review
+  status: sarc-owned   # sarc-owned | public-domain | licensed | permitted | archival | review
   basis: ""
   source: ""
   jurisdiction: ""
@@ -362,11 +362,24 @@ rights:
 ```
 
 `review` (or unset) means rights are **not** established. A `hosted` item with
-`review`/unset rights **fails the build** — it must stay a draft until rights
-are established. Possession of a PDF does not imply redistribution permission;
-do not infer public-domain status from apparent age; do not fabricate rights.
+`review`/unset rights **fails the build** — it must stay a draft until it has a
+publishable status. The statuses that let a hosted file publish are
+`sarc-owned`, `public-domain`, `licensed`, `permitted`, and `archival`.
+
+**`archival`** is a deliberate editorial decision for documentation of a
+**long-discontinued product** (e.g. a vintage instrument's service manual):
+SARC hosts it in good faith as an archival service and takes it down on a
+rightsholder's request (the rights partial prints that offer automatically). It
+is **not** a claim of public domain or permission — it honestly records that the
+file is hosted under an accepted, well-understood archival rationale, not that
+copyright has been cleared. Use it only for genuinely discontinued products; do
+not use it to launder a current commercial product's manual. Still true: don't
+fabricate `public-domain`/`permitted`/`licensed`, and don't infer public domain
+from a document's age (age → consider `archival`, not `public-domain`).
+
 Item archetypes for hosted third-party types (`manual`, `source`) default to
-`draft: true` and `rights.status: review`, so a new bundle never auto-publishes.
+`draft: true` and `rights.status: review`, so a new bundle never auto-publishes;
+promote to `archival` (or another publishable status) per item, with eyes open.
 
 **iCloud manual archive.** The user keeps a personal manual/document collection
 in iCloud — treat it as a **private source archive**. Do not scan, index,
@@ -382,6 +395,15 @@ overwrite, never publish, never modify the source) may be added — keep it simp
 Git LFS for files served directly by the static site. Introduce object storage
 only if the repo actually gets too large — and if so, preserve the metadata,
 public URLs, and the visible Library information architecture.
+
+**The repo is public** (GitHub Pages on a free plan). Committing a hosted
+third-party file is itself a form of distribution, independent of whether the
+*site* publishes it. So a hosted file whose `rights.status` is `review` must
+**not** enter the repo: keep its entry (`index.md`, `draft: true`) tracked, but
+add the file itself to `.gitignore` until it has a publishable status. Once it
+does (e.g. `archival`), remove the `.gitignore` line, commit the file, and set
+`draft: false` — committing and publishing happen together, since GitHub Actions
+builds from the checkout and the file must be present for its download to work.
 
 **Templates/CSS.** `layouts/library/{landing,list,single}.html` and
 `partials/library-{collect,index,item,availability,rights,validate}.html`; styles

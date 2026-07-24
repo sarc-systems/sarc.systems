@@ -43,23 +43,29 @@
   </div>
 
   <div class="wrap">
-    {{- /* Primary + secondary actions. Availability is already stated above; these
-           are the ways to actually reach the material. */ -}}
-    {{- $actions := false -}}
-    {{- if eq .Params.availability "hosted" }}{{ with .Params.file }}{{ if ($.Resources.GetMatch .) }}{{ $actions = true }}{{ end }}{{ end }}{{ end -}}
-    {{- if eq .Params.availability "external" }}{{ with .Params.external_url }}{{ $actions = true }}{{ end }}{{ end -}}
-    {{- if .Params.links }}{{ $actions = true }}{{ end -}}
-    {{- if $actions }}
+    {{- /* Primary + secondary actions — the ways to actually reach the material.
+           One primary action at most: a hosted download, or (for external items)
+           the authoritative external link. Any `links` render as secondary; the
+           first is promoted to primary only for `external` items that have no
+           explicit `external_url` (so e.g. a publisher link becomes the primary
+           authoritative path, with a reading-access scan alongside). SARC only
+           links — it does not host, cache, proxy, or mirror external files. */ -}}
+    {{- $hostedFile := "" -}}
+    {{- if eq .Params.availability "hosted" }}{{ with .Params.file }}{{ with ($.Resources.GetMatch .) }}{{ $hostedFile = . }}{{ end }}{{ end }}{{ end -}}
+    {{- $extUrl := .Params.external_url -}}
+    {{- $hasPrimary := or $hostedFile $extUrl -}}
+    {{- $promoteFirstLink := and (not $hasPrimary) (eq .Params.availability "external") -}}
+    {{- if or $hasPrimary .Params.links }}
     <div class="library-actions">
-      {{- if eq .Params.availability "hosted" }}
-        {{- with .Params.file }}{{ with ($.Resources.GetMatch .) }}
-        <a class="library-action" href="{{ .RelPermalink }}">Download {{ upper (strings.TrimPrefix "." (path.Ext $.Params.file)) }}</a>
-        {{- end }}{{ end }}
-      {{- else if eq .Params.availability "external" }}
-        {{- with .Params.external_url }}<a class="library-action" href="{{ . }}" target="_blank" rel="noopener">External source <span aria-hidden="true">↗</span></a>{{ end }}
+      {{- with $hostedFile }}
+      <a class="library-action" href="{{ .RelPermalink }}">Download {{ upper (strings.TrimPrefix "." (path.Ext $.Params.file)) }}</a>
       {{- end }}
-      {{- range .Params.links }}{{ $l := . }}{{ with $l.url }}
-      <a class="library-action library-action--secondary" href="{{ . }}" target="_blank" rel="noopener">{{ $l.label | default "Link" }} <span aria-hidden="true">↗</span></a>
+      {{- if and (not $hostedFile) $extUrl }}
+      <a class="library-action" href="{{ $extUrl }}" target="_blank" rel="noopener">External source <span aria-hidden="true">↗</span></a>
+      {{- end }}
+      {{- range $i, $l := .Params.links }}{{ with $l.url }}
+      {{- $primary := and $promoteFirstLink (eq $i 0) -}}
+      <a class="library-action{{ if not $primary }} library-action--secondary{{ end }}" href="{{ . }}" target="_blank" rel="noopener">{{ $l.label | default "Link" }} <span aria-hidden="true">↗</span></a>
       {{- end }}{{ end }}
     </div>
     {{- end }}

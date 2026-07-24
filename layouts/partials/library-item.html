@@ -1,7 +1,8 @@
 {{- /* One Library catalog record — a ruled record, never a card. Context is the
-       page. The title links to the item's canonical page (.Permalink); for a
-       cross-site item that is its original location (Systems/Studio/Label), not
-       a copy. Availability is shown inline so it is known before clicking. */ -}}
+       page. The title links to the item's canonical page (.RelPermalink, host-
+       relative like the Journal index); for a cross-site item that is its
+       original location (Systems/Studio/Label), not a copy. Availability is
+       shown inline so it is known before clicking. */ -}}
 {{- $type := .Params.library.type -}}
 {{- $typeLabels := dict "writing" "Writing" "manual" "Manual" "source" "Source" "reading" "Reading" "link" "Link" -}}
 {{- $typeLabel := index $typeLabels $type | default (title (string $type)) -}}
@@ -29,7 +30,7 @@
     {{- if $creator }}{{ $creator | upper }} <span class="dot" aria-hidden="true">·</span> {{ end -}}
     {{ $kickTail | upper }}
   </p>
-  <p class="library-record-title"><a href="{{ .Permalink }}">{{ .Title }}</a></p>
+  <p class="library-record-title"><a href="{{ .RelPermalink }}">{{ .Title }}</a></p>
   {{- with $sub }}<p class="library-record-byline">{{ . }}</p>{{ end -}}
   {{- with .Params.summary }}<p class="library-record-annotation">{{ . }}</p>{{ end -}}
   <p class="library-record-foot">

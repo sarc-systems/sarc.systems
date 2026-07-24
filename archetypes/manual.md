@@ -14,9 +14,9 @@ source_date: ""
 document_date: ""
 topics: []
 rights:
-  status: review              # MUST be established before a hosted file may publish
-  basis: ""
-  source: ""
+  status: review              # publishable: sarc-owned|public-domain|licensed|permitted|archival.
+  basis: ""                   # `review` keeps a hosted file a draft. For a long-discontinued
+  source: ""                  # product's manual, `archival` is the usual publishable status.
   note: ""
 draft: true
 ---

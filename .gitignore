@@ -9,6 +9,12 @@
 # Deploy credentials / targets live outside the repo.
 deploy.env
 
+# Library — a hosted third-party file whose rights status is `review` must NOT
+# enter the public repo (committing is itself distribution). List such files
+# here while their entry stays a draft; remove the line once the file has a
+# publishable rights basis (e.g. `archival`) and is meant to ship. See
+# CLAUDE.md § Library.
+
 # OS / editor cruft
 .DS_Store
 *.swp

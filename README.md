@@ -74,9 +74,12 @@ Then edit the front matter and set `draft: false` when ready. Key fields:
 - `availability` — `hosted` (SARC serves the file/text), `external` (link out),
   or `bibliographic` (listed, no reading link). Shown as a visible label.
 - `rights.status` (hosted third-party files) — `sarc-owned | public-domain |
-  licensed | permitted | review`. **A `hosted` item with `review` or unset
-  rights fails the build** — keep it a draft until rights are established.
-  Possession of a PDF is not permission to redistribute.
+  licensed | permitted | archival | review`. **A `hosted` item with `review` or
+  unset rights fails the build** — keep it a draft until it has a publishable
+  status. Possession of a PDF is not permission to redistribute. For a
+  long-discontinued product's manual, `archival` is the intended publishable
+  status: hosted in good faith as an archival service, taken down on request
+  (not a claim of public domain). Don't fabricate `public-domain`/`permitted`.
 
 **Writings are HTML-first**: write the text as Markdown in the page bundle; a
 PDF edition is optional (`file:`). Manuals/Sources are usually a document record.

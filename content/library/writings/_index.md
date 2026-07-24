@@ -1,5 +1,5 @@
 ---
 title: "Writings"
-summary: "Finished, durable texts written by SARC — essays, papers, reports, and statements."
+summary: "Written by SARC — essays, papers, reports, and statements."
 draft: false
 ---

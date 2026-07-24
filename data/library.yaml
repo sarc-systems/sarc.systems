@@ -5,19 +5,19 @@ categories:
   - type: writing
     slug: writings
     title: Writings
-    description: "Finished, durable texts written by SARC — essays, papers, reports, and statements. Rendered HTML-first; a PDF edition may be offered alongside."
+    description: "Written by SARC — essays, papers, reports, and statements."
   - type: manual
     slug: manuals
     title: Manuals
-    description: "How instruments, circuits, devices, and software work — SARC and third-party documentation, hosted, linked, or listed as a record."
+    description: "How instruments, circuits, devices, and software work — SARC and third-party documentation."
   - type: source
     slug: sources
     title: Sources
-    description: "Third-party texts SARC makes available for study. Every hosted source carries explicit rights and provenance."
+    description: "Third-party texts SARC makes available for study."
   - type: reading
     slug: reading
     title: Reading
-    description: "Books, papers, and essays recommended by SARC but hosted elsewhere. The annotation explains why the work matters."
+    description: "Books, papers, and essays recommended by SARC but hosted elsewhere."
   - type: link
     slug: links
     title: Links
@@ -28,6 +28,16 @@ categories:
 allowed_types: [writing, manual, source, reading, link]
 availability: [hosted, external, bibliographic]
 # Rights statuses that permit a hosted third-party file to publish. `review`
-# (and unset) do not — such items must stay drafts.
-rights_status: [sarc-owned, public-domain, licensed, permitted, review]
-rights_hosted_ok: [sarc-owned, public-domain, licensed, permitted]
+# (and unset) do not — such items must stay drafts. `external-link-only` is a
+# separate axis for `external` items: SARC links but hosts nothing, so no
+# hosted-file rights basis applies.
+#
+# `archival` is a deliberate editorial status (NOT a claim of public domain or
+# permission): documentation for a long-discontinued product, hosted in good
+# faith as an archival service and removed on a rightsholder's request. It is a
+# per-item decision the site owner makes with eyes open — it does not clear
+# copyright, it accepts a small, well-understood risk for orphaned technical
+# docs. New manuals still default to `review`; promote to `archival` only for
+# genuinely discontinued products.
+rights_status: [sarc-owned, public-domain, licensed, permitted, review, external-link-only, archival]
+rights_hosted_ok: [sarc-owned, public-domain, licensed, permitted, archival]
