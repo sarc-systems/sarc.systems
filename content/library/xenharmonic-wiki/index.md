@@ -16,7 +16,12 @@ subjects:
   - tuning
   - sound
 
-images: []
+images:
+  - file: "pitch-lattice.jpg"
+    alt: "Pitch lattice on the 2.3.5 subgroup"
+    role: diagram
+    credit: "Xenharmonic Wiki"
+    source: "https://en.xen.wiki/"
 
 access:
   - label: "Visit website"

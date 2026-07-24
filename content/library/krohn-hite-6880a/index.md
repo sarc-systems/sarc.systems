@@ -25,7 +25,12 @@ language: "English"
 page_count: 64
 checksum: "3f4d70428ec4f349afbe2d7ba0ca6d79907e77cf6d846665cc15d12f4466c830"
 
-images: []
+images:
+  - file: "null-detector-schematic.jpg"
+    alt: "Krohn-Hite 6880A PC6880-3 Null Detector Board schematic"
+    role: diagram
+    caption: "PC6880-3 Null Detector Board schematic."
+    source: "Krohn-Hite 6880A maintenance manual"
 
 access:
   - label: "Download PDF"
