@@ -1,0 +1,43 @@
+{{- /* One unified catalog record — a ruled row (never a card), optionally with a
+       square thumbnail from the entry's first image. Carries data-* for the
+       client filter and a data-library-id for stable identity (future comments).
+       Context is the entry page. Hidden by filtering via the `hidden` attribute. */ -}}
+{{- $lib := hugo.Data.library -}}
+{{- $id := .Params.library.id -}}
+{{- $type := .Params.library.type -}}
+{{- $sarc := .Params.library.sarc_work -}}
+
+{{- $typeLabel := "" -}}{{ range $lib.types }}{{ if eq .type $type }}{{ $typeLabel = .label }}{{ end }}{{ end -}}
+{{- $subs := .Params.subjects -}}
+{{- $subLabels := slice -}}
+{{- range $subs }}{{ $s := . }}{{ range $lib.subjects }}{{ if eq .subject $s }}{{ $subLabels = $subLabels | append .label }}{{ end }}{{ end }}{{ end -}}
+
+{{- $creators := trim (partial "library-creators.html" (dict "page" . "sep" ", ")) " " -}}
+{{- $year := "" -}}{{ with .Params.year }}{{ $year = string . }}{{ else }}{{ if not .Date.IsZero }}{{ $year = string .Date.Year }}{{ end }}{{ end -}}
+
+{{- /* primary image (first) → square thumbnail */ -}}
+{{- $thumb := "" }}{{ $thumb2x := "" }}{{ $alt := "" -}}
+{{- with (index .Params.images 0) }}{{ with ($.Resources.GetMatch .file) }}
+  {{- $thumb = .Fill "160x160 Center q80" }}{{ $thumb2x = .Fill "320x320 Center q80" }}{{ $alt = (index $.Params.images 0).alt -}}
+{{- end }}{{ end -}}
+<li class="library-record{{ if $thumb }} has-thumb{{ end }}" data-library-id="{{ $id }}" data-type="{{ $type }}" data-subjects="{{ delimit $subs " " }}" data-sarc="{{ if $sarc }}true{{ else }}false{{ end }}">
+  {{- with $thumb }}
+  <a class="library-record-thumb" href="{{ $.RelPermalink }}" tabindex="-1" aria-hidden="true">
+    <img src="{{ .RelPermalink }}" srcset="{{ .RelPermalink }} 1x, {{ $thumb2x.RelPermalink }} 2x"
+         width="{{ .Width }}" height="{{ .Height }}" alt="{{ $alt }}" loading="lazy" decoding="async">
+  </a>
+  {{- end }}
+  <div class="library-record-body">
+    <p class="library-record-kicker">
+      {{- with $creators }}{{ . | safeHTML }} <span class="dot" aria-hidden="true">·</span> {{ end -}}
+      {{- with $typeLabel }}{{ . | upper }}{{ end -}}
+      {{- if $year }} <span class="dot" aria-hidden="true">·</span> {{ $year }}{{ end -}}
+    </p>
+    <p class="library-record-title"><a href="{{ .RelPermalink }}">{{ .Title }}</a></p>
+    {{- with .Params.summary }}<p class="library-record-annotation">{{ . }}</p>{{ end -}}
+    {{- with $subLabels }}
+    <p class="library-record-subjects">{{ range $i, $l := . }}{{ if $i }} <span class="dot" aria-hidden="true">·</span> {{ end }}{{ $l | upper }}{{ end }}</p>
+    {{- end }}
+    {{ partial "library-access.html" . }}
+  </div>
+</li>

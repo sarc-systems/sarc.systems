@@ -76,15 +76,15 @@ content/
   studio/projects/_index.md
   label/_index.md
   label/releases/_index.md
-  library/_index.md                   # published landing (layout: landing)
-  library/writings/_index.md          # + one leaf bundle per published item
-  library/manuals/_index.md
-  library/sources/_index.md
-  library/reading/_index.md
-  library/links/_index.md
+  library/_index.md                   # unified catalog landing (+ index.json output)
+  library/<slug>/index.md             # flat entries (books, artists, manuals, releases, …)
+  library/<slug>/cover.jpg            # entry images live in the bundle
 layouts/          # custom theme: baseof, home, journal list/single, taxonomies, 404
-layouts/library/{landing,list,single}.html   # Library templates
-layouts/partials/library-*.html      # collect, index, item, availability, rights, validate
+layouts/library/{list,single}.html + list.json   # unified catalog + JSON index
+layouts/partials/library-*.html      # collect, record, random, featured, filters, images,
+                                      #   access, creators, works, related, rights, validate
+assets/js/library-filter.js          # catalog filter (type/subject/sarc; progressive enhancement)
+assets/js/library-random.js          # "From the Library" random entry
 layouts/partials/mark.html           # generated four-row mark SVG — do not edit
 design/fonts/Nasalization-Rg.otf     # mark source font (build-time only, unchanged)
 scripts/generate-mark.py             # regenerates the mark SVG (`make mark`)
@@ -93,10 +93,10 @@ assets/css/generated/colorplan.css   # generated — do not edit
 assets/img/       # source visual assets incl. the SARC four-row mark (original raster — never modify)
 data/colorplan.json                  # generated — do not edit
 data/palette.yaml                    # central section/project colour assignments
-data/library.yaml                    # Library categories + allowed vocabularies
+data/library.yaml                    # Library types + subjects + roles + relations + access vocab
 scripts/colorplan-source.json        # committed raw palette capture (importer input)
 scripts/import-colorplan.mjs         # deterministic Colorplan importer
-archetypes/journal.md                # + writing, manual, source, reading, link
+archetypes/journal.md                # + library-entry (one unified Library archetype)
 static/           # passthrough files (robots.txt, favicon, etc.)
 ```
 
@@ -299,118 +299,126 @@ import mistakes and poor contrast without hand-editing the palette.
 
 ## Library
 
-A public department: an **annotated research library**, not a blog category,
-link directory, or download dump. Section colour is **Forest** (assigned in
-`data/palette.yaml`; never hardcoded). Landing page at `/library/`, in the nav
-between Label and About (`SARC | JOURNAL | … | LIBRARY | ABOUT`).
+**One unified catalog of entries** — a growing research collection and small
+knowledge graph, not a set of shelves. There are no public Writings / References
+/ Manuals / Sources / Reading / Links sections. Anything durable SARC wants to
+identify, annotate, connect, preserve, or point toward is an *entry*: essays,
+books, manuals, artists, organizations, recordings, releases, compositions,
+films, lectures, websites, software, instruments, systems, historical documents.
+Type, subject, and access are **metadata and filters, never sections.** Section
+colour is **Forest** (in `data/palette.yaml`; never hardcoded). All vocabularies
+live in `data/library.yaml` — the single source of truth for templates, filters,
+the JSON index, archetypes, and validation.
 
-Five categories (definitions and vocabularies live in `data/library.yaml`, the
-single source of truth for templates):
+**Flat URLs.** Library-owned entries live at `content/library/<slug>/index.md`
+and publish at `/library/<slug>/` — do **not** encode type/subject in the URL and
+do **not** create per-type content trees. Taxonomy changes must never require
+page moves.
 
-1. **Writings** — finished, durable SARC-authored texts. Not the same as Journal
-   entries: the Journal is a dated record of work as it happens; a Writing is a
-   finished, durable reference. **Writings are HTML-first, PDF-optional** — keep
-   the intellectual content readable, not a shelf of opaque PDFs.
-2. **Manuals** — how instruments/systems/software work (SARC or third-party).
-3. **Sources** — third-party texts SARC hosts for study (rights required).
-4. **Reading** — works recommended but hosted elsewhere; the SARC annotation is
-   the point, not a reproduced publisher blurb.
-5. **Links** — annotated paths outward, organised by topic/type. Never a bare
-   bookmark dump.
+**Stable identity.** Every entry has a unique `library.id` (not the title, URL,
+slug, or path — entries may move). Relationships resolve through `library.id`.
+The old `reference_id` is gone; validation rejects it. `library.id` is exposed in
+markup (`<article data-library-id="…">`) so a future comment system can key to it.
 
-**Structure.** In-section content is under `content/library/<category>/<slug>/`
-as leaf page bundles. Each category also has a permanent index page. The landing
-page is generated from structured content (a jump-link index + per-category
-record lists) — do not hand-duplicate items in `_index.md`. The jump-link index
-is plain anchors and must work without JS; do not replace it with tabs,
-accordions, or client-side filtering. **No client-side search/filtering** in the
-first implementation.
+**Cross-site inclusion.** A canonical page elsewhere (a Label release, a Systems
+manual, a Studio doc) joins the catalog with `library: { include: true, id: … }`
+— no duplication; its canonical URL stays put. In-section pages under
+`content/library/` are included implicitly. Dedup by canonical page.
 
-**Cross-site catalog.** The Library is not only `content/library/`. Any page
-anywhere (Systems, Studio, Label) may appear in Library indexes by declaring
-front matter — without copying content:
+**Unified schema** (only the fields an entry needs):
 
 ```yaml
 library:
-  include: true
-  type: manual        # writing | manual | source | reading | link
+  id: the-expanding-universe
+  type: release        # one of data/library.yaml types (person, book, manual, release, essay, website, system, …)
+  sarc_work: false     # true if produced by SARC — a filter axis, not a shelf
+creators:              # who made it; drives internal links + reverse "works"
+  - {ref: laurie-spiegel, name: "Laurie Spiegel", role: artist}
+subjects: [computation, time, sound]        # controlled; see below
+images:                # ordered; first = primary (thumbnail + featured + OG)
+  - {file: "cover.jpg", alt: "Front cover", caption: "", credit: "", role: cover}
+access:                # where to find it (many per entry); url/file exclusive
+  - {label: "Bandcamp", kind: bandcamp, url: "https://…"}
+  - {label: "Download PDF", kind: hosted-file, file: "manual.pdf"}
+related:               # editorial links: {ref, relation}
+  - {ref: meta-hodos, relation: discusses}
+weight:  sort_title:  featured:            # optional ordering / no-JS random default
 ```
 
-The canonical URL stays the original page's location. Never copy a document into
-two sections to make it appear in Library. Templates gather in-section pages
-plus any page with `library.include: true`, dedup by page, and **validate
-`library.type`** — an invalid type on a published page fails the build
-(`partials/library-validate.html`, run once via `partialCached` in `head.html`).
+- **type** — nested under `library` (never Hugo's top-level `type`). One primary
+  per entry. Presentation adapts to it; there is no section per type.
+- **sarc_work** — independent of type (a SARC manual and a third-party manual are
+  both `type: manual`). Powers the *Origin* filter.
+- **subjects** — a small controlled vocabulary (why it matters to SARC).
+  **`time` is deliberately broad** (chronology, duration, rhythm, cycles, scale,
+  memory, simultaneity, historical time) — not `chronology`. Don't add casually.
+- **creators / related** — the knowledge graph (see below).
+- **images** — ordered; the first is the primary. No separate cover/image/
+  thumbnail fields; array order alone decides the primary.
+- **access** — how to reach the thing; storage location never sets the type.
 
-**Availability** (shown visibly, before any click):
+**Knowledge graph.** `creators[].ref` (another entry's `library.id`) links the
+name and **automatically** grows a *Works in the Library* section on that entry
+(reverse of `creators[].ref`) — never hand-maintain work lists. A creator with a
+`name` but no `ref` is fine. `related` renders *Related in the Library*. Creator
+attribution uses `creators`, never `related`. Partials: `library-{creators,works,
+related}.html`.
 
-- `hosted` — file/full text served by SARC (READ ONLINE / DOWNLOAD PDF)
-- `external` — SARC links a legitimate copy elsewhere (EXTERNAL SOURCE ↗)
-- `bibliographic` — listed and annotated, no reading link (BIBLIOGRAPHIC RECORD)
+**Landing** (`layouts/library/list.html`): intro → **From the Library** (one
+random entry, `library-random.js` + `sessionStorage`, "Another entry"; a
+deterministic server-rendered fallback — `featured: true` or first — keeps it
+non-blank with no JS) → **filters** → **All entries** (ruled records with
+thumbnails). **Filter** by type + subject + SARC-work: OR within a facet, AND
+across; shareable `?type=a,b&subject=c&sarc=true`; history-aware; Clear; polite
+`aria-live` count; `library-filter.js`. Without JS the whole catalog is visible
+and the filter form is hidden (CSS-gated on `data-nojs`). Records carry
+`data-type` / `data-subjects` / `data-sarc` / `data-library-id`.
 
-Availability is always carried by **text**, never colour alone.
+**Images.** Resolved through Hugo page resources (never hotlink Bandcamp/Discogs/
+publishers; never auto-download third-party artwork). List = square thumbnail
+(`Fill`, srcset, w/h, lazy, `object-fit: cover`); no image → clean text-only row.
+Single page = prominent **uncropped** primary near the header + a simple
+responsive gallery (captions/credits, no carousel/lightbox). Same image model
+for every type, including release artwork.
 
-**Rights & provenance.** Any hosted third-party file must declare `rights`:
+**Access & rights.** Access kinds in `data/library.yaml`; `hosted-file` (needs a
+bundle `file`) is the only kind that makes SARC a host and so drives the rights
+guard. Rights statuses unchanged (`sarc-owned`, `public-domain`, `licensed`,
+`permitted`, `archival`, `review`, `external-link-only`); a `hosted-file` entry
+whose rights aren't publishable **fails the build** and must stay a draft.
+`archival` = deliberate, takedown-on-request hosting of a long-discontinued
+product's docs (not a public-domain claim); don't fabricate rights, don't infer
+public domain from age, don't mirror/cache/proxy external files or images. The
+private iCloud manual archive remains off-limits (no scan/index/publish; never
+expose a local path).
 
-```yaml
-rights:
-  status: sarc-owned   # sarc-owned | public-domain | licensed | permitted | archival | review
-  basis: ""
-  source: ""
-  jurisdiction: ""
-  note: ""
-```
+**JSON index.** `/library/index.json` (`layouts/library/list.json`) — the whole
+published catalog, display-ready, powering random + future search/viz. No
+filesystem paths, drafts, or rights-review notes. The HTML remains canonical.
 
-`review` (or unset) means rights are **not** established. A `hosted` item with
-`review`/unset rights **fails the build** — it must stay a draft until it has a
-publishable status. The statuses that let a hosted file publish are
-`sarc-owned`, `public-domain`, `licensed`, `permitted`, and `archival`.
+**No database.** Hugo content + normalized front matter + `library.id` +
+`index.json` are the migration path if one is ever justified. Do not add a DB,
+CMS, API server, or frontend framework. Comments are **not** built yet, only
+keyed-by-`library.id`-ready.
 
-**`archival`** is a deliberate editorial decision for documentation of a
-**long-discontinued product** (e.g. a vintage instrument's service manual):
-SARC hosts it in good faith as an archival service and takes it down on a
-rightsholder's request (the rights partial prints that offer automatically). It
-is **not** a claim of public domain or permission — it honestly records that the
-file is hosted under an accepted, well-understood archival rationale, not that
-copyright has been cleared. Use it only for genuinely discontinued products; do
-not use it to launder a current commercial product's manual. Still true: don't
-fabricate `public-domain`/`permitted`/`licensed`, and don't infer public domain
-from a document's age (age → consider `archival`, not `public-domain`).
+**Validation** (`library-validate.html`, once via `partialCached`). Production
+build fails on: duplicate/missing `library.id`; residual `reference_id`; missing/
+unknown `library.type`; unknown subject; invalid creator role; unresolved
+creator/related `ref`; invalid relation; an access item with both `url` and
+`file`, an unknown kind, a `hosted-file` with no/unresolvable file; a `hosted-file`
+with unsafe rights; an unresolvable/duplicate image; a non-decorative image
+without alt. It does **not** fail on: no images, a creator name without `ref`, no
+related, an absent optional field, or a subject with one entry.
 
-Item archetypes for hosted third-party types (`manual`, `source`) default to
-`draft: true` and `rights.status: review`, so a new bundle never auto-publishes;
-promote to `archival` (or another publishable status) per item, with eyes open.
-
-**iCloud manual archive.** The user keeps a personal manual/document collection
-in iCloud — treat it as a **private source archive**. Do not scan, index,
-symlink, publish, or reorganise it, and do not assume its files are
-redistributable. The workflow is deliberate: pick a file → review title/source/
-rights → copy into a page bundle → complete metadata → publish. **Never expose
-an iCloud or local path** in rendered HTML, metadata, or error messages. A
-future optional `make add-document` helper (copy file into a new bundle, record
-a SHA-256 checksum, default `draft: true` + `rights.status: review`, never
-overwrite, never publish, never modify the source) may be added — keep it simple.
-
-**Files.** Small/moderate PDFs may live in page bundles in Git. Do **not** use
-Git LFS for files served directly by the static site. Introduce object storage
-only if the repo actually gets too large — and if so, preserve the metadata,
-public URLs, and the visible Library information architecture.
-
-**The repo is public** (GitHub Pages on a free plan). Committing a hosted
-third-party file is itself a form of distribution, independent of whether the
-*site* publishes it. So a hosted file whose `rights.status` is `review` must
-**not** enter the repo: keep its entry (`index.md`, `draft: true`) tracked, but
-add the file itself to `.gitignore` until it has a publishable status. Once it
-does (e.g. `archival`), remove the `.gitignore` line, commit the file, and set
-`draft: false` — committing and publishing happen together, since GitHub Actions
-builds from the checkout and the file must be present for its download to work.
-
-**Templates/CSS.** `layouts/library/{landing,list,single}.html` and
-`partials/library-{collect,index,item,availability,rights,validate}.html`; styles
-in `assets/css/library.css`. Records are **ruled catalog rows**, never
-commercial cards, thumbnails, star ratings, or shopping buttons. Cover images
-are optional, never required. Reuse the base templates, header, footer, palette,
-and type — do not fork the site layout for Library.
+**Templates/JS/CSS.** `layouts/library/{list,single}.html`, `list.json`;
+`partials/library-{collect,record,random,featured,filters,images,access,creators,
+works,related,rights,validate}.html`; `assets/js/library-{filter,random}.js`;
+`assets/css/library.css`. Ruled catalog rows — never commercial cards, cover
+grids, shadows, ratings, badges, hover-zoom, or streaming-service styling. Images
+are documentary, not decoration. Reuse the base shell/header/footer/type — don't
+fork the layout. One archetype: `archetypes/library-entry.md`
+(`hugo new --kind library-entry library/<slug>/index.md`). Moving/renaming a URL:
+add the old path under `aliases:`.
 
 ## The SARC four-row mark
 

@@ -1,0 +1,19 @@
+{{- /* Emit an entry's creator names, separated by `sep`. A creator whose `ref`
+       resolves to a published entry (by library.id) becomes an internal link;
+       otherwise the plain `name` shows. Falls back to legacy
+       manufacturer/creator/authors strings when there is no `creators` array.
+       Call: {{ partial "library-creators.html" (dict "page" . "sep" ", ") }} */ -}}
+{{- $page := .page -}}
+{{- $sep := .sep | default ", " -}}
+{{- with $page.Params.creators -}}
+  {{- range $i, $c := . -}}
+    {{- if $i }}{{ $sep }}{{ end -}}
+    {{- $target := "" -}}
+    {{- with $c.ref }}{{ with (where site.RegularPages "Params.library.id" .) }}{{ $target = index . 0 }}{{ end }}{{ end -}}
+    {{- if $target }}<a href="{{ $target.RelPermalink }}">{{ $c.name }}</a>{{ else }}{{ $c.name }}{{ end -}}
+  {{- end -}}
+{{- else -}}
+  {{- with $page.Params.manufacturer }}{{ . }}
+  {{- else }}{{ with $page.Params.creator }}{{ . }}
+  {{- else }}{{ with $page.Params.authors }}{{ delimit . ", " }}{{ end }}{{ end }}{{ end -}}
+{{- end -}}

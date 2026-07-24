@@ -1,0 +1,25 @@
+{{- /* Render an entry's images as a simple responsive gallery, from index
+       `from` (default 1 — everything after the primary). Each image resolves
+       through the page's resources; captions/credits show when supplied; each
+       links to its full-resolution resource. No carousel / lightbox. Call:
+       {{ partial "library-images.html" (dict "page" . "from" 1) }} */ -}}
+{{- $page := .page -}}
+{{- $from := .from | default 1 -}}
+{{- $imgs := $page.Params.images | default slice -}}
+{{- if gt (len $imgs) $from -}}
+<div class="library-gallery">
+  {{- range $i, $im := $imgs -}}
+    {{- if ge $i $from -}}
+      {{- with $im.file -}}
+        {{- with ($page.Resources.GetMatch .) -}}
+          {{- $small := .Resize "700x q82" -}}
+    <figure class="library-gallery-item">
+      <a href="{{ .RelPermalink }}"><img src="{{ $small.RelPermalink }}" width="{{ $small.Width }}" height="{{ $small.Height }}" alt="{{ $im.alt }}" loading="lazy" decoding="async"></a>
+          {{- if or $im.caption $im.credit }}<figcaption>{{ with $im.caption }}{{ . }}{{ end }}{{ with $im.credit }} <span class="img-credit">{{ . }}</span>{{ end }}</figcaption>{{ end }}
+    </figure>
+        {{- end -}}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
+</div>
+{{- end -}}

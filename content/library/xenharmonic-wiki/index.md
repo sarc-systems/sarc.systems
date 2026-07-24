@@ -1,0 +1,36 @@
+---
+title: "Xenharmonic Wiki"
+summary: "A deep reference for microtonal music — tunings, temperaments, scales, notation."
+
+library:
+  id: xenharmonic-wiki
+  type: website
+  sarc_work: false
+
+creators:
+  - name: "Xenharmonic community"
+    role: organization
+
+subjects:
+  - number
+  - tuning
+  - sound
+
+images: []
+
+access:
+  - label: "Visit website"
+    url: "https://en.xen.wiki/w/Main_Page"
+    kind: website
+
+aliases:
+  - /library/links/xenharmonic-wiki/
+  - /library/references/xenharmonic-wiki/
+
+draft: false
+---
+
+The Xenharmonic Wiki is the most thorough openly-maintained reference on music
+outside twelve-tone equal temperament: regular temperaments, just intonation,
+scale construction, notation systems, and the mathematics that ties them
+together.

@@ -1,0 +1,59 @@
+{{- /* /library/index.json — normalized public catalog. Every PUBLISHED entry
+       (in-section + cross-site), display-ready so the client scripts need no
+       vocabulary lookups. No filesystem paths, no drafts, no rights-review
+       working notes. */ -}}
+{{- $lib := hugo.Data.library -}}
+{{- $typeLabels := dict }}{{ range $lib.types }}{{ $typeLabels = merge $typeLabels (dict .type .label) }}{{ end -}}
+{{- $subjectLabels := dict }}{{ range $lib.subjects }}{{ $subjectLabels = merge $subjectLabels (dict .subject .label) }}{{ end -}}
+{{- $extKind := dict }}{{ range $lib.access_kinds }}{{ $extKind = merge $extKind (dict .kind .external) }}{{ end -}}
+{{- $entries := partial "library-collect.html" (dict "ctx" .) -}}
+{{- $out := slice -}}
+{{- range $entries -}}
+  {{- $p := . -}}
+  {{- $type := "" }}{{ with .Params.library }}{{ $type = .type }}{{ end -}}
+
+  {{- /* creators (resolve refs to urls) */ -}}
+  {{- $creators := slice }}{{ $names := slice -}}
+  {{- range .Params.creators -}}
+    {{- $url := "" }}{{ with .ref }}{{ with (where site.RegularPages "Params.library.id" .) }}{{ $url = (index . 0).RelPermalink }}{{ end }}{{ end -}}
+    {{- $creators = $creators | append (dict "name" .name "role" (.role | default "") "ref" (.ref | default "") "url" $url) -}}
+    {{- $names = $names | append .name -}}
+  {{- end -}}
+
+  {{- /* subjects */ -}}
+  {{- $subLabels := slice }}{{ range .Params.subjects }}{{ $subLabels = $subLabels | append (index $subjectLabels . | default .) }}{{ end -}}
+
+  {{- /* primary image */ -}}
+  {{- $img := "" -}}
+  {{- with (index .Params.images 0) }}{{ with ($p.Resources.GetMatch .file) }}{{ $t := .Fill "240x240 Center q80" }}{{ $img = dict "url" $t.RelPermalink "width" $t.Width "height" $t.Height "alt" ((index $p.Params.images 0).alt | default "") }}{{ end }}{{ end -}}
+
+  {{- /* access */ -}}
+  {{- $access := slice -}}
+  {{- range .Params.access -}}
+    {{- $a := . -}}
+    {{- if eq $a.kind "hosted-file" }}{{ with ($p.Resources.GetMatch ($a.file | default "")) }}{{ $access = $access | append (dict "label" ($a.label | default "Download") "kind" "hosted-file" "url" .RelPermalink "external" false) }}{{ end }}
+    {{- else }}{{ with $a.url }}{{ $access = $access | append (dict "label" ($a.label | default "Link") "kind" ($a.kind | default "other") "url" . "external" (index $extKind ($a.kind | default "other") | default true)) }}{{ end }}{{ end -}}
+  {{- end -}}
+
+  {{- /* related ids */ -}}
+  {{- $related := slice }}{{ range .Params.related }}{{ with .ref }}{{ $related = $related | append . }}{{ end }}{{ end -}}
+
+  {{- $rec := dict
+      "library_id" .Params.library.id
+      "title" .Title
+      "url" .RelPermalink
+      "type" $type
+      "type_label" (index $typeLabels $type | default $type)
+      "sarc_work" (eq .Params.library.sarc_work true)
+      "summary" (.Params.summary | default "")
+      "year" (.Params.year | default (cond .Date.IsZero "" (string .Date.Year)))
+      "creators" $creators
+      "creator_names" (delimit $names ", ")
+      "subjects" (.Params.subjects | default slice)
+      "subject_labels" $subLabels
+      "primary_image" $img
+      "access" $access
+      "related" $related -}}
+  {{- $out = $out | append $rec -}}
+{{- end -}}
+{{ dict "count" (len $out) "entries" $out | jsonify (dict "indent" "  ") }}

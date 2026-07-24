@@ -70,6 +70,16 @@
 .library-records { list-style: none; padding: 0; margin: 0; }
 .library-record { padding: 1rem 0; border-bottom: 1px solid var(--rule); }
 .library-records > .library-record:first-child { border-top: 1px solid var(--rule); }
+/* Filtered-out records: the hidden attribute must win over the has-thumb grid
+   display below (equal specificity, later rule), so force it. */
+.library-record[hidden] { display: none !important; }
+/* Records with a thumbnail: compact two-column (thumb + text). */
+.library-record.has-thumb { display: grid; grid-template-columns: 72px 1fr; gap: 0 1rem; align-items: start; }
+.library-record-thumb { display: block; }
+.library-record-thumb img {
+  width: 72px; height: 72px; object-fit: cover; display: block;
+  border: 1px solid var(--rule); background: var(--paper-2);
+}
 .library-record-kicker {
   font-family: var(--font-mono);
   font-size: var(--t-xs);
@@ -171,8 +181,204 @@
 .library-rights p { margin: 0.2rem 0; }
 .library-rights .rights-status { color: var(--signal-ink); font-weight: 600; }
 
+/* --- Reference records: subjects line + access links -------------------- */
+.library-record-subjects {
+  color: var(--gray-2);
+  font-size: var(--t-xs);
+  font-family: var(--font-mono);
+  letter-spacing: 0.06em;
+  margin: 0.4rem 0 0;
+}
+.access-links {
+  list-style: none;
+  margin: 0.5rem 0 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem 1.1rem;
+}
+.access-link {
+  font-family: var(--font-mono);
+  font-size: var(--t-xs);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--signal-ink);
+  border-bottom: 1px solid transparent;
+}
+.access-link:hover { color: var(--signal); border-bottom-color: var(--signal); }
+.access-link .ext { color: var(--gray-2); }
+/* --- "From the Library" random featured entry ---------------------------- */
+/* A distinct framed panel with a faint Forest wash, clearly set apart from the
+   plain catalog list below. */
+.library-random {
+  margin: clamp(1.6rem, 4vw, 2.6rem) 0;
+  padding: clamp(1rem, 3vw, 1.6rem) clamp(1rem, 3vw, 1.6rem) clamp(1.1rem, 3vw, 1.7rem);
+  border: 1px solid var(--signal);
+  background: color-mix(in srgb, var(--signal) 6%, var(--paper));
+}
+.library-random-head {
+  display: flex; align-items: baseline; gap: 1rem;
+  border-bottom: 1px solid color-mix(in srgb, var(--signal) 35%, var(--rule));
+  padding-bottom: 0.5rem; margin-bottom: 0.9rem;
+}
+.library-random-head .eyebrow { margin: 0; color: var(--signal-ink); }
+.library-random-another { margin-left: auto; }
+.library-random-another {
+  font-family: var(--font-mono); font-size: var(--t-xs); letter-spacing: 0.06em;
+  text-transform: uppercase; background: transparent; border: 0;
+  border-bottom: 1px solid var(--rule); color: var(--gray-1); cursor: pointer; padding: 0.1em 0;
+}
+.library-random-another:hover { color: var(--signal); border-bottom-color: var(--signal); }
+.library-featured { display: flex; gap: 1.1rem; align-items: flex-start; margin-top: 0.8rem; }
+.library-featured-thumb img {
+  width: 96px; height: 96px; object-fit: cover; display: block;
+  border: 1px solid var(--rule); background: var(--paper-2);
+}
+.library-featured-kicker {
+  font-family: var(--font-mono); font-size: var(--t-xs); letter-spacing: 0.1em;
+  text-transform: uppercase; color: var(--signal-ink); margin: 0;
+}
+.library-featured-title { font-size: var(--t-md); font-weight: 600; margin: 0.15rem 0 0; }
+.library-featured-title a { text-decoration: none; color: var(--ink); }
+.library-featured-title a:hover { color: var(--signal); }
+.library-featured-annotation { max-width: var(--measure); margin: 0.4rem 0 0; }
+.library-featured-subjects {
+  font-family: var(--font-mono); font-size: var(--t-xs); letter-spacing: 0.06em;
+  color: var(--gray-2); margin: 0.4rem 0 0;
+}
+
+.library-all-head { font-size: var(--t-md); margin: 2rem 0 0.4rem; }
+
+/* --- Single entry: primary image + gallery ------------------------------- */
+.library-primary-image { margin: 1.6rem 0; }
+.library-primary-image img { max-width: 100%; height: auto; display: block; border: 1px solid var(--rule); }
+.library-primary-image figcaption,
+.library-gallery figcaption { font-size: var(--t-sm); color: var(--gray-1); margin-top: 0.4rem; }
+.img-credit { color: var(--gray-2); }
+.library-gallery {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 1rem; margin: 1.6rem 0;
+}
+.library-gallery-item { margin: 0; }
+.library-gallery-item img { width: 100%; height: auto; display: block; border: 1px solid var(--rule); }
+
+@media (max-width: 30rem) {
+  .library-featured { flex-direction: column; }
+}
+
+/* --- References filter --------------------------------------------------- */
+/* Progressive enhancement: the filter only works with JS, so it is hidden when
+   JS is unavailable (the document carries data-nojs until the head script clears
+   it). No-JS visitors simply see every reference. */
+:root[data-nojs] .reference-filters { display: none; }
+.reference-filters {
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+  padding: 1.1rem 0;
+  margin: 0 0 1.6rem;
+}
+.rf-head {
+  font-family: var(--font-mono);
+  font-size: var(--t-xs);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--gray-2);
+  margin: 0 0 0.8rem;
+}
+.rf-facet {
+  border: 0;
+  margin: 0 0 0.7rem;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.4rem 0.5rem;
+}
+.rf-facet legend {
+  float: left;                       /* keep the legend inline with the chips */
+  width: 5.5rem;
+  font-family: var(--font-mono);
+  font-size: var(--t-xs);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--gray-1);
+  padding: 0.25rem 0.6rem 0 0;
+}
+.rf-chip {
+  font-family: var(--font-mono);
+  font-size: var(--t-xs);
+  letter-spacing: 0.04em;
+  color: var(--ink);
+  background: transparent;
+  border: 1px solid var(--rule);
+  border-radius: 0;                  /* plain squares — never pills */
+  padding: 0.25em 0.6em;
+  cursor: pointer;
+}
+.rf-chip:hover { border-color: var(--signal); color: var(--signal-ink); }
+.rf-chip:focus-visible { outline: 2px solid var(--signal); outline-offset: 2px; }
+/* Active state carried by weight + fill (non-colour cues) and aria-pressed. */
+.rf-chip.is-active {
+  background: var(--signal);
+  border-color: var(--signal);
+  color: var(--paper);
+  font-weight: 700;
+}
+.rf-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 0.6rem;
+}
+.rf-clear {
+  font-family: var(--font-mono);
+  font-size: var(--t-xs);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--rule);
+  color: var(--gray-1);
+  cursor: pointer;
+  padding: 0.1em 0;
+}
+.rf-clear:hover { color: var(--signal); border-bottom-color: var(--signal); }
+.rf-count {
+  font-family: var(--font-mono);
+  font-size: var(--t-xs);
+  letter-spacing: 0.04em;
+  color: var(--gray-2);
+  margin: 0;
+}
+
+/* --- Knowledge-graph sections (works / related) ------------------------- */
+.library-relations { margin: 2.4rem 0 0; }
+.library-relations-head {
+  font-size: var(--t-md);
+  border-bottom: 2px solid var(--signal);
+  padding-bottom: 0.3rem;
+  margin: 0 0 0.4rem;
+}
+.library-related-list { list-style: none; padding: 0; margin: 0; }
+.library-related-list li {
+  padding: 0.55rem 0;
+  border-bottom: 1px solid var(--rule);
+}
+.library-related-list .rel-kind {
+  font-family: var(--font-mono);
+  font-size: var(--t-xs);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--signal-ink);
+  margin-right: 0.6rem;
+}
+.library-related-list a { text-decoration: none; }
+.library-related-list a:hover { color: var(--signal); }
+
 @media (max-width: 34rem) {
   .library-contents .lc-desc { display: none; }
   .library-file dl { grid-template-columns: 1fr; gap: 0.1rem; }
   .library-file dd { margin-bottom: 0.5rem; }
+  .rf-facet legend { float: none; width: auto; }
 }

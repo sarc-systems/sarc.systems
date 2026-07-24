@@ -1,0 +1,22 @@
+{{- /* Editorial relationships. Render an entry's `related` array — each a
+       {ref, relation} — as links to the resolved entries, labelled by the
+       humanised relation. Renders nothing without `related`. Call:
+       {{ partial "library-related.html" (dict "page" .) }} */ -}}
+{{- with .page.Params.related -}}
+  {{- $rows := slice -}}
+  {{- range . -}}
+    {{- $target := "" -}}
+    {{- with .ref }}{{ with (where site.RegularPages "Params.library.id" .) }}{{ $target = index . 0 }}{{ end }}{{ end -}}
+    {{- with $target }}{{ $rows = $rows | append (dict "target" . "relation" ($.relation | default "related-work")) }}{{ end -}}
+  {{- end -}}
+  {{- with $rows -}}
+  <section class="library-relations" aria-labelledby="related-h">
+    <h2 id="related-h" class="library-relations-head">Related in the Library</h2>
+    <ul class="library-related-list">
+      {{- range . }}
+      <li><span class="rel-kind">{{ .relation | replaceRE "-" " " | title }}</span> <a href="{{ .target.RelPermalink }}">{{ .target.Title }}</a></li>
+      {{- end }}
+    </ul>
+  </section>
+  {{- end -}}
+{{- end -}}

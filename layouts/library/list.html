@@ -1,25 +1,36 @@
-{{ define "body-class" }}library library-list{{ end }}
+{{ define "body-class" }}library library-catalog{{ end }}
 
 {{ define "main" }}
-{{- /* This template serves the Library category index pages (/library/writings/,
-       …). The /library/ root uses layout: landing. Resolve which category this
-       page is from its URL slug. */ -}}
-{{- $slug := path.Base (strings.TrimSuffix "/" .RelPermalink) -}}
-{{- $cat := "" -}}
-{{- range hugo.Data.library.categories }}{{ if eq .slug $slug }}{{ $cat = . }}{{ end }}{{ end -}}
+{{- $entries := partial "library-collect.html" (dict "ctx" .) -}}
 <div class="wrap">
   <header class="page-head">
-    <p class="eyebrow"><a href="{{ "/library/" | relURL }}">Library</a></p>
+    <p class="eyebrow">Library</p>
     <h1 class="page-title">{{ .Title }}</h1>
-    {{- with .Content }}<div class="page-intro">{{ . }}</div>
-    {{- else }}{{ with $cat }}<div class="page-intro"><p>{{ .description }}</p></div>{{ end }}{{ end }}
+    {{- with .Content }}<div class="page-intro">{{ . }}</div>{{ end }}
   </header>
 
-  {{- with $cat }}
-  {{- $items := partial "library-collect.html" (dict "ctx" $ "type" .type) }}
-  {{ partial "library-index.html" (dict "pages" $items) }}
+  {{ partial "library-random.html" . }}
+
+  {{ partial "library-filters.html" (dict "pages" $entries) }}
+
+  <h2 class="library-all-head" id="all-entries">All entries</h2>
+  {{- with $entries }}
+  <ul class="library-records" id="library-list">
+    {{ range . }}{{ partial "library-record.html" . }}{{ end }}
+  </ul>
   {{- else }}
-  {{ partial "library-index.html" (dict "pages" (where .Pages "Draft" false)) }}
+  <p class="library-empty">No entries yet.</p>
   {{- end }}
 </div>
+{{ end }}
+
+{{ define "scripts" }}
+{{- range (slice "js/library-filter.js" "js/library-random.js") -}}
+  {{- with resources.Get . -}}
+    {{- $j := . -}}
+    {{- if hugo.IsProduction }}{{ $j = $j | minify }}{{ end -}}
+    {{- $j = $j | fingerprint -}}
+    <script src="{{ $j.RelPermalink }}"{{ if hugo.IsProduction }} integrity="{{ $j.Data.Integrity }}"{{ end }} defer></script>
+  {{- end -}}
+{{- end -}}
 {{ end }}

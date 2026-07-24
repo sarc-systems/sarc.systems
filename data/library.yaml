@@ -1,43 +1,140 @@
-# Library structure and vocabularies (single source of truth for templates).
-# `type` is the value pages carry in front matter as `library.type`; `slug` is
-# the category's URL segment and landing-page anchor. Order = display order.
-categories:
-  - type: writing
-    slug: writings
-    title: Writings
-    description: "Written by SARC — essays, papers, reports, and statements."
-  - type: manual
-    slug: manuals
-    title: Manuals
-    description: "How instruments, circuits, devices, and software work — SARC and third-party documentation."
-  - type: source
-    slug: sources
-    title: Sources
-    description: "Third-party texts SARC makes available for study."
-  - type: reading
-    slug: reading
-    title: Reading
-    description: "Books, papers, and essays recommended by SARC but hosted elsewhere."
-  - type: link
-    slug: links
-    title: Links
-    description: "Annotated paths outward — artists, archives, research projects, software, lectures, and channels."
-
-# Allowed vocabularies. Templates validate against these and fail the build on
-# invalid values (see partials/library-validate.html).
-allowed_types: [writing, manual, source, reading, link]
-availability: [hosted, external, bibliographic]
-# Rights statuses that permit a hosted third-party file to publish. `review`
-# (and unset) do not — such items must stay drafts. `external-link-only` is a
-# separate axis for `external` items: SARC links but hosts nothing, so no
-# hosted-file rights basis applies.
+# Library vocabulary — single source of truth for templates, filters, the JSON
+# index, archetypes, and build-time validation.
 #
-# `archival` is a deliberate editorial status (NOT a claim of public domain or
-# permission): documentation for a long-discontinued product, hosted in good
-# faith as an archival service and removed on a rightsholder's request. It is a
-# per-item decision the site owner makes with eyes open — it does not clear
-# copyright, it accepts a small, well-understood risk for orphaned technical
-# docs. New manuals still default to `review`; promote to `archival` only for
-# genuinely discontinued products.
+# The Library is ONE unified catalog of entries, not a set of sections. An
+# entry's `library.type` and `subjects` are metadata and filters — never
+# separate content shelves. Ordered lists (not maps) so templates iterate in
+# display order and each entry carries its own key.
+
+# Primary entry type (one per entry, nested as `library.type`). Presentation
+# adapts to the type; there is no public section per type.
+types:
+  - {type: person,       label: "Person",         order: 15}
+  - {type: group,        label: "Group",          order: 18}
+  - {type: organization, label: "Organization",   order: 20}
+  - {type: book,         label: "Book",           order: 30}
+  - {type: essay,        label: "Essay",          order: 40}
+  - {type: paper,        label: "Paper",          order: 50}
+  - {type: article,      label: "Article",        order: 60}
+  - {type: manual,       label: "Manual",         order: 70}
+  - {type: recording,    label: "Recording",      order: 80}
+  - {type: release,      label: "Release",        order: 90}
+  - {type: composition,  label: "Composition",    order: 100}
+  - {type: film,         label: "Film",           order: 110}
+  - {type: video,        label: "Video",          order: 120}
+  - {type: lecture,      label: "Lecture",        order: 130}
+  - {type: audio,        label: "Audio",          order: 140}
+  - {type: podcast,      label: "Podcast",        order: 150}
+  - {type: website,      label: "Website",        order: 160}
+  - {type: archive,      label: "Archive",        order: 170}
+  - {type: software,     label: "Software",       order: 180}
+  - {type: repository,   label: "Code Repository", order: 190}
+  - {type: project,      label: "Project",        order: 200}
+  - {type: instrument,   label: "Instrument",     order: 210}
+  - {type: system,       label: "System",         order: 220}
+  - {type: document,     label: "Document",       order: 230}
+  - {type: other,        label: "Other",          order: 240}
+
+# Controlled subjects (multiple per entry) — why an entry matters to SARC, not a
+# commercial genre. Keep small. `time` is deliberately broad (chronology,
+# duration, rhythm, recurrence, cycles, temporal scale, memory, simultaneity,
+# historical time, time-series behaviour), NOT the narrow `chronology`.
+subjects:
+  - {subject: time,              label: "Time"}
+  - {subject: number,            label: "Number"}
+  - {subject: form,              label: "Form"}
+  - {subject: morphogenesis,     label: "Morphogenesis"}
+  - {subject: dynamical-systems, label: "Dynamical Systems"}
+  - {subject: cybernetics,       label: "Cybernetics"}
+  - {subject: computation,       label: "Computation"}
+  - {subject: perception,        label: "Perception"}
+  - {subject: sound,             label: "Sound"}
+  - {subject: tuning,            label: "Tuning"}
+  - {subject: instruments,       label: "Instruments"}
+  - {subject: technology,        label: "Technology"}
+  - {subject: space,             label: "Space"}
+  - {subject: memory,            label: "Memory"}
+  - {subject: feedback,          label: "Feedback"}
+  - {subject: organization,      label: "Organization"}
+  - {subject: language,          label: "Language"}
+
+# Controlled creator roles (`creators[].role`). A creator always has a `name`; an
+# optional `ref` (another entry's library.id) links the name and generates the
+# reverse "works" relationship on that entry.
+creator_roles:
+  - author
+  - artist
+  - composer
+  - performer
+  - director
+  - lecturer
+  - editor
+  - researcher
+  - developer
+  - manufacturer
+  - organization
+  - label
+  - publisher
+
+# Controlled editorial relationship types (`related[].relation`). Creator
+# attribution uses `creators`, never `related`.
+relation_types:
+  - related-work
+  - version-of
+  - edition-of
+  - release-of
+  - recording-of
+  - performance-of
+  - discusses
+  - influenced-by
+  - related-reading
+  - documents
+  - used-by
+  - part-of
+  - successor-to
+  - predecessor-to
+
+# Access kinds (`access[].kind`). `url` and `file` are mutually exclusive per
+# item; `hosted-file` requires a bundle-relative `file` (and is the only kind
+# that makes SARC a host — it drives the rights guard). `verb` is a fallback
+# label; `external` kinds open in a new tab with ↗.
+access_kinds:
+  - {kind: publisher,      verb: "Publisher / purchase",  external: true}
+  - {kind: purchase,       verb: "Purchase",              external: true}
+  - {kind: bandcamp,       verb: "Bandcamp",              external: true}
+  - {kind: video,          verb: "Watch",                 external: true}
+  - {kind: audio,          verb: "Listen",                external: true}
+  - {kind: stream,         verb: "Stream",                external: true}
+  - {kind: website,        verb: "Visit website",         external: true}
+  - {kind: external-copy,  verb: "Read externally",       external: true}
+  - {kind: repository,     verb: "View repository",       external: true}
+  - {kind: archive,        verb: "Archive",               external: true}
+  - {kind: catalog-record, verb: "Catalog record",        external: true}
+  - {kind: worldcat,       verb: "WorldCat",              external: true}
+  - {kind: discogs,        verb: "Discogs",               external: true}
+  - {kind: other,          verb: "Link",                  external: true}
+  - {kind: hosted-file,    verb: "Download",              external: false}
+
+# Descriptive image roles (not strictly validated — metadata only).
+image_roles:
+  - cover
+  - back-cover
+  - portrait
+  - still
+  - diagram
+  - installation
+  - detail
+  - label
+  - insert
+  - packaging
+  - screenshot
+  - document
+
+# Rights statuses for hosted third-party files. See CLAUDE.md § Library.
+# `review` (or unset) keeps a hosted file a draft — the build fails if an entry
+# with a `hosted-file` access publishes without a publishable status.
+# `external-link-only` is for entries that only link out (host nothing).
+# `archival` is a deliberate, takedown-on-request status for a long-discontinued
+# product's documentation.
 rights_status: [sarc-owned, public-domain, licensed, permitted, review, external-link-only, archival]
 rights_hosted_ok: [sarc-owned, public-domain, licensed, permitted, archival]

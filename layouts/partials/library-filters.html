@@ -1,0 +1,44 @@
+{{- /* Unified catalog filter UI. Context: dict "pages" <entries>. Offers only
+       the types and subjects actually present (in vocabulary order), plus a
+       SARC-work origin facet. Native buttons carry state via aria-pressed; the
+       whole control is shown only with JS (CSS-gated on data-nojs) so no-JS
+       visitors see the full catalog. */ -}}
+{{- $lib := hugo.Data.library -}}
+{{- $pages := .pages -}}
+{{- $haveType := slice }}{{ $haveSub := slice -}}
+{{- range $pages -}}
+  {{- with .Params.library.type }}{{ $haveType = $haveType | append . }}{{ end -}}
+  {{- range .Params.subjects }}{{ $haveSub = $haveSub | append . }}{{ end -}}
+{{- end -}}
+{{- $haveType = uniq $haveType }}{{ $haveSub = uniq $haveSub -}}
+<form class="reference-filters" aria-label="Filter the Library">
+  <p class="rf-head">Filter the Library</p>
+
+  <fieldset class="rf-facet">
+    <legend>Type</legend>
+    <button type="button" class="rf-chip is-active" data-facet="type" data-value="" aria-pressed="true">All</button>
+    {{- range $lib.types }}{{ if in $haveType .type }}
+    <button type="button" class="rf-chip" data-facet="type" data-value="{{ .type }}" aria-pressed="false">{{ .label }}</button>
+    {{- end }}{{ end }}
+  </fieldset>
+
+  <fieldset class="rf-facet">
+    <legend>Subject</legend>
+    <button type="button" class="rf-chip is-active" data-facet="subject" data-value="" aria-pressed="true">All</button>
+    {{- range $lib.subjects }}{{ if in $haveSub .subject }}
+    <button type="button" class="rf-chip" data-facet="subject" data-value="{{ .subject }}" aria-pressed="false">{{ .label }}</button>
+    {{- end }}{{ end }}
+  </fieldset>
+
+  <fieldset class="rf-facet">
+    <legend>Origin</legend>
+    <button type="button" class="rf-chip is-active" data-facet="sarc" data-value="" aria-pressed="true">All</button>
+    <button type="button" class="rf-chip" data-facet="sarc" data-value="true" aria-pressed="false">SARC work</button>
+    <button type="button" class="rf-chip" data-facet="sarc" data-value="false" aria-pressed="false">External</button>
+  </fieldset>
+
+  <div class="rf-actions">
+    <button type="button" class="rf-clear" hidden>Clear filters</button>
+    <p class="rf-count" role="status" aria-live="polite"></p>
+  </div>
+</form>

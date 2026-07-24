@@ -1,22 +1,19 @@
-{{- /* Return the Library catalog for one type, sorted per category rules.
-       Unifies in-section pages and cross-site pages: any published page with
-       `library.include: true` and a matching `library.type` is included, each
-       exactly once (dedup is inherent — a page appears in the set once).
-       Call: {{ $items := partial "library-collect.html" (dict "ctx" . "type" "manual") }} */ -}}
+{{- /* The whole Library catalog: every published entry stored under
+       content/library/ (inclusion is implicit there) plus any page elsewhere on
+       the site with `library.include: true`. Deduplicated by canonical page.
+       Sorted by weight (when supplied) → sort_title → title. Call:
+       {{ $entries := partial "library-collect.html" (dict "ctx" .) }} */ -}}
 {{- $ctx := .ctx -}}
-{{- $type := .type -}}
-{{- $all := where $ctx.Site.RegularPages "Params.library.include" true -}}
-{{- $c := where $all "Params.library.type" $type -}}
-{{- $sorted := $c -}}
-{{- if eq $type "writing" -}}
-  {{- $sorted = $c.ByDate.Reverse -}}
-{{- else if eq $type "manual" -}}
-  {{- $sorted = sort $c "Params.manufacturer" -}}
-{{- else if eq $type "source" -}}
-  {{- $sorted = sort $c "Params.creator" -}}
-{{- else if eq $type "reading" -}}
-  {{- $sorted = sort $c "Params.creator" -}}
-{{- else if eq $type "link" -}}
-  {{- $sorted = sort $c "Params.link_type" -}}
+{{- $inSection := where $ctx.Site.RegularPages "Section" "library" -}}
+{{- $included := where $ctx.Site.RegularPages "Params.library.include" true -}}
+{{- $all := $inSection | union $included -}}
+{{- /* stable ordering: 6-digit weight (default high) then sort_title|title */ -}}
+{{- $keyed := slice -}}
+{{- range $all -}}
+  {{- $w := int (.Params.weight | default 100000) -}}
+  {{- $k := printf "%06d|%s" $w (lower (.Params.sort_title | default .Title)) -}}
+  {{- $keyed = $keyed | append (dict "p" . "k" $k) -}}
 {{- end -}}
-{{- return $sorted -}}
+{{- $out := slice -}}
+{{- range (sort $keyed "k") }}{{ $out = $out | append .p }}{{ end -}}
+{{- return $out -}}

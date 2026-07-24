@@ -1,0 +1,21 @@
+{{- /* Featured card for one entry (the "From the Library" slot). Context is the
+       entry page. The client random script rebuilds an equivalent card from
+       /library/index.json, so keep this structure simple and stable. */ -}}
+{{- $lib := hugo.Data.library -}}
+{{- $type := .Params.library.type -}}
+{{- $typeLabel := "" }}{{ range $lib.types }}{{ if eq .type $type }}{{ $typeLabel = .label }}{{ end }}{{ end -}}
+{{- $subLabels := slice }}{{ range .Params.subjects }}{{ $s := . }}{{ range $lib.subjects }}{{ if eq .subject $s }}{{ $subLabels = $subLabels | append .label }}{{ end }}{{ end }}{{ end -}}
+{{- $creators := trim (partial "library-creators.html" (dict "page" . "sep" ", ")) " " -}}
+{{- $year := "" }}{{ with .Params.year }}{{ $year = string . }}{{ else }}{{ if not .Date.IsZero }}{{ $year = string .Date.Year }}{{ end }}{{ end -}}
+{{- $img := "" }}{{ with (index .Params.images 0) }}{{ with ($.Resources.GetMatch .file) }}{{ $img = .Fill "220x220 Center q80" }}{{ end }}{{ end -}}
+<article class="library-featured" data-library-id="{{ .Params.library.id }}">
+  {{- with $img }}
+  <a class="library-featured-thumb" href="{{ $.RelPermalink }}" tabindex="-1" aria-hidden="true"><img src="{{ .RelPermalink }}" width="{{ .Width }}" height="{{ .Height }}" alt="{{ (index $.Params.images 0).alt }}" loading="lazy" decoding="async"></a>
+  {{- end }}
+  <div class="library-featured-body">
+    <p class="library-featured-kicker">{{ with $creators }}{{ . | safeHTML }} <span class="dot" aria-hidden="true">·</span> {{ end }}{{ $typeLabel | upper }}{{ if $year }} <span class="dot" aria-hidden="true">·</span> {{ $year }}{{ end }}</p>
+    <p class="library-featured-title"><a href="{{ .RelPermalink }}">{{ .Title }}</a></p>
+    {{- with .Params.summary }}<p class="library-featured-annotation">{{ . }}</p>{{ end }}
+    {{- with $subLabels }}<p class="library-featured-subjects">{{ range $i, $l := . }}{{ if $i }} <span class="dot" aria-hidden="true">·</span> {{ end }}{{ $l | upper }}{{ end }}</p>{{ end }}
+  </div>
+</article>

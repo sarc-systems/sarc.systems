@@ -52,44 +52,48 @@ and used as the social/Open-Graph preview image. See `assets/img/README.md`.
 
 ## Library
 
-The **Library** (`/library/`) is an annotated research library in five
-categories: **Writings, Manuals, Sources, Reading, Links**. The landing page
-(jump-link index + per-category records) is generated from content — you don't
-edit it to add an item. Section colour is Forest.
+The **Library** (`/library/`) is **one unified catalog of entries** — a growing
+research collection and small knowledge graph, not a set of sections. Every
+durable thing SARC wants to identify, annotate, connect, or point toward is an
+entry (essays, books, manuals, artists, recordings, releases, websites, systems,
+…). Type, subject, and access are metadata and **filters**, never shelves. The
+landing shows a random featured entry, type/subject/SARC-work filters, and the
+full ruled catalog. Section colour is Forest.
 
-**Add an item** with the matching archetype:
+**Add an entry** (one archetype for everything):
 
 ```
-hugo new --kind writing library/writings/my-essay/index.md
-hugo new --kind manual  library/manuals/krohn-hite-6801/index.md
-hugo new --kind source  library/sources/some-paper/index.md
-hugo new --kind reading library/reading/anathem/index.md
-hugo new --kind link    library/links/some-archive/index.md
+hugo new --kind library-entry library/some-slug/index.md
 ```
 
-Then edit the front matter and set `draft: false` when ready. Key fields:
+Entries live flat at `content/library/<slug>/` → `/library/<slug>/`. Edit the
+front matter and set `draft: false`. Key fields:
 
-- `library.type` — `writing | manual | source | reading | link` (validated at
-  build; an invalid value on a published page fails the build).
-- `availability` — `hosted` (SARC serves the file/text), `external` (link out),
-  or `bibliographic` (listed, no reading link). Shown as a visible label.
-- `rights.status` (hosted third-party files) — `sarc-owned | public-domain |
-  licensed | permitted | archival | review`. **A `hosted` item with `review` or
-  unset rights fails the build** — keep it a draft until it has a publishable
-  status. Possession of a PDF is not permission to redistribute. For a
-  long-discontinued product's manual, `archival` is the intended publishable
-  status: hosted in good faith as an archival service, taken down on request
-  (not a claim of public domain). Don't fabricate `public-domain`/`permitted`.
+- `library.id` — stable, **unique** id (not the title/URL); relationships resolve
+  through it. `library.type` — one controlled type (`book | person | manual |
+  release | essay | website | system | …`). `library.sarc_work` — `true` if SARC
+  made it (a filter axis, not a shelf). All validated against `data/library.yaml`.
+- `subjects` — controlled terms (why it matters to SARC); power the filter.
+- `creators` — `{name, role, ref?}`. A `ref` (another entry's `library.id`) links
+  the name and auto-adds a *Works in the Library* list on that entry. `related`
+  are `{ref, relation}` editorial links.
+- `images` — ordered; the **first is the primary** (list thumbnail + entry
+  featured image). Live in the page bundle; `alt` required. No hotlinking.
+- `access` — `{label, kind, url|file}` (many per entry). `hosted-file` needs a
+  bundle `file`; external kinds open in a new tab. `url`/`file` are exclusive.
+- `rights.status` (only for a hosted `file`) — `sarc-owned | public-domain |
+  licensed | permitted | archival | review`. **A hosted file with `review`/unset
+  rights fails the build** — keep it a draft. `archival` = good-faith hosting of a
+  long-discontinued product's docs, taken down on request (not a public-domain
+  claim). Don't fabricate rights.
 
-**Writings are HTML-first**: write the text as Markdown in the page bundle; a
-PDF edition is optional (`file:`). Manuals/Sources are usually a document record.
+**Cross-site inclusion.** A page elsewhere (e.g. a Systems manual) joins the
+catalog with `library: { include: true, id: … }` — no copying, canonical URL
+stays put. **Moving a URL:** add the old path under `aliases:`.
 
-**Cross-site inclusion.** A page that lives elsewhere (e.g. a SARC-100 manual
-under `content/systems/`) can appear in a Library index by adding
-`library: { include: true, type: manual }` — no copying. Its canonical URL stays
-put. See `data/library.yaml` for the category/vocabulary definitions and
-`CLAUDE.md` § Library for the full conventions (including the private iCloud
-archive policy).
+The catalog is also emitted as `/library/index.json`. See `data/library.yaml`
+for the vocabularies and `CLAUDE.md` § Library for full conventions (graph,
+images, random, filtering, rights, the private iCloud policy, why no database).
 
 ## Deploy
 

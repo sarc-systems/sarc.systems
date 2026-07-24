@@ -1,102 +1,112 @@
 {{ define "body-class" }}library library-single{{ end }}
 
 {{ define "main" }}
+{{- $lib := hugo.Data.library -}}
 {{- $type := .Params.library.type -}}
-{{- $catSlug := "" }}{{ $catTitle := "" -}}
-{{- range hugo.Data.library.categories }}{{ if eq .type $type }}{{ $catSlug = .slug }}{{ $catTitle = .title }}{{ end }}{{ end -}}
+{{- $typeLabel := "" }}{{ range $lib.types }}{{ if eq .type $type }}{{ $typeLabel = .label }}{{ end }}{{ end -}}
+{{- $sarc := .Params.library.sarc_work -}}
 
-{{- /* creator + label */ -}}
-{{- $creator := "" -}}
-{{- with .Params.manufacturer }}{{ $creator = . }}{{ end -}}
-{{- if not $creator }}{{ with .Params.creator }}{{ $creator = . }}{{ end }}{{ end -}}
-{{- if not $creator }}{{ with .Params.authors }}{{ $creator = delimit . ", " }}{{ end }}{{ end -}}
-{{- $creatorLabels := dict "writing" "Author" "manual" "Manufacturer" "source" "Creator" "reading" "Author" "link" "By" -}}
-{{- $creatorLabel := index $creatorLabels $type | default "By" -}}
-{{- $year := "" -}}{{- with .Params.year }}{{ $year = string . }}{{ end -}}
-{{- if and (not $year) (not .Date.IsZero) }}{{ $year = string .Date.Year }}{{ end -}}
+{{- $creatorsHTML := trim (partial "library-creators.html" (dict "page" . "sep" ", ")) " " -}}
+{{- $creatorLabels := dict "manual" "Manufacturer" -}}
+{{- $creatorLabel := index $creatorLabels $type | default "Creator" -}}
+{{- with .Params.creators }}{{ if gt (len .) 1 }}{{ $creatorLabel = "Creators" }}{{ end }}{{ end -}}
+{{- $year := "" }}{{ with .Params.year }}{{ $year = string . }}{{ else }}{{ if not .Date.IsZero }}{{ $year = string .Date.Year }}{{ end }}{{ end -}}
 
-<article class="entry-full library-single">
+{{- /* hosted file (an access item of kind hosted-file) */ -}}
+{{- $hostedFile := "" -}}
+{{- range .Params.access }}{{ if and (eq .kind "hosted-file") .file }}{{ with ($.Resources.GetMatch .file) }}{{ $hostedFile = . }}{{ end }}{{ end }}{{ end -}}
+
+<article class="entry-full library-single" data-library-id="{{ .Params.library.id }}">
   <div class="wrap">
     <header class="entry-header">
-      <p class="eyebrow">
-        <a href="{{ "/library/" | relURL }}">Library</a>
-        {{- with $catTitle }} <span class="dot" aria-hidden="true">·</span> <a href="{{ (printf "/library/%s/" $catSlug) | relURL }}">{{ . }}</a>{{ end }}
-      </p>
+      <p class="eyebrow"><a href="{{ "/library/" | relURL }}">Library</a>{{ with $typeLabel }} <span class="dot" aria-hidden="true">·</span> {{ . }}{{ end }}</p>
       <h1 class="entry-full-title">{{ .Title }}</h1>
       {{- with .Params.summary }}<p class="entry-lede">{{ . }}</p>{{ end }}
-      <p>{{ partial "library-availability.html" . }}</p>
-
-      <dl class="entry-meta">
-        {{- with $creator }}<div class="meta-row"><dt>{{ $creatorLabel }}</dt><dd>{{ . }}</dd></div>{{ end }}
-        {{- with $year }}<div class="meta-row"><dt>Year</dt><dd>{{ . }}</dd></div>{{ end }}
-        {{- if not .Date.IsZero }}<div class="meta-row"><dt>Date</dt><dd><time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "02 January 2006" }}</time></dd></div>{{ end }}
-        <div class="meta-row"><dt>Category</dt><dd><a href="{{ (printf "/library/%s/" $catSlug) | relURL }}">{{ $catTitle }}</a></dd></div>
-        {{- with .Params.publisher }}<div class="meta-row"><dt>Publisher</dt><dd>{{ . }}</dd></div>{{ end }}
-        {{- with .Params.models }}<div class="meta-row"><dt>Models</dt><dd>{{ delimit . ", " }}</dd></div>{{ end }}
-        {{- with .Params.isbn }}<div class="meta-row"><dt>ISBN</dt><dd>{{ . }}</dd></div>{{ end }}
-        {{- with .Params.doi }}<div class="meta-row"><dt>DOI</dt><dd>{{ . }}</dd></div>{{ end }}
-        {{- with .Params.topics }}
-        <div class="meta-row"><dt>Topics</dt><dd class="meta-topics">{{ range $i, $t := . }}{{ if $i }}<span class="dot" aria-hidden="true">·</span> {{ end }}<a href="{{ (printf "/topics/%s/" ($t | urlize)) | relURL }}">{{ $t }}</a>{{ end }}</dd></div>
-        {{- end }}
-      </dl>
     </header>
   </div>
 
+  {{- /* Primary image — prominent, uncropped, natural aspect ratio. */ -}}
+  {{- with (index .Params.images 0) }}{{ with ($.Resources.GetMatch .file) }}
+    {{- $im := index $.Params.images 0 }}
+    {{- $small := (.Resize "800x q82") }}{{ $large := (.Resize "1400x q82") }}
   <div class="wrap">
-    {{- /* Primary + secondary actions — the ways to actually reach the material.
-           One primary action at most: a hosted download, or (for external items)
-           the authoritative external link. Any `links` render as secondary; the
-           first is promoted to primary only for `external` items that have no
-           explicit `external_url` (so e.g. a publisher link becomes the primary
-           authoritative path, with a reading-access scan alongside). SARC only
-           links — it does not host, cache, proxy, or mirror external files. */ -}}
-    {{- $hostedFile := "" -}}
-    {{- if eq .Params.availability "hosted" }}{{ with .Params.file }}{{ with ($.Resources.GetMatch .) }}{{ $hostedFile = . }}{{ end }}{{ end }}{{ end -}}
-    {{- $extUrl := .Params.external_url -}}
-    {{- $hasPrimary := or $hostedFile $extUrl -}}
-    {{- $promoteFirstLink := and (not $hasPrimary) (eq .Params.availability "external") -}}
-    {{- if or $hasPrimary .Params.links }}
+    <figure class="library-primary-image">
+      <img src="{{ $small.RelPermalink }}" srcset="{{ $small.RelPermalink }} 800w, {{ $large.RelPermalink }} 1400w"
+           sizes="(min-width: 55rem) 52rem, 100vw" width="{{ $small.Width }}" height="{{ $small.Height }}"
+           alt="{{ $im.alt }}" loading="eager" decoding="async">
+      {{- if or $im.caption $im.credit }}<figcaption>{{ with $im.caption }}{{ . }}{{ end }}{{ with $im.credit }} <span class="img-credit">{{ . }}</span>{{ end }}</figcaption>{{ end }}
+    </figure>
+  </div>
+  {{- end }}{{ end }}
+
+  <div class="wrap">
+    {{- /* Core metadata — only rows that exist. */ -}}
+    <dl class="entry-meta">
+      {{- with $typeLabel }}<div class="meta-row"><dt>Type</dt><dd><a href="{{ (printf "/library/?type=%s" $type) | relURL }}">{{ . }}</a></dd></div>{{ end }}
+      {{- with $creatorsHTML }}<div class="meta-row"><dt>{{ $creatorLabel }}</dt><dd>{{ . | safeHTML }}</dd></div>{{ end }}
+      {{- with $year }}<div class="meta-row"><dt>Year</dt><dd>{{ . }}</dd></div>{{ end }}
+      {{- if not .Date.IsZero }}<div class="meta-row"><dt>Date</dt><dd><time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "02 January 2006" }}</time></dd></div>{{ end }}
+      {{- with .Params.publisher }}<div class="meta-row"><dt>Publisher</dt><dd>{{ . }}</dd></div>{{ end }}
+      {{- with .Params.label }}<div class="meta-row"><dt>Label</dt><dd>{{ . }}</dd></div>{{ end }}
+      {{- with .Params.catalog_number }}<div class="meta-row"><dt>Catalog no.</dt><dd>{{ . }}</dd></div>{{ end }}
+      {{- with .Params.formats }}<div class="meta-row"><dt>Format</dt><dd>{{ delimit . ", " }}</dd></div>{{ end }}
+      {{- with .Params.models }}<div class="meta-row"><dt>Models</dt><dd>{{ delimit . ", " }}</dd></div>{{ end }}
+      {{- with .Params.document_type }}<div class="meta-row"><dt>Document</dt><dd>{{ . }}</dd></div>{{ end }}
+      {{- with .Params.language }}<div class="meta-row"><dt>Language</dt><dd>{{ . }}</dd></div>{{ end }}
+      {{- with .Params.page_count }}<div class="meta-row"><dt>Pages</dt><dd>{{ . }}</dd></div>{{ end }}
+      {{- with .Params.isbn }}<div class="meta-row"><dt>ISBN</dt><dd>{{ . }}</dd></div>{{ end }}
+      {{- with .Params.doi }}<div class="meta-row"><dt>DOI</dt><dd>{{ . }}</dd></div>{{ end }}
+      {{- with .Params.subjects }}
+      <div class="meta-row"><dt>Subjects</dt><dd class="meta-topics">{{ range $i, $s := . }}{{ if $i }}<span class="dot" aria-hidden="true">·</span> {{ end }}{{ $sl := $s }}{{ range $lib.subjects }}{{ if eq .subject $sl }}<a href="{{ (printf "/library/?subject=%s" $sl) | relURL }}">{{ .label }}</a>{{ end }}{{ end }}{{ end }}</dd></div>
+      {{- end }}
+      {{- if $sarc }}<div class="meta-row"><dt>Origin</dt><dd><a href="{{ "/library/?sarc=true" | relURL }}">SARC work</a></dd></div>{{ end }}
+    </dl>
+
+    {{- /* Access actions — first authoritative link gets primary emphasis. */ -}}
+    {{- with .Params.access }}
     <div class="library-actions">
-      {{- with $hostedFile }}
-      <a class="library-action" href="{{ .RelPermalink }}">Download {{ upper (strings.TrimPrefix "." (path.Ext $.Params.file)) }}</a>
-      {{- end }}
-      {{- if and (not $hostedFile) $extUrl }}
-      <a class="library-action" href="{{ $extUrl }}" target="_blank" rel="noopener">External source <span aria-hidden="true">↗</span></a>
-      {{- end }}
-      {{- range $i, $l := .Params.links }}{{ with $l.url }}
-      {{- $primary := and $promoteFirstLink (eq $i 0) -}}
-      <a class="library-action{{ if not $primary }} library-action--secondary{{ end }}" href="{{ . }}" target="_blank" rel="noopener">{{ $l.label | default "Link" }} <span aria-hidden="true">↗</span></a>
+      {{- range $i, $a := . }}
+      {{- $kind := $a.kind | default "other" -}}
+      {{- if eq $kind "hosted-file" }}
+        {{- with $a.file }}{{ with ($.Resources.GetMatch .) }}
+      <a class="library-action{{ if $i }} library-action--secondary{{ end }}" href="{{ .RelPermalink }}">{{ $a.label | default "Download" }}</a>
+        {{- end }}{{ end }}
+      {{- else }}{{ with $a.url }}
+      <a class="library-action{{ if $i }} library-action--secondary{{ end }}" href="{{ . }}" target="_blank" rel="noopener">{{ $a.label | default "Link" }} <span aria-hidden="true">↗</span></a>
       {{- end }}{{ end }}
+      {{- end }}
     </div>
     {{- end }}
 
     {{- with .Content }}<div class="prose e-content">{{ . }}</div>{{ end }}
 
+    {{- /* Additional images (after the primary) as a simple gallery. */ -}}
+    {{ partial "library-images.html" (dict "page" . "from" 1) }}
+
     {{- /* Hosted-file record: filename, type, size, checksum, provenance. */ -}}
-    {{- if eq .Params.availability "hosted" }}{{ with .Params.file }}
-      {{- $res := $.Resources.GetMatch . -}}
-      {{- with $res }}
-      <div class="library-file">
-        <dl>
-          <dt>File</dt><dd>{{ $.Params.file }}</dd>
-          <dt>Type</dt><dd>{{ upper (strings.TrimPrefix "." (path.Ext $.Params.file)) }}</dd>
-          {{- with (os.Stat (path.Join "content" $.File.Dir $.Params.file)) }}
-          <dt>Size</dt><dd>{{ if gt .Size 1048576 }}{{ printf "%.1f MB" (div (float .Size) 1048576.0) }}{{ else }}{{ printf "%.0f KB" (div (float .Size) 1024.0) }}{{ end }}</dd>
-          {{- end }}
-          {{- with $.Params.checksum }}<dt>SHA-256</dt><dd><code>{{ . }}</code></dd>{{ end }}
-          {{- with $.Params.source }}<dt>Source</dt><dd>{{ . }}</dd>{{ end }}
-        </dl>
-      </div>
-      {{- end }}
-    {{- end }}{{ end }}
+    {{- with $hostedFile }}
+    <div class="library-file">
+      <dl>
+        <dt>File</dt><dd>{{ .Name }}</dd>
+        <dt>Type</dt><dd>{{ upper (strings.TrimPrefix "." (path.Ext .Name)) }}</dd>
+        <dt>Size</dt><dd>{{ $b := len .Content }}{{ if gt $b 1048576 }}{{ printf "%.1f MB" (div (float $b) 1048576.0) }}{{ else }}{{ printf "%.0f KB" (div (float $b) 1024.0) }}{{ end }}</dd>
+        {{- with $.Params.page_count }}<dt>Pages</dt><dd>{{ . }}</dd>{{ end }}
+        {{- with $.Params.checksum }}<dt>SHA-256</dt><dd><code>{{ . }}</code></dd>{{ end }}
+      </dl>
+    </div>
+    {{- end }}
 
     {{ partial "library-rights.html" . }}
 
+    {{- /* Knowledge graph: works crediting this entry, then editorial relations. */ -}}
+    {{ partial "library-works.html" (dict "page" .) }}
+    {{ partial "library-related.html" (dict "page" .) }}
+
     <nav class="entry-nav" aria-label="Library navigation">
-      <a class="entry-nav-prev" href="{{ (printf "/library/%s/" $catSlug) | relURL }}">
-        <span class="entry-nav-dir">← {{ $catTitle }}</span>
-      </a>
+      <a class="entry-nav-prev" href="{{ "/library/" | relURL }}"><span class="entry-nav-dir">← Library</span></a>
     </nav>
   </div>
 </article>
 {{ end }}
+
+{{ define "scripts" }}{{ partial "page-scripts.html" . }}{{ end }}

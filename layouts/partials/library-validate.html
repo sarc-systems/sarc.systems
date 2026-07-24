@@ -1,24 +1,80 @@
-{{- /* Build-time Library validation. Invoke once via partialCached from head.
-       Fails the build (errorf) on:
-         - an invalid library.type on a PUBLISHED page
-         - a hosted item published without established rights (status not in
-           rights_hosted_ok — i.e. review or unset)
-       Draft items are exempt (they do not publish); an invalid type on a draft
-       is a warning, not a failure, so work-in-progress does not break dev. */ -}}
+{{- /* Build-time Library validation (invoked once via partialCached from head).
+       Fails a production build clearly on the problems listed below; draft
+       entries are exempt from vocabulary checks but the hosted-rights guard
+       still forces review/unset hosted files to stay drafts. */ -}}
 {{- $lib := hugo.Data.library -}}
-{{- $allowed := $lib.allowed_types -}}
+{{- $types := slice }}{{ range $lib.types }}{{ $types = $types | append .type }}{{ end -}}
+{{- $subjects := slice }}{{ range $lib.subjects }}{{ $subjects = $subjects | append .subject }}{{ end -}}
+{{- $roles := $lib.creator_roles -}}
+{{- $relations := $lib.relation_types -}}
+{{- $kinds := slice }}{{ range $lib.access_kinds }}{{ $kinds = $kinds | append .kind }}{{ end -}}
 {{- $okRights := $lib.rights_hosted_ok -}}
-{{- range where site.RegularPages "Params.library.include" true -}}
-  {{- $t := .Params.library.type -}}
-  {{- if not (in $allowed $t) -}}
-    {{- if .Draft -}}
-      {{- warnf "Library: %q has invalid library.type %q (allowed: %s)" .Path $t (delimit $allowed ", ") -}}
-    {{- else -}}
-      {{- errorf "Library: %q has invalid library.type %q (allowed: %s)" .Path $t (delimit $allowed ", ") -}}
-    {{- end -}}
+
+{{- /* all published catalog entries (in-section + cross-site), deduped */ -}}
+{{- $entries := where (where site.RegularPages "Section" "library" | union (where site.RegularPages "Params.library.include" true)) "Draft" false -}}
+
+{{- /* Pre-pass: reference_id must be gone; collect library.id, detect dups. */ -}}
+{{- $counts := dict }}{{ $ids := slice -}}
+{{- range $entries -}}
+  {{- if .Params.reference_id }}{{ errorf "Library: %q still uses reference_id — migrate to library.id" .Path }}{{ end -}}
+  {{- $id := "" }}{{ with .Params.library }}{{ $id = .id }}{{ end -}}
+  {{- if not $id }}{{ errorf "Library: %q has no library.id (a stable unique id is required)" .Path -}}
+  {{- else }}{{ $counts = merge $counts (dict $id (add (int (index $counts $id | default 0)) 1)) }}{{ $ids = $ids | append $id }}{{ end -}}
+{{- end -}}
+{{- range $id, $n := $counts }}{{ if gt $n 1 }}{{ errorf "Library: duplicate library.id %q used by %d published entries" $id $n }}{{ end }}{{ end -}}
+{{- $ids = uniq $ids -}}
+
+{{- range $entries -}}
+  {{- $page := . -}}
+  {{- $type := "" }}{{ with .Params.library }}{{ $type = .type }}{{ end -}}
+
+  {{- /* type */ -}}
+  {{- if not $type }}{{ errorf "Library: %q has no library.type (allowed: %s)" $page.Path (delimit $types ", ") }}{{ end -}}
+  {{- if and $type (not (in $types $type)) }}{{ errorf "Library: %q has invalid library.type %q (allowed: %s)" $page.Path $type (delimit $types ", ") }}{{ end -}}
+
+  {{- /* subjects — controlled */ -}}
+  {{- range .Params.subjects }}{{ if not (in $subjects .) }}{{ errorf "Library: %q has unknown subject %q (allowed: %s)" $page.Path . (delimit $subjects ", ") }}{{ end }}{{ end -}}
+
+  {{- /* creators — name required; role valid; ref resolves (omitting ref is ok) */ -}}
+  {{- range .Params.creators -}}
+    {{- if not .name }}{{ errorf "Library: %q has a creator with no name" $page.Path }}{{ end -}}
+    {{- if and .role (not (in $roles .role)) }}{{ errorf "Library: %q creator %q has invalid role %q (allowed: %s)" $page.Path (.name | default "?") .role (delimit $roles ", ") }}{{ end -}}
+    {{- if and .ref (not (in $ids .ref)) }}{{ errorf "Library: %q creator %q has ref %q that does not resolve to a published entry" $page.Path (.name | default "?") .ref }}{{ end -}}
   {{- end -}}
-  {{- $status := "" -}}{{- with .Params.rights }}{{ $status = .status }}{{ end -}}
-  {{- if and (not .Draft) (eq .Params.availability "hosted") (not (in $okRights $status)) -}}
-    {{- errorf "Library: hosted item %q must not publish with rights status %q — establish rights (%s) or keep it a draft" .Path (default "unset" $status) (delimit $okRights ", ") -}}
+
+  {{- /* related — relation valid; ref present + resolves */ -}}
+  {{- range .Params.related -}}
+    {{- if not .ref }}{{ errorf "Library: %q has a related entry with no ref" $page.Path }}{{ end -}}
+    {{- if and .relation (not (in $relations .relation)) }}{{ errorf "Library: %q has invalid relation %q (allowed: %s)" $page.Path .relation (delimit $relations ", ") }}{{ end -}}
+    {{- if and .ref (not (in $ids .ref)) }}{{ errorf "Library: %q related.ref %q does not resolve to a published entry" $page.Path .ref }}{{ end -}}
+  {{- end -}}
+
+  {{- /* access — url/file mutually exclusive; kind known; hosted-file resolves */ -}}
+  {{- $hasHosted := false -}}
+  {{- range .Params.access -}}
+    {{- if and .url .file }}{{ errorf "Library: %q access %q supplies both url and file" $page.Path (.label | default .kind) }}{{ end -}}
+    {{- if and .kind (not (in $kinds .kind)) }}{{ errorf "Library: %q has unknown access kind %q (allowed: %s)" $page.Path .kind (delimit $kinds ", ") }}{{ end -}}
+    {{- if eq .kind "hosted-file" -}}
+      {{- $hasHosted = true -}}
+      {{- if not .file }}{{ errorf "Library: %q hosted-file access has no file" $page.Path }}{{ end -}}
+      {{- if and .file (not ($page.Resources.GetMatch .file)) }}{{ errorf "Library: %q hosted file %q cannot be resolved in the page bundle" $page.Path .file }}{{ end -}}
+    {{- else if and (ne .kind nil) (not .url) }}{{ errorf "Library: %q external access %q has no url" $page.Path (.label | default .kind) }}{{ end -}}
+  {{- end -}}
+
+  {{- /* images — first must have a resolvable file + alt (unless decorative);
+         no duplicate files; every declared file resolves */ -}}
+  {{- $seen := slice -}}
+  {{- range $i, $im := .Params.images -}}
+    {{- if not $im.file }}{{ errorf "Library: %q image #%d has no file" $page.Path (add $i 1) }}{{ end -}}
+    {{- if and $im.file (not ($page.Resources.GetMatch $im.file)) }}{{ errorf "Library: %q image %q cannot be resolved in the page bundle" $page.Path $im.file }}{{ end -}}
+    {{- if in $seen $im.file }}{{ errorf "Library: %q lists image %q more than once" $page.Path $im.file }}{{ end -}}
+    {{- $seen = $seen | append $im.file -}}
+    {{- if and (not $im.decorative) (not $im.alt) }}{{ errorf "Library: %q image %q lacks alt text (set alt, or decorative: true)" $page.Path $im.file }}{{ end -}}
+  {{- end -}}
+
+  {{- /* hosted third-party file must have established rights to publish */ -}}
+  {{- $status := "" }}{{ with .Params.rights }}{{ $status = .status }}{{ end -}}
+  {{- if and $hasHosted (not (in $okRights $status)) -}}
+    {{- errorf "Library: hosted item %q must not publish with rights status %q — establish rights (%s) or keep it a draft" $page.Path (default "unset" $status) (delimit $okRights ", ") -}}
   {{- end -}}
 {{- end -}}
