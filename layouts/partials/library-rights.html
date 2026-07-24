@@ -1,0 +1,20 @@
+{{- /* Rights & provenance block for a hosted Library item. Context is the page.
+       Renders nothing unless the page declares `rights`. Small print, framed by
+       the section rule. */ -}}
+{{- with .Params.rights -}}
+{{- $labels := dict
+      "sarc-owned" "SARC-owned"
+      "public-domain" "Public domain"
+      "licensed" "Licensed"
+      "permitted" "Permitted by rights holder"
+      "review" "Rights under review" -}}
+<aside class="library-rights" aria-label="Rights and provenance">
+  <p class="rights-head">Rights &amp; provenance</p>
+  <p><span class="rights-status">{{ index $labels .status | default .status }}</span>
+    {{- with .basis }} — {{ . }}{{ end -}}
+  </p>
+  {{- with .source }}<p>Source: {{ . }}</p>{{ end -}}
+  {{- with .jurisdiction }}<p>Jurisdiction: {{ . }}</p>{{ end -}}
+  {{- with .note }}<p>{{ . }}</p>{{ end -}}
+</aside>
+{{- end -}}

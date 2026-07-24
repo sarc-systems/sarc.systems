@@ -37,6 +37,10 @@ timeout = "60s"
     url    = "/journal/"
     weight = 10
   [[menus.main]]
+    name   = "Library"
+    url    = "/library/"
+    weight = 18
+  [[menus.main]]
     name   = "About"
     url    = "/about/"
     weight = 20

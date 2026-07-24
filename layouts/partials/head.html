@@ -7,8 +7,12 @@
 
 {{ partial "meta.html" . }}
 
+{{- /* Validate the Library catalog once per build (fails on invalid types or
+       unsafe hosted items). Cheap and cached; runs regardless of page. */ -}}
+{{- partialCached "library-validate.html" . "library-validate" -}}
+
 {{- /* CSS: concatenate the small set of files by concern, then minify+fingerprint. */ -}}
-{{- $order := slice "css/generated/colorplan.css" "css/base.css" "css/layout.css" "css/journal.css" "css/mark.css" "css/print.css" -}}
+{{- $order := slice "css/generated/colorplan.css" "css/base.css" "css/layout.css" "css/journal.css" "css/library.css" "css/mark.css" "css/print.css" -}}
 {{- $styles := slice -}}
 {{- range $order -}}
   {{- with resources.Get . -}}{{ $styles = $styles | append . }}{{- end -}}

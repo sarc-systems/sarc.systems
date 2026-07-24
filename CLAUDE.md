@@ -76,21 +76,27 @@ content/
   studio/projects/_index.md
   label/_index.md
   label/releases/_index.md
-  library/_index.md
-  library/writings/_index.md
+  library/_index.md                   # published landing (layout: landing)
+  library/writings/_index.md          # + one leaf bundle per published item
+  library/manuals/_index.md
+  library/sources/_index.md
+  library/reading/_index.md
   library/links/_index.md
 layouts/          # custom theme: baseof, home, journal list/single, taxonomies, 404
+layouts/library/{landing,list,single}.html   # Library templates
+layouts/partials/library-*.html      # collect, index, item, availability, rights, validate
 layouts/partials/mark.html           # generated four-row mark SVG — do not edit
 design/fonts/Nasalization-Rg.otf     # mark source font (build-time only, unchanged)
 scripts/generate-mark.py             # regenerates the mark SVG (`make mark`)
-assets/css/       # site CSS (see CSS architecture)
+assets/css/       # site CSS (see CSS architecture) — incl. library.css
 assets/css/generated/colorplan.css   # generated — do not edit
 assets/img/       # source visual assets incl. the SARC four-row mark (original raster — never modify)
 data/colorplan.json                  # generated — do not edit
 data/palette.yaml                    # central section/project colour assignments
+data/library.yaml                    # Library categories + allowed vocabularies
 scripts/colorplan-source.json        # committed raw palette capture (importer input)
 scripts/import-colorplan.mjs         # deterministic Colorplan importer
-archetypes/journal.md
+archetypes/journal.md                # + writing, manual, source, reading, link
 static/           # passthrough files (robots.txt, favicon, etc.)
 ```
 
@@ -162,11 +168,11 @@ shipped as a webfont: the free Typodermic licence permits creating a logo but
 lists "web page (embedded)" as *not allowed*, so shipping outlines (a logo) is
 the compliant path.
 
-Current desktop nav: `SARC | JOURNAL | ABOUT | YOUTUBE | GITHUB` (YouTube and
-GitHub are external links to the SARC channel and GitHub org). Future:
-`SARC | JOURNAL | SYSTEMS | STUDIO | LABEL | LIBRARY | ABOUT` (plus the external
-YouTube/GitHub links) — build the nav partial from a menu definition so this is
-a config change, not a redesign.
+Current desktop nav: `SARC | JOURNAL | LIBRARY | ABOUT | YOUTUBE | GITHUB`
+(YouTube and GitHub are external links to the SARC channel and GitHub org).
+Future: `SARC | JOURNAL | SYSTEMS | STUDIO | LABEL | LIBRARY | ABOUT` (plus the
+external YouTube/GitHub links) — the nav is built from the `[menus]` definition
+in `hugo.toml`, so adding a department is a config change, not a redesign.
 
 Small screens: simple, accessible menu (works without JS — e.g. details/summary
 or a no-JS-fallback pattern). No animated navigation systems.
@@ -290,6 +296,99 @@ showing every imported color with official name, slug, generated hex,
 suggested foreground, and large- and small-text samples; plus all current
 section assignments and all release pairs in use. Its purpose is catching
 import mistakes and poor contrast without hand-editing the palette.
+
+## Library
+
+A public department: an **annotated research library**, not a blog category,
+link directory, or download dump. Section colour is **Forest** (assigned in
+`data/palette.yaml`; never hardcoded). Landing page at `/library/`, in the nav
+between Label and About (`SARC | JOURNAL | … | LIBRARY | ABOUT`).
+
+Five categories (definitions and vocabularies live in `data/library.yaml`, the
+single source of truth for templates):
+
+1. **Writings** — finished, durable SARC-authored texts. Not the same as Journal
+   entries: the Journal is a dated record of work as it happens; a Writing is a
+   finished, durable reference. **Writings are HTML-first, PDF-optional** — keep
+   the intellectual content readable, not a shelf of opaque PDFs.
+2. **Manuals** — how instruments/systems/software work (SARC or third-party).
+3. **Sources** — third-party texts SARC hosts for study (rights required).
+4. **Reading** — works recommended but hosted elsewhere; the SARC annotation is
+   the point, not a reproduced publisher blurb.
+5. **Links** — annotated paths outward, organised by topic/type. Never a bare
+   bookmark dump.
+
+**Structure.** In-section content is under `content/library/<category>/<slug>/`
+as leaf page bundles. Each category also has a permanent index page. The landing
+page is generated from structured content (a jump-link index + per-category
+record lists) — do not hand-duplicate items in `_index.md`. The jump-link index
+is plain anchors and must work without JS; do not replace it with tabs,
+accordions, or client-side filtering. **No client-side search/filtering** in the
+first implementation.
+
+**Cross-site catalog.** The Library is not only `content/library/`. Any page
+anywhere (Systems, Studio, Label) may appear in Library indexes by declaring
+front matter — without copying content:
+
+```yaml
+library:
+  include: true
+  type: manual        # writing | manual | source | reading | link
+```
+
+The canonical URL stays the original page's location. Never copy a document into
+two sections to make it appear in Library. Templates gather in-section pages
+plus any page with `library.include: true`, dedup by page, and **validate
+`library.type`** — an invalid type on a published page fails the build
+(`partials/library-validate.html`, run once via `partialCached` in `head.html`).
+
+**Availability** (shown visibly, before any click):
+
+- `hosted` — file/full text served by SARC (READ ONLINE / DOWNLOAD PDF)
+- `external` — SARC links a legitimate copy elsewhere (EXTERNAL SOURCE ↗)
+- `bibliographic` — listed and annotated, no reading link (BIBLIOGRAPHIC RECORD)
+
+Availability is always carried by **text**, never colour alone.
+
+**Rights & provenance.** Any hosted third-party file must declare `rights`:
+
+```yaml
+rights:
+  status: sarc-owned   # sarc-owned | public-domain | licensed | permitted | review
+  basis: ""
+  source: ""
+  jurisdiction: ""
+  note: ""
+```
+
+`review` (or unset) means rights are **not** established. A `hosted` item with
+`review`/unset rights **fails the build** — it must stay a draft until rights
+are established. Possession of a PDF does not imply redistribution permission;
+do not infer public-domain status from apparent age; do not fabricate rights.
+Item archetypes for hosted third-party types (`manual`, `source`) default to
+`draft: true` and `rights.status: review`, so a new bundle never auto-publishes.
+
+**iCloud manual archive.** The user keeps a personal manual/document collection
+in iCloud — treat it as a **private source archive**. Do not scan, index,
+symlink, publish, or reorganise it, and do not assume its files are
+redistributable. The workflow is deliberate: pick a file → review title/source/
+rights → copy into a page bundle → complete metadata → publish. **Never expose
+an iCloud or local path** in rendered HTML, metadata, or error messages. A
+future optional `make add-document` helper (copy file into a new bundle, record
+a SHA-256 checksum, default `draft: true` + `rights.status: review`, never
+overwrite, never publish, never modify the source) may be added — keep it simple.
+
+**Files.** Small/moderate PDFs may live in page bundles in Git. Do **not** use
+Git LFS for files served directly by the static site. Introduce object storage
+only if the repo actually gets too large — and if so, preserve the metadata,
+public URLs, and the visible Library information architecture.
+
+**Templates/CSS.** `layouts/library/{landing,list,single}.html` and
+`partials/library-{collect,index,item,availability,rights,validate}.html`; styles
+in `assets/css/library.css`. Records are **ruled catalog rows**, never
+commercial cards, thumbnails, star ratings, or shopping buttons. Cover images
+are optional, never required. Reuse the base templates, header, footer, palette,
+and type — do not fork the site layout for Library.
 
 ## The SARC four-row mark
 

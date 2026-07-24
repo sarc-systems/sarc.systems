@@ -1,0 +1,13 @@
+{{- /* Render a (pre-sorted) collection of Library items as ruled records.
+       Call: {{ partial "library-index.html" (dict "pages" $items "limit" 6) }}
+       limit 0 (or omitted) renders all. */ -}}
+{{- $pages := .pages -}}
+{{- $limit := .limit | default 0 -}}
+{{- if and $limit (gt $limit 0) }}{{ $pages = first $limit $pages }}{{ end -}}
+{{- with $pages -}}
+<ul class="library-records">
+  {{- range . }}{{ partial "library-item.html" . }}{{ end }}
+</ul>
+{{- else -}}
+<p class="library-empty">No entries in this category yet.</p>
+{{- end -}}

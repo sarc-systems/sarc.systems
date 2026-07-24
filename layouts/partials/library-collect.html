@@ -1,0 +1,22 @@
+{{- /* Return the Library catalog for one type, sorted per category rules.
+       Unifies in-section pages and cross-site pages: any published page with
+       `library.include: true` and a matching `library.type` is included, each
+       exactly once (dedup is inherent — a page appears in the set once).
+       Call: {{ $items := partial "library-collect.html" (dict "ctx" . "type" "manual") }} */ -}}
+{{- $ctx := .ctx -}}
+{{- $type := .type -}}
+{{- $all := where $ctx.Site.RegularPages "Params.library.include" true -}}
+{{- $c := where $all "Params.library.type" $type -}}
+{{- $sorted := $c -}}
+{{- if eq $type "writing" -}}
+  {{- $sorted = $c.ByDate.Reverse -}}
+{{- else if eq $type "manual" -}}
+  {{- $sorted = sort $c "Params.manufacturer" -}}
+{{- else if eq $type "source" -}}
+  {{- $sorted = sort $c "Params.creator" -}}
+{{- else if eq $type "reading" -}}
+  {{- $sorted = sort $c "Params.creator" -}}
+{{- else if eq $type "link" -}}
+  {{- $sorted = sort $c "Params.link_type" -}}
+{{- end -}}
+{{- return $sorted -}}

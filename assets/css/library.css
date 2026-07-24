@@ -1,0 +1,178 @@
+/* library.css — the Library: annotated catalog records, availability and rights
+   labels, and the landing jump-index. Ruled records, never commercial cards or
+   thumbnails. Colour enters only through --signal (Forest for this section);
+   availability is always carried by text, never by colour alone. */
+
+/* --- Landing: contents jump-index ---------------------------------------- */
+.library-contents {
+  counter-reset: lib;
+  list-style: none;
+  margin: clamp(1.6rem, 4vw, 2.4rem) 0;
+  padding: 0;
+  max-width: var(--measure);
+}
+.library-contents li { counter-increment: lib; border-top: 1px solid var(--rule); }
+.library-contents li:last-child { border-bottom: 1px solid var(--rule); }
+.library-contents a {
+  display: flex;
+  align-items: baseline;
+  gap: 0.9rem;
+  padding: 0.55rem 0;
+  text-decoration: none;
+  color: var(--ink);
+  font-family: var(--font-mono);
+}
+.library-contents a::before {
+  content: counter(lib, decimal-leading-zero);
+  color: var(--gray-2);
+  font-variant-numeric: tabular-nums;
+}
+.library-contents .lc-label { text-transform: uppercase; letter-spacing: 0.08em; font-size: var(--t-sm); }
+.library-contents .lc-desc {
+  margin-left: auto;
+  color: var(--gray-1);
+  font-family: var(--font-sans);
+  font-size: var(--t-sm);
+  text-align: right;
+}
+.library-contents a:hover { color: var(--signal); }
+.library-contents a:hover .lc-desc { color: var(--signal); }
+
+/* --- Landing: per-category blocks ---------------------------------------- */
+.library-category { margin: clamp(2.4rem, 6vw, 4rem) 0; scroll-margin-top: 1.5rem; }
+.library-category-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.4rem 1rem;
+  border-bottom: 2px solid var(--signal);
+  padding-bottom: 0.35rem;
+}
+.library-category-head h2 { font-size: var(--t-lg); margin: 0; }
+.library-category-head .cat-num {
+  font-family: var(--font-mono);
+  color: var(--gray-2);
+  font-size: var(--t-sm);
+  margin-right: 0.6rem;
+}
+.library-category-desc { color: var(--gray-1); max-width: var(--measure); margin: 0.7rem 0 1.1rem; }
+.library-viewall {
+  font-family: var(--font-mono);
+  font-size: var(--t-sm);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.library-empty { color: var(--gray-1); font-style: italic; margin: 0.8rem 0; }
+
+/* --- Catalog records ------------------------------------------------------ */
+.library-records { list-style: none; padding: 0; margin: 0; }
+.library-record { padding: 1rem 0; border-bottom: 1px solid var(--rule); }
+.library-records > .library-record:first-child { border-top: 1px solid var(--rule); }
+.library-record-kicker {
+  font-family: var(--font-mono);
+  font-size: var(--t-xs);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--signal-ink);
+}
+.library-record-kicker .dot { color: var(--gray-2); margin: 0 0.15em; }
+.library-record-title { font-size: var(--t-md); font-weight: 600; margin: 0.15rem 0 0; line-height: 1.25; }
+.library-record-title a { text-decoration: none; color: var(--ink); }
+.library-record-title a:hover { color: var(--signal); }
+.library-record-byline { color: var(--gray-1); font-size: var(--t-sm); margin-top: 0.1rem; }
+.library-record-annotation { max-width: var(--measure); margin: 0.45rem 0 0.55rem; }
+.library-record-foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 1rem;
+  margin-top: 0.4rem;
+}
+.library-record-topics {
+  color: var(--gray-2);
+  font-size: var(--t-xs);
+  font-family: var(--font-mono);
+  letter-spacing: 0.04em;
+}
+.library-record-topics a { color: inherit; text-decoration: none; }
+.library-record-topics a:hover { color: var(--signal); }
+
+/* --- Availability label (text-first, never colour-only) ------------------ */
+.availability {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35em;
+  font-family: var(--font-mono);
+  font-size: var(--t-xs);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.15em 0.5em;
+  border: 1px solid var(--rule);
+  color: var(--gray-1);
+  white-space: nowrap;
+}
+.availability--hosted { border-color: var(--signal); color: var(--signal-ink); }
+.availability--external { border-style: dashed; }
+.availability--bibliographic { color: var(--gray-1); }
+
+/* --- Single item page ----------------------------------------------------- */
+.library-single .entry-lede { color: var(--gray-1); font-size: var(--t-md); max-width: var(--measure); }
+.library-actions { display: flex; flex-wrap: wrap; gap: 0.8rem 1rem; align-items: center; margin: 1.4rem 0; }
+.library-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+  font-family: var(--font-mono);
+  font-size: var(--t-sm);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--paper);
+  background: var(--signal);
+  padding: 0.5em 0.9em;
+}
+.library-action:hover { color: var(--paper); background: var(--signal-ink); filter: brightness(1.08); }
+.library-action--secondary { color: var(--ink); background: transparent; border: 1px solid var(--rule); }
+.library-action--secondary:hover { color: var(--signal); background: transparent; border-color: var(--signal); }
+
+.library-file {
+  border: 1px solid var(--rule);
+  padding: 1rem 1.2rem;
+  margin: 1.4rem 0;
+}
+.library-file dl { margin: 0; display: grid; grid-template-columns: max-content 1fr; gap: 0.3rem 1rem; }
+.library-file dt {
+  font-family: var(--font-mono);
+  font-size: var(--t-xs);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--gray-2);
+}
+.library-file dd { margin: 0; font-size: var(--t-sm); color: var(--ink); word-break: break-word; }
+
+/* Rights statement — small print, framed by the section rule. */
+.library-rights {
+  border-left: 2px solid var(--signal);
+  padding-left: 0.9rem;
+  margin: 1.4rem 0;
+  font-size: var(--t-sm);
+  color: var(--gray-1);
+}
+.library-rights .rights-head {
+  font-family: var(--font-mono);
+  font-size: var(--t-xs);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--gray-2);
+  margin: 0 0 0.3rem;
+}
+.library-rights p { margin: 0.2rem 0; }
+.library-rights .rights-status { color: var(--signal-ink); font-weight: 600; }
+
+@media (max-width: 34rem) {
+  .library-contents .lc-desc { display: none; }
+  .library-file dl { grid-template-columns: 1fr; gap: 0.1rem; }
+  .library-file dd { margin-bottom: 0.5rem; }
+}

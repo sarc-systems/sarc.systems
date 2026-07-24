@@ -1,7 +1,5 @@
 ---
 title: "Writings"
-summary: "Essays and longer-form writings."
-draft: true
+summary: "Finished, durable texts written by SARC — essays, papers, reports, and statements."
+draft: false
 ---
-
-Reserved for essays and longer-form writings.

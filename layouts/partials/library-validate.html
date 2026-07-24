@@ -1,0 +1,24 @@
+{{- /* Build-time Library validation. Invoke once via partialCached from head.
+       Fails the build (errorf) on:
+         - an invalid library.type on a PUBLISHED page
+         - a hosted item published without established rights (status not in
+           rights_hosted_ok — i.e. review or unset)
+       Draft items are exempt (they do not publish); an invalid type on a draft
+       is a warning, not a failure, so work-in-progress does not break dev. */ -}}
+{{- $lib := hugo.Data.library -}}
+{{- $allowed := $lib.allowed_types -}}
+{{- $okRights := $lib.rights_hosted_ok -}}
+{{- range where site.RegularPages "Params.library.include" true -}}
+  {{- $t := .Params.library.type -}}
+  {{- if not (in $allowed $t) -}}
+    {{- if .Draft -}}
+      {{- warnf "Library: %q has invalid library.type %q (allowed: %s)" .Path $t (delimit $allowed ", ") -}}
+    {{- else -}}
+      {{- errorf "Library: %q has invalid library.type %q (allowed: %s)" .Path $t (delimit $allowed ", ") -}}
+    {{- end -}}
+  {{- end -}}
+  {{- $status := "" -}}{{- with .Params.rights }}{{ $status = .status }}{{ end -}}
+  {{- if and (not .Draft) (eq .Params.availability "hosted") (not (in $okRights $status)) -}}
+    {{- errorf "Library: hosted item %q must not publish with rights status %q — establish rights (%s) or keep it a draft" .Path (default "unset" $status) (delimit $okRights ", ") -}}
+  {{- end -}}
+{{- end -}}

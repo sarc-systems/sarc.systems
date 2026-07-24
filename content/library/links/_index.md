@@ -1,7 +1,5 @@
 ---
 title: "Links"
-summary: "External references and links."
-draft: true
+summary: "Annotated online resources — artists, archives, research projects, software, and lectures."
+draft: false
 ---
-
-Reserved for external references and links.

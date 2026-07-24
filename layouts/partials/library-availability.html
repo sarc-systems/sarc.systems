@@ -1,0 +1,16 @@
+{{- /* Availability label for a Library item. Text-first: the words carry the
+       meaning, never colour alone. Context is the page. */ -}}
+{{- $a := .Params.availability -}}
+{{- $file := .Params.file -}}
+{{- if eq $a "hosted" -}}
+  {{- if $file -}}
+    {{- $ext := upper (strings.TrimPrefix "." (path.Ext $file)) -}}
+    <span class="availability availability--hosted">Download {{ $ext | default "file" }}</span>
+  {{- else -}}
+    <span class="availability availability--hosted">Read online</span>
+  {{- end -}}
+{{- else if eq $a "external" -}}
+  <span class="availability availability--external">External source <span aria-hidden="true">↗</span></span>
+{{- else if eq $a "bibliographic" -}}
+  <span class="availability availability--bibliographic">Bibliographic record</span>
+{{- end -}}

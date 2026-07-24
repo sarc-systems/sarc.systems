@@ -70,6 +70,12 @@ body.journal { background: color-mix(in srgb, var(--signal) 10%, var(--paper)); 
 body.journal .site-header,
 body.journal .site-footer { background: var(--paper); }
 
+/* Library pages carry the same faint section-colour wash (Forest), framed by
+   solid-paper header/footer. Same restraint as the Journal — a coded signal. */
+body.library { background: color-mix(in srgb, var(--signal) 8%, var(--paper)); }
+body.library .site-header,
+body.library .site-footer { background: var(--paper); }
+
 /* --- Generic page head --------------------------------------------------- */
 .page-head { padding: clamp(2rem, 6vw, 4rem) 0 1.6rem; }
 .page-title { font-size: var(--t-2xl); }

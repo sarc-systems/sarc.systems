@@ -1,0 +1,33 @@
+{{ define "body-class" }}library library-landing{{ end }}
+
+{{ define "main" }}
+{{- $cats := hugo.Data.library.categories -}}
+<div class="wrap">
+  <header class="page-head">
+    <p class="eyebrow">Library</p>
+    <h1 class="page-title">{{ .Title }}</h1>
+    {{- with .Content }}<div class="page-intro">{{ . }}</div>{{ end }}
+  </header>
+
+  {{- /* Contents index — plain anchor links; works without JavaScript. */ -}}
+  <nav aria-label="Library contents">
+    <ul class="library-contents">
+      {{- range $cats }}
+      <li><a href="#{{ .slug }}"><span class="lc-label">{{ .title }}</span></a></li>
+      {{- end }}
+    </ul>
+  </nav>
+
+  {{- range $i, $cat := $cats }}
+  {{- $items := partial "library-collect.html" (dict "ctx" $ "type" $cat.type) }}
+  <section class="library-category" id="{{ $cat.slug }}" aria-labelledby="lib-h-{{ $cat.slug }}">
+    <div class="library-category-head">
+      <h2 id="lib-h-{{ $cat.slug }}"><span class="cat-num">{{ printf "%02d" (add $i 1) }}</span>{{ $cat.title }}</h2>
+      <a class="library-viewall" href="{{ (printf "/library/%s/" $cat.slug) | relURL }}">View all {{ lower $cat.title }} →</a>
+    </div>
+    <p class="library-category-desc">{{ $cat.description }}</p>
+    {{ partial "library-index.html" (dict "pages" $items "limit" 6) }}
+  </section>
+  {{- end }}
+</div>
+{{ end }}

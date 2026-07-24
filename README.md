@@ -50,6 +50,44 @@ static readable state with no JS, and stays canonical under
 The **original raster** (`assets/img/rect15_larger.png`) is preserved unchanged
 and used as the social/Open-Graph preview image. See `assets/img/README.md`.
 
+## Library
+
+The **Library** (`/library/`) is an annotated research library in five
+categories: **Writings, Manuals, Sources, Reading, Links**. The landing page
+(jump-link index + per-category records) is generated from content — you don't
+edit it to add an item. Section colour is Forest.
+
+**Add an item** with the matching archetype:
+
+```
+hugo new --kind writing library/writings/my-essay/index.md
+hugo new --kind manual  library/manuals/krohn-hite-6801/index.md
+hugo new --kind source  library/sources/some-paper/index.md
+hugo new --kind reading library/reading/anathem/index.md
+hugo new --kind link    library/links/some-archive/index.md
+```
+
+Then edit the front matter and set `draft: false` when ready. Key fields:
+
+- `library.type` — `writing | manual | source | reading | link` (validated at
+  build; an invalid value on a published page fails the build).
+- `availability` — `hosted` (SARC serves the file/text), `external` (link out),
+  or `bibliographic` (listed, no reading link). Shown as a visible label.
+- `rights.status` (hosted third-party files) — `sarc-owned | public-domain |
+  licensed | permitted | review`. **A `hosted` item with `review` or unset
+  rights fails the build** — keep it a draft until rights are established.
+  Possession of a PDF is not permission to redistribute.
+
+**Writings are HTML-first**: write the text as Markdown in the page bundle; a
+PDF edition is optional (`file:`). Manuals/Sources are usually a document record.
+
+**Cross-site inclusion.** A page that lives elsewhere (e.g. a SARC-100 manual
+under `content/systems/`) can appear in a Library index by adding
+`library: { include: true, type: manual }` — no copying. Its canonical URL stays
+put. See `data/library.yaml` for the category/vocabulary definitions and
+`CLAUDE.md` § Library for the full conventions (including the private iCloud
+archive policy).
+
 ## Deploy
 
 Hosted on **GitHub Pages**. Pushing to `main` triggers

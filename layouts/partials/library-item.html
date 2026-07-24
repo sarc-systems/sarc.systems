@@ -1,0 +1,41 @@
+{{- /* One Library catalog record — a ruled record, never a card. Context is the
+       page. The title links to the item's canonical page (.Permalink); for a
+       cross-site item that is its original location (Systems/Studio/Label), not
+       a copy. Availability is shown inline so it is known before clicking. */ -}}
+{{- $type := .Params.library.type -}}
+{{- $typeLabels := dict "writing" "Writing" "manual" "Manual" "source" "Source" "reading" "Reading" "link" "Link" -}}
+{{- $typeLabel := index $typeLabels $type | default (title (string $type)) -}}
+
+{{- /* creator / manufacturer / authors */ -}}
+{{- $creator := "" -}}
+{{- with .Params.manufacturer }}{{ $creator = . }}{{ end -}}
+{{- if not $creator }}{{ with .Params.creator }}{{ $creator = . }}{{ end }}{{ end -}}
+{{- if not $creator }}{{ with .Params.authors }}{{ $creator = delimit . ", " }}{{ end }}{{ end -}}
+
+{{- /* year: explicit, else derived only from a real (non-zero) date */ -}}
+{{- $year := "" -}}
+{{- with .Params.year }}{{ $year = string . }}{{ end -}}
+{{- if and (not $year) (not .Date.IsZero) }}{{ $year = string .Date.Year }}{{ end -}}
+
+{{- $kickTail := $typeLabel -}}
+{{- if $year }}{{ $kickTail = $year }}{{ end -}}
+
+{{- /* optional sub-line: publisher (reading) or models (manual) */ -}}
+{{- $sub := "" -}}
+{{- with .Params.publisher }}{{ $sub = . }}{{ end -}}
+{{- if not $sub }}{{ with .Params.models }}{{ $sub = delimit . ", " }}{{ end }}{{ end -}}
+<li class="library-record">
+  <p class="library-record-kicker">
+    {{- if $creator }}{{ $creator | upper }} <span class="dot" aria-hidden="true">·</span> {{ end -}}
+    {{ $kickTail | upper }}
+  </p>
+  <p class="library-record-title"><a href="{{ .Permalink }}">{{ .Title }}</a></p>
+  {{- with $sub }}<p class="library-record-byline">{{ . }}</p>{{ end -}}
+  {{- with .Params.summary }}<p class="library-record-annotation">{{ . }}</p>{{ end -}}
+  <p class="library-record-foot">
+    {{ partial "library-availability.html" . }}
+    {{- with .Params.topics }}
+    <span class="library-record-topics">{{ range $i, $t := . }}{{ if $i }} <span class="dot" aria-hidden="true">·</span> {{ end }}<a href="{{ (printf "/topics/%s/" ($t | urlize)) | relURL }}">{{ $t }}</a>{{ end }}</span>
+    {{- end }}
+  </p>
+</li>
