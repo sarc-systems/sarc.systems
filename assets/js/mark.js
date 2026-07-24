@@ -1,25 +1,17 @@
-// Live landing mark — Rows 2 and 3 are independently animated: one letter at a
-// time (from either row) mutates to a permitted transform, with no coupling
-// between the two rows. Row 1 is stable; Row 4 is a static <use> mirror of
-// Row 1. Slow, irregular. Respects prefers-reduced-motion (stays canonical).
+// Live landing mark — all sixteen letters (four rows) animate independently:
+// one letter, chosen at random from any row, turns 90° on a fixed cadence, with
+// no coupling between rows. Respects prefers-reduced-motion (stays canonical).
 (function () {
   "use strict";
 
+  var INTERVAL = 2260; // ms between changes — one letter turns every 2.26s
+
   var root = document.querySelector("[data-mark]");
   if (!root) return;
-  var activeRow = root.querySelector("[data-mark-active]");
-  var mirrorRow = root.querySelector("[data-mark-mirror]");
-  if (!activeRow || !mirrorRow) return;
 
-  // Every letter in Rows 2 and 3 is an independent, individually mutable unit.
-  var letters = Array.prototype.slice.call(
-    root.querySelectorAll("[data-mark-active] .mk-letter, [data-mark-mirror] .mk-letter")
-  );
+  // Every letter in the mark is an independent, individually mutable unit.
+  var letters = Array.prototype.slice.call(root.querySelectorAll(".mk-letter"));
   if (!letters.length) return;
-
-  // Permitted transforms about each letter's own centre (transform-box: fill-box):
-  // canonical / horizontal reflection / vertical reflection / 180° rotation.
-  var STATES = ["", "scaleX(-1)", "scaleY(-1)", "rotate(180deg)"];
 
   var reduce = window.matchMedia("(prefers-reduced-motion: reduce)");
   var paused = false;
@@ -30,28 +22,27 @@
   function setState(l, s) { glyph(l).style.transform = s; }
   function restoreAll() { letters.forEach(function (l) { setState(l, ""); }); }
 
-  // Pick any state other than the current one — including canonical (""), so a
-  // letter can return to readable on its own. No global reset.
+  // Every step is a 90° turn about the letter's own centre (transform-box:
+  // fill-box). A readable letter rotates ±90° (direction chosen at random); a
+  // rotated letter turns back to readable — so it always returns on its own and
+  // never makes a 180° jump.
   function nextState(current) {
-    var opts = STATES.filter(function (s) { return s !== current; });
-    return opts[Math.floor(Math.random() * opts.length)];
+    if (current) return "";
+    return Math.random() < 0.5 ? "rotate(90deg)" : "rotate(-90deg)";
   }
 
   function mutate(l) { setState(l, nextState(currentState(l))); }
   function mutateOne() { mutate(letters[Math.floor(Math.random() * letters.length)]); }
 
-  function step() {
-    mutateOne();
-    schedule();
-  }
-
-  function schedule() {
-    clearTimeout(timer);
+  function start() {
+    stop();
     if (paused || reduce.matches) return;
-    timer = setTimeout(step, 3500 + Math.random() * 5500); // slow, irregular
+    timer = setInterval(mutateOne, INTERVAL);
   }
+  function stop() { clearInterval(timer); timer = null; }
 
-  // Interaction: click a letter -> transform it; click a row -> mutate one.
+  // Interaction: click a letter -> transform it; click elsewhere on the mark ->
+  // mutate one at random.
   letters.forEach(function (l) {
     l.style.cursor = "pointer";
     l.addEventListener("click", function (ev) {
@@ -59,15 +50,14 @@
       mutate(l);
     });
   });
-  activeRow.addEventListener("click", function () { mutateOne(); });
-  mirrorRow.addEventListener("click", function () { mutateOne(); });
-  root.addEventListener("pointerenter", function () { paused = true; clearTimeout(timer); });
-  root.addEventListener("pointerleave", function () { paused = false; schedule(); });
+  root.addEventListener("click", function () { mutateOne(); });
+  root.addEventListener("pointerenter", function () { paused = true; stop(); });
+  root.addEventListener("pointerleave", function () { paused = false; start(); });
 
   function onReduceChange() {
-    if (reduce.matches) { clearTimeout(timer); restoreAll(); } else { schedule(); }
+    if (reduce.matches) { stop(); restoreAll(); } else { start(); }
   }
   if (reduce.addEventListener) reduce.addEventListener("change", onReduceChange);
 
-  if (!reduce.matches) schedule();
+  if (!reduce.matches) start();
 })();

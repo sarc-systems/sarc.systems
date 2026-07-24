@@ -312,25 +312,24 @@ Rules:
 animated by `assets/js/mark.js`, styled in `assets/css/mark.css`. The mark is a
 responsive SVG system: 
 
-- Row 1: stable, readable, never transforms.
-- Row 2: an active transformation layer.
-- Row 3: shares Row 2's reflected geometry (canonical rest state is Row 2's
-  mirror) but is its **own** animated group whose letters transform
-  **independently** of Row 2 — the two rows are not coupled. One letter, chosen
-  at random from either row, mutates at a time.
-- Row 4: vertical reflection of Row 1 (stable, derived via SVG `<use>` — no
-  independent state).
-- Each letter is an independently transformable SVG group.
-- Permitted transforms on Row 2 and Row 3 letters: horizontal reflection,
-  vertical reflection, 180° rotation, restoration to canonical. (No position
-  swaps — removed.)
-- Slow, irregular intervals; a letter returns to readable on its own (no
-  synchronized global reset). No constant motion, jitter, flicker, glitch,
-  arbitrary-angle rotation, or elastic distortion.
+- Four rows of four letters. Rows are reflected across the figure's centre in
+  pairs (Row 2 is the fold-mirror of Row 1, Row 3 the centre-reflection of Row
+  2, Row 4 the centre-reflection of Row 1), so at rest the mark reads as the
+  woven SARC reflection.
+- All four rows are emitted as their own animatable groups (no passive `<use>`).
+  Every one of the sixteen letters is an independently transformable SVG group;
+  the rows are not coupled.
+- Animation: one letter, chosen at random from any row, turns at a time, on a
+  fixed cadence (currently every 2.26s).
+- Permitted transform: a 90° rotation in a random direction and restoration to
+  canonical (a readable letter turns ±90°, then turns back — never a 180° jump).
+  (Reflections and position swaps — removed.)
+- A letter returns to readable on its own (no synchronized global reset). No
+  jitter, flicker, glitch, arbitrary-angle rotation, or elastic distortion.
 - `prefers-reduced-motion`: static canonical state.
-- Optional interaction: click a letter → permitted transform; click a row →
-  one constrained random mutation; pointer over the mark may pause the
-  autonomous sequence.
+- Optional interaction: click a letter → rotate it; click elsewhere on the mark
+  → one constrained random mutation; pointer over the mark pauses the autonomous
+  sequence.
 - No "Enter" screen — institutional name and primary nav sit directly beneath
   the mark. This animation is the only prominent moving element on the site.
 

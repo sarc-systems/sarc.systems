@@ -11,8 +11,8 @@
 
 /* The mark — masthead / institutional-plate scale. Substantial space, no
    aggressive cropping, no colour effects. Its glow stays inside this plate.
-   This is the live SVG reconstruction (see CLAUDE.md): Row 1 stable, Row 2 the
-   active transform layer, Rows 3-4 derived reflections. */
+   This is the live SVG reconstruction (see CLAUDE.md): four rows, each its own
+   group, every letter independently animated. */
 .mark {
   max-width: 40rem;
   margin-inline: auto;
@@ -33,10 +33,7 @@
 /* Where rows overlap, take the darker value so the dark outline of the letter
    underneath shows through the fill of the letter on top (coupling lines from
    both letters), instead of the upper letter simply occluding the lower. */
-.mark-row-stable,
-.mark-row-active,
-.mark-row-mirror,
-.mark-reflected {
+.mark-row {
   mix-blend-mode: darken;
 }
 
@@ -48,25 +45,20 @@
   stroke: #0c0c0b;
   stroke-width: 11;          /* font units; scales down with the mark */
   stroke-linejoin: round;
-}
-.mark-row-stable .mk-glyph path,
-.mark-row-active .mk-glyph path,
-.mark-row-mirror .mk-glyph path {
   filter: drop-shadow(0 0 6px rgba(238, 232, 214, 0.28));
 }
 
-/* Row 2 and its mirror Row 3 transform about each letter's own centre, slowly.
-   Row 3 is driven in opposition to Row 2 (see mark.js) so the coupled pair
-   never reads as one rigid piece. */
-.mark-row-active .mk-glyph,
-.mark-row-mirror .mk-glyph {
+/* Every letter transforms about its own centre. All sixteen animate
+   independently (see mark.js): one letter at a time, from any row, turns 90° in
+   a random direction and later turns back. */
+.mk-glyph {
   transform-box: fill-box;
   transform-origin: center;
   transition: transform 520ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .mark-row-active .mk-glyph { transition: none; }
+  .mk-glyph { transition: none; }
 }
 
 /* Institutional name + statement, directly beneath the mark (no "Enter"). */
