@@ -15,6 +15,11 @@ creators:
 
 subjects: [feedback, instruments, sound]
 
+access:
+  - label: "Watch on YouTube"
+    kind: video
+    url: "https://youtu.be/Fo30MgBRQO0"
+
 draft: false
 ---
 

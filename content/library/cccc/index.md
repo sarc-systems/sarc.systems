@@ -16,6 +16,11 @@ images:
     credit: "Last.fm"
     source: "https://www.last.fm/music/C.C.C.C."
 
+access:
+  - label: "Watch on YouTube"
+    kind: video
+    url: "https://youtu.be/5f2we3QvCbI"
+
 draft: false
 ---
 
