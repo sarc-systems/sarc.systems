@@ -9,6 +9,12 @@ library:
 
 subjects: [sound, perception, space]
 
+images:
+  - file: "alvin-lucier.jpg"
+    alt: "Alvin Lucier at electronic equipment"
+    role: portrait
+    anchor: Right
+
 draft: false
 ---
 
