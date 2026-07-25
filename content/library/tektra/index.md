@@ -15,6 +15,12 @@ creators:
 
 subjects: [cybernetics, sound, feedback]
 
+images:
+  - file: "cover.jpg"
+    alt: "Cover of Tektra by Roland Kayn"
+    role: cover
+    credit: "Cortical Art"
+
 draft: false
 ---
 

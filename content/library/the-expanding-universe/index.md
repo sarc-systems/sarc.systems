@@ -15,6 +15,17 @@ creators:
 
 subjects: [sound, time]
 
+images:
+  - file: "cover.jpg"
+    alt: "Cover of The Expanding Universe by Laurie Spiegel"
+    role: cover
+    credit: "Bandcamp"
+
+access:
+  - label: "Bandcamp"
+    kind: bandcamp
+    url: "https://lauriespiegel.bandcamp.com/album/the-expanding-universe"
+
 draft: false
 ---
 

@@ -16,9 +16,8 @@ subjects: [sound, perception, space]
 
 images:
   - file: "cover.jpg"
-    alt: "Cover of The Soundscape by R. Murray Schafer"
-    role: cover
-    credit: "Internet Archive"
+    alt: "A British Columbia landscape — a soundscape environment"
+    role: still
 
 access:
   - label: "Internet Archive"

@@ -14,6 +14,12 @@ creators:
 
 subjects: [cybernetics, sound, feedback]
 
+images:
+  - file: "cover.jpg"
+    alt: "Cover of Infra by Roland Kayn"
+    role: cover
+    credit: "Cortical Art"
+
 draft: false
 ---
 

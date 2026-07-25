@@ -15,6 +15,17 @@ creators:
 
 subjects: [sound, instruments]
 
+images:
+  - file: "cover.jpg"
+    alt: "Cover of Con by Conrad Schnitzler"
+    role: cover
+    credit: "Bandcamp"
+
+access:
+  - label: "Bandcamp"
+    kind: bandcamp
+    url: "https://conradschnitzler.bandcamp.com/album/con"
+
 draft: false
 ---
 
