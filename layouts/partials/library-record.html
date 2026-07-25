@@ -8,7 +8,7 @@
 {{- $sarc := .Params.library.sarc_work -}}
 
 {{- $typeLabel := "" -}}{{ range $lib.types }}{{ if eq .type $type }}{{ $typeLabel = .label }}{{ end }}{{ end -}}
-{{- $subs := .Params.subjects -}}
+{{- $subs := .Params.subjects | default slice -}}
 {{- $subLabels := slice -}}
 {{- range $subs }}{{ $s := . }}{{ range $lib.subjects }}{{ if eq .subject $s }}{{ $subLabels = $subLabels | append .label }}{{ end }}{{ end }}{{ end -}}
 
