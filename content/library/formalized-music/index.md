@@ -22,6 +22,15 @@ images:
     credit: "Monoskop"
     source: "https://monoskop.org/"
 
+access:
+  - label: "Read at Monoskop"
+    kind: external-copy
+    url: "https://monoskop.org/images/7/74/Xenakis_Iannis_Formalized_Music_Thought_and_Mathematics_in_Composition.pdf"
+
+rights:
+  status: external-link-only
+  note: "SARC links to this resource and does not host or mirror the file."
+
 draft: false
 ---
 
