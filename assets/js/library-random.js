@@ -25,8 +25,8 @@
   function cardHTML(e) {
     var img = e.primary_image;
     var thumb = img ? '<a class="library-featured-thumb" href="' + esc(e.url) +
-      '" tabindex="-1" aria-hidden="true"><img src="' + esc(img.url) + '" width="' +
-      img.width + '" height="' + img.height + '" alt="' + esc(img.alt) +
+      '" tabindex="-1" aria-hidden="true"><img src="' + esc(img.url) +
+      '" style="object-position: ' + esc(img.pos || "center") + '" alt="' + esc(img.alt) +
       '" loading="lazy" decoding="async"></a>' : "";
     var kick = [];
     if (e.creator_names) kick.push(esc(e.creator_names));

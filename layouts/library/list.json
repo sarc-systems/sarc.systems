@@ -25,7 +25,7 @@
 
   {{- /* primary image */ -}}
   {{- $img := "" -}}
-  {{- $im0 := index .Params.images 0 }}{{ with $im0 }}{{ with ($p.Resources.GetMatch .file) }}{{ $t := .Fill (printf "240x240 %s q80" ($im0.anchor | default "Center")) }}{{ $img = dict "url" $t.RelPermalink "width" $t.Width "height" $t.Height "alt" ($im0.alt | default "") }}{{ end }}{{ end -}}
+  {{- $im0 := index .Params.images 0 }}{{ with $im0 }}{{ $anchor := $im0.anchor | default "Center" }}{{ $pos := "center" }}{{ if eq $anchor "Top" }}{{ $pos = "center top" }}{{ else if eq $anchor "Bottom" }}{{ $pos = "center bottom" }}{{ else if eq $anchor "Left" }}{{ $pos = "left center" }}{{ else if eq $anchor "Right" }}{{ $pos = "right center" }}{{ end }}{{ with ($p.Resources.GetMatch .file) }}{{ $t := .Fill (printf "360x360 %s q80" $anchor) }}{{ $img = dict "url" $t.RelPermalink "width" $t.Width "height" $t.Height "alt" ($im0.alt | default "") "pos" $pos }}{{ end }}{{ end -}}
 
   {{- /* access */ -}}
   {{- $access := slice -}}

@@ -15,19 +15,21 @@
 {{- $creators := trim (partial "library-creators.html" (dict "page" . "sep" ", ")) " " -}}
 {{- $year := "" -}}{{ with .Params.year }}{{ $year = string . }}{{ else }}{{ if not .Date.IsZero }}{{ $year = string .Date.Year }}{{ end }}{{ end -}}
 
-{{- /* primary image (first) → square thumbnail. Optional per-image `anchor`
-       (Center default; Top/Smart/… ) controls the crop focus. */ -}}
-{{- $thumb := "" }}{{ $thumb2x := "" }}{{ $alt := "" -}}
+{{- /* primary image (first) → thumbnail. The thumbnail fills the record's height
+       (set by the text) and never grows the row; a per-image `anchor` sets both
+       the Fill focus and the CSS object-position. */ -}}
+{{- $thumb := "" }}{{ $thumb2x := "" }}{{ $alt := "" }}{{ $pos := "center" -}}
 {{- $im0 := index .Params.images 0 -}}
 {{- with $im0 }}{{ with ($.Resources.GetMatch .file) }}
   {{- $anchor := $im0.anchor | default "Center" -}}
-  {{- $thumb = .Fill (printf "160x160 %s q80" $anchor) }}{{ $thumb2x = .Fill (printf "320x320 %s q80" $anchor) }}{{ $alt = $im0.alt -}}
+  {{- $thumb = .Fill (printf "240x240 %s q80" $anchor) }}{{ $thumb2x = .Fill (printf "480x480 %s q80" $anchor) }}{{ $alt = $im0.alt -}}
+  {{- if eq $anchor "Top" }}{{ $pos = "center top" }}{{ else if eq $anchor "Bottom" }}{{ $pos = "center bottom" }}{{ else if eq $anchor "Left" }}{{ $pos = "left center" }}{{ else if eq $anchor "Right" }}{{ $pos = "right center" }}{{ end -}}
 {{- end }}{{ end -}}
 <li class="library-record{{ if $thumb }} has-thumb{{ end }}" data-library-id="{{ $id }}" data-type="{{ $type }}" data-subjects="{{ delimit $subs " " }}" data-sarc="{{ if $sarc }}true{{ else }}false{{ end }}">
   {{- with $thumb }}
   <a class="library-record-thumb" href="{{ $.RelPermalink }}" tabindex="-1" aria-hidden="true">
     <img src="{{ .RelPermalink }}" srcset="{{ .RelPermalink }} 1x, {{ $thumb2x.RelPermalink }} 2x"
-         width="{{ .Width }}" height="{{ .Height }}" alt="{{ $alt }}" loading="lazy" decoding="async">
+         style="object-position: {{ $pos }}" alt="{{ $alt }}" loading="lazy" decoding="async">
   </a>
   {{- end }}
   <div class="library-record-body">

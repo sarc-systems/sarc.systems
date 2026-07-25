@@ -1,6 +1,6 @@
 ---
 title: "Mother Mallard's Portable Masterpiece Company"
-summary: "Mother Mallard's Portable Masterpiece Company — placeholder entry; annotation to come."
+summary: "Mother Mallard's Portable Masterpiece Company — early synthesizer ensemble from America."
 
 library:
   id: mother-mallard
@@ -24,4 +24,4 @@ access:
 draft: false
 ---
 
-Mother Mallard's Portable Masterpiece Company — placeholder entry; annotation to come.
+Mother Mallard's Portable Masterpiece Company was one of the first music ensembles performing live on electronic instruments.

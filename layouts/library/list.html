@@ -3,8 +3,7 @@
 {{ define "main" }}
 {{- $entries := partial "library-collect.html" (dict "ctx" .) -}}
 <div class="wrap">
-  <header class="page-head">
-    <p class="eyebrow">Library</p>
+  <header class="page-head library-head">
     <h1 class="page-title">{{ .Title }}</h1>
     {{- with .Content }}<div class="page-intro">{{ . }}</div>{{ end }}
   </header>

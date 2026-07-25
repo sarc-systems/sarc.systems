@@ -1,6 +1,6 @@
 ---
 title: "C.C.C.C."
-summary: "C.C.C.C. — placeholder entry; annotation to come."
+summary: "C.C.C.C. — psychedelic noise performance."
 
 library:
   id: cccc
@@ -24,4 +24,4 @@ access:
 draft: false
 ---
 
-C.C.C.C. — placeholder entry; annotation to come.
+C.C.C.C. (Cosmic Coincidence Control Center) were a Japanese harsh noise group active in the 1990s.
