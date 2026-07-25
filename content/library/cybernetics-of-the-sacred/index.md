@@ -14,6 +14,11 @@ creators:
 
 subjects: [cybernetics, organization]
 
+images:
+  - file: "cover.jpg"
+    alt: "Cover of Cybernetics of the Sacred"
+    role: cover
+
 draft: false
 ---
 

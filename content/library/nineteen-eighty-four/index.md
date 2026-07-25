@@ -14,6 +14,13 @@ creators:
 
 subjects: [organization, memory, language]
 
+images:
+  - file: "cover.jpg"
+    alt: "Nineteen Eighty-Four"
+    role: cover
+    credit: "The New Yorker"
+    source: "https://www.newyorker.com/"
+
 draft: false
 ---
 
