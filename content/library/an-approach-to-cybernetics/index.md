@@ -20,7 +20,7 @@ images:
     role: cover
 
 access:
-  - label: "Read externally"
+  - label: "PDF"
     kind: external-copy
     url: "https://library.agnescameron.info/cybernetics/An%20Approach%20to%20Cybernetics,%20Gordon%20Pask%20(1961).pdf"
 rights:

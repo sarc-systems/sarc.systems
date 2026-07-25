@@ -30,7 +30,7 @@ access:
   - label: "CBC Massey Lectures (audio)"
     url: "https://www.cbc.ca/radio/ideas/the-1973-cbc-massey-lectures-designing-freedom-1.2946819"
     kind: audio
-  - label: "Read at Monoskop"
+  - label: "PDF"
     url: "https://monoskop.org/images/e/e3/Beer_Stafford_Designing_Freedom.pdf"
     kind: external-copy
 

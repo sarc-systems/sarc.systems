@@ -30,7 +30,7 @@ access:
   - label: "Publisher (MIT Press)"
     url: "https://mitpress.mit.edu/9780262521123/vehicles/"
     kind: publisher
-  - label: "Read externally"
+  - label: "PDF"
     url: "https://library.agnescameron.info/artificial%20intelligence/Vehicles,%20Experiments%20in%20Synthetic%20Psychology,%20Valentino%20Braitenberg%20(1984).pdf"
     kind: external-copy
 

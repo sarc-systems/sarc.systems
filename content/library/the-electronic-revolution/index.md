@@ -16,7 +16,7 @@ creators:
 subjects: [language, technology, sound]
 
 access:
-  - label: "Read (PDF)"
+  - label: "PDF"
     kind: external-copy
     url: "https://on-air.caricomassimo.org/media/pages/airchive/the-electronic-revolution/98247bfb5c-1715897949/electronic_revolution-w-burrouhgs.pdf"
 

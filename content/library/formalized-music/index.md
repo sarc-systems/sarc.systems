@@ -23,7 +23,7 @@ images:
     source: "https://monoskop.org/"
 
 access:
-  - label: "Read at Monoskop"
+  - label: "PDF"
     kind: external-copy
     url: "https://monoskop.org/images/7/74/Xenakis_Iannis_Formalized_Music_Thought_and_Mathematics_in_Composition.pdf"
 

@@ -16,7 +16,7 @@ creators:
 subjects: [language, sound, perception]
 
 access:
-  - label: "Read (PDF)"
+  - label: "PDF"
     kind: external-copy
     url: "https://asounder.org/resources/burroughs_invisible.pdf"
 

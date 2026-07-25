@@ -30,7 +30,7 @@ access:
   - label: "Publisher / purchase"
     url: "https://www.frogpeak.org/fpartists/fptenney.html"
     kind: publisher
-  - label: "Read at Monoskop"
+  - label: "PDF"
     url: "https://monoskop.org/images/1/13/Tenney_James_Meta-Hodos_and_Meta_Meta-Hodos.pdf"
     kind: external-copy
 

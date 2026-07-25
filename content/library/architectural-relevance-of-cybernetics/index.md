@@ -15,7 +15,7 @@ creators:
 subjects: [cybernetics]
 
 access:
-  - label: "Read externally"
+  - label: "PDF"
     kind: external-copy
     url: "https://library.agnescameron.info/cybernetics/The%20Architectural%20Relevance%20of%20Cybernetics,%20Gordon%20Pask.pdf"
 rights:
