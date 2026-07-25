@@ -15,6 +15,13 @@ creators:
 
 subjects: [number, sound, computation]
 
+images:
+  - file: "upic-score.jpg"
+    alt: "Xenakis, Mycènes Alpha (UPIC score, 1978)"
+    role: diagram
+    credit: "WilderUtopia"
+    source: "https://wilderutopia.com/"
+
 draft: false
 ---
 

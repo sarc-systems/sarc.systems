@@ -15,6 +15,11 @@ creators:
 
 subjects: [number, sound, computation]
 
+images:
+  - file: "cover.jpg"
+    alt: "La Légende d'Eer"
+    role: cover
+
 draft: false
 ---
 
