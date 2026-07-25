@@ -16,6 +16,11 @@ images:
     credit: "CutCommon"
     source: "https://www.cutcommonmag.com/"
 
+access:
+  - label: "Portrait documentary"
+    kind: video
+    url: "https://youtu.be/D2U0q4lZiFg"
+
 draft: false
 ---
 
