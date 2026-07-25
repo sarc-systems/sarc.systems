@@ -11,6 +11,7 @@ subjects: [sound, perception]
 
 images:
   - file: "amm.jpg"
+    anchor: Top
     alt: "AMM"
     role: portrait
 

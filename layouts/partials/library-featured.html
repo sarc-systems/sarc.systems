@@ -7,7 +7,7 @@
 {{- $subLabels := slice }}{{ range .Params.subjects }}{{ $s := . }}{{ range $lib.subjects }}{{ if eq .subject $s }}{{ $subLabels = $subLabels | append .label }}{{ end }}{{ end }}{{ end -}}
 {{- $creators := trim (partial "library-creators.html" (dict "page" . "sep" ", ")) " " -}}
 {{- $year := "" }}{{ with .Params.year }}{{ $year = string . }}{{ else }}{{ if not .Date.IsZero }}{{ $year = string .Date.Year }}{{ end }}{{ end -}}
-{{- $img := "" }}{{ with (index .Params.images 0) }}{{ with ($.Resources.GetMatch .file) }}{{ $img = .Fill "220x220 Center q80" }}{{ end }}{{ end -}}
+{{- $img := "" }}{{ $im0 := index .Params.images 0 }}{{ with $im0 }}{{ with ($.Resources.GetMatch .file) }}{{ $img = .Fill (printf "220x220 %s q80" ($im0.anchor | default "Center")) }}{{ end }}{{ end -}}
 <article class="library-featured" data-library-id="{{ .Params.library.id }}">
   {{- with $img }}
   <a class="library-featured-thumb" href="{{ $.RelPermalink }}" tabindex="-1" aria-hidden="true"><img src="{{ .RelPermalink }}" width="{{ .Width }}" height="{{ .Height }}" alt="{{ (index $.Params.images 0).alt }}" loading="lazy" decoding="async"></a>

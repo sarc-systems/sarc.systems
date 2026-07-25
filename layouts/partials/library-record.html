@@ -15,10 +15,13 @@
 {{- $creators := trim (partial "library-creators.html" (dict "page" . "sep" ", ")) " " -}}
 {{- $year := "" -}}{{ with .Params.year }}{{ $year = string . }}{{ else }}{{ if not .Date.IsZero }}{{ $year = string .Date.Year }}{{ end }}{{ end -}}
 
-{{- /* primary image (first) → square thumbnail */ -}}
+{{- /* primary image (first) → square thumbnail. Optional per-image `anchor`
+       (Center default; Top/Smart/… ) controls the crop focus. */ -}}
 {{- $thumb := "" }}{{ $thumb2x := "" }}{{ $alt := "" -}}
-{{- with (index .Params.images 0) }}{{ with ($.Resources.GetMatch .file) }}
-  {{- $thumb = .Fill "160x160 Center q80" }}{{ $thumb2x = .Fill "320x320 Center q80" }}{{ $alt = (index $.Params.images 0).alt -}}
+{{- $im0 := index .Params.images 0 -}}
+{{- with $im0 }}{{ with ($.Resources.GetMatch .file) }}
+  {{- $anchor := $im0.anchor | default "Center" -}}
+  {{- $thumb = .Fill (printf "160x160 %s q80" $anchor) }}{{ $thumb2x = .Fill (printf "320x320 %s q80" $anchor) }}{{ $alt = $im0.alt -}}
 {{- end }}{{ end -}}
 <li class="library-record{{ if $thumb }} has-thumb{{ end }}" data-library-id="{{ $id }}" data-type="{{ $type }}" data-subjects="{{ delimit $subs " " }}" data-sarc="{{ if $sarc }}true{{ else }}false{{ end }}">
   {{- with $thumb }}

@@ -11,6 +11,7 @@ subjects: [sound, instruments]
 
 images:
   - file: "conrad-schnitzler.jpg"
+    anchor: Top
     alt: "Conrad Schnitzler"
     role: portrait
     credit: "Bureau B"
