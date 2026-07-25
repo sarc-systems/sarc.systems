@@ -16,9 +16,11 @@ subjects: [sound, space]
 
 images:
   - file: "cover.jpg"
-    alt: "Cover of Planetary Unfolding by Michael Stearns"
-    role: cover
-    credit: "Projekt Records"
+    alt: "Michael Stearns"
+    role: portrait
+    anchor: Right
+    credit: "15 Questions"
+    source: "https://15questions.net/interview/fifteen-questions-interview-michael-stearns/"
 
 access:
   - label: "Listen on Bandcamp"

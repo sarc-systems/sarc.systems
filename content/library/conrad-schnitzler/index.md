@@ -17,6 +17,11 @@ images:
     credit: "Bureau B"
     source: "https://www.bureau-b.com/fileadmin/user_upload/con_from_mars2.jpg"
 
+access:
+  - label: "Official site"
+    kind: website
+    url: "https://fancymoon.com/con_s/"
+
 draft: false
 ---
 
