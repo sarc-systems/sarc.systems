@@ -17,7 +17,7 @@ images:
     source: "https://freight.cargo.site/w/500/q/94/i/083cc9f51b22b962d3fd2a73d6caea43fff4393c2d21437073e500f0d7b03053/Jean-Claude-ELOY-Photo-Volker-Muller_500.jpg"
 
 access:
-  - label: "Official website"
+  - label: "Official site"
     kind: website
     url: "https://www.eloyjeanclaude.com"
 

@@ -17,6 +17,9 @@ images:
     source: "https://www.starsend.org/graphics/mmpmc06.jpg"
 
 access:
+  - label: "Official site"
+    kind: website
+    url: "https://www.mothermallard.com/Music.html"
   - label: "Star's End feature"
     kind: website
     url: "https://www.starsend.org/mmpmc.html"

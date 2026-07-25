@@ -16,6 +16,11 @@ images:
     credit: "Discogs"
     source: "https://www.discogs.com/artist/19275"
 
+access:
+  - label: "Maryanne Amacher Foundation"
+    kind: website
+    url: "https://www.blankforms.org/the-maryanne-amacher-foundation"
+
 draft: false
 ---
 

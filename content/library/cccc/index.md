@@ -17,7 +17,7 @@ images:
     source: "https://www.last.fm/music/C.C.C.C."
 
 access:
-  - label: "Watch on YouTube"
+  - label: "YouTube"
     kind: video
     url: "https://youtu.be/5f2we3QvCbI"
 

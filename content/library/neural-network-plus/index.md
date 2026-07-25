@@ -23,7 +23,7 @@ images:
     source: "https://mlure.art/"
 
 access:
-  - label: "Watch on YouTube"
+  - label: "YouTube"
     kind: video
     url: "https://youtu.be/Fo30MgBRQO0"
 
