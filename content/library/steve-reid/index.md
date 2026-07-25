@@ -9,6 +9,11 @@ library:
 
 subjects: [sound, instruments]
 
+images:
+  - file: "steve-reid.jpg"
+    alt: "Steve Reid"
+    role: portrait
+
 draft: false
 ---
 

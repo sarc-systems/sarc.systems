@@ -9,6 +9,11 @@ library:
 
 subjects: [language, time, memory]
 
+images:
+  - file: "borges.jpg"
+    alt: "Jorge Luis Borges"
+    role: portrait
+
 draft: false
 ---
 

@@ -9,6 +9,12 @@ library:
 
 subjects: [dynamical-systems, form, language]
 
+images:
+  - file: "deleuze.jpg"
+    alt: "Gilles Deleuze"
+    role: portrait
+    anchor: Top
+
 draft: false
 ---
 

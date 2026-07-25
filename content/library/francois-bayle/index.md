@@ -9,6 +9,12 @@ library:
 
 subjects: [sound, space]
 
+images:
+  - file: "bayle.jpg"
+    alt: "François Bayle"
+    role: portrait
+    credit: "MUBI"
+
 related:
   - ref: grm
     relation: part-of

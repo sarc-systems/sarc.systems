@@ -9,6 +9,12 @@ library:
 
 subjects: [sound, instruments]
 
+images:
+  - file: "takayanagi.jpg"
+    alt: "Masayuki Takayanagi"
+    credit: "Blank Forms"
+    source: "https://www.blankforms.org/sites/default/files/shopify_images/BF-008_front_cover.jpg"
+
 draft: false
 ---
 

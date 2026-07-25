@@ -9,6 +9,11 @@ library:
 
 subjects: [sound, technology, feedback]
 
+images:
+  - file: "brian-eno.jpg"
+    alt: "Brian Eno"
+    role: portrait
+
 draft: false
 ---
 

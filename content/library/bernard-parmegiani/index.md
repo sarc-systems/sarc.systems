@@ -9,6 +9,11 @@ library:
 
 subjects: [sound, perception]
 
+images:
+  - file: "parmegiani.jpg"
+    alt: "Bernard Parmegiani"
+    role: portrait
+
 related:
   - ref: grm
     relation: part-of
