@@ -14,6 +14,11 @@ images:
     alt: "Kraftwerk"
     role: portrait
 
+access:
+  - label: "Official site"
+    kind: website
+    url: "https://kraftwerk.com"
+
 draft: false
 ---
 
