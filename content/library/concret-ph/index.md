@@ -15,6 +15,13 @@ creators:
 
 subjects: [number, sound, computation]
 
+images:
+  - file: "xenakis-sketch.jpg"
+    alt: "Xenakis sketch"
+    role: diagram
+    credit: "Columbia University"
+    source: "https://sites.music.columbia.edu/"
+
 draft: false
 ---
 

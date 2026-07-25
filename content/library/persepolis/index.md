@@ -15,6 +15,13 @@ creators:
 
 subjects: [number, sound, computation]
 
+images:
+  - file: "persepolis.jpg"
+    alt: "Xenakis, Persepolis (A Utopian Stage)"
+    role: still
+    credit: "Bowerbird"
+    source: "https://www.bowerbird.org/"
+
 draft: false
 ---
 
