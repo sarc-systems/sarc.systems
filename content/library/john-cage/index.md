@@ -16,6 +16,11 @@ images:
     credit: "Cantaloupe Music"
     source: "https://cantaloupemusic.com/sites/default/files/artistimages/14481_50c8e093a34d23.92851346-big.jpg"
 
+access:
+  - label: "Official website"
+    kind: website
+    url: "https://johncage.org"
+
 draft: false
 ---
 

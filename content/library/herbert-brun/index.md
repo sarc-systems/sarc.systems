@@ -15,6 +15,11 @@ images:
     role: portrait
     source: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ-xFA4yzTH1fmlPqPxr7XTZWUULa61pU5AkGo_U0shAGG004HTaoWOSh0"
 
+access:
+  - label: "Official website"
+    kind: website
+    url: "https://www.herbertbrun.org"
+
 draft: false
 ---
 

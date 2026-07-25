@@ -22,6 +22,11 @@ images:
     caption: "Light-and-sound scheme for the Polytope de Cluny."
     source: "Iannis Xenakis"
 
+access:
+  - label: "Listen on Bandcamp"
+    kind: bandcamp
+    url: "https://karlrecords.bandcamp.com/track/polytope-de-cluny-1972"
+
 draft: false
 ---
 

@@ -15,6 +15,11 @@ creators:
 
 subjects: [number, sound, computation]
 
+access:
+  - label: "Listen on Bandcamp"
+    kind: bandcamp
+    url: "https://karlrecords.bandcamp.com/track/voyage-absolu-des-unari-vers-androm-de-1989"
+
 draft: false
 ---
 

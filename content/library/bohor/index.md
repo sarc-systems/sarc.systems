@@ -22,6 +22,11 @@ images:
     credit: "Columbia University"
     source: "https://sites.music.columbia.edu/"
 
+access:
+  - label: "Listen on Bandcamp"
+    kind: bandcamp
+    url: "https://karlrecords.bandcamp.com/track/bohor-1962"
+
 draft: false
 ---
 

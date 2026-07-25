@@ -15,6 +15,11 @@ images:
     role: portrait
     source: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhFMvVg_dC0VKX1aGvXHzHXgVBi6LT3H9_48gCiUQDSTEa90ZjgF464JpBVacvg3PJ32pPTKXQLsti2_opRvpGIRojoXl7b3pbx_rja4fRFGLC6divps-wvFhb7BOAEBp7igDkE8Xuscw/s640/reihem_0905_rainforest_09.jpg"
 
+access:
+  - label: "Official website"
+    kind: website
+    url: "https://davidtudor.org"
+
 draft: false
 ---
 

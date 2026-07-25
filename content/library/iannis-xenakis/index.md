@@ -15,6 +15,14 @@ images:
     role: portrait
     source: "https://musicaenmexico.com.mx/wp-content/uploads/2022/11/xenakis_domingo.jpg"
 
+access:
+  - label: "Official website"
+    kind: website
+    url: "https://www.iannis-xenakis.org"
+  - label: "Electroacoustic Works (Bandcamp)"
+    kind: bandcamp
+    url: "https://karlrecords.bandcamp.com/album/electroacoustic-works"
+
 draft: false
 ---
 

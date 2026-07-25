@@ -22,6 +22,11 @@ images:
     credit: "Bowerbird"
     source: "https://www.bowerbird.org/"
 
+access:
+  - label: "Listen on Bandcamp"
+    kind: bandcamp
+    url: "https://karlrecords.bandcamp.com/track/persepolis-1972"
+
 draft: false
 ---
 

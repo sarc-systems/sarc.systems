@@ -16,6 +16,11 @@ images:
     credit: "The New Yorker"
     source: "https://media.newyorker.com/photos/59097c718b51cf59fc423e63/master/w_2240,c_limit/OBrien-Oliveros.jpg"
 
+access:
+  - label: "Official website"
+    kind: website
+    url: "https://paulineoliveros.us"
+
 draft: false
 ---
 

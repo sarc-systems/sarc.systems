@@ -15,6 +15,11 @@ creators:
 
 subjects: [number, sound, computation]
 
+access:
+  - label: "Listen on Bandcamp"
+    kind: bandcamp
+    url: "https://karlrecords.bandcamp.com/track/s-709-1992"
+
 draft: false
 ---
 

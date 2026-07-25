@@ -15,6 +15,11 @@ creators:
 
 subjects: [number, sound, computation]
 
+access:
+  - label: "Listen on Bandcamp"
+    kind: bandcamp
+    url: "https://karlrecords.bandcamp.com/track/gendy-3-1991"
+
 draft: false
 ---
 

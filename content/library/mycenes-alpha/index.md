@@ -22,6 +22,11 @@ images:
     credit: "WilderUtopia"
     source: "https://wilderutopia.com/"
 
+access:
+  - label: "Listen on Bandcamp"
+    kind: bandcamp
+    url: "https://karlrecords.bandcamp.com/track/mycenae-alpha-1978"
+
 draft: false
 ---
 

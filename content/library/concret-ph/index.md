@@ -22,6 +22,11 @@ images:
     credit: "Wikimedia Commons"
     source: "https://commons.wikimedia.org/wiki/File:Expo58_building_Philips.jpg"
 
+access:
+  - label: "Listen on Bandcamp"
+    kind: bandcamp
+    url: "https://karlrecords.bandcamp.com/track/concret-ph-1958"
+
 draft: false
 ---
 

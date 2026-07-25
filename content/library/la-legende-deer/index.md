@@ -20,6 +20,11 @@ images:
     alt: "La Légende d'Eer"
     role: cover
 
+access:
+  - label: "Listen on Bandcamp"
+    kind: bandcamp
+    url: "https://karlrecords.bandcamp.com/track/la-l-gende-d-eer-1978"
+
 draft: false
 ---
 
