@@ -15,6 +15,17 @@ creators:
 
 subjects: [sound, time, perception]
 
+images:
+  - file: "cover.jpg"
+    alt: "Cover of Trilogie de la Mort by Éliane Radigue"
+    role: cover
+    credit: "Bandcamp"
+
+access:
+  - label: "Bandcamp"
+    kind: bandcamp
+    url: "https://elianeradigue.bandcamp.com/album/trilogie-de-la-mort"
+
 draft: false
 ---
 

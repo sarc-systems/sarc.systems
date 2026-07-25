@@ -15,6 +15,20 @@ creators:
 
 subjects: [technology, form]
 
+images:
+  - file: "cover.jpg"
+    alt: "A geodesic dome — from Buckminster Fuller's Critical Path"
+    role: still
+    credit: "jeromearul.com"
+
+access:
+  - label: "Internet Archive"
+    kind: external-copy
+    url: "https://archive.org/details/LIBRORBuckminsterFullerCriticalPath"
+rights:
+  status: external-link-only
+  note: "SARC links to this resource and does not host or mirror the file."
+
 draft: false
 ---
 
