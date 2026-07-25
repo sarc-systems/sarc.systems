@@ -18,6 +18,7 @@ images:
   - file: "cover.jpg"
     alt: "Cover of Greek Mathematical Thought and the Origin of Algebra"
     role: cover
+    anchor: Top
     credit: "Dover Publications"
     source: "https://store.doverpublications.com/9780486272894.html"
 

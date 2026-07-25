@@ -16,6 +16,11 @@ images:
     credit: "Sonic Acts"
     source: "https://cms.sonicacts.com/uploads/Jaap_Vink_2_f7be23f97c.jpg"
 
+access:
+  - label: "Bandcamp"
+    kind: bandcamp
+    url: "https://recollectiongrm.bandcamp.com/album/s-t"
+
 draft: false
 ---
 

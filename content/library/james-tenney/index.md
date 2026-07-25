@@ -13,6 +13,7 @@ images:
   - file: "james-tenney.jpg"
     alt: "James Tenney"
     role: portrait
+    anchor: Right
     credit: "Alchetron"
     source: "https://alchetron.com/James-Tenney"
 

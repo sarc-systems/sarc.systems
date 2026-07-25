@@ -16,6 +16,14 @@ images:
     credit: "Discogs"
     source: "https://www.discogs.com/artist/341514"
 
+access:
+  - label: "Official site"
+    kind: website
+    url: "https://www.milfordgraves.com"
+  - label: "Full Mantis (documentary)"
+    kind: website
+    url: "https://fullmantis.com"
+
 draft: false
 ---
 
