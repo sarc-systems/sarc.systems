@@ -1,6 +1,6 @@
 ---
 title: "Throbbing Gristle"
-summary: "British industrial group pioneering tape, electronics, and confrontational performance."
+summary: "British industrial group pioneering industrial music and culture."
 
 library:
   id: throbbing-gristle
@@ -17,4 +17,4 @@ images:
 draft: false
 ---
 
-British industrial group pioneering tape, electronics, and confrontational performance.
+British industrial group pioneering industrial music, alchemical investigations into audio electronics, and confrontational live performance.

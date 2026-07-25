@@ -1,6 +1,6 @@
 ---
 title: "Time Machines"
-summary: "Coil's 1998 album of sustained drones, each track titled for a psychoactive compound and intended to suspend the sense of time."
+summary: "Coil's 1998 album of sustained electronic drones."
 year: 1998
 
 library:
@@ -28,5 +28,5 @@ access:
 draft: false
 ---
 
-Coil's 1998 album of sustained drones, each track titled for a psychoactive
+Coil's 1998 album of sustained electronic drones, each track titled for a psychoactive
 compound and intended to suspend the sense of time.

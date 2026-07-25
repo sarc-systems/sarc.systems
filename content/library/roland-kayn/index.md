@@ -16,6 +16,11 @@ images:
     credit: "Discogs"
     source: "https://www.discogs.com/artist/60338"
 
+access:
+  - label: "Listen on Bandcamp"
+    kind: bandcamp
+    url: "https://rolandkayn.bandcamp.com"
+
 draft: false
 ---
 
