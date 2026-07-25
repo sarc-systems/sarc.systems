@@ -12,6 +12,7 @@ library:
 creators:
   - name: "James Tenney"
     role: author
+    ref: james-tenney
 
 subjects:
   - perception

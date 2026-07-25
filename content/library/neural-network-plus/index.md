@@ -15,6 +15,13 @@ creators:
 
 subjects: [feedback, instruments, sound]
 
+images:
+  - file: "feedback-paths.jpg"
+    alt: "Feedback signal paths"
+    role: diagram
+    credit: "mlure.art"
+    source: "https://mlure.art/"
+
 access:
   - label: "Watch on YouTube"
     kind: video

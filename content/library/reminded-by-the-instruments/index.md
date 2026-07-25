@@ -14,6 +14,13 @@ creators:
 
 subjects: [instruments, sound, feedback]
 
+images:
+  - file: "cover.jpg"
+    alt: "Reminded by the Instruments (book)"
+    role: cover
+    credit: "4Columns"
+    source: "https://www.4columns.org/"
+
 related:
   - ref: david-tudor
     relation: documents
