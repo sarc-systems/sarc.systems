@@ -15,6 +15,13 @@ creators:
 
 subjects: [number, form, computation, sound]
 
+images:
+  - file: "cover.jpg"
+    alt: "Cover of Formalized Music"
+    role: cover
+    credit: "Monoskop"
+    source: "https://monoskop.org/"
+
 draft: false
 ---
 

@@ -9,6 +9,13 @@ library:
 
 subjects: [sound, organization]
 
+images:
+  - file: "frog-peak.jpg"
+    alt: "Frog Peak Music"
+    role: cover
+    credit: "Bandcamp"
+    source: "https://frogpeak.bandcamp.com/"
+
 access:
   - label: "Website"
     kind: website

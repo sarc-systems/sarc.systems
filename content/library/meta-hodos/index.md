@@ -19,7 +19,12 @@ subjects:
   - form
   - sound
 
-images: []
+images:
+  - file: "hl-diagram.jpg"
+    alt: "Tenney's temporal-gestalt hierarchy diagram"
+    role: diagram
+    caption: "The temporal-gestalt hierarchy (Meta-Hodos)."
+    source: "Meta-Hodos"
 
 access:
   - label: "Publisher / purchase"
