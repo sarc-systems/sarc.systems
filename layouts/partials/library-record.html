@@ -23,7 +23,7 @@
 {{- with $im0 }}{{ with ($.Resources.GetMatch .file) }}
   {{- $anchor := $im0.anchor | default "Center" -}}
   {{- $thumb = .Fill (printf "240x240 %s q80" $anchor) }}{{ $thumb2x = .Fill (printf "480x480 %s q80" $anchor) }}{{ $alt = $im0.alt -}}
-  {{- if eq $anchor "Top" }}{{ $pos = "center top" }}{{ else if eq $anchor "Bottom" }}{{ $pos = "center bottom" }}{{ else if eq $anchor "Left" }}{{ $pos = "left center" }}{{ else if eq $anchor "Right" }}{{ $pos = "right center" }}{{ end -}}
+  {{- $pos = partial "library-image-pos.html" $anchor -}}
 {{- end }}{{ end -}}
 <li class="library-record{{ if $thumb }} has-thumb{{ end }}" data-library-id="{{ $id }}" data-type="{{ $type }}" data-subjects="{{ delimit $subs " " }}" data-sarc="{{ if $sarc }}true{{ else }}false{{ end }}">
   {{- with $thumb }}
