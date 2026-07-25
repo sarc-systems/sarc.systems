@@ -21,6 +21,10 @@
 .library-record-thumb { display: block; height: 100%; }
 .library-record-thumb img {
   height: 100%; width: auto; aspect-ratio: 1; object-fit: cover; display: block;
+  /* Cap the square so a tall (text-driven) row — common on narrow screens where
+     the summary wraps to many lines — can't blow the thumbnail up to half the
+     viewport. The image top-aligns within the taller cell. */
+  max-height: 168px;
   border: 1px solid var(--rule); background: var(--paper-2);
 }
 .library-record-kicker {
@@ -143,7 +147,7 @@
 .library-featured { display: flex; gap: 1.2rem; align-items: stretch; margin-top: 0.8rem; }
 .library-featured-thumb { display: block; }
 .library-featured-thumb img {
-  height: 100%; width: auto; aspect-ratio: 1; min-height: 148px; object-fit: cover; display: block;
+  height: 100%; width: auto; aspect-ratio: 1; min-height: 148px; max-height: 220px; object-fit: cover; display: block;
   border: 1px solid var(--rule); background: var(--paper-2);
 }
 .library-featured-kicker {
@@ -291,4 +295,6 @@
   .library-file dl { grid-template-columns: 1fr; gap: 0.1rem; }
   .library-file dd { margin-bottom: 0.5rem; }
   .rf-facet legend { float: none; width: auto; }
+  /* Keep the catalog thumbnail small on phones so text stays readable. */
+  .library-record-thumb img { max-height: 104px; }
 }

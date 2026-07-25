@@ -1,0 +1,26 @@
+---
+title: "Outside the Dream Syndicate"
+summary: "Tony Conrad and Faust's 1973 landmark of sustained-tone drone minimalism."
+year: 1973
+
+library:
+  id: outside-the-dream-syndicate
+  type: release
+  sarc_work: false
+
+creators:
+  - name: "Tony Conrad"
+    role: artist
+  - name: "Faust"
+    role: artist
+
+subjects: [sound, time, tuning]
+
+related:
+  - ref: la-monte-young
+    relation: influenced-by
+
+draft: false
+---
+
+Tony Conrad and Faust's 1973 landmark of sustained-tone drone minimalism, out of Conrad's work in the Theatre of Eternal Music.

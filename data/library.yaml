@@ -14,6 +14,7 @@ types:
   - {type: organization, label: "Organization",   order: 20}
   - {type: book,         label: "Book",           order: 30}
   - {type: essay,        label: "Essay",          order: 40}
+  - {type: story,        label: "Story",          order: 45}
   - {type: paper,        label: "Paper",          order: 50}
   - {type: article,      label: "Article",        order: 60}
   - {type: manual,       label: "Manual",         order: 70}
