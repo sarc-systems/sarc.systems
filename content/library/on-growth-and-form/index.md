@@ -14,6 +14,13 @@ creators:
 
 subjects: [morphogenesis, form, number]
 
+images:
+  - file: "transformations.jpg"
+    alt: "Coordinate transformation of skulls, Hyracotherium to horse"
+    role: diagram
+    caption: "The theory of transformations (On Growth and Form)."
+    source: "On Growth and Form"
+
 draft: false
 ---
 
