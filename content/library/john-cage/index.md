@@ -1,6 +1,6 @@
 ---
 title: "John Cage"
-summary: "John Cage — placeholder entry; annotation to come."
+summary: "John Cage — American composer."
 
 library:
   id: john-cage
@@ -19,4 +19,4 @@ images:
 draft: false
 ---
 
-John Cage — placeholder entry; annotation to come.
+John Cage (1912-1992) was an American composer with an interest in aleatoric music, Zen, indeterminacy, mycology, and many other subjects.

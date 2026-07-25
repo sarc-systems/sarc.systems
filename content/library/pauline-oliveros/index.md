@@ -1,6 +1,6 @@
 ---
 title: "Pauline Oliveros"
-summary: "Pauline Oliveros — placeholder entry; annotation to come."
+summary: "Pauline Oliveros — American composer and improviser."
 
 library:
   id: pauline-oliveros
@@ -19,4 +19,4 @@ images:
 draft: false
 ---
 
-Pauline Oliveros — placeholder entry; annotation to come.
+Pauline Oliveros (1932-2016) was an American composer and improviser.

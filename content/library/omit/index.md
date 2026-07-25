@@ -1,10 +1,10 @@
 ---
 title: "Omit"
-summary: "Omit — placeholder entry; annotation to come."
+summary: "Omit — electronic composer."
 
 library:
   id: omit
-  type: person
+  type: group
   sarc_work: false
 
 subjects: [sound, instruments]
@@ -19,4 +19,4 @@ images:
 draft: false
 ---
 
-Omit — placeholder entry; annotation to come.
+Omit (Clinton Williams of New Zealand) produces hypnotic psychoacoustic recordings.

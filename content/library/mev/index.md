@@ -1,6 +1,6 @@
 ---
 title: "Musica Elettronica Viva"
-summary: "Musica Elettronica Viva — placeholder entry; annotation to come."
+summary: "Musica Elettronica Viva — electroacoustic improvisation ensemble."
 
 library:
   id: mev
@@ -19,4 +19,4 @@ images:
 draft: false
 ---
 
-Musica Elettronica Viva — placeholder entry; annotation to come.
+Musica Elettronica Viva (MEV) was an early electroacoustic improvisation ensemble formed in Rome in 1966.

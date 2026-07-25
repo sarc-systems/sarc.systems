@@ -1,6 +1,6 @@
 ---
 title: "Morton Feldman"
-summary: "Morton Feldman — placeholder entry; annotation to come."
+summary: "Morton Feldman — American composer."
 
 library:
   id: morton-feldman
@@ -19,4 +19,4 @@ images:
 draft: false
 ---
 
-Morton Feldman — placeholder entry; annotation to come.
+Morton Feldman (1926-1987) was an American composer.

@@ -1,6 +1,6 @@
 ---
 title: "Jean-Claude Éloy"
-summary: "Jean-Claude Éloy — placeholder entry; annotation to come."
+summary: "Jean-Claude Éloy — French electroacoustic composer."
 
 library:
   id: jean-claude-eloy
@@ -19,4 +19,4 @@ images:
 draft: false
 ---
 
-Jean-Claude Éloy — placeholder entry; annotation to come.
+Jean-Claude Éloy (1938-2025) was a French electroacoustic composer.
