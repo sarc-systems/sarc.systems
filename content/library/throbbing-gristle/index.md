@@ -14,6 +14,11 @@ images:
     alt: "Throbbing Gristle"
     role: portrait
 
+access:
+  - label: "Live in San Francisco, 1981"
+    kind: video
+    url: "https://youtu.be/XT8omNGhbTM"
+
 draft: false
 ---
 

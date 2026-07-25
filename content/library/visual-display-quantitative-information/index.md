@@ -20,6 +20,17 @@ images:
     role: cover
     credit: "Graphics Press"
 
+access:
+  - label: "Publisher (Graphics Press)"
+    kind: publisher
+    url: "https://www.edwardtufte.com/book/the-visual-display-of-quantitative-information/"
+  - label: "PDF"
+    kind: external-copy
+    url: "https://ia800408.us.archive.org/15/items/tufte_visual_display_of_quantitative_information_low-res/tufte_visual_display_of_quantitative_information_low-res_text.pdf"
+rights:
+  status: external-link-only
+  note: "SARC links to this resource and does not host or mirror the file."
+
 draft: false
 ---
 

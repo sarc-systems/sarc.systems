@@ -16,6 +16,11 @@ images:
     credit: "Discogs"
     source: "https://www.discogs.com/artist/312508"
 
+access:
+  - label: "Live in Wellington, 2012"
+    kind: video
+    url: "https://youtu.be/oADC2tEIgm4"
+
 draft: false
 ---
 
