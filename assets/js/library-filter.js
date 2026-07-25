@@ -32,6 +32,8 @@
   // while any filter is active (it returns when filters are cleared) — otherwise
   // an unrelated featured entry above a filtered list reads as a broken filter.
   var randomSection = document.getElementById("library-random");
+  // The list heading must not claim "All entries" while a subset is shown.
+  var allHead = document.getElementById("all-entries");
 
   // Active state: multi sets for type + subject, single value for sarc.
   var sel = { type: [], subject: [], sarc: "" };
@@ -60,6 +62,7 @@
   function apply() {
     var anyFilter = sel.type.length > 0 || sel.subject.length > 0 || sel.sarc !== "";
     if (randomSection) randomSection.hidden = anyFilter;
+    if (allHead) allHead.textContent = anyFilter ? "Matching entries" : "All entries";
     var shown = 0;
     records.forEach(function (rec) {
       var recType = rec.dataset.type || "";
