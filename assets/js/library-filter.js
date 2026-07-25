@@ -12,6 +12,19 @@
   if (!form || !list) return;
 
   var records = Array.prototype.slice.call(list.querySelectorAll(".library-record"));
+  // Randomize the catalog order per visit so no single entry always leads the
+  // list. Fisher-Yates, applied once at init by re-appending in shuffled order;
+  // filtering below only toggles `hidden`, so it preserves this order. Without
+  // JS the server-rendered (deterministic) order stands.
+  (function shuffle() {
+    for (var i = records.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var t = records[i]; records[i] = records[j]; records[j] = t;
+    }
+    var frag = document.createDocumentFragment();
+    records.forEach(function (rec) { frag.appendChild(rec); });
+    list.appendChild(frag);
+  })();
   var chips = Array.prototype.slice.call(form.querySelectorAll(".rf-chip"));
   var clearBtn = form.querySelector(".rf-clear");
   var countEl = form.querySelector(".rf-count");
