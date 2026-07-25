@@ -15,6 +15,11 @@ images:
     role: portrait
     source: "https://scx1.b-cdn.net/csz/news/800a/2012/alanturingat.jpg"
 
+access:
+  - label: "Turing Digital Archive"
+    kind: archive
+    url: "https://turingarchive.kings.cam.ac.uk"
+
 draft: false
 ---
 
