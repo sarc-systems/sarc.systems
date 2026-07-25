@@ -9,6 +9,11 @@ library:
 
 subjects: [sound, perception]
 
+images:
+  - file: "amm.jpg"
+    alt: "AMM"
+    role: portrait
+
 draft: false
 ---
 

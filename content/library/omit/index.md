@@ -9,6 +9,13 @@ library:
 
 subjects: [sound, instruments]
 
+images:
+  - file: "omit.jpg"
+    alt: "Omit"
+    role: portrait
+    credit: "Ambient NZ"
+    source: "https://ambientnz.com/"
+
 draft: false
 ---
 
