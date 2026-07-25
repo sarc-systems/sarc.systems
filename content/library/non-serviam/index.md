@@ -11,9 +11,14 @@ library:
 creators:
   - name: "Stanisław Lem"
     role: author
-    ref: stanislaw-lem
 
 subjects: [computation, language]
+
+images:
+  - file: "lem.jpg"
+    alt: "Stanisław Lem"
+    role: portrait
+    credit: "Wikimedia Commons"
 
 access:
   - label: "PDF"
