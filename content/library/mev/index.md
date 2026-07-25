@@ -16,6 +16,11 @@ images:
     credit: "alvincurran.com"
     source: "http://www.alvincurran.com/writings/images/mevsenzapieta.jpg"
 
+access:
+  - label: "Live in Rome, 1968"
+    kind: video
+    url: "https://youtu.be/Lgem1LjAINY"
+
 draft: false
 ---
 

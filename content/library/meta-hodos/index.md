@@ -27,7 +27,7 @@ images:
     source: "Meta-Hodos"
 
 access:
-  - label: "Publisher / purchase"
+  - label: "Publisher (Frog Peak)"
     url: "https://www.frogpeak.org/fpartists/fptenney.html"
     kind: publisher
   - label: "PDF"
