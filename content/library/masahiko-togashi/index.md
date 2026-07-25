@@ -9,6 +9,11 @@ library:
 
 subjects: [sound, instruments]
 
+images:
+  - file: "togashi.jpg"
+    alt: "Masahiko Togashi"
+    role: portrait
+
 draft: false
 ---
 
