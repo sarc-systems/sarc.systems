@@ -1,0 +1,15 @@
+---
+title: "Christopher Langton"
+summary: "American computer scientist and founder of the field of artificial life."
+
+library:
+  id: christopher-langton
+  type: person
+  sarc_work: false
+
+subjects: [computation, dynamical-systems, morphogenesis]
+
+draft: false
+---
+
+American computer scientist and founder of the field of artificial life.
