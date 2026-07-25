@@ -13,6 +13,7 @@ images:
   - file: "voice-crack.jpg"
     alt: "Voice Crack (Andy Guhl and Norbert Möslang)"
     role: portrait
+    anchor: Left
 
 draft: false
 ---

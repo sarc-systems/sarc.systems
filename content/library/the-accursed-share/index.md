@@ -16,6 +16,7 @@ images:
   - file: "cover.jpg"
     alt: "Cover of Georges Bataille's La Part maudite (The Accursed Share)"
     role: cover
+    anchor: Bottom
     credit: "Éditions de Minuit"
 
 access:

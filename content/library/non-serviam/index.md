@@ -18,6 +18,7 @@ images:
   - file: "lem.jpg"
     alt: "Stanisław Lem"
     role: portrait
+    anchor: Top
     credit: "Wikimedia Commons"
 
 access:

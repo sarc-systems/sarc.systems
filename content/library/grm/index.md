@@ -13,6 +13,7 @@ images:
   - file: "grm.jpg"
     alt: "Pierre Schaeffer at the GRM"
     role: portrait
+    anchor: Left
     credit: "Cense.earth"
     source: "https://cense.earth/"
 

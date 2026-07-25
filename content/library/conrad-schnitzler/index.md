@@ -1,6 +1,6 @@
 ---
 title: "Conrad Schnitzler"
-summary: "German electronic musician and Kluster co-founder; prolific tape and cassette works."
+summary: "Prolific German electronic musician and Kluster co-founder."
 
 library:
   id: conrad-schnitzler
@@ -25,4 +25,4 @@ access:
 draft: false
 ---
 
-Conrad Schnitzler — placeholder entry; annotation to come.
+Conrad Schnitzler (1937-2011) was a prolific composer of electronic music.
