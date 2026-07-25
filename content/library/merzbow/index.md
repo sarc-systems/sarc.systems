@@ -1,6 +1,6 @@
 ---
 title: "Merzbow"
-summary: "Merzbow — placeholder entry; annotation to come."
+summary: "Merzbow — the king of noise."
 
 library:
   id: merzbow

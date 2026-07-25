@@ -11,6 +11,7 @@ subjects: [computation, number, cybernetics]
 
 images:
   - file: "john-von-neumann.jpg"
+    anchor: Left
     alt: "John von Neumann"
     role: portrait
     credit: "DataArt Museum"
