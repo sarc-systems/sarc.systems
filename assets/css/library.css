@@ -74,12 +74,13 @@
    display below (equal specificity, later rule), so force it. */
 .library-record[hidden] { display: none !important; }
 /* Records with a thumbnail: compact two-column (thumb + text). */
-/* Thumbnail fills the record's full height (set by the text column) and never
-   grows the row — so a larger column reads bigger without adding height. */
-.library-record.has-thumb { display: grid; grid-template-columns: 112px 1fr; gap: 0 1.2rem; align-items: stretch; }
+/* Square thumbnail that fills the record's height (set by the text column) and
+   never grows the row: the image is height:100% with auto (square) width, so the
+   column widens to match the height. */
+.library-record.has-thumb { display: grid; grid-template-columns: auto 1fr; gap: 0 1.2rem; align-items: stretch; }
 .library-record-thumb { display: block; height: 100%; }
 .library-record-thumb img {
-  width: 112px; height: 100%; object-fit: cover; display: block;
+  height: 100%; width: auto; aspect-ratio: 1; object-fit: cover; display: block;
   border: 1px solid var(--rule); background: var(--paper-2);
 }
 .library-record-kicker {
@@ -238,7 +239,7 @@
 .library-featured { display: flex; gap: 1.2rem; align-items: stretch; margin-top: 0.8rem; }
 .library-featured-thumb { display: block; }
 .library-featured-thumb img {
-  width: 148px; height: 100%; min-height: 148px; object-fit: cover; display: block;
+  height: 100%; width: auto; aspect-ratio: 1; min-height: 148px; object-fit: cover; display: block;
   border: 1px solid var(--rule); background: var(--paper-2);
 }
 .library-featured-kicker {
