@@ -1,6 +1,6 @@
 ---
 title: "Conrad Schnitzler"
-summary: "Conrad Schnitzler — placeholder entry; annotation to come."
+summary: "German electronic musician and Kluster co-founder; prolific tape and cassette works."
 
 library:
   id: conrad-schnitzler

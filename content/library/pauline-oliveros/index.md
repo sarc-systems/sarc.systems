@@ -1,6 +1,6 @@
 ---
 title: "Pauline Oliveros"
-summary: "Pauline Oliveros — American composer and improviser."
+summary: "American composer and improviser."
 
 library:
   id: pauline-oliveros

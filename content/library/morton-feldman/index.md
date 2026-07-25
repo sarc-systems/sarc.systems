@@ -1,6 +1,6 @@
 ---
 title: "Morton Feldman"
-summary: "Morton Feldman — American composer."
+summary: "American composer."
 
 library:
   id: morton-feldman

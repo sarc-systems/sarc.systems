@@ -1,6 +1,6 @@
 ---
 title: "Omit"
-summary: "Omit — electronic composer."
+summary: "Electronic composer."
 
 library:
   id: omit

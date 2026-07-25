@@ -1,6 +1,6 @@
 ---
 title: "Roland Kayn"
-summary: "Roland Kayn — composer who utilized cybernetic frameworks."
+summary: "Composer who utilized cybernetic frameworks."
 
 library:
   id: roland-kayn

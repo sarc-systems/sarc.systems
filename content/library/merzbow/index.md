@@ -1,6 +1,6 @@
 ---
 title: "Merzbow"
-summary: "Merzbow — the king of noise."
+summary: "The king of noise."
 
 library:
   id: merzbow

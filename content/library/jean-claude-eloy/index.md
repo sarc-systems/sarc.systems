@@ -1,6 +1,6 @@
 ---
 title: "Jean-Claude Éloy"
-summary: "Jean-Claude Éloy — French electroacoustic composer."
+summary: "French electroacoustic composer."
 
 library:
   id: jean-claude-eloy

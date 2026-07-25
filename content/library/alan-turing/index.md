@@ -1,13 +1,13 @@
 ---
 title: "Alan Turing"
-summary: "Mathematician and founder of computation."
+summary: "Mathematician and father of theoretical computer science."
 
 library:
   id: alan-turing
   type: person
   sarc_work: false
 
-subjects: [computation, number]
+subjects: [computation, number, morphogenesis]
 
 images:
   - file: "alan-turing.jpg"
@@ -18,4 +18,6 @@ images:
 draft: false
 ---
 
-Mathematician and founder of computation.
+Alan Turing (1912-1954) was not only a profoundly influential figure in the development of theoretical computater science,
+but a central figure in the formalization of procedure, machine intelligence, morphogenesis,
+and the relation between discrete rules and emergent form.

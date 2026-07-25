@@ -1,6 +1,6 @@
 ---
 title: "Herbert Brün"
-summary: "Herbert Brün — cybernetician, composer and visual artist."
+summary: "Cybernetician, composer and visual artist."
 
 library:
   id: herbert-brun

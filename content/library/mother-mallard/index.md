@@ -1,6 +1,6 @@
 ---
 title: "Mother Mallard's Portable Masterpiece Company"
-summary: "Mother Mallard's Portable Masterpiece Company — early synthesizer ensemble from America."
+summary: "Early synthesizer ensemble from America."
 
 library:
   id: mother-mallard

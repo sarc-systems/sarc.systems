@@ -1,6 +1,6 @@
 ---
 title: "Musica Elettronica Viva"
-summary: "Musica Elettronica Viva — electroacoustic improvisation ensemble."
+summary: "Electroacoustic improvisation ensemble."
 
 library:
   id: mev

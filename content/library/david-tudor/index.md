@@ -1,6 +1,6 @@
 ---
 title: "David Tudor"
-summary: "David Tudor — placeholder entry; annotation to come."
+summary: "Pianist turned live-electronics pioneer; Rainforest and feedback instruments."
 
 library:
   id: david-tudor

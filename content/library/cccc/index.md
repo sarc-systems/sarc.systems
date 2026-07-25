@@ -1,6 +1,6 @@
 ---
 title: "C.C.C.C."
-summary: "C.C.C.C. — psychedelic noise performance."
+summary: "Psychedelic noise performance."
 
 library:
   id: cccc

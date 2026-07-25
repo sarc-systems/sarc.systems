@@ -1,6 +1,6 @@
 ---
 title: "Iannis Xenakis"
-summary: "Iannis Xenakis — composer and architect utilizing game theory, stochastic processes, set theory"
+summary: "Composer and architect utilizing game theory, stochastic processes, set theory"
 
 library:
   id: iannis-xenakis

@@ -1,6 +1,6 @@
 ---
 title: "John Cage"
-summary: "John Cage — American composer."
+summary: "American composer."
 
 library:
   id: john-cage

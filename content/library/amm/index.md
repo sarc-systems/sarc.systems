@@ -1,6 +1,6 @@
 ---
 title: "AMM"
-summary: "AMM — pioneering British electroacoustic improvisation group with a 50-year history"
+summary: "Pioneering British electroacoustic improvisation group with a 50-year history"
 
 library:
   id: amm
