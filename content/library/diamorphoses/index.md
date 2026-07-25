@@ -15,6 +15,13 @@ creators:
 
 subjects: [number, sound, computation]
 
+images:
+  - file: "sketch.jpg"
+    alt: "Xenakis working sketch for Diamorphoses"
+    role: diagram
+    caption: "Xenakis's working sketch (27 April 1957)."
+    source: "Iannis Xenakis"
+
 draft: false
 ---
 
