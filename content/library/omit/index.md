@@ -13,8 +13,8 @@ images:
   - file: "omit.jpg"
     alt: "Omit"
     role: portrait
-    credit: "Ambient NZ"
-    source: "https://ambientnz.com/"
+    credit: "Discogs"
+    source: "https://www.discogs.com/artist/312508"
 
 draft: false
 ---
