@@ -14,6 +14,12 @@ creators:
 
 subjects: [technology, form]
 
+images:
+  - file: "tetsuo.jpg"
+    alt: "Still from Tetsuo: Iron Man — a face merging with metal"
+    role: still
+    anchor: Top
+
 draft: false
 ---
 

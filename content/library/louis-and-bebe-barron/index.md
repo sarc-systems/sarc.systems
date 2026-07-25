@@ -9,6 +9,12 @@ library:
 
 subjects: [sound, technology, feedback]
 
+images:
+  - file: "barrons.jpg"
+    alt: "Louis and Bebe Barron in their Greenwich Village studio"
+    role: portrait
+    credit: "Echoes.org"
+
 draft: false
 ---
 

@@ -16,6 +16,12 @@ creators:
 
 subjects: [sound, time, tuning]
 
+images:
+  - file: "cover.jpg"
+    alt: "Cover of Outside the Dream Syndicate by Tony Conrad and Faust"
+    role: cover
+    credit: "Bandcamp"
+
 related:
   - ref: la-monte-young
     relation: influenced-by
