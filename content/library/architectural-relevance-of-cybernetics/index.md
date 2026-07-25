@@ -12,7 +12,7 @@ creators:
   - name: "Gordon Pask"
     role: author
 
-subjects: [cybernetics, organization]
+subjects: [cybernetics]
 
 access:
   - label: "Read externally"

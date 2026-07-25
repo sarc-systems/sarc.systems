@@ -7,7 +7,7 @@ library:
   type: organization
   sarc_work: false
 
-subjects: [sound, organization]
+subjects: [sound]
 
 images:
   - file: "frog-peak.jpg"

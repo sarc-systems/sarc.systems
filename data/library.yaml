@@ -55,7 +55,6 @@ subjects:
   - {subject: space,             label: "Space"}
   - {subject: memory,            label: "Memory"}
   - {subject: feedback,          label: "Feedback"}
-  - {subject: organization,      label: "Organization"}
   - {subject: language,          label: "Language"}
 
 # Controlled creator roles (`creators[].role`). A creator always has a `name`; an

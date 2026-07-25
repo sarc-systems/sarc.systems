@@ -12,7 +12,7 @@ creators:
   - name: "George Orwell"
     role: author
 
-subjects: [organization, memory, language]
+subjects: [memory, language]
 
 images:
   - file: "cover.jpg"

@@ -13,7 +13,7 @@ creators:
     role: composer
     ref: iannis-xenakis
 
-subjects: [number, sound, computation]
+subjects: [number, sound]
 
 images:
   - file: "xenakis-sketch.jpg"

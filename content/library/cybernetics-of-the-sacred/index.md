@@ -12,7 +12,7 @@ creators:
   - name: "Paul Ryan"
     role: author
 
-subjects: [cybernetics, organization]
+subjects: [cybernetics]
 
 images:
   - file: "cover.jpg"
