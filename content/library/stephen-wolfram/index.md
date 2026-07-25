@@ -9,6 +9,12 @@ library:
 
 subjects: [computation, dynamical-systems, form]
 
+images:
+  - file: "wolfram.jpg"
+    alt: "A cellular-automaton pattern resembling a mollusc shell, from Wolfram's work"
+    role: diagram
+    credit: "Wolfram"
+
 draft: false
 ---
 

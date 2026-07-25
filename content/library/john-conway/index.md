@@ -9,6 +9,11 @@ library:
 
 subjects: [computation, number, form]
 
+images:
+  - file: "john-conway.jpg"
+    alt: "John Horton Conway"
+    role: portrait
+
 draft: false
 ---
 
