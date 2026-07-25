@@ -14,6 +14,12 @@ creators:
 
 subjects: [form, number, perception]
 
+images:
+  - file: "cover.jpg"
+    alt: "Cover of The Visual Display of Quantitative Information"
+    role: cover
+    credit: "Graphics Press"
+
 draft: false
 ---
 

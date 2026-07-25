@@ -19,7 +19,12 @@ subjects:
   - perception
   - computation
 
-images: []
+images:
+  - file: "tape-predictor.jpg"
+    alt: "Braitenberg tape memory and predictor diagram"
+    role: diagram
+    caption: "Past/future tape memory, comparator, and predictor."
+    source: "Vehicles"
 
 access:
   - label: "Publisher (MIT Press)"

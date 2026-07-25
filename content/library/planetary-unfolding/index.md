@@ -14,6 +14,17 @@ creators:
 
 subjects: [sound, space]
 
+images:
+  - file: "cover.jpg"
+    alt: "Cover of Planetary Unfolding by Michael Stearns"
+    role: cover
+    credit: "Projekt Records"
+
+access:
+  - label: "Listen on Bandcamp"
+    kind: bandcamp
+    url: "https://projektrecords.bandcamp.com/album/planetary-unfolding"
+
 draft: false
 ---
 

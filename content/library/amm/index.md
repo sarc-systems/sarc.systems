@@ -1,6 +1,6 @@
 ---
 title: "AMM"
-summary: "AMM — placeholder entry; annotation to come."
+summary: "AMM — pioneering British electroacoustic improvisation group with a 50-year history"
 
 library:
   id: amm
