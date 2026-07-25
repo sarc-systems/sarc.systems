@@ -17,8 +17,10 @@ creators: []
 subjects: []
 
 # Ordered images (first = primary/thumbnail). alt required unless decorative.
+# Optional per-image: caption, credit, source, role, and anchor (Top/Center/Smart
+# — use Top when a centred square crop cuts through a portrait's head).
 # images:
-#   - {file: "cover.jpg", alt: "…", caption: "", credit: "", role: cover}
+#   - {file: "cover.jpg", alt: "…", caption: "", credit: "", role: cover, anchor: Top}
 images: []
 
 # Where to find it. kind selects the verb; `hosted-file` needs a bundle `file`

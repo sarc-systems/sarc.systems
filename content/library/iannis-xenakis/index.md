@@ -1,6 +1,6 @@
 ---
 title: "Iannis Xenakis"
-summary: "Iannis Xenakis — placeholder entry; annotation to come."
+summary: "Iannis Xenakis — composer and architect utilizing game theory, stochastic processes, set theory"
 
 library:
   id: iannis-xenakis
@@ -18,4 +18,4 @@ images:
 draft: false
 ---
 
-Iannis Xenakis — placeholder entry; annotation to come.
+Iannis Xenakis (1922-2001) was a Greek-French composer.

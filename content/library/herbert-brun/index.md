@@ -1,6 +1,6 @@
 ---
 title: "Herbert Brün"
-summary: "Herbert Brün — placeholder entry; annotation to come."
+summary: "Herbert Brün — cybernetician, composer and visual artist."
 
 library:
   id: herbert-brun
@@ -18,4 +18,4 @@ images:
 draft: false
 ---
 
-Herbert Brün — placeholder entry; annotation to come.
+Herbert Brün (1918-2000) was a cybernetician, composer and visual artist.

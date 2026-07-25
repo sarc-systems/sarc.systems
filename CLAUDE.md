@@ -77,7 +77,7 @@ content/
   label/_index.md
   label/releases/_index.md
   library/_index.md                   # unified catalog landing (+ index.json output)
-  library/<slug>/index.md             # flat entries (books, artists, manuals, releases, …)
+  library/<slug>/index.md             # flat entries (books, people, groups, manuals, releases, …)
   library/<slug>/cover.jpg            # entry images live in the bundle
 layouts/          # custom theme: baseof, home, journal list/single, taxonomies, 404
 layouts/library/{list,single}.html + list.json   # unified catalog + JSON index
@@ -303,8 +303,8 @@ import mistakes and poor contrast without hand-editing the palette.
 knowledge graph, not a set of shelves. There are no public Writings / References
 / Manuals / Sources / Reading / Links sections. Anything durable SARC wants to
 identify, annotate, connect, preserve, or point toward is an *entry*: essays,
-books, manuals, artists, organizations, recordings, releases, compositions,
-films, lectures, websites, software, instruments, systems, historical documents.
+books, manuals, people, groups, organizations, recordings, releases,
+compositions, films, lectures, websites, software, instruments, systems, documents.
 Type, subject, and access are **metadata and filters, never sections.** Section
 colour is **Forest** (in `data/palette.yaml`; never hardcoded). All vocabularies
 live in `data/library.yaml` — the single source of truth for templates, filters,
@@ -336,7 +336,7 @@ creators:              # who made it; drives internal links + reverse "works"
   - {ref: laurie-spiegel, name: "Laurie Spiegel", role: artist}
 subjects: [computation, time, sound]        # controlled; see below
 images:                # ordered; first = primary (thumbnail + featured + OG)
-  - {file: "cover.jpg", alt: "Front cover", caption: "", credit: "", role: cover}
+  - {file: "cover.jpg", alt: "Front cover", caption: "", credit: "", source: "", role: cover, anchor: Top}
 access:                # where to find it (many per entry); url/file exclusive
   - {label: "Bandcamp", kind: bandcamp, url: "https://…"}
   - {label: "Download PDF", kind: hosted-file, file: "manual.pdf"}
@@ -346,7 +346,11 @@ weight:  sort_title:  featured:            # optional ordering / no-JS random de
 ```
 
 - **type** — nested under `library` (never Hugo's top-level `type`). One primary
-  per entry. Presentation adapts to it; there is no section per type.
+  per entry (full list in `data/library.yaml`). Presentation adapts to it; there
+  is no section per type. For agents: **`person`** = an individual (Xenakis,
+  Turing, Merzbow — there is no `artist` type; `artist` survives only as a
+  creator *role*); **`group`** = a band / ensemble / collective (AMM, Kraftwerk);
+  **`organization`** = an institution / label / studio (GRM, Frog Peak).
 - **sarc_work** — independent of type (a SARC manual and a third-party manual are
   both `type: manual`). Powers the *Origin* filter.
 - **subjects** — a small controlled vocabulary (why it matters to SARC).
@@ -354,7 +358,13 @@ weight:  sort_title:  featured:            # optional ordering / no-JS random de
   memory, simultaneity, historical time) — not `chronology`. Don't add casually.
 - **creators / related** — the knowledge graph (see below).
 - **images** — ordered; the first is the primary. No separate cover/image/
-  thumbnail fields; array order alone decides the primary.
+  thumbnail fields; array order alone decides the primary. Per-image fields:
+  `file` (required, bundle-relative), `alt` (required unless `decorative: true`),
+  optional `caption` / `credit` / `source` / `role`, and optional **`anchor`**
+  (`Center` default; `Top`, `Smart`, … ) controlling the square-thumbnail crop
+  focus (use `Top` when a centred crop cuts through a portrait's head). Images
+  live in the bundle and are resolved through Hugo resources — never hotlink or
+  auto-republish third-party artwork.
 - **access** — how to reach the thing; storage location never sets the type.
 
 **Knowledge graph.** `creators[].ref` (another entry's `library.id`) links the

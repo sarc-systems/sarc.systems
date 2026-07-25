@@ -4,7 +4,7 @@ summary: "Merzbow — placeholder entry; annotation to come."
 
 library:
   id: merzbow
-  type: person
+  type: group
   sarc_work: false
 
 subjects: [sound]
@@ -19,4 +19,5 @@ images:
 draft: false
 ---
 
-Merzbow — placeholder entry; annotation to come.
+Merzbow is a noise art project started by Masami Akita in 1979.
+Merzbow has released over 500 recordings.

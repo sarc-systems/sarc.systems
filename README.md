@@ -55,8 +55,8 @@ and used as the social/Open-Graph preview image. See `assets/img/README.md`.
 The **Library** (`/library/`) is **one unified catalog of entries** — a growing
 research collection and small knowledge graph, not a set of sections. Every
 durable thing SARC wants to identify, annotate, connect, or point toward is an
-entry (essays, books, manuals, artists, recordings, releases, websites, systems,
-…). Type, subject, and access are metadata and **filters**, never shelves. The
+entry (essays, books, manuals, people, groups, recordings, releases, websites,
+systems, …). Type, subject, and access are metadata and **filters**, never shelves. The
 landing shows a random featured entry, type/subject/SARC-work filters, and the
 full ruled catalog. Section colour is Forest.
 
@@ -70,15 +70,19 @@ Entries live flat at `content/library/<slug>/` → `/library/<slug>/`. Edit the
 front matter and set `draft: false`. Key fields:
 
 - `library.id` — stable, **unique** id (not the title/URL); relationships resolve
-  through it. `library.type` — one controlled type (`book | person | manual |
-  release | essay | website | system | …`). `library.sarc_work` — `true` if SARC
-  made it (a filter axis, not a shelf). All validated against `data/library.yaml`.
+  through it. `library.type` — one controlled type (`book | person | group |
+  organization | manual | release | essay | website | system | …`; `person` for an
+  individual, `group` for a band/ensemble, `organization` for an institution).
+  `library.sarc_work` — `true` if SARC made it (a filter axis, not a shelf). All
+  validated against `data/library.yaml`.
 - `subjects` — controlled terms (why it matters to SARC); power the filter.
 - `creators` — `{name, role, ref?}`. A `ref` (another entry's `library.id`) links
   the name and auto-adds a *Works in the Library* list on that entry. `related`
   are `{ref, relation}` editorial links.
 - `images` — ordered; the **first is the primary** (list thumbnail + entry
-  featured image). Live in the page bundle; `alt` required. No hotlinking.
+  featured image). Live in the page bundle; `alt` required. Optional per-image
+  `caption` / `credit` / `source` / `role` / `anchor` (`anchor: Top` crops the
+  thumbnail from the top when a centred crop cuts through a head). No hotlinking.
 - `access` — `{label, kind, url|file}` (many per entry). `hosted-file` needs a
   bundle `file`; external kinds open in a new tab. `url`/`file` are exclusive.
 - `rights.status` (only for a hosted `file`) — `sarc-owned | public-domain |

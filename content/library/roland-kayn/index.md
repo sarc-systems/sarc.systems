@@ -1,6 +1,6 @@
 ---
 title: "Roland Kayn"
-summary: "Roland Kayn — placeholder entry; annotation to come."
+summary: "Roland Kayn — composer who utilized cybernetic frameworks."
 
 library:
   id: roland-kayn
@@ -19,4 +19,4 @@ images:
 draft: false
 ---
 
-Roland Kayn — placeholder entry; annotation to come.
+Roland Kayn (1933-2011) was a composer who utilized cybernetic frameworks.
