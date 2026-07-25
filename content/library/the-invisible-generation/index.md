@@ -15,6 +15,14 @@ creators:
 
 subjects: [language, sound, perception]
 
+images:
+  - file: "cover.jpg"
+    alt: "Poster of Burroughs's 'The Invisible Generation' as published in International Times"
+    role: document
+    anchor: Top
+    credit: "RealityStudio / International Times"
+    source: "https://realitystudio.org/"
+
 access:
   - label: "PDF"
     kind: external-copy

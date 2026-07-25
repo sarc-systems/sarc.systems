@@ -15,9 +15,12 @@ images:
     role: portrait
 
 access:
-  - label: "Watch on YouTube"
+  - label: "Bell Labs interview, 1984 — pt. 1"
     kind: video
     url: "https://youtu.be/TzOJtZYsGSA"
+  - label: "Bell Labs interview, 1984 — pt. 2"
+    kind: video
+    url: "https://youtu.be/oconRQBZff0"
 
 draft: false
 ---
