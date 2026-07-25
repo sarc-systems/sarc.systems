@@ -15,6 +15,13 @@ creators:
 
 subjects: [number, sound, computation]
 
+images:
+  - file: "scheme.jpg"
+    alt: "Xenakis's scheme for the Polytope de Cluny"
+    role: diagram
+    caption: "Light-and-sound scheme for the Polytope de Cluny."
+    source: "Iannis Xenakis"
+
 draft: false
 ---
 
