@@ -62,17 +62,17 @@
       {{- if $sarc }}<div class="meta-row"><dt>Origin</dt><dd><a href="{{ "/library/?sarc=true" | relURL }}">SARC work</a></dd></div>{{ end }}
     </dl>
 
-    {{- /* Access actions — first authoritative link gets primary emphasis. */ -}}
+    {{- /* Access actions — all rendered as equal (filled) buttons. */ -}}
     {{- with .Params.access }}
     <div class="library-actions">
       {{- range $i, $a := . }}
       {{- $kind := $a.kind | default "other" -}}
       {{- if eq $kind "hosted-file" }}
         {{- with $a.file }}{{ with ($.Resources.GetMatch .) }}
-      <a class="library-action{{ if $i }} library-action--secondary{{ end }}" href="{{ .RelPermalink }}">{{ $a.label | default "Download" }}</a>
+      <a class="library-action" href="{{ .RelPermalink }}">{{ $a.label | default "Download" }}</a>
         {{- end }}{{ end }}
       {{- else }}{{ with $a.url }}
-      <a class="library-action{{ if $i }} library-action--secondary{{ end }}" href="{{ . }}" target="_blank" rel="noopener">{{ $a.label | default "Link" }} <span aria-hidden="true">↗</span></a>
+      <a class="library-action" href="{{ . }}" target="_blank" rel="noopener">{{ $a.label | default "Link" }} <span aria-hidden="true">↗</span></a>
       {{- end }}{{ end }}
       {{- end }}
     </div>
