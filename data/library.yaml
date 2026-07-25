@@ -94,6 +94,26 @@ relation_types:
   - successor-to
   - predecessor-to
 
+# Inverse labels for reverse-resolved `related` links. `related` is bidirectional:
+# a relation declared on one entry also renders on its target, labelled by the
+# inverse here (e.g. a composer's `part-of GRM` shows as "Member" on GRM). Display
+# only — never stored or validated. Symmetric relations map to themselves.
+relation_inverse:
+  related-work: related-work
+  related-reading: related-reading
+  influenced-by: influenced
+  documents: documented-by
+  discusses: discussed-by
+  used-by: uses
+  part-of: member
+  version-of: has-version
+  edition-of: has-edition
+  release-of: released-as
+  recording-of: recorded-as
+  performance-of: performed-as
+  successor-to: predecessor-to
+  predecessor-to: successor-to
+
 # Access kinds (`access[].kind`). `url` and `file` are mutually exclusive per
 # item; `hosted-file` requires a bundle-relative `file` (and is the only kind
 # that makes SARC a host — it drives the rights guard). `verb` is a fallback

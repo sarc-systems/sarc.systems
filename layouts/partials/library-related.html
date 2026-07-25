@@ -1,22 +1,49 @@
-{{- /* Editorial relationships. Render an entry's `related` array — each a
-       {ref, relation} — as links to the resolved entries, labelled by the
-       humanised relation. Renders nothing without `related`. Call:
-       {{ partial "library-related.html" (dict "page" .) }} */ -}}
-{{- with .page.Params.related -}}
-  {{- $rows := slice -}}
-  {{- range . -}}
-    {{- $target := "" -}}
-    {{- with .ref }}{{ with (where site.RegularPages "Params.library.id" .) }}{{ $target = index . 0 }}{{ end }}{{ end -}}
-    {{- with $target }}{{ $rows = $rows | append (dict "target" . "relation" ($.relation | default "related-work")) }}{{ end -}}
+{{- /* Editorial relationships — BIDIRECTIONAL. Renders an entry's own `related`
+       array ({ref, relation}) plus the reverse: any entry whose `related` points
+       AT this one, labelled with the inverse relation (data/library.yaml
+       relation_inverse). So a composer's `part-of GRM` shows as "Part Of · GRM"
+       on the composer and "Member · <composer>" on GRM, from one declaration.
+       Renders nothing when there is neither a forward nor a reverse link.
+       Call: {{ partial "library-related.html" (dict "page" .) }} */ -}}
+{{- $page := .page -}}
+{{- $id := $page.Params.library.id -}}
+{{- $inv := hugo.Data.library.relation_inverse -}}
+{{- $rows := slice -}}
+{{- /* forward: relations this entry declares */ -}}
+{{- range $page.Params.related -}}
+  {{- $rel := .relation | default "related-work" -}}
+  {{- with .ref }}{{ with (where site.RegularPages "Params.library.id" .) -}}
+    {{- $rows = $rows | append (dict "target" (index . 0) "relation" $rel) -}}
+  {{- end }}{{ end -}}
+{{- end -}}
+{{- /* reverse: entries that declare a relation pointing at this one */ -}}
+{{- with $id -}}
+  {{- range site.RegularPages -}}
+    {{- $p := . -}}
+    {{- range $p.Params.related -}}
+      {{- if eq .ref $id -}}
+        {{- $r := .relation | default "related-work" -}}
+        {{- $rows = $rows | append (dict "target" $p "relation" (index $inv $r | default $r)) -}}
+      {{- end -}}
+    {{- end -}}
   {{- end -}}
-  {{- with $rows -}}
-  <section class="library-relations" aria-labelledby="related-h">
-    <h2 id="related-h" class="library-relations-head">Related in the Library</h2>
-    <ul class="library-related-list">
-      {{- range . }}
-      <li><span class="rel-kind">{{ .relation | replaceRE "-" " " | title }}</span> <a href="{{ .target.RelPermalink }}">{{ .target.Title }}</a></li>
-      {{- end }}
-    </ul>
-  </section>
+{{- end -}}
+{{- /* dedupe by target id + relation; drop any self-reference */ -}}
+{{- $seen := slice }}{{ $out := slice -}}
+{{- range $rows -}}
+  {{- $tid := .target.Params.library.id -}}
+  {{- $k := printf "%v|%s" $tid .relation -}}
+  {{- if and (ne $tid $id) (not (in $seen $k)) -}}
+    {{- $seen = $seen | append $k }}{{ $out = $out | append . -}}
   {{- end -}}
+{{- end -}}
+{{- with $out -}}
+<section class="library-relations" aria-labelledby="related-h">
+  <h2 id="related-h" class="library-relations-head">Related in the Library</h2>
+  <ul class="library-related-list">
+    {{- range . }}
+    <li><span class="rel-kind">{{ .relation | replaceRE "-" " " | title }}</span> <a href="{{ .target.RelPermalink }}">{{ .target.Title }}</a></li>
+    {{- end }}
+  </ul>
+</section>
 {{- end -}}

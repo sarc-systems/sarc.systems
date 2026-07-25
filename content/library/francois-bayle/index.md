@@ -9,6 +9,10 @@ library:
 
 subjects: [sound, space]
 
+related:
+  - ref: grm
+    relation: part-of
+
 draft: false
 ---
 

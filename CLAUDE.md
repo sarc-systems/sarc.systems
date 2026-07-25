@@ -370,9 +370,12 @@ weight:  sort_title:  featured:            # optional ordering / no-JS random de
 **Knowledge graph.** `creators[].ref` (another entry's `library.id`) links the
 name and **automatically** grows a *Works in the Library* section on that entry
 (reverse of `creators[].ref`) — never hand-maintain work lists. A creator with a
-`name` but no `ref` is fine. `related` renders *Related in the Library*. Creator
-attribution uses `creators`, never `related`. Partials: `library-{creators,works,
-related}.html`.
+`name` but no `ref` is fine. `related` renders *Related in the Library* and is
+**bidirectional**: a relation declared on one entry also appears on its target,
+labelled by the inverse (`data/library.yaml` `relation_inverse`, e.g. a
+composer's `part-of GRM` shows as *Member* on GRM) — so declare an affiliation
+once, on either side. Creator attribution uses `creators`, never `related`.
+Partials: `library-{creators,works,related}.html`.
 
 **Landing** (`layouts/library/list.html`): intro → **From the Library** (one
 random entry, `library-random.js` + `sessionStorage`, "Another entry"; a

@@ -9,6 +9,10 @@ library:
 
 subjects: [sound, perception]
 
+related:
+  - ref: grm
+    relation: part-of
+
 draft: false
 ---
 
