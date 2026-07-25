@@ -16,11 +16,11 @@ creators:
 subjects: [number, sound, computation]
 
 images:
-  - file: "xenakis-sketch.jpg"
-    alt: "Xenakis sketch"
-    role: diagram
-    credit: "Columbia University"
-    source: "https://sites.music.columbia.edu/"
+  - file: "philips-pavilion.jpg"
+    alt: "Philips Pavilion, Expo 58"
+    role: still
+    credit: "Wikimedia Commons"
+    source: "https://commons.wikimedia.org/wiki/File:Expo58_building_Philips.jpg"
 
 draft: false
 ---
