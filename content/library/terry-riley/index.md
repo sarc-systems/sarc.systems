@@ -9,6 +9,11 @@ library:
 
 subjects: [sound, time, tuning]
 
+images:
+  - file: "terry-riley.jpg"
+    alt: "Terry Riley"
+    role: portrait
+
 draft: false
 ---
 

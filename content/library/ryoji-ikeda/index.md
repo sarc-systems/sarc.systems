@@ -9,6 +9,11 @@ library:
 
 subjects: [number, sound, perception]
 
+images:
+  - file: "ryoji-ikeda.jpg"
+    alt: "Ryoji Ikeda"
+    role: portrait
+
 draft: false
 ---
 

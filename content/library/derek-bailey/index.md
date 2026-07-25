@@ -9,6 +9,11 @@ library:
 
 subjects: [sound, instruments]
 
+images:
+  - file: "derek-bailey.jpg"
+    alt: "Derek Bailey"
+    role: portrait
+
 draft: false
 ---
 

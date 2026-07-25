@@ -9,6 +9,12 @@ library:
 
 subjects: [sound, time, tuning]
 
+images:
+  - file: "la-monte-young.jpg"
+    alt: "La Monte Young"
+    role: portrait
+    anchor: Top
+
 draft: false
 ---
 
