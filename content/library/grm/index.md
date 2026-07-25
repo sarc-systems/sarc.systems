@@ -9,6 +9,13 @@ library:
 
 subjects: [sound, technology]
 
+images:
+  - file: "grm.jpg"
+    alt: "Pierre Schaeffer at the GRM"
+    role: portrait
+    credit: "Cense.earth"
+    source: "https://cense.earth/"
+
 draft: false
 ---
 

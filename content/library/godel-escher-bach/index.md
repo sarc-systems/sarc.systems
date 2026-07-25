@@ -14,6 +14,11 @@ creators:
 
 subjects: [number, form, computation]
 
+images:
+  - file: "cover.jpg"
+    alt: "Cover of Gödel, Escher, Bach"
+    role: cover
+
 draft: false
 ---
 
