@@ -11,6 +11,7 @@ library:
 creators:
   - name: "Steve Roach"
     role: artist
+    ref: steve-roach
 
 subjects: [time, sound]
 
