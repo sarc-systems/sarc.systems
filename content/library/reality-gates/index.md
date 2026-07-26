@@ -14,6 +14,13 @@ creators:
 
 subjects: [sound, technology]
 
+images:
+  - file: "cover.jpg"
+    alt: "Cover of Reality Gates by Steve Birchall"
+    role: cover
+    credit: "eBay"
+    source: "https://www.ebay.com/"
+
 access:
   - label: "Bandcamp"
     kind: bandcamp

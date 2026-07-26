@@ -14,6 +14,13 @@ creators:
 
 subjects: [sound, technology]
 
+images:
+  - file: "cover.jpg"
+    alt: "Cover of _snd by Microstoria"
+    role: cover
+    credit: "Discogs"
+    source: "https://www.discogs.com/"
+
 access:
   - label: "Bandcamp (remastered, with Init Ding)"
     kind: bandcamp

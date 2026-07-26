@@ -14,6 +14,12 @@ creators:
 
 subjects: [time, sound]
 
+images:
+  - file: "cover.jpg"
+    alt: "Cover of Structures from Silence by Steve Roach"
+    role: cover
+    credit: "Bandcamp"
+
 access:
   - label: "Bandcamp"
     kind: bandcamp

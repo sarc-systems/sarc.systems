@@ -13,6 +13,12 @@ creators:
 
 subjects: [sound, technology]
 
+images:
+  - file: "jon-appleton.jpg"
+    alt: "Jon Appleton at the Synclavier, 1977"
+    role: still
+    source: "https://www.synclavier.com"
+
 access:
   - label: "YouTube"
     kind: video

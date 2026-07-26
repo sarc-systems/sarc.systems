@@ -9,6 +9,13 @@ library:
 
 subjects: [sound, time, perception]
 
+images:
+  - file: "luc-ferrari.jpg"
+    alt: "Luc Ferrari at a studio console"
+    role: portrait
+    credit: "Photo: László Ruszka"
+    source: "https://elevate.at"
+
 related:
   - ref: grm
     relation: part-of

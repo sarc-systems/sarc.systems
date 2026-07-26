@@ -15,6 +15,14 @@ images:
     role: portrait
     credit: "MUBI"
 
+access:
+  - label: "Bandcamp"
+    kind: bandcamp
+    url: "https://francoisbayle.bandcamp.com"
+  - label: "Floating Sound"
+    kind: website
+    url: "https://floatingsound.at/Francois-Bayle"
+
 related:
   - ref: grm
     relation: part-of

@@ -14,6 +14,11 @@ images:
     alt: "Ryoji Ikeda"
     role: portrait
 
+access:
+  - label: "Official website"
+    kind: website
+    url: "https://www.ryojiikeda.com"
+
 draft: false
 ---
 

@@ -17,6 +17,9 @@ images:
     source: "https://www.cutcommonmag.com/"
 
 access:
+  - label: "Bandcamp"
+    kind: bandcamp
+    url: "https://elianeradigue.bandcamp.com"
   - label: "Portrait documentary"
     kind: video
     url: "https://youtu.be/D2U0q4lZiFg"

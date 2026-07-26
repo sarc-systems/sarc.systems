@@ -18,6 +18,12 @@ access:
   - label: "Live in San Francisco, 1981"
     kind: video
     url: "https://youtu.be/XT8omNGhbTM"
+  - label: "Official website"
+    kind: website
+    url: "http://www.throbbing-gristle.com"
+  - label: "Bandcamp"
+    kind: bandcamp
+    url: "https://throbbinggristle.bandcamp.com"
 
 draft: false
 ---

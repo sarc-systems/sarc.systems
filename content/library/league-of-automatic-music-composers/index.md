@@ -17,6 +17,14 @@ images:
     credit: "Medien Kunst Netz"
     source: "http://www.medienkunstnetz.de/assets/img/data/1949/bild.jpg"
 
+access:
+  - label: "Article (Sothis Media)"
+    kind: external-copy
+    url: "https://www.sothismedias.com/home/the-league-of-automatic-music-composers"
+  - label: "DRAM"
+    kind: catalog-record
+    url: "https://www.dramonline.org/labels/league-of-automatic-music-composers"
+
 draft: false
 ---
 

@@ -14,6 +14,11 @@ images:
     alt: "Derek Bailey"
     role: portrait
 
+access:
+  - label: "The Quietus feature"
+    kind: external-copy
+    url: "https://thequietus.com/interviews/strange-world-of/derek-bailey/"
+
 draft: false
 ---
 

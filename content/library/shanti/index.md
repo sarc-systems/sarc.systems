@@ -15,6 +15,16 @@ creators:
 
 subjects: [sound, time]
 
+images:
+  - file: "cover.jpg"
+    alt: "Cover of Shânti by Jean-Claude Eloy"
+    role: cover
+
+access:
+  - label: "YouTube"
+    kind: video
+    url: "https://youtu.be/lcvGwtEUUhE"
+
 draft: false
 ---
 
