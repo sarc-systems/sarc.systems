@@ -14,6 +14,11 @@ creators:
 
 subjects: [sound, instruments, feedback]
 
+images:
+  - file: "kick-that-habit-still.jpg"
+    alt: "Still from Kick That Habit: two musicians bowing long wires as instruments"
+    role: still
+
 related:
   - ref: voice-crack
     relation: documents
