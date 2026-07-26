@@ -14,6 +14,12 @@ creators:
 
 subjects: [instruments, sound, technology]
 
+images:
+  - file: "cover.jpg"
+    alt: "Cover of Handmade Electronic Music: The Art of Hardware Hacking"
+    role: cover
+    credit: "Goodreads"
+
 access:
   - label: "Author's page"
     kind: website
