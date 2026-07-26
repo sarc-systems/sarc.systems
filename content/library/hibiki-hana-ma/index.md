@@ -15,6 +15,13 @@ creators:
 
 subjects: [number, sound]
 
+images:
+  - file: "hibiki-hana-ma-spatialization.png"
+    alt: "Diagram of the ceiling and floor speaker spatialization patterns in Hibiki-Hana-Ma"
+    role: diagram
+    credit: "Esaki, 1970"
+    source: "https://www.researchgate.net/publication/384778178/figure/fig2/AS:11431281282907594@1728548134452/Spatialization-in-Hibiki-Hana-Ma-Source-Esaki-1970-Channels-1-4-were-assigned-to-the.jpg"
+
 access:
   - label: "Listen on Bandcamp"
     kind: bandcamp

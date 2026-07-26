@@ -17,6 +17,11 @@ images:
     credit: "Alchetron"
     source: "https://alchetron.com/James-Tenney"
 
+access:
+  - label: "Official website"
+    kind: website
+    url: "http://www.jamestenney.net"
+
 draft: false
 ---
 

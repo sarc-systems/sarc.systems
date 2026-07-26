@@ -15,6 +15,13 @@ creators:
 
 subjects: [sound, time]
 
+images:
+  - file: "williams-mix-score.png"
+    alt: "Page three of John Cage's handwritten Williams Mix score (1952)"
+    role: diagram
+    credit: "Wikipedia"
+    source: "https://upload.wikimedia.org/wikipedia/en/f/f4/John_Cage_%22Williams_Mix%22_score_%281952%29_page_three.png"
+
 access:
   - label: "YouTube"
     kind: video
