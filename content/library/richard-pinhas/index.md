@@ -9,6 +9,11 @@ library:
 
 subjects: [sound, technology, cybernetics]
 
+images:
+  - file: "richard-pinhas.jpg"
+    alt: "Richard Pinhas at a modular synthesizer"
+    role: portrait
+
 access:
   - label: "Official website"
     kind: website
