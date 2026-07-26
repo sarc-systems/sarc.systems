@@ -15,6 +15,11 @@ creators:
 
 subjects: [morphogenesis, form, dynamical-systems]
 
+images:
+  - file: "figure.png"
+    alt: "Simulated dappled pattern from Turing's reaction-diffusion model, from the original paper"
+    role: diagram
+
 access:
   - label: "Royal Society Publishing"
     kind: external-copy
