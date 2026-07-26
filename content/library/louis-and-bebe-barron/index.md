@@ -15,6 +15,11 @@ images:
     role: portrait
     credit: "Echoes.org"
 
+access:
+  - label: "YouTube"
+    kind: video
+    url: "https://youtu.be/Zg_5Eb8coTU"
+
 draft: false
 ---
 

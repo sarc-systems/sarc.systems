@@ -21,6 +21,9 @@ access:
   - label: "Official site"
     kind: website
     url: "https://inagrm.com/"
+  - label: "Bandcamp"
+    kind: bandcamp
+    url: "https://recollectiongrm.bandcamp.com"
 
 draft: false
 ---

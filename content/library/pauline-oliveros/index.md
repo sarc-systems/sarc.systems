@@ -20,6 +20,9 @@ access:
   - label: "Official website"
     kind: website
     url: "https://paulineoliveros.us"
+  - label: "Bandcamp"
+    kind: bandcamp
+    url: "https://imprec.bandcamp.com/album/pauline-oliveros-reverberations-tape-electronic-music-1960-1970-12cd"
 
 draft: false
 ---

@@ -33,4 +33,4 @@ related:
 draft: false
 ---
 
-You Nakai's study of David Tudor reconstructed through his instruments and circuits.
+You Nakai's study of [David Tudor](/library/david-tudor/) reconstructed through his instruments and circuits.

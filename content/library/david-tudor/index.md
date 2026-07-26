@@ -19,8 +19,14 @@ access:
   - label: "Official website"
     kind: website
     url: "https://davidtudor.org"
+  - label: "Getty Research Institute — bibliography"
+    kind: external-copy
+    url: "https://www.getty.edu/research/tools/guides_bibliographies/david_tudor/index.html"
+  - label: "Reminded by the Instruments (official site)"
+    kind: website
+    url: "http://remindedbytheinstruments.info"
 
 draft: false
 ---
 
-David Tudor — placeholder entry; annotation to come.
+David Tudor began as a virtuoso pianist of the postwar avant-garde before turning to live electronics, building idiosyncratic feedback circuits and instruments — most notably Rainforest — that treated electronic systems themselves as living, resonant bodies.

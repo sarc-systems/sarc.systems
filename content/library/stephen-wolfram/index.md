@@ -15,6 +15,11 @@ images:
     role: diagram
     credit: "Wolfram"
 
+access:
+  - label: "Official website"
+    kind: website
+    url: "https://www.stephenwolfram.com"
+
 draft: false
 ---
 

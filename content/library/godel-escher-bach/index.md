@@ -19,6 +19,11 @@ images:
     alt: "Cover of Gödel, Escher, Bach"
     role: cover
 
+access:
+  - label: "Internet Archive"
+    kind: archive
+    url: "https://archive.org/details/GEBen_201706"
+
 draft: false
 ---
 

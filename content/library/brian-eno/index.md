@@ -14,6 +14,11 @@ images:
     alt: "Brian Eno"
     role: portrait
 
+access:
+  - label: "Hyperreal artist page"
+    kind: external-copy
+    url: "http://music.hyperreal.org/artists/brian_eno/"
+
 draft: false
 ---
 
