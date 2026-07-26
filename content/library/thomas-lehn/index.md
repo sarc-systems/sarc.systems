@@ -9,10 +9,21 @@ library:
 
 subjects: [sound, instruments, feedback]
 
+images:
+  - file: "thomas-lehn.jpg"
+    alt: "Thomas Lehn performing on his analog synthesizer, hands on the patch panel"
+    credit: "Photo hosted by Gerry Hemingway"
+    source: "https://www.gerryhemingway.com/lehn"
+    role: portrait
+    anchor: Left
+
 access:
   - label: "Official website"
     kind: website
     url: "http://www.thomaslehn.com"
+  - label: "Biography (via Gerry Hemingway)"
+    kind: other
+    url: "https://www.gerryhemingway.com/lehn"
 
 draft: false
 ---
