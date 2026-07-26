@@ -15,6 +15,12 @@ creators:
 
 subjects: [computation, sound, feedback]
 
+images:
+  - file: "cover.jpg"
+    alt: "Cover of The League of Automatic Music Composers 1978-1983 (New World Records)"
+    role: cover
+    credit: "Bandcamp"
+
 access:
   - label: "Bandcamp"
     kind: bandcamp
