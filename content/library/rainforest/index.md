@@ -15,6 +15,13 @@ creators:
 
 subjects: [sound, instruments, space]
 
+images:
+  - file: "rainforest-philadelphia-kids.jpg"
+    alt: "Two children listening to a Rainforest sculpture through long rods held to their ears"
+    credit: "Kira Perov"
+    source: "https://composers-inside-electronics.net/rainforest/rainforest/RAINFOREST_IV_files/Phila-Kids-compressed.jpg"
+    role: installation
+
 access:
   - label: "Rainforest (1968) — Tudor/Mumma, New World Records"
     kind: bandcamp
