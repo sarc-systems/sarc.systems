@@ -16,6 +16,13 @@ creators:
 
 subjects: [sound, language, technology]
 
+images:
+  - file: "cover.jpg"
+    alt: "Cover of In Sara, Mencken, Christ and Beethoven There Were Men and Women by Robert Ashley and Paul DeMarinis (Cramps Records, Nova Musicha n.3)"
+    role: cover
+    credit: "Cramps Records"
+    source: "https://www.forcedexposure.com/App_Themes/Default/Images/product_images/close_up/c/CRS103CD_CU.jpg"
+
 access:
   - label: "Bandcamp"
     kind: bandcamp

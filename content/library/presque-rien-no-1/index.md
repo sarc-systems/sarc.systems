@@ -15,6 +15,12 @@ creators:
 
 subjects: [sound, time, perception]
 
+images:
+  - file: "luc-ferrari-field-recording.jpg"
+    alt: "Luc Ferrari wearing headphones with a portable recorder, overlooking a harbor"
+    role: portrait
+    source: "https://lucferrari.com/wp-content/uploads/2017/03/ferrari_biographie.jpg"
+
 access:
   - label: "Bandcamp"
     kind: bandcamp

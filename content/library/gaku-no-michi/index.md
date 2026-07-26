@@ -15,6 +15,11 @@ creators:
 
 subjects: [sound, time]
 
+images:
+  - file: "eloy-studio.jpg"
+    alt: "Jean-Claude Eloy working in a studio with a collaborator"
+    source: "https://continuo.wordpress.com/wp-content/uploads/2010/06/eloykojima.jpg"
+
 draft: false
 ---
 

@@ -9,6 +9,12 @@ library:
 
 subjects: [sound, technology]
 
+images:
+  - file: "raymond-scott.jpg"
+    alt: "Raymond Scott seated among his reel-to-reel tape machines and electronic music equipment"
+    role: portrait
+    source: "https://www.kmuw.org/post/musical-space-raymond-scott"
+
 access:
   - label: "Official website"
     kind: website

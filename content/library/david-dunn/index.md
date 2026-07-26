@@ -9,6 +9,13 @@ library:
 
 subjects: [sound, perception, cybernetics]
 
+images:
+  - file: "david-dunn.png"
+    alt: "David Dunn working with electronics and a microscope in his studio"
+    role: portrait
+    source: "https://subtropics.org/ST25/wp-content/uploads/2021/07/David-Dunn-WEB.png"
+    anchor: Right
+
 access:
   - label: "Bandcamp"
     kind: bandcamp
