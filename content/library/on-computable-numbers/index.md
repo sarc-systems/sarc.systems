@@ -15,6 +15,15 @@ creators:
 
 subjects: [computation, number]
 
+images:
+  - file: "turing-abbreviated-tables.png"
+    alt: "A page of Turing's paper showing abbreviated machine tables for copying and replacing symbols on the tape"
+    role: document
+    credit: "Alan Turing, from the original 1936 paper"
+    rights:
+      status: unknown
+      note: "Excerpt from the original paper, used for identification; public-domain status not established across jurisdictions."
+
 access:
   - label: "PDF"
     kind: external-copy

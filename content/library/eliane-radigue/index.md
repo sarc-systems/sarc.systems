@@ -11,10 +11,11 @@ subjects: [time, sound, perception]
 
 images:
   - file: "eliane-radigue.jpg"
-    alt: "Éliane Radigue"
+    alt: "A young Éliane Radigue seated beside her home studio, an ARP 2500 and reel-to-reel tape machines behind her"
     role: portrait
-    credit: "Photograph by Vincent Pontet"
-    source: "https://www.cutcommonmag.com/cat-hope-talks-gender-sound-art-and-the-work-of-eliane-radigue/1-eliane-radigue-image-vincent-pontet/"
+    rights:
+      status: unknown
+      note: "Photographer and original publication not yet established."
 
 access:
   - label: "Bandcamp"

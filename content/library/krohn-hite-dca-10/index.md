@@ -16,6 +16,15 @@ subjects:
   - sound
   - instruments
 
+images:
+  - file: "dca-10-schematic.png"
+    alt: "Schematic for the Krohn-Hite DCA-10 wide-band 10-watt amplifier"
+    role: diagram
+    credit: "Krohn-Hite, from the DCA-10 service manual"
+    rights:
+      status: archival
+      note: "Same archival basis as the hosted manual itself — see rights above."
+
 # Manual-specific metadata
 manufacturer: "Krohn-Hite"
 models:

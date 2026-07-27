@@ -1,0 +1,35 @@
+---
+title: "Dreamer (Lo91)"
+summary: "Susumu Yokota's 2012 album on Lo Recordings."
+year: 2012
+
+library:
+  id: dreamer-lo91
+  type: release
+  sarc_work: false
+
+creators:
+  - name: "Susumu Yokota"
+    role: artist
+    ref: susumu-yokota
+
+subjects: [sound, perception]
+
+images:
+  - file: "cover.jpg"
+    alt: "Cover of Dreamer (Lo91) by Susumu Yokota"
+    role: cover
+    source: "https://susumuyokota.bandcamp.com/album/dreamer-lo91"
+    rights:
+      status: promotional
+      note: "Label cover art used for identification."
+
+access:
+  - label: "Bandcamp"
+    kind: bandcamp
+    url: "https://susumuyokota.bandcamp.com/album/dreamer-lo91"
+
+draft: false
+---
+
+Susumu Yokota's 2012 album, released on Lo Recordings.

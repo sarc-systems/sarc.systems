@@ -16,6 +16,15 @@ subjects:
   - sound
   - instruments
 
+images:
+  - file: "ue100-frequency-response.png"
+    alt: "Frequency response chart for the Klein + Hummel UE-100, showing overlapping filter curves across the audio band"
+    role: diagram
+    credit: "Klein + Hummel, from the UE-100 manual"
+    rights:
+      status: archival
+      note: "Same archival basis as the hosted manual itself — see rights above."
+
 # Manual-specific metadata
 manufacturer: "Klein + Hummel"
 models:

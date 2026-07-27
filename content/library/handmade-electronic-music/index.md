@@ -18,6 +18,7 @@ images:
   - file: "cover.jpg"
     alt: "Cover of Handmade Electronic Music: The Art of Hardware Hacking"
     role: cover
+    anchor: Bottom
 
 access:
   - label: "Author's page"
