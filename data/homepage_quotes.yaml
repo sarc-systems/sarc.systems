@@ -67,3 +67,13 @@
   source_url:
   library_ref:
   enabled: true
+
+- id: modified-environment
+  text: "We have modified our environment so radically that we must now modify ourselves to exist in this new environment."
+  author: "Norbert Wiener"
+  work: "The Human Use of Human Beings"
+  year: 1950
+  citation: "The Human Use of Human Beings: Cybernetics and Society (1950/1954); a widely cited passage, exact page/edition not yet verified."
+  source_url:
+  library_ref:
+  enabled: true
