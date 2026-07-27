@@ -176,6 +176,13 @@
   width: clamp(260px, 40vw, 440px);
   height: clamp(260px, 40vw, 440px);
 }
+/* Shrink the framed panel to hug the centred image (and header) rather than
+   spanning the full content width with wide empty wash on either side. */
+:root[data-library-view="images"] .library-random {
+  width: fit-content;
+  max-width: 100%;
+  margin-inline: auto;
+}
 .library-featured-kicker {
   font-family: var(--font-mono); font-size: var(--t-xs); letter-spacing: 0.1em;
   text-transform: uppercase; color: var(--signal-ink); margin: 0;
