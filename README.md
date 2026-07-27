@@ -50,6 +50,23 @@ static readable state with no JS, and stays canonical under
 The **original raster** (`assets/img/rect15_larger.png`) is preserved unchanged
 and used as the social/Open-Graph preview image. See `assets/img/README.md`.
 
+## Homepage quote
+
+Beneath the mark sits one SARC-curated editorial quotation —
+`data/homepage_quotes.yaml`, resolved by `layouts/partials/homepage-quote.html`.
+This is homepage content, not the Library: quotes never become Library
+entries and never touch Library front matter, filters, JSON, or random
+selection. `library_ref` is an optional pointer *into* the Library (a
+resolvable `library.id`) and is validated at build time
+(`homepage-quotes-validate.html`) — an unresolvable reference fails the
+build. Selection is session-stable (`sessionStorage`, revalidated against the
+enabled set on every read) and never becomes URL state. The first enabled
+quote is the deterministic no-JS/pre-JS fallback; `assets/js/homepage-quote.js`
+is inlined (not `<script src defer>`) specifically so the session pick
+replaces it before the fallback can visibly flash. See `CLAUDE.md` §
+Homepage quote for the full editorial rules and the author/work/full/no-link
+attribution rule.
+
 ## Library
 
 The **Library** (`/library/`) is **one unified catalog of entries** — a growing
@@ -57,7 +74,8 @@ research collection and small knowledge graph, not a set of sections. Every
 durable thing SARC wants to identify, annotate, connect, or point toward is an
 entry (essays, books, manuals, people, groups, recordings, releases, websites,
 systems, …). Type, subject, and access are metadata and **filters**, never shelves. The
-landing puts the **View** switch and **Type/Subject/Origin filters** first,
+landing puts the **View** switch and **Type/Subject filters** (collapsed by
+default behind a native disclosure) first,
 then a chance-picked "From the Library" entry, then the full ruled catalog —
 in that order because the controls define one field, and the chance pick and
 the catalog below it are both sampled/filtered from that exact same field

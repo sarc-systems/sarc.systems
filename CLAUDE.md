@@ -170,10 +170,18 @@ shipped as a webfont: the free Typodermic licence permits creating a logo but
 lists "web page (embedded)" as *not allowed*, so shipping outlines (a logo) is
 the compliant path.
 
-Current desktop nav: `SARC | JOURNAL | LIBRARY | ABOUT | YOUTUBE | GITHUB`
-(YouTube and GitHub are external links to the SARC channel and GitHub org).
-Future: `SARC | JOURNAL | SYSTEMS | STUDIO | LABEL | LIBRARY | ABOUT` (plus the
-external YouTube/GitHub links) — the nav is built from the `[menus]` definition
+Current desktop nav: `SARC | JOURNAL | LIBRARY | ABOUT | ▶ | ⌥` (YouTube and
+GitHub are external links to the SARC channel and GitHub org, rendered as
+small inline monochrome icons — `layouts/partials/icon.html`, outline glyphs
+from Feather Icons, MIT licence, `stroke: currentColor` so they always match
+the surrounding link's colour/hover state — instead of text, in both the
+header nav and footer; each keeps a `.visually-hidden` accessible name
+("YouTube"/"GitHub") since the icon alone says nothing to a screen reader.
+Which menu items get an icon is config-driven (`[menus.main.params] icon =
+"youtube"` in `hugo.toml`), not a template special-case, so it's the same
+mechanism for any future icon-bearing link). Future:
+`SARC | JOURNAL | SYSTEMS | STUDIO | LABEL | LIBRARY | ABOUT` (plus the
+external YouTube/GitHub icons) — the nav is built from the `[menus]` definition
 in `hugo.toml`, so adding a department is a config change, not a redesign.
 
 Small screens: simple, accessible menu (works without JS — e.g. details/summary
@@ -354,7 +362,9 @@ weight:  sort_title:  featured:            # optional ordering / no-JS random de
   creator *role*); **`group`** = a band / ensemble / collective (AMM, Kraftwerk);
   **`organization`** = an institution / label / studio (GRM, Frog Peak).
 - **sarc_work** — independent of type (a SARC manual and a third-party manual are
-  both `type: manual`). Powers the *Origin* filter.
+  both `type: manual`). Previously powered a visible *Origin* filter; that
+  facet is removed from the UI for now (still a valid field, still in the
+  JSON index) and can come back the same way Type/Subject work if wanted.
 - **subjects** — a small controlled vocabulary (why it matters to SARC).
   **`time` is deliberately broad** (chronology, duration, rhythm, cycles, scale,
   memory, simultaneity, historical time) — not `chronology`. Don't add casually.
@@ -434,16 +444,19 @@ once, on either side. Creator attribution uses `creators`, never `related`.
 Partials: `library-{creators,works,related}.html`.
 
 **Landing** (`layouts/library/list.html`): intro → **View** switch → **Filters**
-(Type/Subject/Origin, Clear, result count) → **From the Library** (one entry
-sampled from whatever the controls above currently define) → **All entries**
-(ruled records with thumbnails). The controls sit *above* the chance panel
-deliberately: View/Type/Subject/Origin define one field, and both the chance
+(Type/Subject, Clear, result count — collapsed by default behind a native
+`<details>`/`<summary>`, no custom disclosure JS; `library-filter.js` opens it
+automatically only when the URL already carries an active filter, so a shared
+filtered link isn't hiding its own explanation) → **From the Library** (one
+entry sampled from whatever the controls above currently define) → **All
+entries** (ruled records with thumbnails). The controls sit *above* the chance
+panel deliberately: View/Type/Subject define one field, and both the chance
 panel and the complete results beneath it are sampled/filtered from that same
 field — there is exactly one matching-set computation
 (`library-filter.js`'s `matchesFields`/`matchesDataset`/`matchesEntry`), never
-a separate one for the random pick. **Filter** by type + subject + SARC-work:
-OR within a facet, AND across; shareable `?type=a,b&subject=c&sarc=true`;
-history-aware; Clear; polite `aria-live` count. Without JS the whole catalog
+a separate one for the random pick. **Filter** by type + subject: OR within a
+facet, AND across; shareable `?type=a,b&subject=c`; history-aware; Clear;
+polite `aria-live` count. Without JS the whole catalog
 is visible and the filter form/view switch are hidden (CSS-gated on
 `data-nojs`), and the chance panel stands as its unfiltered deterministic
 fallback (`featured: true` or first) since there's no client-side filtering to
@@ -467,7 +480,7 @@ in the URL, but an absent or invalid `view` resolves to Images, not Catalog
 (the switch lists Images first for the same reason); `library-filter.js` only
 ever adds `view=catalog` to the URL, never `view=images`. One script
 (`library-filter.js`; there is no separate random script anymore) owns
-View/Type/Subject/Origin state, filters both result collections, updates a
+View/Type/Subject state, filters both result collections, updates a
 view-aware result count (`"N entries · M with images"` in Images view; `"0
 images among N matching entries"` when none match), and — every single time
 any of that state changes — revalidates the chance panel against the same
@@ -498,8 +511,8 @@ sparse `aria-live` region (`[data-chance-announce]`, only updated when the
 picked entry's identity actually changes — never on every filter click)
 announces `"Selected: <title> by <creators>"`. The pick itself is
 `sessionStorage`-only, revalidated against the live pool on every read — it
-never becomes URL state (View/Type/Subject/Origin are the only URL-backed
-state); a stored id that's no longer eligible is simply discarded and redrawn.
+never becomes URL state (View/Type/Subject are the only URL-backed state); a
+stored id that's no longer eligible is simply discarded and redrawn.
 The whole view switch and chance-selection behavior requires JS (there is no
 server-rendered Images view or client-filtered chance pick), so the switch is
 hidden under `data-nojs` exactly like the filter form; Catalog with its
@@ -599,6 +612,74 @@ responsive SVG system:
   sequence.
 - No "Enter" screen — institutional name and primary nav sit directly beneath
   the mark. This animation is the only prominent moving element on the site.
+
+## Homepage quote
+
+Beneath the mark and institutional name sits one editorial quotation —
+replacing what used to be a static discipline line
+("computation · nonlinear dynamics · feedback · synthesis"). This is homepage
+editorial content, **not part of the Library**: quotes are never stored in a
+Library entry's front matter, never become Library entries themselves, and
+never appear in `index.json`, the Library filters/counts, or the Library
+random-selection system. An optional `library_ref` may point *into* the
+Library (a one-way pointer, validated to resolve — see below), but that's the
+only relationship between the two systems.
+
+**Data.** `data/homepage_quotes.yaml` — a flat list. Each quote: `id`
+(required, unique, stable kebab-case — session storage and the client script
+key on this, never on array position or on `text`), `text` (required),
+`author` (required), `work` (optional), `year` (optional), `citation`
+(required — an editorial verification note for maintainers; not shown on the
+page), `source_url` (optional, the exact source page, never a bare homepage
+or search result), `library_ref` (optional, another entry's `library.id`),
+`enabled` (optional, default true). Quotes must be manually selected and
+verified — one sentence or a distinctive fragment, roughly 5–25 words,
+language relevant to SARC's intellectual position; no generic inspirational
+language, slogans, lyrics, or paraphrases presented as direct quotations.
+Leave a quote `enabled: false` rather than guess at uncertain wording; leave
+`citation` honestly hedged (e.g. "exact page not yet pinned down") rather than
+inventing a page number or edition. Quality over quantity — a handful of
+carefully verified quotes beats a large uncertain set.
+
+**Rendering.** `layouts/partials/homepage-quotes-resolve.html` resolves the
+enabled quotes once, computing `library_url`/`link_target` per quote so
+neither the server render nor the client script needs its own Library lookup:
+`link_target` is `"work"` when the quote names a `work` (assumed to be the
+referenced entry), `"author"` when the resolved entry is a `person` and no
+`work` is given, `"full"` when `library_ref` resolves but neither applies, or
+empty when there's no `library_ref` at all. `homepage-quote-attribution.html`
+renders the footer for one resolved quote from that rule — author linked,
+work linked (in `<cite>`), the whole attribution linked, or nothing linked;
+an external `source_url` is always a separate, distinctly-labelled `Source ↗`
+link, never conflated with a Library link. `homepage-quote.html` renders the
+**first enabled quote** (deterministic; `Math.random()` in a Hugo template
+would only randomize once per build, not per session, so the SSR version is
+never random) as the no-JS fallback, embeds all enabled quotes as inline JSON
+(`#homepage-quotes-data`, no separate fetch), and inlines
+`assets/js/homepage-quote.js`'s content directly as a **non-deferred**
+`<script>` — deliberately not the usual `<script src defer>` pattern used
+elsewhere, so it runs synchronously as the parser reaches it, right after the
+fallback markup, avoiding a visible flash from the fallback quote to the
+session pick. The client script mirrors the attribution-link rule by hand
+(same accepted duplication as `library-featured.html`/`cardHTML()` for the
+Library's chance panel) since it can't call a Hugo partial at runtime.
+
+**Selection.** One quote, stable for the browser session (`sessionStorage`,
+revalidated against the current enabled set on every read — a stored id
+that's no longer enabled/present is discarded and redrawn), refreshing keeps
+it, a new session may get another. A light `localStorage` memory of the last
+session's pick avoids immediate repetition across sessions when there's more
+than one enabled quote; this is a convenience, not a real history. No
+"select again" control, no timer/rotation, no visible counter — a rotating
+institutional epigraph, not a quote-of-the-day widget.
+
+**Validation** (`homepage-quotes-validate.html`, via `partialCached` from
+`head.html`, alongside but independent of the Library's own validator). Fails
+the build on: a missing/duplicate `id`; missing `text`/`author`/`citation`; a
+non-boolean `enabled`; a malformed, Google, or bare-homepage `source_url`; a
+`library_ref` that doesn't resolve to exactly one published Library entry;
+duplicate quote text (normalized whitespace/case). Warns (doesn't fail) on a
+quote well past the ~5–25-word guideline.
 
 ## Accessibility
 
