@@ -23,7 +23,6 @@ images:
   - file: "stafford-beer.jpg"
     alt: "Stafford Beer, 1990"
     role: portrait
-    credit: "Wikimedia Commons"
     source: "https://commons.wikimedia.org/wiki/File:Stafford_Beer_1990.png"
 
 access:

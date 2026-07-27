@@ -17,9 +17,13 @@ subjects: [sound, space]
 
 images:
   - file: "cover.jpg"
-    alt: "Cover of Erda / Suite N by Jean Schwarz"
+    alt: "Cover of the original Erda / Symphonie LP (Ina-GRM, 1978)"
     role: cover
-    credit: "Bandcamp"
+    caption: "Original Ina-GRM vinyl sleeve for Erda / Symphonie (1978) — a different Erda pairing than this entry's Erda / Suite N release."
+    source: "https://www.discogs.com/release/291890-Jean-Schwarz-Erda-Symphonie"
+    rights:
+      status: promotional
+      note: "Label sleeve art used for identification."
 
 access:
   - label: "Bandcamp"

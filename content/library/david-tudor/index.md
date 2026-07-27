@@ -22,7 +22,7 @@ access:
   - label: "Getty Research Institute — bibliography"
     kind: external-copy
     url: "https://www.getty.edu/research/tools/guides_bibliographies/david_tudor/index.html"
-  - label: "Reminded by the Instruments (official site)"
+  - label: "Reminded by the Instruments"
     kind: website
     url: "http://remindedbytheinstruments.info"
 

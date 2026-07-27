@@ -19,7 +19,7 @@ images:
   - file: "cover.jpg"
     alt: "Cover of L'Expérience Acoustique by François Bayle"
     role: cover
-    credit: "Bandcamp"
+    source: "https://francoisbayle.bandcamp.com/album/lexp-rience-acoustique-2"
 
 access:
   - label: "Bandcamp"

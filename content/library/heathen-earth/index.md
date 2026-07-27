@@ -19,7 +19,7 @@ images:
   - file: "cover.jpg"
     alt: "Cover of Heathen Earth by Throbbing Gristle"
     role: cover
-    credit: "Bandcamp"
+    source: "https://throbbinggristle.bandcamp.com/album/heathen-earth"
 
 access:
   - label: "Bandcamp"

@@ -16,10 +16,16 @@ creators:
 subjects: [sound, time, perception]
 
 images:
+  - file: "radigue-arp2500.png"
+    alt: "Éliane Radigue at her ARP 2500 synthesizer"
+    role: still
+    rights:
+      status: unknown
+      note: "Photographer and original publication not yet established."
   - file: "cover.jpg"
     alt: "Cover of Trilogie de la Mort by Éliane Radigue"
     role: cover
-    credit: "Bandcamp"
+    source: "https://elianeradigue.bandcamp.com/album/trilogie-de-la-mort"
 
 access:
   - label: "Bandcamp"

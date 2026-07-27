@@ -13,8 +13,8 @@ images:
   - file: "eliane-radigue.jpg"
     alt: "Éliane Radigue"
     role: portrait
-    credit: "CutCommon"
-    source: "https://www.cutcommonmag.com/"
+    credit: "Photograph by Vincent Pontet"
+    source: "https://www.cutcommonmag.com/cat-hope-talks-gender-sound-art-and-the-work-of-eliane-radigue/1-eliane-radigue-image-vincent-pontet/"
 
 access:
   - label: "Bandcamp"

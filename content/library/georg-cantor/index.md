@@ -13,7 +13,6 @@ images:
   - file: "georg-cantor.jpg"
     alt: "Georg Cantor"
     role: portrait
-    credit: "Wikimedia Commons"
 
 draft: false
 ---

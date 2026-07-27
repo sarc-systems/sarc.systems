@@ -24,7 +24,7 @@ images:
     source: "https://hal.science/hal-02546819v1/document"
 
 access:
-  - label: "Listen on Bandcamp"
+  - label: "Bandcamp"
     kind: bandcamp
     url: "https://karlrecords.bandcamp.com/track/voyage-absolu-des-unari-vers-androm-de-1989"
 

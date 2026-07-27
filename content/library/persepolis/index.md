@@ -19,11 +19,10 @@ images:
   - file: "persepolis.jpg"
     alt: "Xenakis, Persepolis (A Utopian Stage)"
     role: still
-    credit: "Bowerbird"
-    source: "https://www.bowerbird.org/"
+    source: "https://www.bowerbird.org/event/xenakis-persepolis-a-utopian-stage/"
 
 access:
-  - label: "Listen on Bandcamp"
+  - label: "Bandcamp"
     kind: bandcamp
     url: "https://karlrecords.bandcamp.com/track/persepolis-1972"
 

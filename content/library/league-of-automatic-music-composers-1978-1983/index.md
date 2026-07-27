@@ -19,7 +19,7 @@ images:
   - file: "cover.jpg"
     alt: "Cover of The League of Automatic Music Composers 1978-1983 (New World Records)"
     role: cover
-    credit: "Bandcamp"
+    source: "https://newworldrecords.bandcamp.com/album/the-league-of-automatic-music-composers-1978-1983"
 
 access:
   - label: "Bandcamp"

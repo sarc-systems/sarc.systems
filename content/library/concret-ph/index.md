@@ -19,14 +19,13 @@ images:
   - file: "philips-pavilion.jpg"
     alt: "Philips Pavilion, Expo 58"
     role: still
-    credit: "Wikimedia Commons"
     source: "https://commons.wikimedia.org/wiki/File:Expo58_building_Philips.jpg"
 
 access:
-  - label: "Listen on Bandcamp"
+  - label: "Bandcamp"
     kind: bandcamp
     url: "https://karlrecords.bandcamp.com/track/concret-ph-1958"
-  - label: "AD Classics: Philips Pavilion (ArchDaily)"
+  - label: "AD Classics: Philips Pavilion"
     kind: external-copy
     url: "https://www.archdaily.com/157658/ad-classics-expo-58-philips-pavilion-le-corbusier-and-iannis-xenakis"
   - label: "Philips Pavilion (Fondation Le Corbusier)"

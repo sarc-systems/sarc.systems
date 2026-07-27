@@ -17,14 +17,18 @@ subjects: [sound, time, perception]
 
 images:
   - file: "cover.jpg"
-    alt: "Cover of Adnos by Éliane Radigue"
+    alt: "Cover of Adnos by Éliane Radigue, Important Records 2021 edition"
     role: cover
-    credit: "Bandcamp"
+    caption: "Important Records (imprec) 2021 edition artwork."
+    source: "https://imprec.bandcamp.com/album/adnos"
+    rights:
+      status: promotional
+      note: "Label cover art used for identification."
 
 access:
   - label: "Bandcamp"
     kind: bandcamp
-    url: "https://elianeradigue.bandcamp.com/album/adnos"
+    url: "https://imprec.bandcamp.com/album/adnos"
 
 draft: false
 ---

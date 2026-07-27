@@ -19,10 +19,10 @@ images:
   - file: "cover.jpg"
     alt: "Cover of Sakura (Skintone Edition) by Susumu Yokota"
     role: cover
-    credit: "Bandcamp"
+    source: "https://susumuyokota.bandcamp.com/album/sakura-skintone-edition"
 
 access:
-  - label: "Bandcamp (Skintone Edition)"
+  - label: "Bandcamp"
     kind: bandcamp
     url: "https://susumuyokota.bandcamp.com/album/sakura-skintone-edition"
 

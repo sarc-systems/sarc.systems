@@ -19,11 +19,11 @@ images:
   - file: "xenakis-sketch.jpg"
     alt: "Xenakis sketch"
     role: diagram
-    credit: "Columbia University"
-    source: "https://sites.music.columbia.edu/"
+    credit: "Columbia University Computer Music Center"
+    source: "http://sites.music.columbia.edu/masterpieces/notes/xenakis/works.html"
 
 access:
-  - label: "Listen on Bandcamp"
+  - label: "Bandcamp"
     kind: bandcamp
     url: "https://karlrecords.bandcamp.com/track/bohor-1962"
 

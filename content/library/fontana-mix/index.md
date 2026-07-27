@@ -22,7 +22,7 @@ images:
     source: "https://miro.medium.com/max/652/1*XNz5CNGr7meFZ_lRPgl9fQ.png"
 
 access:
-  - label: "Audio realization (Medien Kunst Netz)"
+  - label: "Audio realization"
     kind: audio
     url: "http://www.medienkunstnetz.de/works/fontana-mix/audio/1/"
 

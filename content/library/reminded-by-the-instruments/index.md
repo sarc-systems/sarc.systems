@@ -18,8 +18,11 @@ images:
   - file: "cover.jpg"
     alt: "Reminded by the Instruments (book)"
     role: cover
-    credit: "4Columns"
-    source: "https://www.4columns.org/"
+    caption: "Oxford University Press edition."
+    source: "https://www.4columns.org/dayal-geeta/reminded-by-the-instruments"
+    rights:
+      status: promotional
+      note: "Publisher cover art used for identification."
 
 access:
   - label: "Official site"

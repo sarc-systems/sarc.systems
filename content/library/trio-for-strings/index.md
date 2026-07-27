@@ -19,7 +19,6 @@ images:
   - file: "cover.png"
     alt: "Lithograph portrait of La Monte Young on the Trio for Strings LP cover"
     role: cover
-    credit: "Wikipedia"
     source: "https://upload.wikimedia.org/wikipedia/en/7/7d/Trio_for_Strings_lithograph.png"
 
 access:

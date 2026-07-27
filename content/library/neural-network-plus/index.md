@@ -19,8 +19,7 @@ images:
   - file: "feedback-paths.jpg"
     alt: "Feedback signal paths"
     role: diagram
-    credit: "mlure.art"
-    source: "https://mlure.art/"
+    source: "https://mlure.art/analog-neural-synthesis/"
 
 access:
   - label: "YouTube"

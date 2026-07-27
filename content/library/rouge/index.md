@@ -18,10 +18,9 @@ images:
   - file: "cover.jpg"
     alt: "Cover of Heliograms by Jean Piché"
     role: cover
-    credit: "Amoeba Music"
 
 access:
-  - label: "YouTube (from Jean Piché - Heliograms)"
+  - label: "YouTube"
     kind: video
     url: "https://youtu.be/VOL6sYK-Ovk?t=1398"
   - label: "SoundCloud"

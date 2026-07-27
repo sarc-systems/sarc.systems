@@ -24,10 +24,11 @@ images:
     alt: "Braitenberg tape memory and predictor diagram"
     role: diagram
     caption: "Past/future tape memory, comparator, and predictor."
-    source: "Vehicles"
+    credit: "Valentino Braitenberg, from Vehicles"
+    source: "https://library.agnescameron.info/artificial%20intelligence/Vehicles,%20Experiments%20in%20Synthetic%20Psychology,%20Valentino%20Braitenberg%20(1984).pdf"
 
 access:
-  - label: "Publisher (MIT Press)"
+  - label: "Publisher"
     url: "https://mitpress.mit.edu/9780262521123/vehicles/"
     kind: publisher
   - label: "PDF"

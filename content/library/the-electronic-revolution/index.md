@@ -19,7 +19,6 @@ images:
   - file: "cover.jpg"
     alt: "Cover of The Electronic Revolution by William S. Burroughs, cut-up grid lettering"
     role: cover
-    credit: "Wikipedia"
     source: "https://upload.wikimedia.org/wikipedia/en/0/0d/ElectronicRevolution.jpg"
 
 access:

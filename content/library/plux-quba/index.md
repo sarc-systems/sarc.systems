@@ -19,7 +19,7 @@ images:
   - file: "cover.jpg"
     alt: "Cover of Plux Quba by Nuno Canavarro"
     role: cover
-    credit: "Bandcamp"
+    source: "https://nunocanavarro.bandcamp.com/album/plux-quba"
 
 access:
   - label: "Bandcamp"

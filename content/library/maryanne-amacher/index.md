@@ -13,7 +13,6 @@ images:
   - file: "maryanne-amacher.jpg"
     alt: "Maryanne Amacher wearing headphones, hands on a custom mixing console"
     role: portrait
-    credit: "WHYY"
     source: "https://whyy.org/wp-content/uploads/2019/04/Amacher_knobs-2.jpg"
 
 access:

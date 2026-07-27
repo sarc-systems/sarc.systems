@@ -19,7 +19,6 @@ images:
     alt: "Stanisław Lem"
     role: portrait
     anchor: Top
-    credit: "Wikimedia Commons"
 
 access:
   - label: "PDF"

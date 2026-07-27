@@ -13,7 +13,6 @@ images:
   - file: "pan-sonic.jpg"
     alt: "Mika Vainio and Ilpo Väisänen of Pan Sonic, one holding a large seed pod"
     role: portrait
-    credit: "Xing"
     source: "https://www.xing.it/media/1300/large/1206_pan_soni.jpg"
 
 draft: false

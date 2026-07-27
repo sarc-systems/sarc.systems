@@ -13,7 +13,6 @@ images:
   - file: "omit.jpg"
     alt: "Omit"
     role: portrait
-    credit: "Discogs"
     source: "https://www.discogs.com/artist/312508"
 
 access:

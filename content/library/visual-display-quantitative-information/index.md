@@ -21,7 +21,7 @@ images:
     credit: "Graphics Press"
 
 access:
-  - label: "Publisher (Graphics Press)"
+  - label: "Publisher"
     kind: publisher
     url: "https://www.edwardtufte.com/book/the-visual-display-of-quantitative-information/"
   - label: "PDF"

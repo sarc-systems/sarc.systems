@@ -4,7 +4,7 @@ summary: "David Jackman's long-running project of dense, ritualistic drone built
 
 library:
   id: organum
-  type: person
+  type: group
   sarc_work: false
 
 subjects: [sound, perception]
@@ -12,8 +12,7 @@ subjects: [sound, perception]
 images:
   - file: "organum.jpg"
     alt: "Illustrated release artwork for Organum: a stylized face surrounded by rose illustrations"
-    credit: "Discogs"
-    source: "https://www.discogs.com/"
+    source: "https://www.discogs.com/release/121431"
 
 draft: false
 ---

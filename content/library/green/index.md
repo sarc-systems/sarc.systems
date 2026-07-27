@@ -19,7 +19,7 @@ images:
   - file: "cover.jpg"
     alt: "Cover of Green by Hiroshi Yoshimura"
     role: cover
-    credit: "Bandcamp"
+    source: "https://hiroshiyoshimura.bandcamp.com/album/green"
 
 access:
   - label: "Bandcamp"

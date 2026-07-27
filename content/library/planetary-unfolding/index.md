@@ -23,7 +23,7 @@ images:
     source: "https://15questions.net/interview/fifteen-questions-interview-michael-stearns/"
 
 access:
-  - label: "Listen on Bandcamp"
+  - label: "Bandcamp"
     kind: bandcamp
     url: "https://projektrecords.bandcamp.com/album/planetary-unfolding"
 

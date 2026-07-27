@@ -18,11 +18,10 @@ images:
   - file: "cover.jpg"
     alt: "Cover of _snd by Microstoria"
     role: cover
-    credit: "Discogs"
-    source: "https://www.discogs.com/"
+    source: "https://www.discogs.com/master/14154-Microstoria-Snd"
 
 access:
-  - label: "Bandcamp (remastered, with Init Ding)"
+  - label: "Bandcamp"
     kind: bandcamp
     url: "https://oval.bandcamp.com/album/init-ding-snd-remastered"
 

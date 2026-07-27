@@ -1,7 +1,6 @@
 ---
 title: "League of Automatic Music Composers"
 summary: "Pioneering late-1970s Bay Area ensemble performing live music with a network of microcomputers."
-year: 1978
 
 library:
   id: league-of-automatic-music-composers
@@ -18,7 +17,7 @@ images:
     source: "http://www.medienkunstnetz.de/assets/img/data/1949/bild.jpg"
 
 access:
-  - label: "Article (Sothis Media)"
+  - label: "Article"
     kind: external-copy
     url: "https://www.sothismedias.com/home/the-league-of-automatic-music-composers"
   - label: "DRAM"

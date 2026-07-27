@@ -13,8 +13,8 @@ images:
   - file: "luc-ferrari.jpg"
     alt: "Luc Ferrari at a studio console"
     role: portrait
-    credit: "Photo: László Ruszka"
-    source: "https://elevate.at"
+    credit: "Photograph by László Ruszka"
+    source: "https://elevate.at/websites/2020/en/arts/artists/luc_ferrari/index.html"
 
 related:
   - ref: grm

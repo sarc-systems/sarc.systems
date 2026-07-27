@@ -17,7 +17,7 @@ images:
   - file: "jon-appleton.jpg"
     alt: "Jon Appleton at the Synclavier, 1977"
     role: still
-    source: "https://www.synclavier.com"
+    source: "https://www.synclavier.com/project/jon-appleton/"
 
 access:
   - label: "YouTube"

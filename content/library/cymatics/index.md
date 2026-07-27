@@ -19,7 +19,6 @@ images:
   - file: "cymatics-still.jpg"
     alt: "Hans Jenny introducing the film, seated before two cymatic mandala patterns"
     role: still
-    credit: "Internet Archive"
     source: "https://archive.org/details/Cymatics"
 
 access:

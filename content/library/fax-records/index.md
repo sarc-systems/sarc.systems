@@ -12,7 +12,6 @@ subjects: [sound, technology]
 images:
   - file: "fax-records.jpg"
     alt: "FAX +49-69/450464 label logo"
-    credit: "Wikipedia"
     source: "https://upload.wikimedia.org/wikipedia/en/6/68/Fax_Label_full_logo.jpg"
 
 draft: false

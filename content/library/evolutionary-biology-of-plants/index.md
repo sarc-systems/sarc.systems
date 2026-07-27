@@ -19,7 +19,6 @@ images:
     alt: "Cover of The Evolutionary Biology of Plants by Karl J. Niklas"
     role: cover
     anchor: Top
-    credit: "Internet Archive"
 
 access:
   - label: "Internet Archive"

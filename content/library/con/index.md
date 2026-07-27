@@ -19,7 +19,7 @@ images:
   - file: "cover.jpg"
     alt: "Cover of Con by Conrad Schnitzler"
     role: cover
-    credit: "Bandcamp"
+    source: "https://conradschnitzler.bandcamp.com/album/con"
 
 access:
   - label: "Bandcamp"

@@ -19,7 +19,7 @@ access:
   - label: "Official site"
     kind: website
     url: "https://www.iannis-xenakis.org"
-  - label: "Electroacoustic Works (Bandcamp)"
+  - label: "Bandcamp"
     kind: bandcamp
     url: "https://karlrecords.bandcamp.com/album/electroacoustic-works"
 

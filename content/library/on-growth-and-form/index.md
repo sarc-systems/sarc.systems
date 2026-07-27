@@ -19,7 +19,11 @@ images:
     alt: "Coordinate transformation of skulls, Hyracotherium to horse"
     role: diagram
     caption: "The theory of transformations (On Growth and Form)."
-    source: "On Growth and Form"
+    credit: "D'Arcy Wentworth Thompson, from On Growth and Form"
+    source: "https://archive.org/details/ongrowthform00thom"
+    rights:
+      status: public-domain
+      note: "First published 1917; author died 1948 — in the public domain in the US and elsewhere."
 
 draft: false
 ---

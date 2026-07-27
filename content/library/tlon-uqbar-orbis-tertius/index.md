@@ -19,7 +19,12 @@ images:
   - file: "cover.jpg"
     alt: "Cover of Tlön, Uqbar, Orbis Tertius by Jorge Luis Borges, illustrated by Rikki"
     role: cover
-    credit: "Goodreads"
+    anchor: Top
+    caption: "Standalone illustrated edition, illustrated by Rikki."
+    source: "https://www.goodreads.com/book/show/929587"
+    rights:
+      status: promotional
+      note: "Edition artwork used for identification."
 
 draft: false
 ---

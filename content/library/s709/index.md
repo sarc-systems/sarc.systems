@@ -16,7 +16,7 @@ creators:
 subjects: [number, sound]
 
 access:
-  - label: "Listen on Bandcamp"
+  - label: "Bandcamp"
     kind: bandcamp
     url: "https://karlrecords.bandcamp.com/track/s-709-1992"
 

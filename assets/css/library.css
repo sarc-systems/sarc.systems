@@ -105,9 +105,12 @@
   margin: 0.5rem 0 0;
   padding: 0;
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
+  overflow: hidden;
   gap: 0.3rem 1.1rem;
 }
+.access-links li { flex: 0 0 auto; white-space: nowrap; }
+.access-link--more { color: var(--gray-2); }
 .access-link {
   font-family: var(--font-mono);
   font-size: var(--t-xs);
@@ -170,7 +173,13 @@
 .library-primary-image img { max-width: 100%; height: auto; display: block; border: 1px solid var(--rule); }
 .library-primary-image figcaption,
 .library-gallery figcaption { font-size: var(--t-sm); color: var(--gray-1); margin-top: 0.4rem; }
+.img-caption, .img-credit, .img-source { display: inline; }
+.img-caption + .img-credit, .img-caption + .img-source,
+.img-credit + .img-source { margin-left: 0.5em; }
+.img-caption + .img-credit::before, .img-caption + .img-source::before,
+.img-credit + .img-source::before { content: "· "; color: var(--rule); }
 .img-credit { color: var(--gray-2); }
+.img-source { color: var(--gray-2); }
 .library-gallery {
   display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
   gap: 1rem; margin: 1.6rem 0;

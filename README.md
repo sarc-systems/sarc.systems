@@ -81,8 +81,18 @@ front matter and set `draft: false`. Key fields:
   are `{ref, relation}` editorial links.
 - `images` — ordered; the **first is the primary** (list thumbnail + entry
   featured image). Live in the page bundle; `alt` required. Optional per-image
-  `caption` / `credit` / `source` / `role` / `anchor` (`anchor: Top` crops the
-  thumbnail from the top when a centred crop cuts through a head). No hotlinking.
+  `caption` / `credit` / `source` / `role` / `anchor` / `rights` (`anchor: Top`
+  crops the thumbnail from the top when a centred crop cuts through a head).
+  No hotlinking. **`credit` and `source` are different claims**: `source` is
+  the exact page the image was obtained from/verified against (never a bare
+  homepage or a platform name like "Bandcamp"/"Wikipedia"); `credit` is who
+  actually made or supplies it (a photographer, archive, or "SARC") — leave it
+  absent rather than naming the site you found the image on. Per-image
+  `rights.status` (`sarc-owned | public-domain | licensed | permitted |
+  promotional | fair-use | archival | unknown` — distinct from the hosted-file
+  `rights.status` below) records what's known without implying a legal
+  determination. See `CLAUDE.md` § Library for full examples and
+  `make library-image-audit` for an offline report on every image's metadata.
 - `access` — `{label, kind, url|file}` (many per entry). `hosted-file` needs a
   bundle `file`; external kinds open in a new tab. `url`/`file` are exclusive.
 - `rights.status` (only for a hosted `file`) — `sarc-owned | public-domain |

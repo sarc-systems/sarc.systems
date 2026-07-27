@@ -13,8 +13,7 @@ images:
   - file: "serge-tcherepnin.jpg"
     alt: "Serge Tcherepnin"
     role: portrait
-    credit: "Modular Station"
-    source: "https://modular-station.com/"
+    source: "https://modular-station.com/modulisme/itatiom/serge/"
 
 draft: false
 ---

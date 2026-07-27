@@ -20,8 +20,8 @@ images:
     alt: "Poster of Burroughs's 'The Invisible Generation' as published in International Times"
     role: document
     anchor: Top
-    credit: "RealityStudio / International Times"
-    source: "https://realitystudio.org/"
+    credit: "Poster design by Michael English"
+    source: "https://realitystudio.org/bibliographic-bunker/the-top-23-most-interesting-burroughs-collectibles/14-the-invisible-generation-poster/"
 
 access:
   - label: "PDF"

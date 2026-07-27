@@ -13,7 +13,6 @@ images:
   - file: "tetsu-inoue.jpg"
     alt: "Tetsu Inoue lit by the glow of a monitor"
     role: portrait
-    credit: "Substack"
     source: "https://substackcdn.com/image/fetch/$s_!tuNC!,w_1456,c_limit,f_webp,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2Fce813815-7180-46ab-b023-a07730bf069b_600x572.jpeg"
 
 draft: false

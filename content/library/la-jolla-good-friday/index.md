@@ -18,10 +18,10 @@ images:
   - file: "cover.jpg"
     alt: "Cover of La Jolla Good Friday I-II by Thorkell Sigurbjörnsson"
     role: cover
-    credit: "Bandcamp"
+    source: "https://musicalobservations.bandcamp.com/album/thorkell-sigurbj-rnsson-la-jolla-good-friday"
 
 access:
-  - label: "Bandcamp (Musical Observations)"
+  - label: "Bandcamp"
     kind: bandcamp
     url: "https://musicalobservations.bandcamp.com/album/thorkell-sigurbj-rnsson-la-jolla-good-friday"
   - label: "Discogs"

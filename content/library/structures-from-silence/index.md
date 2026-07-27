@@ -19,7 +19,7 @@ images:
   - file: "cover.jpg"
     alt: "Cover of Structures from Silence by Steve Roach"
     role: cover
-    credit: "Bandcamp"
+    source: "https://steveroach.bandcamp.com/album/structures-from-silence-40th-anniversary-remaster-expanded-edition"
 
 access:
   - label: "Bandcamp"

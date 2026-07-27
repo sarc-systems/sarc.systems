@@ -18,7 +18,6 @@ images:
   - file: "cover.jpg"
     alt: "Cover of The Origin of Consciousness in the Breakdown of the Bicameral Mind"
     role: cover
-    credit: "Internet Archive"
 
 access:
   - label: "Internet Archive"

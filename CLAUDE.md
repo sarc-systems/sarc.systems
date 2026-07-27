@@ -82,9 +82,11 @@ content/
 layouts/          # custom theme: baseof, home, journal list/single, taxonomies, 404
 layouts/library/{list,single}.html + list.json   # unified catalog + JSON index
 layouts/partials/library-*.html      # collect, record, random, featured, filters, images,
-                                      #   access, creators, works, related, rights, validate
+                                      #   image-caption, access, creators, works, related,
+                                      #   rights, validate
 assets/js/library-filter.js          # catalog filter (type/subject/sarc; progressive enhancement)
 assets/js/library-random.js          # "From the Library" random entry
+scripts/audit-library-images.py      # offline image credit/source/rights report (`make library-image-audit`)
 layouts/partials/mark.html           # generated four-row mark SVG — do not edit
 design/fonts/Nasalization-Rg.otf     # mark source font (build-time only, unchanged)
 scripts/generate-mark.py             # regenerates the mark SVG (`make mark`)
@@ -360,11 +362,55 @@ weight:  sort_title:  featured:            # optional ordering / no-JS random de
 - **images** — ordered; the first is the primary. No separate cover/image/
   thumbnail fields; array order alone decides the primary. Per-image fields:
   `file` (required, bundle-relative), `alt` (required unless `decorative: true`),
-  optional `caption` / `credit` / `source` / `role`, and optional **`anchor`**
-  (`Center` default; `Top`, `Smart`, … ) controlling the square-thumbnail crop
-  focus (use `Top` when a centred crop cuts through a portrait's head). Images
-  live in the bundle and are resolved through Hugo resources — never hotlink or
-  auto-republish third-party artwork.
+  optional `caption` / `credit` / `source` / `role` / `rights`, and optional
+  **`anchor`** (`Center` default; `Top`, `Smart`, … ) controlling the
+  square-thumbnail crop focus (use `Top` when a centred crop cuts through a
+  portrait's head). Images live in the bundle and are resolved through Hugo
+  resources — never hotlink or auto-republish third-party artwork.
+
+  **`credit` vs `source` — different claims, never invent either.** A
+  **source** is the exact page where the image was obtained or its
+  provenance can be verified — an official artist/estate/publisher/label/
+  archive/museum page, a Wikimedia Commons *file description* page, the
+  exact Bandcamp/Discogs/Goodreads record, the exact article. Not a bare
+  homepage, a search-results page, `google.com`, or (when a contextual page
+  exists) a raw CDN image URL. A **credit** is who actually made or
+  legitimately supplies the image — a photographer, designer, archive, or
+  "SARC" — and is optional: leave it absent rather than naming the *site
+  you found the image on* (a platform is a `source`, essentially never a
+  `credit`). Optional per-image `rights.status` (`sarc-owned`,
+  `public-domain`, `licensed`, `permitted`, `promotional`, `fair-use`,
+  `archival`, `unknown` — a separate, smaller vocabulary from the
+  hosted-file `rights.status` below) records what's actually known without
+  implying a legal determination that hasn't been made; pair `licensed` /
+  `permitted` with a `note` explaining the basis. Examples:
+
+  ```yaml
+  # photograph, creator known
+  - {file: cover.jpg, alt: "...", credit: "Photograph by Kira Perov",
+     source: "https://composers-inside-electronics.net/..."}
+  # cover artwork, edition matters
+  - {file: cover.jpg, alt: "...", role: cover,
+     caption: "Penguin Audio edition.", source: "https://...",
+     rights: {status: promotional, note: "Publisher cover art used for identification."}}
+  # analytical diagram — not the original score
+  - {file: fig.jpg, alt: "...", role: diagram,
+     credit: "Analytical diagram by Pierre Couprie",
+     caption: "A later analysis, not the original manuscript.", source: "https://..."}
+  # SARC-owned photograph
+  - {file: photo.jpg, alt: "...", credit: "SARC", rights: {status: sarc-owned}}
+  # provenance genuinely unresolved — honest, not a guess
+  - {file: portrait.jpg, alt: "...", source: "https://...",
+     rights: {status: unknown, note: "Photographer not yet established."}}
+  ```
+
+  Build-time validation (`library-validate.html`) fails on a bare-homepage/
+  Google/malformed `source`, an invalid `rights.status`, or a `licensed`/
+  `permitted`/`public-domain` claim with no note or source to back it —  and
+  warns (without failing) on a platform-name `credit`, a missing `source`, a
+  raw-CDN `source`, or an unresolved `rights.status`. `make library-image-audit`
+  (`scripts/audit-library-images.py`) gives an offline, non-network report of
+  the same, for auditing beyond what a single build run surfaces.
 - **access** — how to reach the thing; storage location never sets the type.
 
 **Knowledge graph.** `creators[].ref` (another entry's `library.id`) links the
@@ -391,8 +437,13 @@ and the filter form is hidden (CSS-gated on `data-nojs`). Records carry
 publishers; never auto-download third-party artwork). List = square thumbnail
 (`Fill`, srcset, w/h, lazy, `object-fit: cover`); no image → clean text-only row.
 Single page = prominent **uncropped** primary near the header + a simple
-responsive gallery (captions/credits, no carousel/lightbox). Same image model
-for every type, including release artwork.
+responsive gallery, caption/credit/source rendered as distinct elements — a
+caption, a credit line, and a `Source ↗` link, never concatenated into one
+string, never a bare URL (`library-image-caption.html`, shared by the primary
+image and the gallery). List and random-panel thumbnails never show
+caption/credit/source — that stays on the single-entry page only. Same image
+model for every type, including release artwork. See `credit` vs `source`
+above.
 
 **Access & rights.** Access kinds in `data/library.yaml`; `hosted-file` (needs a
 bundle `file`) is the only kind that makes SARC a host and so drives the rights

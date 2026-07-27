@@ -22,7 +22,6 @@ images:
   - file: "studio-photo.jpg"
     alt: "Jon Hassell and Brian Eno in the studio at a mixing console"
     role: still
-    credit: "PopMatters"
     source: "https://www.popmatters.com/wp-content/uploads/2021/01/img-42159.jpg.webp"
   - file: "cover.jpg"
     alt: "Cover of Fourth World, Vol. 1: Possible Musics by Jon Hassell and Brian Eno"
@@ -31,7 +30,7 @@ images:
     source: "https://jonhassell.com/fourth-world-vol-1-possible-music/"
 
 access:
-  - label: "About the album (jonhassell.com)"
+  - label: "About the album"
     kind: external-copy
     url: "https://jonhassell.com/fourth-world-vol-1-possible-music/"
 

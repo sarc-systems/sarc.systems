@@ -19,7 +19,7 @@ images:
   - file: "cover.jpg"
     alt: "Cover of Tremblements by François Bayle"
     role: cover
-    credit: "Bandcamp"
+    source: "https://francoisbayle.bandcamp.com/album/tremblements"
 
 access:
   - label: "Bandcamp"

@@ -19,7 +19,6 @@ images:
   - file: "cover.jpg"
     alt: "Cover of Silence: Lectures and Writings by John Cage"
     role: cover
-    credit: "Internet Archive"
 
 access:
   - label: "Internet Archive"

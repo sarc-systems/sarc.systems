@@ -20,10 +20,10 @@ images:
     credit: "Éditions de Minuit"
 
 access:
-  - label: "Vol. 1 (Internet Archive)"
+  - label: "Vol. 1"
     kind: external-copy
     url: "https://archive.org/details/accursedshareess0000bata"
-  - label: "Vols. 2–3 (Internet Archive)"
+  - label: "Vols. 2–3"
     kind: external-copy
     url: "https://archive.org/details/anonymous901/Accursed%20Share%2C%20The/Volumes%202%20%26%203/Bataille%2C%20Georges%20-%20Accursed%20Share%2C%20Vols.%202%20and%203%20%28Zone%2C%201991%29"
 rights:

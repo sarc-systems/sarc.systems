@@ -17,9 +17,13 @@ subjects: [sound, technology]
 
 images:
   - file: "cover.jpg"
-    alt: "Cover of Le Trièdre Fertile by Pierre Schaeffer"
+    alt: "Cover of Le Trièdre Fertile by Pierre Schaeffer, original Philips Prospective 21e Siècle sleeve"
     role: cover
-    credit: "Bandcamp"
+    caption: "Original Philips \"Prospective 21e Siècle\" LP sleeve."
+    source: "https://www.discogs.com/release/775402"
+    rights:
+      status: promotional
+      note: "Label cover art used for identification."
 
 access:
   - label: "Bandcamp"

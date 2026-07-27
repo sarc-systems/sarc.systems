@@ -18,10 +18,10 @@ images:
   - file: "cover.jpg"
     alt: "Cover of Time Machines by Coil"
     role: cover
-    credit: "Bandcamp"
+    source: "https://coilofficial.bandcamp.com/album/time-machines"
 
 access:
-  - label: "Listen on Bandcamp"
+  - label: "Bandcamp"
     kind: bandcamp
     url: "https://coilofficial.bandcamp.com/album/time-machines"
 

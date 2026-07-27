@@ -1,0 +1,14 @@
+{{- /* Render one image's figcaption: caption, credit, and source rendered as
+       distinct elements — never concatenated into one undifferentiated string.
+       A credit names who made/supplied the image; a source is the exact page
+       it can be verified against; neither implies the other. Call:
+       {{ partial "library-image-caption.html" $im }} where $im is one entry
+       from an `images` array (the front-matter dict, not the resource). */ -}}
+{{- $im := . -}}
+{{- if or $im.caption $im.credit $im.source -}}
+<figcaption>
+  {{- with $im.caption }}<span class="img-caption">{{ . }}</span>{{ end -}}
+  {{- with $im.credit }}<span class="img-credit">{{ . }}</span>{{ end -}}
+  {{- with $im.source }}<a class="img-source" href="{{ . }}" target="_blank" rel="noopener">Source <span aria-hidden="true">↗</span></a>{{ end -}}
+</figcaption>
+{{- end -}}

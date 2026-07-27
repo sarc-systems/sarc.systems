@@ -19,7 +19,7 @@ images:
   - file: "cover.jpg"
     alt: "Cover of Surround by Hiroshi Yoshimura"
     role: cover
-    credit: "Bandcamp"
+    source: "https://hiroshi-yoshimura.bandcamp.com/album/surround"
 
 access:
   - label: "Bandcamp"

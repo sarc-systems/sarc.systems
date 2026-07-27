@@ -135,6 +135,16 @@ access_kinds:
   - {kind: other,          verb: "Link",                  external: true}
   - {kind: hosted-file,    verb: "Download",              external: false}
 
+# Per-image fields and the distinction between them (see CLAUDE.md § Library
+# for full examples): `credit` names who actually made or legitimately supplies
+# the image (a photographer, designer, archive, estate, or "SARC"). `source`
+# is the exact page where the image was obtained or its provenance can be
+# verified (an official/archive/publisher/label page, a Wikimedia Commons file
+# page, an exact Bandcamp/Discogs/Goodreads record — not a homepage or a raw
+# CDN URL when a contextual page exists). A platform name (Bandcamp, Discogs,
+# Wikipedia, Spotify, Google, …) is almost always a `source` domain, not a
+# `credit` — leave `credit` absent rather than naming the site you found it on.
+
 # Descriptive image roles (not strictly validated — metadata only).
 image_roles:
   - cover
@@ -158,3 +168,13 @@ image_roles:
 # product's documentation.
 rights_status: [sarc-owned, public-domain, licensed, permitted, review, external-link-only, archival]
 rights_hosted_ok: [sarc-owned, public-domain, licensed, permitted, archival]
+
+# Per-image rights vocabulary (`images[].rights.status`) — a separate, smaller
+# vocabulary from `rights_status` above. That one gates whether SARC may host a
+# *file* (a document); this one just records what's known about a *picture*
+# used for illustration/identification, and never gates anything on its own.
+# `promotional` = official publicity/cover/press art used for identification.
+# `fair-use` = editorial identification or commentary rationale. `unknown` =
+# status not established — honest default, not a stand-in for clearance. None
+# of these are a substitute for an actual legal determination; don't imply one.
+image_rights_status: [sarc-owned, public-domain, licensed, permitted, promotional, fair-use, archival, unknown]

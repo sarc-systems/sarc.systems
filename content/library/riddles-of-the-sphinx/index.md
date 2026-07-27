@@ -18,7 +18,7 @@ images:
   - file: "cover.jpg"
     alt: "Cover of Riddles of the Sphinx by Mike Ratledge"
     role: cover
-    credit: "Bandcamp"
+    source: "https://mikeratledge.bandcamp.com/album/riddles-of-the-sphinx"
 
 access:
   - label: "Bandcamp"

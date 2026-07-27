@@ -1,15 +1,22 @@
-{{- /* Render an entry's `access` array as labelled links. Context is the page.
+{{- /* Render an entry's `access` array as labelled links, capped to a single
+       row: catalog rows never wrap to multiple lines. Context is the page.
        Each entry: {label, url|file, kind}. `hosted-file` resolves a bundle file
        to a download link; other (external) kinds link out with ↗. The kind's
        external-ness comes from data/library.yaml. The author-supplied label is
-       the visible text; CSS styles record vs single context. Renders nothing
-       without `access`. Call: {{ partial "library-access.html" . }} */ -}}
+       the visible text. Beyond `$max` items, a single "and N more" link to the
+       entry page replaces the rest (the single-entry page itself always shows
+       every access item in full — this cap is catalog-list-only). Renders
+       nothing without `access`. Call: {{ partial "library-access.html" . }} */ -}}
 {{- $page := . -}}
+{{- $max := 3 -}}
 {{- $ext := dict -}}{{ $verbs := dict -}}
 {{- range hugo.Data.library.access_kinds }}{{ $ext = merge $ext (dict .kind .external) }}{{ $verbs = merge $verbs (dict .kind .verb) }}{{ end -}}
 {{- with $page.Params.access -}}
+{{- $items := . -}}
+{{- $total := len $items -}}
+{{- $shown := $items -}}{{ if gt $total $max }}{{ $shown = first $max $items }}{{ end -}}
 <ul class="access-links">
-  {{- range . }}{{ $a := . }}
+  {{- range $shown }}{{ $a := . }}
   {{- $kind := $a.kind | default "other" -}}
   {{- $label := $a.label | default (index $verbs $kind) | default "Link" -}}
   {{- if eq $kind "hosted-file" }}
@@ -20,6 +27,9 @@
   {{- $isExt := index $ext $kind }}
   <li><a class="access-link access-link--{{ $kind }}" href="{{ . }}"{{ if $isExt }} target="_blank" rel="noopener"{{ end }}>{{ $label }}{{ if $isExt }} <span class="ext" aria-hidden="true">↗</span>{{ end }}</a></li>
   {{- end }}{{ end }}
+  {{- end }}
+  {{- if gt $total $max }}
+  <li><a class="access-link access-link--more" href="{{ $page.RelPermalink }}">and {{ sub $total $max }} more</a></li>
   {{- end }}
 </ul>
 {{- end -}}

@@ -19,7 +19,7 @@ images:
   - file: "cover.jpg"
     alt: "Cover of The Expanding Universe by Laurie Spiegel"
     role: cover
-    credit: "Bandcamp"
+    source: "https://lauriespiegel.bandcamp.com/album/the-expanding-universe"
 
 access:
   - label: "Bandcamp"

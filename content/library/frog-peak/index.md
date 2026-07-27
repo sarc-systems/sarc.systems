@@ -13,8 +13,7 @@ images:
   - file: "frog-peak.jpg"
     alt: "Frog Peak Music"
     role: cover
-    credit: "Bandcamp"
-    source: "https://frogpeak.bandcamp.com/"
+    source: "https://www.frogpeak.org/fpartistsfront.html"
 
 access:
   - label: "Website"

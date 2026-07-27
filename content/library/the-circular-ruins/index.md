@@ -19,7 +19,6 @@ images:
   - file: "cover.jpg"
     alt: "Cover of The Circular Ruins by Jorge Luis Borges, Penguin Audio edition"
     role: cover
-    credit: "Goodreads"
 
 draft: false
 ---

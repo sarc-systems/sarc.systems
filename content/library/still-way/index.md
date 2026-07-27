@@ -19,7 +19,7 @@ images:
   - file: "cover.jpg"
     alt: "Cover of Still Way (Wave Notation 2) by Satoshi Ashikawa"
     role: cover
-    credit: "Bandcamp"
+    source: "https://wereleasewhateverthefuckwewantrecords.bandcamp.com/album/still-way-wave-notation-2"
 
 access:
   - label: "Bandcamp"

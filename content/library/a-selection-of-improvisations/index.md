@@ -18,7 +18,7 @@ images:
   - file: "cover.jpg"
     alt: "Cover of A Selection of Improvisations (1989-2017) by Telesoniek Atelier"
     role: cover
-    credit: "Bandcamp"
+    source: "https://telesoniekatelier.bandcamp.com/album/a-selection-of-improvisations-1989-2017-revised-edition"
 
 access:
   - label: "Bandcamp"

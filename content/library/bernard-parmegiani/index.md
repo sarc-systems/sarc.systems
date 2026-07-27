@@ -14,6 +14,14 @@ images:
     alt: "Bernard Parmegiani"
     role: portrait
 
+access:
+  - label: "Bandcamp"
+    kind: bandcamp
+    url: "https://bernardparmegiani.bandcamp.com"
+  - label: "Official website"
+    kind: website
+    url: "https://bernard-parmegiani.fr/en/"
+
 related:
   - ref: grm
     relation: part-of

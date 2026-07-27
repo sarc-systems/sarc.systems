@@ -13,8 +13,9 @@ images:
   - file: "william-s-burroughs.jpg"
     alt: "William S. Burroughs"
     role: portrait
-    credit: "Laughing Squid"
-    source: "https://laughingsquid.com/"
+    rights:
+      status: unknown
+      note: "Photographer and original publication not yet established."
 
 draft: false
 ---

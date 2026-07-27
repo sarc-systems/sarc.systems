@@ -13,9 +13,10 @@ images:
   - file: "grm.jpg"
     alt: "Pierre Schaeffer at the GRM"
     role: portrait
-    anchor: Left
-    credit: "Cense.earth"
-    source: "https://cense.earth/"
+    source: "https://cense.earth/groupe-de-recherches-musicales"
+    rights:
+      status: unknown
+      note: "Photographer not yet established."
 
 access:
   - label: "Official site"

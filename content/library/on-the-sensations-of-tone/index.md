@@ -18,7 +18,6 @@ images:
   - file: "cover.jpg"
     alt: "Cover of On the Sensations of Tone by Hermann von Helmholtz"
     role: cover
-    credit: "Internet Archive"
 
 access:
   - label: "Internet Archive"

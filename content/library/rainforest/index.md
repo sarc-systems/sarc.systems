@@ -23,31 +23,31 @@ images:
     role: installation
 
 access:
-  - label: "Rainforest (1968) — Tudor/Mumma, New World Records"
+  - label: "Rainforest (1968)"
     kind: bandcamp
     url: "https://newworldrecords.bandcamp.com/track/rainforest-1968"
-  - label: "Rainforest (1969) — Tudor/Mumma, New World Records"
+  - label: "Rainforest (1969)"
     kind: bandcamp
     url: "https://newworldrecords.bandcamp.com/track/rainforest-1969"
-  - label: "Rainforest IV (1973, Stockholm) — The Art of David Tudor"
+  - label: "Rainforest IV (1973, Stockholm)"
     kind: bandcamp
     url: "https://newworldrecords.bandcamp.com/track/rainforest-iv-1973-stockholm"
-  - label: "Rainforest IV (1973, Berlin) — The Art of David Tudor"
+  - label: "Rainforest IV (1973, Berlin)"
     kind: bandcamp
     url: "https://newworldrecords.bandcamp.com/track/rainforest-iv-1973-berlin"
-  - label: "Rainforest IV (UCSD, 1977, binaural) — Composers Inside Electronics"
+  - label: "Rainforest IV (UCSD, 1977, binaural)"
     kind: bandcamp
     url: "https://composersinsideelectronics.bandcamp.com/track/rainforest-iv-ucsd-1977-binaural"
-  - label: "Rainforest (Mode Records, 1998)"
+  - label: "Rainforest (1998)"
     kind: bandcamp
     url: "https://moderecords.bandcamp.com/album/rainforest-mode064"
-  - label: "Official work page (davidtudor.org)"
+  - label: "Official work page"
     kind: website
     url: "https://davidtudor.org/Works/rainforest.html"
-  - label: "Revisit Rainforest in 360° (CDM)"
+  - label: "Revisit Rainforest in 360°"
     kind: external-copy
     url: "https://cdm.link/david-tudor-rainforest/"
-  - label: "The Evolution of David Tudor's Rainforest (MoMA Magazine)"
+  - label: "The Evolution of David Tudor's Rainforest"
     kind: external-copy
     url: "https://www.moma.org/magazine/articles/166"
 

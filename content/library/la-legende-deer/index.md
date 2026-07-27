@@ -21,7 +21,7 @@ images:
     role: cover
 
 access:
-  - label: "Listen on Bandcamp"
+  - label: "Bandcamp"
     kind: bandcamp
     url: "https://karlrecords.bandcamp.com/track/la-l-gende-d-eer-1978"
 

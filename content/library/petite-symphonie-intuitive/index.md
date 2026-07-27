@@ -19,7 +19,7 @@ images:
   - file: "cover.jpg"
     alt: "Cover of Hétérozygote / Petite Symphonie Intuitive Pour Un Paysage De Printemps by Luc Ferrari"
     role: cover
-    credit: "Bandcamp"
+    source: "https://lucferrari.bandcamp.com/track/petite-symphonie-intuitive-pour-un-paysage-de-printemps"
 
 access:
   - label: "Bandcamp"

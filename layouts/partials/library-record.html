@@ -8,6 +8,11 @@
 {{- $sarc := .Params.library.sarc_work -}}
 
 {{- $typeLabel := "" -}}{{ range $lib.types }}{{ if eq .type $type }}{{ $typeLabel = .label }}{{ end }}{{ end -}}
+{{- /* Person/Group entries: the title already reads as the name — the type
+       badge (PERSON/GROUP) adds nothing here, unlike RELEASE, COMPOSITION,
+       etc. Suppressed only in this catalog-list kicker, not on the single
+       entry page's own Type row. */ -}}
+{{- if in (slice "person" "group") $type }}{{ $typeLabel = "" }}{{ end -}}
 {{- $subs := .Params.subjects | default slice -}}
 {{- $subLabels := slice -}}
 {{- range $subs }}{{ $s := . }}{{ range $lib.subjects }}{{ if eq .subject $s }}{{ $subLabels = $subLabels | append .label }}{{ end }}{{ end }}{{ end -}}

@@ -21,7 +21,7 @@ access:
   - label: "Official website"
     kind: website
     url: "http://www.thomaslehn.com"
-  - label: "Biography (via Gerry Hemingway)"
+  - label: "Biography"
     kind: other
     url: "https://www.gerryhemingway.com/lehn"
 

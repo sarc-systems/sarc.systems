@@ -19,11 +19,10 @@ images:
   - file: "upic-score.jpg"
     alt: "Xenakis, Mycènes Alpha (UPIC score, 1978)"
     role: diagram
-    credit: "WilderUtopia"
-    source: "https://wilderutopia.com/"
+    source: "https://wilderutopia.com/sustainability/land/iannis-xenakis-and-the-notion-of-a-cosmic-utopia/"
 
 access:
-  - label: "Listen on Bandcamp"
+  - label: "Bandcamp"
     kind: bandcamp
     url: "https://karlrecords.bandcamp.com/track/mycenae-alpha-1978"
 

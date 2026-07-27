@@ -20,7 +20,6 @@ images:
   - file: "cover.jpg"
     alt: "Cover of The Tree of Knowledge by Maturana and Varela"
     role: cover
-    credit: "Internet Archive"
 
 access:
   - label: "Internet Archive"

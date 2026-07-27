@@ -16,7 +16,7 @@ images:
     role: portrait
 
 access:
-  - label: "Label (Matchless Recordings)"
+  - label: "Label"
     kind: website
     url: "https://matchlessrecordings.com"
 

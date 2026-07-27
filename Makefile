@@ -3,7 +3,7 @@
 
 HUGO ?= hugo
 
-.PHONY: dev build check new-post deploy clean colorplan mark
+.PHONY: dev build check new-post deploy clean colorplan mark library-image-audit
 
 ## dev — local server with drafts and future-dated posts
 dev:
@@ -48,6 +48,13 @@ colorplan:
 ## letterforms change. Requires: pip install fonttools Pillow.
 mark:
 	python3 scripts/generate-mark.py
+
+## library-image-audit — offline report on every Library image's credit/source/
+## rights metadata (scripts/audit-library-images.py). Read-only, no network
+## calls; exits nonzero only on hard errors (the same ones the build itself
+## already fails on) — pass --strict to also fail on warnings.
+library-image-audit:
+	python3 scripts/audit-library-images.py
 
 ## clean — remove build artifacts
 clean:

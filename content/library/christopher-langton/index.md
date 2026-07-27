@@ -13,7 +13,6 @@ images:
   - file: "langton.jpg"
     alt: "Christopher Langton"
     role: portrait
-    credit: "Wikimedia Commons"
 
 draft: false
 ---

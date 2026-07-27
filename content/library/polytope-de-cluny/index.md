@@ -20,10 +20,13 @@ images:
     alt: "Xenakis's scheme for the Polytope de Cluny"
     role: diagram
     caption: "Light-and-sound scheme for the Polytope de Cluny."
-    source: "Iannis Xenakis"
+    credit: "Iannis Xenakis"
+    rights:
+      status: unknown
+      note: "Manuscript by Xenakis himself; exact publication/archive page not yet established."
 
 access:
-  - label: "Listen on Bandcamp"
+  - label: "Bandcamp"
     kind: bandcamp
     url: "https://karlrecords.bandcamp.com/track/polytope-de-cluny-1972"
 

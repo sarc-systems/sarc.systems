@@ -20,10 +20,13 @@ images:
     alt: "Xenakis working sketch for Diamorphoses"
     role: diagram
     caption: "Xenakis's working sketch (27 April 1957)."
-    source: "Iannis Xenakis"
+    credit: "Iannis Xenakis"
+    rights:
+      status: unknown
+      note: "Manuscript by Xenakis himself; exact publication/archive page not yet established."
 
 access:
-  - label: "Listen on Bandcamp"
+  - label: "Bandcamp"
     kind: bandcamp
     url: "https://karlrecords.bandcamp.com/track/diamorphoses-1957"
 

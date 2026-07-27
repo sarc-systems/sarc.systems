@@ -23,7 +23,7 @@ images:
     source: "https://www.researchgate.net/publication/384778178/figure/fig2/AS:11431281282907594@1728548134452/Spatialization-in-Hibiki-Hana-Ma-Source-Esaki-1970-Channels-1-4-were-assigned-to-the.jpg"
 
 access:
-  - label: "Listen on Bandcamp"
+  - label: "Bandcamp"
     kind: bandcamp
     url: "https://karlrecords.bandcamp.com/track/hibiki-hana-ma-1969"
 

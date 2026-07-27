@@ -18,7 +18,7 @@ images:
   - file: "cover.jpg"
     alt: "Cover of Ovalcommers by Oval"
     role: cover
-    credit: "Bandcamp"
+    source: "https://oval.bandcamp.com/album/ovalcommers"
 
 access:
   - label: "Bandcamp"

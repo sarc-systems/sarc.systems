@@ -18,8 +18,9 @@ images:
   - file: "cover.jpg"
     alt: "Cover of Reality Gates by Steve Birchall"
     role: cover
-    credit: "eBay"
-    source: "https://www.ebay.com/"
+    rights:
+      status: unknown
+      note: "Sourced from a since-expired eBay listing; no stable page to cite."
 
 access:
   - label: "Bandcamp"

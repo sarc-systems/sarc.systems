@@ -13,14 +13,13 @@ images:
   - file: "roland-kayn.jpg"
     alt: "Roland Kayn"
     role: portrait
-    credit: "Discogs"
     source: "https://www.discogs.com/artist/60338"
 
 access:
   - label: "Official website"
     kind: website
     url: "https://kayn.nl"
-  - label: "Listen on Bandcamp"
+  - label: "Bandcamp"
     kind: bandcamp
     url: "https://rolandkayn.bandcamp.com"
 

@@ -19,7 +19,7 @@ images:
   - file: "cover.jpg"
     alt: "Cover of the self-titled Recollection GRM release by Jaap Vink"
     role: cover
-    credit: "Bandcamp"
+    source: "https://recollectiongrm.bandcamp.com/album/s-t"
 
 access:
   - label: "Bandcamp"

@@ -16,7 +16,7 @@ creators:
 subjects: [computation, number]
 
 access:
-  - label: "PDF (University of Virginia)"
+  - label: "PDF"
     kind: external-copy
     url: "https://www.cs.virginia.edu/~robins/Turing_Paper_1936.pdf"
 

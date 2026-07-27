@@ -19,7 +19,6 @@ images:
   - file: "cover.jpg"
     alt: "Cover of Music for Nine Post Cards by Hiroshi Yoshimura"
     role: cover
-    credit: "Wikipedia"
     source: "https://en.wikipedia.org/wiki/Music_for_Nine_Post_Cards"
 
 access:

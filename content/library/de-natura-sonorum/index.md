@@ -17,9 +17,13 @@ subjects: [sound, perception]
 
 images:
   - file: "cover.jpg"
-    alt: "Cover of De Natura Sonorum by Bernard Parmegiani"
+    alt: "Cover of De Natura Sonorum by Bernard Parmegiani, original Ina-GRM vinyl sleeve"
     role: cover
-    credit: "Bandcamp"
+    caption: "Original Ina-GRM vinyl sleeve (Collection GRM, AM 714.01)."
+    source: "https://bernardparmegiani.bandcamp.com/album/de-natura-sonorum"
+    rights:
+      status: promotional
+      note: "Label sleeve art used for identification."
 
 access:
   - label: "Bandcamp"

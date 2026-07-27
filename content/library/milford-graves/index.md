@@ -14,7 +14,6 @@ images:
     alt: "Milford Graves"
     role: portrait
     anchor: Top
-    credit: "Discogs"
     source: "https://www.discogs.com/artist/341514"
 
 access:

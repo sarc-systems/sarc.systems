@@ -16,10 +16,13 @@ subjects: [memory, language]
 
 images:
   - file: "cover.jpg"
-    alt: "Nineteen Eighty-Four"
-    role: cover
-    credit: "The New Yorker"
-    source: "https://www.newyorker.com/"
+    alt: "George Orwell typing at a desk, bookshelves behind him"
+    role: portrait
+    caption: "Orwell at his flat, 27b Canonbury Square, Islington, late 1945."
+    credit: "Photograph by Vernon Richards"
+    rights:
+      status: unknown
+      note: "Widely reproduced Vernon Richards photograph; exact publication/archive page not yet established."
 
 draft: false
 ---

@@ -20,8 +20,8 @@ images:
   - file: "pitch-lattice.jpg"
     alt: "Pitch lattice on the 2.3.5 subgroup"
     role: diagram
-    credit: "Xenharmonic Wiki"
-    source: "https://en.xen.wiki/"
+    credit: "Xenharmonic Wiki contributors"
+    source: "https://en.xen.wiki/w/Lattice"
 
 access:
   - label: "Visit website"

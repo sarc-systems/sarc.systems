@@ -19,7 +19,7 @@ images:
   - file: "cover.jpg"
     alt: "Cover of Flora by Hiroshi Yoshimura"
     role: cover
-    credit: "Bandcamp"
+    source: "https://hiroshi-yoshimura.bandcamp.com/album/flora"
 
 access:
   - label: "Bandcamp"

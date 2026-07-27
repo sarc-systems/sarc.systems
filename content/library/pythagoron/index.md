@@ -18,13 +18,13 @@ images:
   - file: "cover.jpg"
     alt: "Cover of the self-titled Pythagoron album, a blue geometric pattern of interlocking triangles"
     role: cover
-    credit: "Discogs"
+    source: "https://wahwahrecords.bandcamp.com/album/pythagoron"
 
 access:
   - label: "Discogs"
     kind: catalog-record
     url: "https://www.discogs.com/release/833776-Pythagoron-Pythagoron"
-  - label: "Bandcamp (2020 reissue, Wah Wah Records)"
+  - label: "Bandcamp"
     kind: bandcamp
     url: "https://wahwahrecords.bandcamp.com/album/pythagoron"
 

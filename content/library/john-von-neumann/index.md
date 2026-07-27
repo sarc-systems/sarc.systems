@@ -14,8 +14,7 @@ images:
     anchor: Left
     alt: "John von Neumann"
     role: portrait
-    credit: "DataArt Museum"
-    source: "https://museum.dataart.com/"
+    source: "https://museum.dataart.com/short-stories/john-von-neumann"
 
 draft: false
 ---

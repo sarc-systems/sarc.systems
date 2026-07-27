@@ -13,7 +13,6 @@ images:
   - file: "steve-roden.jpg"
     alt: "Steve Roden closely mic'd over a tangle of patch cables"
     role: portrait
-    credit: "Spotify"
     source: "https://i.scdn.co/image/d4ba3aa805730abb08f5c7fbff44911f3f3b1c99"
 
 draft: false

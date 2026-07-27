@@ -18,7 +18,7 @@ images:
   - file: "cover.jpg"
     alt: "Cover of Pulse Music by John McGuire"
     role: cover
-    credit: "Bandcamp"
+    source: "https://johnmcguire.bandcamp.com/track/pulse-music-iii"
 
 access:
   - label: "Bandcamp"

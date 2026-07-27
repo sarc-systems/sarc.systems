@@ -19,7 +19,7 @@ images:
   - file: "cover.jpg"
     alt: "Cover of 20 Jazz Funk Greats by Throbbing Gristle"
     role: cover
-    credit: "Bandcamp"
+    source: "https://throbbinggristle.bandcamp.com/album/20-jazz-funk-greats"
 
 access:
   - label: "Bandcamp"

@@ -24,10 +24,11 @@ images:
     alt: "Tenney's temporal-gestalt hierarchy diagram"
     role: diagram
     caption: "The temporal-gestalt hierarchy (Meta-Hodos)."
-    source: "Meta-Hodos"
+    credit: "James Tenney, from Meta-Hodos and Meta Meta-Hodos"
+    source: "https://monoskop.org/images/1/13/Tenney_James_Meta-Hodos_and_Meta_Meta-Hodos.pdf"
 
 access:
-  - label: "Publisher (Frog Peak)"
+  - label: "Publisher"
     url: "https://www.frogpeak.org/fpartists/fptenney.html"
     kind: publisher
   - label: "PDF"
