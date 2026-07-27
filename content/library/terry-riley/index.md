@@ -14,6 +14,11 @@ images:
     alt: "Terry Riley"
     role: portrait
 
+access:
+  - label: "Official website"
+    kind: website
+    url: "http://terryriley.net"
+
 draft: false
 ---
 
