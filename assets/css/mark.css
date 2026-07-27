@@ -66,6 +66,11 @@
   max-width: var(--wrap);
   margin: clamp(2.4rem, 6vw, 3.6rem) auto 0;
   padding-inline: clamp(1.2rem, 5vw, 3rem);
+  /* Centered under the mark above, which is itself a narrower centered
+     column (see .mark) — text-align alone only centers inline content, so
+     .inst-statement (a constrained-width block) also needs its own
+     margin-inline: auto below. */
+  text-align: center;
 }
 .inst-name {
   font-family: var(--font-sans);
@@ -82,7 +87,7 @@
 }
 .inst-statement {
   max-width: var(--measure);
-  margin-top: 1rem;
+  margin: 1rem auto 0;
   color: #cfc9ba;
   font-size: var(--t-md);
   line-height: 1.5;
