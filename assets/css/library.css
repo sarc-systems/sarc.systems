@@ -32,6 +32,10 @@
   max-height: var(--library-thumbnail-size);
   border: 1px solid var(--rule); background: var(--paper-2);
 }
+/* Match the Images-view hover: the thumbnail border picks up the section signal
+   colour on hover (and when the row's title link is hovered). */
+.library-record-thumb:hover img,
+.library-record:hover .library-record-thumb img { border-color: var(--signal); }
 .library-record-kicker {
   font-family: var(--font-mono);
   font-size: var(--t-xs);
