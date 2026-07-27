@@ -58,10 +58,12 @@ durable thing SARC wants to identify, annotate, connect, or point toward is an
 entry (essays, books, manuals, people, groups, recordings, releases, websites,
 systems, …). Type, subject, and access are metadata and **filters**, never shelves. The
 landing shows a random featured entry, type/subject/SARC-work filters, and the
-full ruled catalog. A Catalog/Images view switch (`?view=images`) presents the
-same filtered entries as a thumbnail-only grid instead of full records — same
-images, same crop, same order, filters and URL state shared with Catalog; JS
-required, Catalog is the no-JS fallback. See `CLAUDE.md` § Library for the
+full ruled catalog. A Catalog/Images view switch presents the same filtered
+entries as a thumbnail-only grid instead of full records — same images, same
+crop, same order, filters and URL state shared with Catalog. **Images is the
+default view** (`?view=catalog` opts back into the ruled records; an absent or
+invalid `view` resolves to Images). Requires JS; Catalog (server-rendered) is
+the no-JS fallback. See `CLAUDE.md` § Library for the
 full behavior (shared thumbnail partial, accessibility, chance-selection sync).
 Section colour is Forest.
 

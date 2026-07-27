@@ -198,6 +198,11 @@
   border: 1px solid var(--rule);
   background: var(--paper-2);
 }
+/* Hover/focus affordance — border colour only, matching .rf-chip/.access-link
+   elsewhere on the page; no zoom or scale (the governing rule for this view
+   is that an image is never a different size than its Catalog thumbnail). */
+.library-image-index__item:hover img { border-color: var(--signal); }
+.library-image-index__item:focus-visible { outline: 2px solid var(--signal); outline-offset: 2px; }
 .library-image-index-empty { color: var(--gray-1); font-style: italic; margin: 1rem 0 0; }
 
 /* --- Single entry: primary image + gallery ------------------------------- */

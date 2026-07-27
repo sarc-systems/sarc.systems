@@ -455,8 +455,11 @@ never end up with a different derivative, crop, or size. Sizing is one shared
 CSS custom property, `--library-thumbnail-size` (set once, redefined at the
 mobile breakpoint) — the Catalog thumbnail's `max-height` and the Images grid's
 item `width`/`height` both read it, so changing one changes both by
-construction. State is `?view=catalog|images` in the URL (absent/invalid →
-catalog), combined with the existing filter params; `library-filter.js` (which
+construction. **Images is the default view** — state is `?view=catalog|images`
+in the URL, but an absent or invalid `view` resolves to Images, not Catalog
+(the switch lists Images first for the same reason); `library-filter.js` only
+ever adds `view=catalog` to the URL, never `view=images`. Combined with the
+existing filter params, `library-filter.js` (which
 also owns the view switch) applies one filter pass to both collections,
 updates a view-aware result count (`"N entries · M with images"` in Images
 view; `"0 images among N matching entries"` when none match), and fires a

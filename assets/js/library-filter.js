@@ -75,16 +75,18 @@
   }
 
   // Active state: multi sets for type + subject, single value for sarc, plus
-  // the presentation view ("catalog" | "images").
+  // the presentation view ("catalog" | "images"). Images is the default —
+  // an absent or invalid ?view= resolves to "images", not "catalog" (see
+  // fromURL/toURL below, which only ever add view=catalog to the URL).
   var sel = { type: [], subject: [], sarc: "" };
-  var view = "catalog";
+  var view = "images";
 
   function chipsFor(facet) {
     return chips.filter(function (c) { return c.dataset.facet === facet; });
   }
 
   function setView(v) {
-    view = v === "images" ? "images" : "catalog";
+    view = v === "catalog" ? "catalog" : "images";
     document.documentElement.dataset.libraryView = view;
     list.hidden = view === "images";
     if (imageIndex) imageIndex.hidden = view !== "images";
@@ -171,7 +173,7 @@
     if (sel.type.length) params.set("type", sel.type.join(","));
     if (sel.subject.length) params.set("subject", sel.subject.join(","));
     if (sel.sarc) params.set("sarc", sel.sarc);
-    if (view === "images") params.set("view", "images");
+    if (view === "catalog") params.set("view", "catalog");
     var qs = params.toString();
     if (push) history.pushState(null, "", location.pathname + (qs ? "?" + qs : ""));
   }
@@ -184,7 +186,7 @@
     var s = params.get("sarc") || "";
     sel.sarc = valid.sarc[s] ? s : "";
     var v = params.get("view") || "";
-    setView(v === "images" ? "images" : "catalog");
+    setView(v === "catalog" ? "catalog" : "images");
   }
 
   chips.forEach(function (c) {
