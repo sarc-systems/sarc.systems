@@ -243,6 +243,14 @@
 
 @media (max-width: 30rem) {
   .library-featured { flex-direction: column; }
+  /* flex-direction: column swaps which axis justify-content/align-items
+     control — the Images-view centering rule above is a justify-content
+     (main/horizontal-axis) rule that does nothing once the axis is
+     vertical, leaving the image at align-items's default (flex-start,
+     i.e. left-aligned) instead of centered. Center on the cross axis here
+     specifically for Images view; Catalog view's stacked image+text keeps
+     its left alignment. */
+  :root[data-library-view="images"] .library-featured { align-items: center; }
 }
 
 /* --- References filter --------------------------------------------------- */
@@ -261,14 +269,19 @@
   padding: 1.1rem 0;
   margin: 0 0 1.6rem;
 }
+/* Native <details>/<summary>: collapsed by default, the browser's own
+   disclosure triangle is the "element next to Filter" that opens it — no
+   custom JS or icon needed for the toggle itself. */
 .rf-head {
   font-family: var(--font-mono);
   font-size: var(--t-xs);
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--gray-2);
-  margin: 0 0 0.8rem;
+  cursor: pointer;
 }
+.rf-head:focus-visible { outline: 2px solid var(--signal); outline-offset: 2px; }
+.reference-filters[open] .rf-head { margin: 0 0 0.8rem; }
 .rf-facet {
   border: 0;
   margin: 0 0 0.7rem;

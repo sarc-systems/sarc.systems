@@ -1,8 +1,16 @@
 {{- /* Unified catalog filter UI. Context: dict "pages" <entries>. Offers only
-       the types and subjects actually present (in vocabulary order), plus a
-       SARC-work origin facet. Native buttons carry state via aria-pressed; the
-       whole control is shown only with JS (CSS-gated on data-nojs) so no-JS
-       visitors see the full catalog. */ -}}
+       the types and subjects actually present (in vocabulary order). Native
+       buttons carry state via aria-pressed; the whole control is shown only
+       with JS (CSS-gated on data-nojs) so no-JS visitors see the full
+       catalog. Collapsed by default behind a native <details>/<summary>
+       disclosure — library-filter.js opens it automatically on load only
+       when the URL already carries an active filter, so a shared filtered
+       link doesn't hide its own explanation; otherwise it stays exactly as
+       the visitor left it.
+       The Origin (SARC-work) facet is removed for now — sarc_work stays a
+       valid per-entry field and in the JSON index, just not filterable here
+       — this can come back the same way Type/Subject work if it's wanted
+       later. */ -}}
 {{- $lib := hugo.Data.library -}}
 {{- $pages := .pages -}}
 {{- $haveType := slice }}{{ $haveSub := slice -}}
@@ -11,8 +19,9 @@
   {{- range .Params.subjects }}{{ $haveSub = $haveSub | append . }}{{ end -}}
 {{- end -}}
 {{- $haveType = uniq $haveType }}{{ $haveSub = uniq $haveSub -}}
-<form class="reference-filters" aria-label="Filter the Library">
-  <p class="rf-head">Filter the Library</p>
+<details class="reference-filters">
+  <summary class="rf-head">Filter</summary>
+  <form aria-label="Filter the Library">
 
   <fieldset class="rf-facet">
     <legend>Type</legend>
@@ -30,15 +39,9 @@
     {{- end }}{{ end }}
   </fieldset>
 
-  <fieldset class="rf-facet">
-    <legend>Origin</legend>
-    <button type="button" class="rf-chip is-active" data-facet="sarc" data-value="" aria-pressed="true">All</button>
-    <button type="button" class="rf-chip" data-facet="sarc" data-value="true" aria-pressed="false">SARC</button>
-    <button type="button" class="rf-chip" data-facet="sarc" data-value="false" aria-pressed="false">Other</button>
-  </fieldset>
-
   <div class="rf-actions">
     <button type="button" class="rf-clear" hidden>Clear filters</button>
     <p class="rf-count" role="status" aria-live="polite"></p>
   </div>
-</form>
+  </form>
+</details>

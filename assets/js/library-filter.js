@@ -1,9 +1,11 @@
 // Library catalog filter + Catalog/Images view switch + chance selection —
 // progressive enhancement, no dependencies.
-// Facets: type (multi, OR), subject (multi, OR), sarc/origin (single). Facets
-// combine with AND: (typeA OR typeB) AND (subjA OR subjB) AND origin.
-// State lives in the URL query string (?type=a,b&subject=c&sarc=true&view=images)
-// so views are shareable and survive back/forward. Without this script the
+// Facets: type (multi, OR), subject (multi, OR). Facets combine with AND:
+// (typeA OR typeB) AND (subjA OR subjB). (An Origin/SARC-work facet was
+// removed for now — sarc_work is still a valid per-entry field and still in
+// the JSON index, just not filterable here.)
+// State lives in the URL query string (?type=a,b&subject=c&view=images) so
+// views are shareable and survive back/forward. Without this script the
 // whole catalog is visible (the filter form and view switch are CSS-hidden on
 // the no-JS flag), there is no Images view, and the "From the Library" panel
 // stands as its deterministic server-rendered fallback (unfiltered).
@@ -27,6 +29,8 @@
 (function () {
   "use strict";
 
+  // A native <details> now, not literally a <form> (see library-filters.html)
+  // — kept the name since it's still queried the same way throughout.
   var form = document.querySelector(".reference-filters");
   var list = document.getElementById("library-list");
   if (!form || !list) return;
@@ -208,11 +212,11 @@
     return chips.filter(function (c) { return c.dataset.facet === facet; });
   }
 
-  // Active state: multi sets for type + subject, single value for sarc, plus
-  // the presentation view ("catalog" | "images"). Images is the default —
-  // an absent or invalid ?view= resolves to "images", not "catalog" (see
-  // fromURL/toURL below, which only ever add view=catalog to the URL).
-  var sel = { type: [], subject: [], sarc: "" };
+  // Active state: multi sets for type + subject, plus the presentation view
+  // ("catalog" | "images"). Images is the default — an absent or invalid
+  // ?view= resolves to "images", not "catalog" (see fromURL/toURL below,
+  // which only ever add view=catalog to the URL).
+  var sel = { type: [], subject: [] };
   var view = "images";
 
   function setView(v) {
@@ -236,32 +240,33 @@
         c.classList.toggle("is-active", on);
       });
     });
-    chipsFor("sarc").forEach(function (c) {
-      var on = c.dataset.value === sel.sarc;
-      c.setAttribute("aria-pressed", on ? "true" : "false");
-      c.classList.toggle("is-active", on);
-    });
-    if (clearBtn) clearBtn.hidden = !sel.type.length && !sel.subject.length && sel.sarc === "";
+    if (clearBtn) clearBtn.hidden = !sel.type.length && !sel.subject.length;
   }
 
-  function matchesFields(type, subjects, sarc) {
+  function matchesFields(type, subjects) {
     var typeOk = sel.type.length === 0 || sel.type.indexOf(type) !== -1;
     var subjOk = sel.subject.length === 0 || sel.subject.some(function (s) {
       return subjects.indexOf(s) !== -1;
     });
-    var sarcOk = sel.sarc === "" || String(sarc) === sel.sarc;
-    return typeOk && subjOk && sarcOk;
+    return typeOk && subjOk;
   }
   function matchesDataset(ds) {
-    return matchesFields(ds.type || "", (ds.subjects || "").split(/\s+/).filter(Boolean), ds.sarc === "true");
+    return matchesFields(ds.type || "", (ds.subjects || "").split(/\s+/).filter(Boolean));
   }
   function matchesEntry(e) {
-    return matchesFields(e.type, e.subjects || [], e.sarc_work);
+    return matchesFields(e.type, e.subjects || []);
   }
 
-  function apply() {
-    var anyFilter = sel.type.length > 0 || sel.subject.length > 0 || sel.sarc !== "";
+  // `fromNav` is true only when called right after fromURL() (initial load or
+  // popstate) — see the two call sites at the bottom of this file. Only then
+  // do we force the disclosure open for an active filter, so a shared
+  // filtered link (or Back/Forward into one) doesn't hide its own
+  // explanation; an ordinary chip click never touches `open`, so it doesn't
+  // fight a visitor who's already opened or closed the panel themselves.
+  function apply(fromNav) {
+    var anyFilter = sel.type.length > 0 || sel.subject.length > 0;
     if (allHead) allHead.textContent = anyFilter ? "Matching entries" : "All entries";
+    if (fromNav && anyFilter && "open" in form) form.open = true;
 
     var shown = 0;
     records.forEach(function (rec) {
@@ -307,19 +312,16 @@
     var params = new URLSearchParams();
     if (sel.type.length) params.set("type", sel.type.join(","));
     if (sel.subject.length) params.set("subject", sel.subject.join(","));
-    if (sel.sarc) params.set("sarc", sel.sarc);
     if (view === "catalog") params.set("view", "catalog");
     var qs = params.toString();
     if (push) history.pushState(null, "", location.pathname + (qs ? "?" + qs : ""));
   }
   function fromURL() {
     var params = new URLSearchParams(location.search);
-    var valid = { type: {}, subject: {}, sarc: {} };
+    var valid = { type: {}, subject: {} };
     chips.forEach(function (c) { if (c.dataset.value) valid[c.dataset.facet][c.dataset.value] = 1; });
     sel.type = (params.get("type") || "").split(",").filter(function (v) { return valid.type[v]; });
     sel.subject = (params.get("subject") || "").split(",").filter(function (v) { return valid.subject[v]; });
-    var s = params.get("sarc") || "";
-    sel.sarc = valid.sarc[s] ? s : "";
     var v = params.get("view") || "";
     setView(v === "catalog" ? "catalog" : "images");
   }
@@ -327,16 +329,14 @@
   chips.forEach(function (c) {
     c.addEventListener("click", function () {
       var facet = c.dataset.facet, v = c.dataset.value;
-      if (facet === "sarc") {
-        sel.sarc = sel.sarc === v ? "" : v;
-      } else if (v === "") {
+      if (v === "") {
         sel[facet] = [];
       } else {
         var i = sel[facet].indexOf(v);
         if (i === -1) sel[facet].push(v); else sel[facet].splice(i, 1);
       }
       toURL(true);
-      apply();
+      apply(false);
     });
   });
 
@@ -345,20 +345,20 @@
       if (b.dataset.libraryView === view) return;
       setView(b.dataset.libraryView);
       toURL(true);
-      apply();
+      apply(false);
     });
   });
 
   if (clearBtn) {
     clearBtn.addEventListener("click", function () {
-      sel = { type: [], subject: [], sarc: "" };
+      sel = { type: [], subject: [] };
       toURL(true);
-      apply();
+      apply(false);
     });
   }
 
-  window.addEventListener("popstate", function () { fromURL(); apply(); });
+  window.addEventListener("popstate", function () { fromURL(); apply(true); });
 
   fromURL();
-  apply();
+  apply(true);
 })();

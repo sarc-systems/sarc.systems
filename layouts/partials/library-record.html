@@ -5,7 +5,6 @@
 {{- $lib := hugo.Data.library -}}
 {{- $id := .Params.library.id -}}
 {{- $type := .Params.library.type -}}
-{{- $sarc := .Params.library.sarc_work -}}
 
 {{- $typeLabel := "" -}}{{ range $lib.types }}{{ if eq .type $type }}{{ $typeLabel = .label }}{{ end }}{{ end -}}
 {{- /* Person/Group entries: the title already reads as the name — the type
@@ -26,7 +25,7 @@
        grows the row; a per-image `anchor` sets both the Fill focus and the
        CSS object-position. */ -}}
 {{- $thumb := partial "library-thumbnail.html" . -}}
-<li class="library-record{{ if $thumb.has }} has-thumb{{ end }}" data-library-id="{{ $id }}" data-type="{{ $type }}" data-subjects="{{ delimit $subs " " }}" data-sarc="{{ if $sarc }}true{{ else }}false{{ end }}" data-has-image="{{ if $thumb.has }}true{{ else }}false{{ end }}">
+<li class="library-record{{ if $thumb.has }} has-thumb{{ end }}" data-library-id="{{ $id }}" data-type="{{ $type }}" data-subjects="{{ delimit $subs " " }}" data-has-image="{{ if $thumb.has }}true{{ else }}false{{ end }}">
   {{- with $thumb.has }}
   <a class="library-record-thumb" href="{{ $.RelPermalink }}" tabindex="-1" aria-hidden="true">
     <img src="{{ $thumb.url }}" srcset="{{ $thumb.url }} 1x, {{ $thumb.url2x }} 2x"

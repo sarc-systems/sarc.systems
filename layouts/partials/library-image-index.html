@@ -14,12 +14,11 @@
     {{- $page := . -}}
     {{- $id := $page.Params.library.id -}}
     {{- $type := $page.Params.library.type -}}
-    {{- $sarc := $page.Params.library.sarc_work -}}
     {{- $subs := $page.Params.subjects | default slice -}}
     {{- $thumb := partial "library-thumbnail.html" $page -}}
     {{- if $thumb.has }}
   <a class="library-image-index__item" href="{{ $page.RelPermalink }}" aria-label="View {{ $page.Title }}"
-     data-library-id="{{ $id }}" data-type="{{ $type }}" data-subjects="{{ delimit $subs " " }}" data-sarc="{{ if $sarc }}true{{ else }}false{{ end }}">
+     data-library-id="{{ $id }}" data-type="{{ $type }}" data-subjects="{{ delimit $subs " " }}">
     <img src="{{ $thumb.url }}" srcset="{{ $thumb.url }} 1x, {{ $thumb.url2x }} 2x"
          style="object-position: {{ $thumb.pos }}" alt="{{ $thumb.alt }}" width="240" height="240" loading="lazy" decoding="async">
   </a>
