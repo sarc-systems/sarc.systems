@@ -1,7 +1,10 @@
 ---
-title: "Dreamer (Lo91)"
-summary: "Susumu Yokota's 2012 album on Lo Recordings."
+title: "Dreamer"
+summary: "Susumu Yokota's 2012 album."
 year: 2012
+
+aliases:
+  - /library/dreamer-lo91/
 
 library:
   id: dreamer-lo91
@@ -34,4 +37,4 @@ access:
 draft: false
 ---
 
-Susumu Yokota's 2012 album, released on Lo Recordings.
+Susumu Yokota's 2012 album.
