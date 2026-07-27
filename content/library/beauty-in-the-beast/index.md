@@ -15,6 +15,18 @@ creators:
 
 subjects: [sound, tuning]
 
+images:
+  - file: "cover.webp"
+    alt: "Cover of Beauty in the Beast by Wendy Carlos"
+    role: cover
+    caption: "Original 1986 LP artwork."
+    source: "https://cdn.sonemic.net/i/600/w/0119e78ab159ffb3de81daa58330629b/10854887/wendy-carlos-beauty-in-the-beast-Cover-Art.jpg"
+    rights:
+      status: unknown
+    use:
+      basis: identification
+      note: "Label cover art used for identification."
+
 access:
   - label: "Discogs"
     kind: catalog-record

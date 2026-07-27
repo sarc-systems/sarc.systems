@@ -159,6 +159,14 @@
   height: 100%; width: auto; aspect-ratio: 1; min-height: 148px; max-height: 220px; object-fit: cover; display: block;
   border: 1px solid var(--rule); background: var(--paper-2);
 }
+/* Images view: the card's text is hidden (library-random.js), leaving just the
+   thumbnail — let it read as the panel's focal image rather than the small
+   corner of a text card: centered, and considerably larger. */
+:root[data-library-view="images"] .library-featured { justify-content: center; }
+:root[data-library-view="images"] .library-featured-thumb img {
+  min-height: 220px;
+  max-height: clamp(260px, 40vw, 440px);
+}
 .library-featured-kicker {
   font-family: var(--font-mono); font-size: var(--t-xs); letter-spacing: 0.1em;
   text-transform: uppercase; color: var(--signal-ink); margin: 0;
