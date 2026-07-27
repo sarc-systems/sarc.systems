@@ -1,0 +1,28 @@
+{{- /* Images view: a visual index of the catalog's primary images only — the
+       same filtered set as the Catalog list, with its text removed. Not a
+       gallery: reuses library-thumbnail.html (same processed derivative, crop,
+       anchor, srcset as the Catalog list) so an entry's image is never a
+       different size or crop between views. Entries with no resolvable image
+       are simply omitted here (Catalog view still shows them normally).
+       Carries the same data-* the filter script reads on .library-record, so
+       one filter pass can hide/show both views identically. Hidden by default;
+       shown only when JS switches to Images view (see library-filter.js).
+       Call: {{ partial "library-image-index.html" (dict "pages" $entries) }} */ -}}
+{{- $pages := .pages -}}
+<div class="library-image-index" id="library-image-index" hidden>
+  {{- range $pages -}}
+    {{- $page := . -}}
+    {{- $id := $page.Params.library.id -}}
+    {{- $type := $page.Params.library.type -}}
+    {{- $sarc := $page.Params.library.sarc_work -}}
+    {{- $subs := $page.Params.subjects | default slice -}}
+    {{- $thumb := partial "library-thumbnail.html" $page -}}
+    {{- if $thumb.has }}
+  <a class="library-image-index__item" href="{{ $page.RelPermalink }}" aria-label="View {{ $page.Title }}"
+     data-library-id="{{ $id }}" data-type="{{ $type }}" data-subjects="{{ delimit $subs " " }}" data-sarc="{{ if $sarc }}true{{ else }}false{{ end }}">
+    <img src="{{ $thumb.url }}" srcset="{{ $thumb.url }} 1x, {{ $thumb.url2x }} 2x"
+         style="object-position: {{ $thumb.pos }}" alt="{{ $thumb.alt }}" width="240" height="240" loading="lazy" decoding="async">
+  </a>
+    {{- end -}}
+  {{- end }}
+</div>

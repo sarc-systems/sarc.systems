@@ -1,0 +1,19 @@
+{{- /* Resolve an entry's primary (first) image into a square thumbnail —
+       the single source of processing for both the Catalog list and the
+       Images view, so the two views can never drift onto different crops,
+       derivatives, or dimensions. Context: the entry page. Returns a dict:
+       {has, url, url2x, alt, pos} — `has` is false (all other keys empty)
+       when the entry has no resolvable first image. Call:
+       {{ $thumb := partial "library-thumbnail.html" . }} */ -}}
+{{- $page := . -}}
+{{- $has := false }}{{ $url := "" }}{{ $url2x := "" }}{{ $alt := "" }}{{ $pos := "center" -}}
+{{- $im0 := index $page.Params.images 0 -}}
+{{- with $im0 }}{{ with ($page.Resources.GetMatch .file) }}
+  {{- $anchor := $im0.anchor | default "Center" -}}
+  {{- $has = true -}}
+  {{- $url = (.Fill (printf "240x240 %s q80" $anchor)).RelPermalink -}}
+  {{- $url2x = (.Fill (printf "480x480 %s q80" $anchor)).RelPermalink -}}
+  {{- $alt = $im0.alt -}}
+  {{- $pos = partial "library-image-pos.html" $anchor -}}
+{{- end }}{{ end -}}
+{{- return (dict "has" $has "url" $url "url2x" $url2x "alt" $alt "pos" $pos) -}}

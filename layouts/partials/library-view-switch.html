@@ -1,0 +1,11 @@
+{{- /* Catalog/Images presentation switch. Same records, same images, same
+       filters — this only toggles whether text or just thumbnails show.
+       Reuses .rf-facet/.rf-chip styling so it reads as one more control among
+       the others, not a new visual theme. Requires JS to do anything (there's
+       no server-rendered Images view), so it's hidden under data-nojs like the
+       filter form. Call: {{ partial "library-view-switch.html" . }} */ -}}
+<fieldset class="rf-facet library-view-switch" data-view-switch>
+  <legend>View</legend>
+  <button type="button" class="rf-chip is-active" data-library-view="catalog" aria-pressed="true">Catalog</button>
+  <button type="button" class="rf-chip" data-library-view="images" aria-pressed="false">Images</button>
+</fieldset>

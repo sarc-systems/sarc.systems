@@ -7,6 +7,11 @@
 .library-empty { color: var(--gray-1); font-style: italic; margin: 0.8rem 0; }
 
 /* --- Catalog records ------------------------------------------------------ */
+/* Shared by the Catalog thumbnail cap below and the Images view grid
+   (.library-image-index), so the two can never silently drift apart —
+   changing one changes both. See library-thumbnail.html for the shared image
+   processing/crop that backs both views. */
+:root { --library-thumbnail-size: 168px; }
 .library-records { list-style: none; padding: 0; margin: 0; }
 .library-record { padding: 1rem 0; border-bottom: 1px solid var(--rule); }
 .library-records > .library-record:first-child { border-top: 1px solid var(--rule); }
@@ -24,7 +29,7 @@
   /* Cap the square so a tall (text-driven) row — common on narrow screens where
      the summary wraps to many lines — can't blow the thumbnail up to half the
      viewport. The image top-aligns within the taller cell. */
-  max-height: 168px;
+  max-height: var(--library-thumbnail-size);
   border: 1px solid var(--rule); background: var(--paper-2);
 }
 .library-record-kicker {
@@ -169,6 +174,32 @@
 
 .library-all-head { font-size: var(--t-md); margin: 2rem 0 0.4rem; }
 
+/* --- Images view: same entries, thumbnails only -------------------------- */
+/* Fixed-size grid, packed left — never masonry, never scaled. Each item reuses
+   the exact thumbnail markup/derivative/crop as the Catalog record (see
+   library-thumbnail.html), sized from the same --library-thumbnail-size
+   custom property as the Catalog thumbnail's cap above, so the two views can
+   never render an image at different sizes. */
+.library-image-index {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, var(--library-thumbnail-size));
+  gap: 1rem;
+  margin: 1rem 0 0;
+  padding: 0;
+}
+.library-image-index[hidden] { display: none !important; }
+.library-image-index__item { display: block; }
+.library-image-index__item[hidden] { display: none !important; }
+.library-image-index__item img {
+  width: var(--library-thumbnail-size);
+  height: var(--library-thumbnail-size);
+  object-fit: cover;
+  display: block;
+  border: 1px solid var(--rule);
+  background: var(--paper-2);
+}
+.library-image-index-empty { color: var(--gray-1); font-style: italic; margin: 1rem 0 0; }
+
 /* --- Single entry: primary image + gallery ------------------------------- */
 .library-primary-image { margin: 1.6rem 0; }
 .library-primary-image img { max-width: 100%; height: auto; display: block; border: 1px solid var(--rule); }
@@ -196,7 +227,12 @@
 /* Progressive enhancement: the filter only works with JS, so it is hidden when
    JS is unavailable (the document carries data-nojs until the head script clears
    it). No-JS visitors simply see every reference. */
-:root[data-nojs] .reference-filters { display: none; }
+:root[data-nojs] .reference-filters,
+:root[data-nojs] .library-view-switch { display: none; }
+/* Reuses .rf-facet/.rf-chip (below) so it reads as one more control, not a
+   new visual theme; the small top margin separates it from the "From the
+   Library" panel above since it sits outside the filter <form>. */
+.library-view-switch { margin: 0 0 0.6rem; }
 .reference-filters {
   border-top: 1px solid var(--rule);
   border-bottom: 1px solid var(--rule);
@@ -305,6 +341,9 @@
   .library-file dl { grid-template-columns: 1fr; gap: 0.1rem; }
   .library-file dd { margin-bottom: 0.5rem; }
   .rf-facet legend { float: none; width: auto; }
-  /* Keep the catalog thumbnail small on phones so text stays readable. */
-  .library-record-thumb img { max-height: 104px; }
+  /* Keep the catalog thumbnail small on phones so text stays readable. This
+     redefines the shared custom property (rather than overriding max-height
+     directly), so the Images view grid shrinks to match at the same
+     breakpoint instead of silently disagreeing with the Catalog thumbnail. */
+  :root { --library-thumbnail-size: 104px; }
 }

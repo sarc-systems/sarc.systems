@@ -10,6 +10,7 @@
 
   {{ partial "library-random.html" . }}
 
+  {{ partial "library-view-switch.html" . }}
   {{ partial "library-filters.html" (dict "pages" $entries) }}
 
   <h2 class="library-all-head" id="all-entries">All entries</h2>
@@ -17,6 +18,7 @@
   <ul class="library-records" id="library-list">
     {{ range . }}{{ partial "library-record.html" . }}{{ end }}
   </ul>
+  {{ partial "library-image-index.html" (dict "pages" $entries) }}
   {{- else }}
   <p class="library-empty">No entries yet.</p>
   {{- end }}

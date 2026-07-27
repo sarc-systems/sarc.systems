@@ -443,6 +443,36 @@ across; shareable `?type=a,b&subject=c&sarc=true`; history-aware; Clear; polite
 and the filter form is hidden (CSS-gated on `data-nojs`). Records carry
 `data-type` / `data-subjects` / `data-sarc` / `data-library-id`.
 
+**Catalog / Images view switch.** A presentation toggle, not a second page or a
+gallery — it changes what's visible, never the image itself. **Catalog** is the
+existing ruled records; **Images** shows only the primary images of the
+currently matching entries, same filters, same order, same crop. Both render
+from one entry collection at build time (`#library-list` /
+`#library-image-index`, see `library-image-index.html`) and both call the same
+`library-thumbnail.html` partial for image resolution — this is the only place
+that resolves an entry's primary image into a thumbnail, so the two views can
+never end up with a different derivative, crop, or size. Sizing is one shared
+CSS custom property, `--library-thumbnail-size` (set once, redefined at the
+mobile breakpoint) — the Catalog thumbnail's `max-height` and the Images grid's
+item `width`/`height` both read it, so changing one changes both by
+construction. State is `?view=catalog|images` in the URL (absent/invalid →
+catalog), combined with the existing filter params; `library-filter.js` (which
+also owns the view switch) applies one filter pass to both collections,
+updates a view-aware result count (`"N entries · M with images"` in Images
+view; `"0 images among N matching entries"` when none match), and fires a
+`library:view-change` `document` event on every change. Entries with no image
+are simply omitted from the Images grid (Catalog still lists them normally) —
+never a placeholder. The "From the Library" panel listens for that event too:
+in Images view it hides its own text (`hidden`, not just visually), grants the
+thumbnail link a real accessible name (`aria-label`, since the title link it
+normally defers to is now hidden) by removing the `aria-hidden`/`tabindex`
+that suppress it as a redundant link in Catalog view, and — if the currently
+featured entry has no image — swaps to one that does; switching back to
+Catalog restores the text and never re-picks. The whole view switch requires
+JS (there is no server-rendered Images view), so it's hidden under
+`data-nojs` exactly like the filter form; Catalog remains the complete no-JS
+fallback. Reuses `.rf-facet`/`.rf-chip` styling — no new visual theme.
+
 **Images.** Resolved through Hugo page resources (never hotlink Bandcamp/Discogs/
 publishers; never auto-download third-party artwork). List = square thumbnail
 (`Fill`, srcset, w/h, lazy, `object-fit: cover`); no image → clean text-only row.
@@ -485,9 +515,10 @@ without alt. It does **not** fail on: no images, a creator name without `ref`, n
 related, an absent optional field, or a subject with one entry.
 
 **Templates/JS/CSS.** `layouts/library/{list,single}.html`, `list.json`;
-`partials/library-{collect,record,random,featured,filters,images,access,creators,
-works,related,rights,validate}.html`; `assets/js/library-{filter,random}.js`;
-`assets/css/library.css`. Ruled catalog rows — never commercial cards, cover
+`partials/library-{collect,record,random,featured,filters,view-switch,
+image-index,thumbnail,images,access,creators,works,related,rights,validate}.html`;
+`assets/js/library-{filter,random}.js`; `assets/css/library.css`. Ruled catalog
+rows — never commercial cards, cover
 grids, shadows, ratings, badges, hover-zoom, or streaming-service styling. Images
 are documentary, not decoration. Reuse the base shell/header/footer/type — don't
 fork the layout. One archetype: `archetypes/library-entry.md`

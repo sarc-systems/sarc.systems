@@ -10,7 +10,11 @@
 {{- $img := "" }}{{ $pos := "center" }}{{ $im0 := index .Params.images 0 }}{{ with $im0 }}{{ $anchor := $im0.anchor | default "Center" }}{{ with ($.Resources.GetMatch .file) }}{{ $img = .Fill (printf "360x360 %s q80" $anchor) }}{{ end }}{{ $pos = partial "library-image-pos.html" $anchor }}{{ end -}}
 <article class="library-featured" data-library-id="{{ .Params.library.id }}">
   {{- with $img }}
-  <a class="library-featured-thumb" href="{{ $.RelPermalink }}" tabindex="-1" aria-hidden="true"><img src="{{ .RelPermalink }}" style="object-position: {{ $pos }}" alt="{{ (index $.Params.images 0).alt }}" loading="lazy" decoding="async"></a>
+  {{- /* aria-hidden/tabindex suppress this as a duplicate link in Catalog
+         mode (the title link below already reaches the same page); the
+         Images-view script strips both and relies on aria-label instead,
+         since that mode hides the title text entirely. */}}
+  <a class="library-featured-thumb" href="{{ $.RelPermalink }}" aria-label="View {{ $.Title }}" tabindex="-1" aria-hidden="true"><img src="{{ .RelPermalink }}" style="object-position: {{ $pos }}" alt="{{ (index $.Params.images 0).alt }}" loading="lazy" decoding="async"></a>
   {{- end }}
   <div class="library-featured-body">
     <p class="library-featured-kicker">{{ with $creators }}{{ . | safeHTML }} <span class="dot" aria-hidden="true">·</span> {{ end }}{{ $typeLabel | upper }}{{ if $year }} <span class="dot" aria-hidden="true">·</span> {{ $year }}{{ end }}</p>
