@@ -11,10 +11,10 @@ subjects: [perception, sound, space]
 
 images:
   - file: "maryanne-amacher.jpg"
-    alt: "Maryanne Amacher"
+    alt: "Maryanne Amacher wearing headphones, hands on a custom mixing console"
     role: portrait
-    credit: "Discogs"
-    source: "https://www.discogs.com/artist/19275"
+    credit: "WHYY"
+    source: "https://whyy.org/wp-content/uploads/2019/04/Amacher_knobs-2.jpg"
 
 access:
   - label: "Maryanne Amacher Foundation"

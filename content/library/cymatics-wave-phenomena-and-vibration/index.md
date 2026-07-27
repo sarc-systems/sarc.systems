@@ -16,11 +16,11 @@ creators:
 subjects: [sound, form, morphogenesis]
 
 images:
-  - file: "cover.jpg"
-    alt: "Cover of Cymatics: A Study of Wave Phenomena and Vibration by Hans Jenny (MACROmedia Publishing, 2001 revised edition)"
-    role: cover
-    credit: "AbeBooks"
-    source: "https://pictures.abebooks.com/inventory/31889671864.jpg"
+  - file: "cymatic-pattern.jpg"
+    alt: "A circular cymatic pattern formed by sound vibration in a Chladni-style plate experiment"
+    role: diagram
+    credit: "Shockwave-Sound"
+    source: "https://www.shockwave-sound.com/blog/wp-content/uploads/2018/05/firstimageSoundMatrix.jpg"
 
 access:
   - label: "PDF"

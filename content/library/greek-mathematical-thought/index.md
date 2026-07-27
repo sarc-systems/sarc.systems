@@ -16,11 +16,9 @@ subjects: [number, form]
 
 images:
   - file: "cover.jpg"
-    alt: "Cover of Greek Mathematical Thought and the Origin of Algebra"
-    role: cover
-    anchor: Top
-    credit: "Dover Publications"
-    source: "https://store.doverpublications.com/9780486272894.html"
+    alt: "Jacob Klein"
+    role: portrait
+    source: "https://eadn-wc04-4478098.nxedge.io/wp-content/uploads/2016/02/6F54FE82-0C6B-46B8-A260-25DAD053DF92_1_105_c-600x448.jpeg"
 
 draft: false
 ---

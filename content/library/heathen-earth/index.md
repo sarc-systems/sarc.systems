@@ -1,0 +1,32 @@
+---
+title: "Heathen Earth"
+summary: "Throbbing Gristle's 1980 album, recorded live in the studio before an invited audience."
+year: 1980
+
+library:
+  id: heathen-earth
+  type: release
+  sarc_work: false
+
+creators:
+  - name: "Throbbing Gristle"
+    role: artist
+    ref: throbbing-gristle
+
+subjects: [sound, technology]
+
+images:
+  - file: "cover.jpg"
+    alt: "Cover of Heathen Earth by Throbbing Gristle"
+    role: cover
+    credit: "Bandcamp"
+
+access:
+  - label: "Bandcamp"
+    kind: bandcamp
+    url: "https://throbbinggristle.bandcamp.com/album/heathen-earth"
+
+draft: false
+---
+
+Throbbing Gristle's 1980 album, recorded live in the studio before an invited audience, released on Industrial Records.

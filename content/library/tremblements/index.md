@@ -1,0 +1,32 @@
+---
+title: "Tremblements"
+summary: "François Bayle's acousmatic works from 1978 and 1979, reissued by Recollection GRM."
+year: 1978
+
+library:
+  id: tremblements
+  type: release
+  sarc_work: false
+
+creators:
+  - name: "François Bayle"
+    role: composer
+    ref: francois-bayle
+
+subjects: [sound, space]
+
+images:
+  - file: "cover.jpg"
+    alt: "Cover of Tremblements by François Bayle"
+    role: cover
+    credit: "Bandcamp"
+
+access:
+  - label: "Bandcamp"
+    kind: bandcamp
+    url: "https://francoisbayle.bandcamp.com/album/tremblements"
+
+draft: false
+---
+
+François Bayle's acousmatic works from 1978 and 1979, reissued together by Recollection GRM.
