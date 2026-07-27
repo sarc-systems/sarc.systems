@@ -21,7 +21,9 @@ images:
     role: cover
     source: "https://susumuyokota.bandcamp.com/album/dreamer-lo91"
     rights:
-      status: promotional
+      status: unknown
+    use:
+      basis: identification
       note: "Label cover art used for identification."
 
 access:

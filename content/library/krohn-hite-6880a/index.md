@@ -32,7 +32,9 @@ images:
     caption: "PC6880-3 Null Detector Board schematic."
     credit: "Krohn-Hite, from the 6880A maintenance manual"
     rights:
-      status: archival
+      status: unknown
+    use:
+      basis: archival
       note: "Same archival basis as the hosted manual itself — see rights above."
 
 access:

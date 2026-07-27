@@ -109,7 +109,8 @@
   overflow: hidden;
   gap: 0.3rem 1.1rem;
 }
-.access-links li { flex: 0 0 auto; white-space: nowrap; }
+.access-links li.access-item { flex: 0 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.access-links li.access-item--more { flex: 0 0 auto; overflow: visible; }
 .access-link--more { color: var(--gray-2); }
 .access-link {
   font-family: var(--font-mono);

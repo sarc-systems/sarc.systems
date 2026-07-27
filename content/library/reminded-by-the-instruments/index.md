@@ -21,7 +21,9 @@ images:
     caption: "Oxford University Press edition."
     source: "https://www.4columns.org/dayal-geeta/reminded-by-the-instruments"
     rights:
-      status: promotional
+      status: unknown
+    use:
+      basis: identification
       note: "Publisher cover art used for identification."
 
 access:

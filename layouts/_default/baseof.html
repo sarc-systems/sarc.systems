@@ -12,6 +12,20 @@
   </main>
   {{ partial "footer.html" . }}
   {{ block "scripts" . }}{{ end }}
-  <script data-goatcounter="https://sarc.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+  <script>
+    (function () {
+      /* GoatCounter ignores Do Not Track by default; this is the guard
+         GoatCounter's own docs provide for sites that want to honor it
+         (https://www.goatcounter.com/help/dnt). Skips loading count.js
+         entirely when the browser sends DNT. */
+      var dnt = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      if (dnt === "1" || dnt === "yes") { return; }
+      var s = document.createElement("script");
+      s.async = true;
+      s.src = "//gc.zgo.at/count.js";
+      s.setAttribute("data-goatcounter", "https://sarc.goatcounter.com/count");
+      document.body.appendChild(s);
+    })();
+  </script>
 </body>
 </html>

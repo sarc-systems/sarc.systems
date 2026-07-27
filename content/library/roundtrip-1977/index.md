@@ -24,7 +24,9 @@ images:
     role: cover
     source: "https://transversales.bandcamp.com/album/roundtrip-1977"
     rights:
-      status: promotional
+      status: unknown
+    use:
+      basis: identification
       note: "Label cover art used for identification."
 
 access:

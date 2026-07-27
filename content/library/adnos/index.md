@@ -22,7 +22,9 @@ images:
     caption: "Important Records (imprec) 2021 edition artwork."
     source: "https://imprec.bandcamp.com/album/adnos"
     rights:
-      status: promotional
+      status: unknown
+    use:
+      basis: identification
       note: "Label cover art used for identification."
 
 access:

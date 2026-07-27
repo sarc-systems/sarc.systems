@@ -22,7 +22,9 @@ images:
     caption: "Original Ina-GRM vinyl sleeve for Erda / Symphonie (1978) — a different Erda pairing than this entry's Erda / Suite N release."
     source: "https://www.discogs.com/release/291890-Jean-Schwarz-Erda-Symphonie"
     rights:
-      status: promotional
+      status: unknown
+    use:
+      basis: identification
       note: "Label sleeve art used for identification."
 
 access:

@@ -22,7 +22,9 @@ images:
     caption: "Original Philips \"Prospective 21e Siècle\" LP sleeve."
     source: "https://www.discogs.com/release/775402"
     rights:
-      status: promotional
+      status: unknown
+    use:
+      basis: identification
       note: "Label cover art used for identification."
 
 access:

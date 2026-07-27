@@ -5,10 +5,15 @@
        external-ness comes from data/library.yaml. The author-supplied label is
        the visible text. Beyond `$max` items, a single "and N more" link to the
        entry page replaces the rest (the single-entry page itself always shows
-       every access item in full — this cap is catalog-list-only). Renders
-       nothing without `access`. Call: {{ partial "library-access.html" . }} */ -}}
+       every access item in full — this cap is catalog-list-only). `$max` is
+       kept at 1 deliberately: with long labels and several access items (e.g.
+       Rainforest's nine), a higher cap risks the trailing "and N more" link —
+       the one telling the reader more exists — being clipped by the row's
+       `overflow: hidden`/`nowrap` (see library.css); one link plus the count
+       reliably fits. Renders nothing without `access`.
+       Call: {{ partial "library-access.html" . }} */ -}}
 {{- $page := . -}}
-{{- $max := 3 -}}
+{{- $max := 1 -}}
 {{- $ext := dict -}}{{ $verbs := dict -}}
 {{- range hugo.Data.library.access_kinds }}{{ $ext = merge $ext (dict .kind .external) }}{{ $verbs = merge $verbs (dict .kind .verb) }}{{ end -}}
 {{- with $page.Params.access -}}
@@ -21,15 +26,15 @@
   {{- $label := $a.label | default (index $verbs $kind) | default "Link" -}}
   {{- if eq $kind "hosted-file" }}
     {{- with $a.file }}{{ with ($page.Resources.GetMatch .) }}
-  <li><a class="access-link access-link--hosted-file" href="{{ .RelPermalink }}">{{ $label }}</a></li>
+  <li class="access-item"><a class="access-link access-link--hosted-file" href="{{ .RelPermalink }}">{{ $label }}</a></li>
     {{- end }}{{ end }}
   {{- else }}{{ with $a.url }}
   {{- $isExt := index $ext $kind }}
-  <li><a class="access-link access-link--{{ $kind }}" href="{{ . }}"{{ if $isExt }} target="_blank" rel="noopener"{{ end }}>{{ $label }}{{ if $isExt }} <span class="ext" aria-hidden="true">↗</span>{{ end }}</a></li>
+  <li class="access-item"><a class="access-link access-link--{{ $kind }}" href="{{ . }}"{{ if $isExt }} target="_blank" rel="noopener"{{ end }}>{{ $label }}{{ if $isExt }} <span class="ext" aria-hidden="true">↗</span>{{ end }}</a></li>
   {{- end }}{{ end }}
   {{- end }}
   {{- if gt $total $max }}
-  <li><a class="access-link access-link--more" href="{{ $page.RelPermalink }}">and {{ sub $total $max }} more</a></li>
+  <li class="access-item access-item--more"><a class="access-link access-link--more" href="{{ $page.RelPermalink }}">and {{ sub $total $max }} more</a></li>
   {{- end }}
 </ul>
 {{- end -}}

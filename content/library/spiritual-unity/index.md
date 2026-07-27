@@ -21,7 +21,9 @@ images:
     caption: "ESP-Disk' original edition artwork."
     source: "https://albertayler.bandcamp.com/album/spiritual-unity"
     rights:
-      status: promotional
+      status: unknown
+    use:
+      basis: identification
       note: "Label cover art used for identification."
 
 access:

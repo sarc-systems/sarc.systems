@@ -171,10 +171,20 @@ rights_hosted_ok: [sarc-owned, public-domain, licensed, permitted, archival]
 
 # Per-image rights vocabulary (`images[].rights.status`) — a separate, smaller
 # vocabulary from `rights_status` above. That one gates whether SARC may host a
-# *file* (a document); this one just records what's known about a *picture*
-# used for illustration/identification, and never gates anything on its own.
-# `promotional` = official publicity/cover/press art used for identification.
-# `fair-use` = editorial identification or commentary rationale. `unknown` =
-# status not established — honest default, not a stand-in for clearance. None
-# of these are a substitute for an actual legal determination; don't imply one.
-image_rights_status: [sarc-owned, public-domain, licensed, permitted, promotional, fair-use, archival, unknown]
+# *file* (a document); this one records what's actually known about a
+# *picture*'s copyright status, and never gates anything on its own. `unknown`
+# is the honest default — not a stand-in for clearance — and applies to most
+# images in the catalog: an official cover or press photo is still `unknown`
+# unless SARC actually holds a license or the work is genuinely public domain.
+# Don't put a *rationale for use* here (see `image_use_basis` below) — status
+# describes the copyright condition only.
+image_rights_status: [sarc-owned, public-domain, licensed, permitted, unknown]
+
+# Per-image use rationale (`images[].use.basis`) — separate from rights.status
+# above. Rights records what's known about copyright; `use.basis` records why
+# SARC is using the image anyway when status isn't sarc-owned/public-domain/
+# licensed/permitted — e.g. official cover art shown for identification, or a
+# manual diagram kept for archival documentation of discontinued hardware.
+# This is an editorial rationale, not a legal determination, and never changes
+# rights.status. Pair `use.basis` with a `use.note` giving the specifics.
+image_use_basis: [identification, editorial, promotional, fair-use, archival]

@@ -10,6 +10,7 @@
 {{- $kinds := slice }}{{ range $lib.access_kinds }}{{ $kinds = $kinds | append .kind }}{{ end -}}
 {{- $okRights := $lib.rights_hosted_ok -}}
 {{- $imgRights := $lib.image_rights_status -}}
+{{- $imgUseBasis := $lib.image_use_basis -}}
 
 {{- /* Known platform/host names that identify WHERE an image was found, not
        WHO made it — a `credit` equal to one of these (case-insensitive) is a
@@ -102,13 +103,18 @@
     {{- if and (in (slice "licensed" "permitted") $rstatus) (not $rnote) }}{{ errorf "Library: %q image %q claims rights.status %q with no note explaining it" $page.Path $im.file $rstatus }}{{ end -}}
     {{- if and (eq $rstatus "public-domain") (not $src) }}{{ errorf "Library: %q image %q claims public-domain with no source to verify it against" $page.Path $im.file }}{{ end -}}
 
+    {{- /* use.basis, if set, must be from the editorial-rationale vocabulary
+           (separate from rights.status — see data/library.yaml) */ -}}
+    {{- $ubasis := "" }}{{ $unote := "" }}{{ with $im.use }}{{ $ubasis = .basis }}{{ $unote = .note }}{{ end -}}
+    {{- if and $ubasis (not (in $imgUseBasis $ubasis)) }}{{ errorf "Library: %q image %q has invalid use.basis %q (allowed: %s)" $page.Path $im.file $ubasis (delimit $imgUseBasis ", ") }}{{ end -}}
+
     {{- /* warnings — flagged for review, never fail the build */ -}}
     {{- $creditLower := lower ($im.credit | default "") -}}
     {{- if and $im.credit (in $platformNames $creditLower) }}{{ warnf "Library: %q image %q has credit %q, which names a platform, not a creator — move it to source and leave credit for an actual photographer/designer/archive" $page.Path $im.file $im.credit }}{{ end -}}
     {{- if and (not $src) (ne $rstatus "sarc-owned") }}{{ warnf "Library: %q image %q has no source recorded" $page.Path $im.file }}{{ end -}}
     {{- if and $src (findRE `\.(jpg|jpeg|png|webp|gif)(\?.*)?$` (lower $src)) }}{{ warnf "Library: %q image %q source %q is a raw image file, not a contextual page — link the page it appears on if one exists" $page.Path $im.file $src }}{{ end -}}
     {{- if and $src (gt (int (index $sourceTally $src | default 0)) 1) }}{{ warnf "Library: image source %q is reused across %d different Library entries — confirm it's genuinely the same image/edition each time" $src (index $sourceTally $src) }}{{ end -}}
-    {{- if and (eq $im.role "cover") (not $im.caption) (not $im.credit) (not $rnote) }}{{ warnf "Library: %q cover image %q doesn't identify its edition — add a caption or credit naming the specific printing/label pictured" $page.Path $im.file }}{{ end -}}
+    {{- if and (eq $im.role "cover") (not $im.caption) (not $im.credit) (not $rnote) (not $unote) }}{{ warnf "Library: %q cover image %q doesn't identify its edition — add a caption or credit naming the specific printing/label pictured" $page.Path $im.file }}{{ end -}}
     {{- if eq $rstatus "unknown" }}{{ warnf "Library: %q image %q rights status is unknown — resolve when possible" $page.Path $im.file }}{{ end -}}
   {{- end -}}
 

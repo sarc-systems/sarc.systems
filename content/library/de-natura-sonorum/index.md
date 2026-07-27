@@ -22,7 +22,9 @@ images:
     caption: "Original Ina-GRM vinyl sleeve (Collection GRM, AM 714.01)."
     source: "https://bernardparmegiani.bandcamp.com/album/de-natura-sonorum"
     rights:
-      status: promotional
+      status: unknown
+    use:
+      basis: identification
       note: "Label sleeve art used for identification."
 
 access:

@@ -379,20 +379,28 @@ weight:  sort_title:  featured:            # optional ordering / no-JS random de
   "SARC" — and is optional: leave it absent rather than naming the *site
   you found the image on* (a platform is a `source`, essentially never a
   `credit`). Optional per-image `rights.status` (`sarc-owned`,
-  `public-domain`, `licensed`, `permitted`, `promotional`, `fair-use`,
-  `archival`, `unknown` — a separate, smaller vocabulary from the
-  hosted-file `rights.status` below) records what's actually known without
-  implying a legal determination that hasn't been made; pair `licensed` /
-  `permitted` with a `note` explaining the basis. Examples:
+  `public-domain`, `licensed`, `permitted`, `unknown` — a separate, smaller
+  vocabulary from the hosted-file `rights.status` below) records what's
+  actually known about the image's *copyright condition*, without implying a
+  legal determination that hasn't been made; pair `licensed`/`permitted` with
+  a `note` explaining the basis. **`rights` is not where a rationale for use
+  goes** — a separate optional `use.basis` (`identification`, `editorial`,
+  `promotional`, `fair-use`, `archival`) plus `use.note` records *why* SARC is
+  using an image whose rights aren't sarc-owned/public-domain/licensed/
+  permitted (an official cover shown to identify an edition, a manual diagram
+  kept for archival documentation, etc). Keeping these separate means the
+  schema never implies more legal certainty than a `use.basis` alone
+  provides. Examples:
 
   ```yaml
   # photograph, creator known
   - {file: cover.jpg, alt: "...", credit: "Photograph by Kira Perov",
      source: "https://composers-inside-electronics.net/..."}
-  # cover artwork, edition matters
+  # cover artwork, edition matters — rights unknown, used for identification
   - {file: cover.jpg, alt: "...", role: cover,
      caption: "Penguin Audio edition.", source: "https://...",
-     rights: {status: promotional, note: "Publisher cover art used for identification."}}
+     rights: {status: unknown},
+     use: {basis: identification, note: "Publisher cover art used for identification."}}
   # analytical diagram — not the original score
   - {file: fig.jpg, alt: "...", role: diagram,
      credit: "Analytical diagram by Pierre Couprie",
@@ -405,12 +413,14 @@ weight:  sort_title:  featured:            # optional ordering / no-JS random de
   ```
 
   Build-time validation (`library-validate.html`) fails on a bare-homepage/
-  Google/malformed `source`, an invalid `rights.status`, or a `licensed`/
-  `permitted`/`public-domain` claim with no note or source to back it —  and
-  warns (without failing) on a platform-name `credit`, a missing `source`, a
-  raw-CDN `source`, or an unresolved `rights.status`. `make library-image-audit`
-  (`scripts/audit-library-images.py`) gives an offline, non-network report of
-  the same, for auditing beyond what a single build run surfaces.
+  Google/malformed `source`, an invalid `rights.status` or `use.basis`, or a
+  `licensed`/`permitted`/`public-domain` claim with no note or source to back
+  it — and warns (without failing) on a platform-name `credit`, a missing
+  `source`, a raw-CDN `source`, or an unresolved `rights.status`.
+  `make library-image-audit` (`scripts/audit-library-images.py`) gives an
+  offline, non-network report of the same, for auditing beyond what a single
+  build run surfaces — see that script's docstring for exactly what it does
+  and does not cover.
 - **access** — how to reach the thing; storage location never sets the type.
 
 **Knowledge graph.** `creators[].ref` (another entry's `library.id`) links the
@@ -555,13 +565,18 @@ facade. Optimized images via Hugo image processing.
 ## Analytics
 
 **GoatCounter** (`sarc.goatcounter.com`) — one small async script
-(`layouts/_default/baseof.html`, right before `</body>`), no cookies, no
-personal data collected, respects Do Not Track. This is a deliberate,
-narrow exception to "minimal external requests": one script, one request
-per page load, chosen specifically because it doesn't compromise the
-site's privacy posture the way conventional analytics would. Do not add
-any other analytics, tracking pixel, or A/B testing script without the
-same deliberate conversation.
+(`layouts/_default/baseof.html`, right before `</body>`), no cookies. Per
+GoatCounter's own docs, IP address and User-Agent are used transiently to
+de-duplicate a session and are not written to its database or disk — no
+persistent personal identifier is stored. GoatCounter does **not** honor Do
+Not Track by default, so the inline snippet in `baseof.html` implements
+GoatCounter's documented DNT guard itself (checks `navigator.doNotTrack` and
+skips loading `count.js` entirely when it's set) — do not remove that guard
+or load the script unconditionally. This is a deliberate, narrow exception to
+"minimal external requests": one script, one request per page load, chosen
+specifically because it doesn't compromise the site's privacy posture the
+way conventional analytics would. Do not add any other analytics, tracking
+pixel, or A/B testing script without the same deliberate conversation.
 
 ## Deployment
 

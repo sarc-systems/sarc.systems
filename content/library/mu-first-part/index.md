@@ -24,7 +24,9 @@ images:
     role: cover
     source: "https://bygrecords.bandcamp.com/album/mu-first-part"
     rights:
-      status: promotional
+      status: unknown
+    use:
+      basis: identification
       note: "Label cover art used for identification."
 
 access:

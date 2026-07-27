@@ -22,7 +22,9 @@ images:
     role: diagram
     credit: "Klein + Hummel, from the UE-100 manual"
     rights:
-      status: archival
+      status: unknown
+    use:
+      basis: archival
       note: "Same archival basis as the hosted manual itself — see rights above."
 
 # Manual-specific metadata

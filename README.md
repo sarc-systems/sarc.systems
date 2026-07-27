@@ -89,9 +89,12 @@ front matter and set `draft: false`. Key fields:
   actually made or supplies it (a photographer, archive, or "SARC") — leave it
   absent rather than naming the site you found the image on. Per-image
   `rights.status` (`sarc-owned | public-domain | licensed | permitted |
-  promotional | fair-use | archival | unknown` — distinct from the hosted-file
-  `rights.status` below) records what's known without implying a legal
-  determination. See `CLAUDE.md` § Library for full examples and
+  unknown` — distinct from the hosted-file `rights.status` below) records the
+  image's copyright condition; a separate `use.basis` (`identification |
+  editorial | promotional | fair-use | archival`) plus `use.note` records why
+  SARC is using it when rights aren't sarc-owned/public-domain/licensed/
+  permitted — kept apart so the schema never implies more legal certainty
+  than it has. See `CLAUDE.md` § Library for full examples and
   `make library-image-audit` for an offline report on every image's metadata.
 - `access` — `{label, kind, url|file}` (many per entry). `hosted-file` needs a
   bundle `file`; external kinds open in a new tab. `url`/`file` are exclusive.

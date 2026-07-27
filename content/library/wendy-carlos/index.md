@@ -9,6 +9,15 @@ library:
 
 subjects: [sound, technology, tuning]
 
+images:
+  - file: "studio86.jpg"
+    alt: "Wendy Carlos in her studio, 1986"
+    role: portrait
+    source: "https://www.wendycarlos.com/photos/studio86.jpg"
+    rights:
+      status: unknown
+      note: "Photographer not established; hosted on Carlos's own official site."
+
 draft: false
 ---
 

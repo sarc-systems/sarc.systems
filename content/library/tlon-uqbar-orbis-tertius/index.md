@@ -23,7 +23,9 @@ images:
     caption: "Standalone illustrated edition, illustrated by Rikki."
     source: "https://www.goodreads.com/book/show/929587"
     rights:
-      status: promotional
+      status: unknown
+    use:
+      basis: identification
       note: "Edition artwork used for identification."
 
 draft: false

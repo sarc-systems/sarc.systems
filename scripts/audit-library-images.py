@@ -1,12 +1,43 @@
 #!/usr/bin/env python3
 """Audit credit/source/rights metadata for every image in the Library.
 
-Scans content/library/*/index.md, extracts each entry's `images` array (a
-line-based reader, not a full YAML parser — the front matter here is always
-simple `key: "value"` pairs at consistent indentation), and reports the same
-things the build-time check in layouts/partials/library-validate.html looks
-for, plus a plain-text table for manual review. Makes no network requests —
-this only reads files already on disk, so it stays deterministic and offline.
+Scope: every entry the Hugo build treats as a catalog member — every
+`content/library/<slug>/index.md` bundle, PLUS any page anywhere else in
+`content/` that opts in with `library: {include: true, id: ...}` (a Label
+release, a Systems manual, a Studio doc joining the catalog from its own
+canonical URL). This mirrors the selection logic in
+`layouts/partials/library-validate.html`
+(`where site.RegularPages "Section" "library" | union where
+"Params.library.include" true`). `_index.md` list pages and drafts are
+skipped, same as the Hugo build.
+
+PARSER LIMITATION — read this before trusting a "clean" report.  This is a
+line-based front-matter reader, not a YAML parser, so it only understands the
+house style this catalog has used so far:
+
+  - `images:` as a block sequence, each item starting `  - file: "..."`
+  - scalar fields (`alt`, `role`, `caption`, `credit`, `source`, `anchor`)
+    each on their own line at a fixed 4-space indent under the item
+  - `rights:` / `use:` as nested mappings at 4-space indent, their own
+    `status`/`note`/`basis` scalars at 6-space indent
+  - scalar values double-quoted, single-quoted, or bare (unquoted) — all
+    three are recognized
+
+It does NOT understand: flow-style mappings (`- {file: "x.jpg", alt: "..."}`
+on one line), multi-line block scalars (`|` or `>`), inline comments after a
+value, or any indentation other than the one this catalog has used so far.
+If an entry's `images` block is ever written in one of those forms, this
+script will silently skip fields it doesn't recognize — it does NOT raise an
+error for a form it can't parse, because it has no real grammar to fall back
+on. The Hugo build-time validator
+(`layouts/partials/library-validate.html`) is the authoritative check — it
+uses Hugo's actual YAML/TOML front matter parsing and cannot be fooled this
+way. Treat this script as a helpful offline report, not a substitute for
+`make check`. If this ever needs to be airtight, replace the parser with
+PyYAML rather than extending these regexes further (blocked previously in
+this environment by `pip install pyyaml` failing with
+"externally-managed-environment" — a venv or `pipx` install would resolve
+that if it's worth the added setup step).
 
 Usage: python3 scripts/audit-library-images.py [--strict]
   --strict   exit nonzero on warnings too, not just hard errors
@@ -19,7 +50,7 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-LIB_DIR = ROOT / "content" / "library"
+CONTENT_DIR = ROOT / "content"
 LIBRARY_YAML = ROOT / "data" / "library.yaml"
 
 PLATFORM_NAMES = {
@@ -33,13 +64,23 @@ IMAGE_EXT_RE = re.compile(r"\.(jpg|jpeg|png|webp|gif)(\?.*)?$", re.IGNORECASE)
 BARE_HOMEPAGE_RE = re.compile(r"^https?://[^/]+/?$")
 ABS_URL_RE = re.compile(r"^https?://")
 
+# A scalar value: "double-quoted", 'single-quoted', or bare-unquoted (trimmed,
+# trailing comment stripped). Used for every image field below.
+_VALUE_RE = r'(?:"([^"\n]*)"|\'([^\'\n]*)\'|([^\s#][^\n]*?))\s*(?:#.*)?$'
 
-def load_image_rights_vocab():
-    text = LIBRARY_YAML.read_text()
-    m = re.search(r"^image_rights_status:\s*\[([^\]]*)\]", text, re.MULTILINE)
+
+def _scalar_match(pattern_prefix, line):
+    m = re.match(pattern_prefix + _VALUE_RE, line)
     if not m:
-        return {"sarc-owned", "public-domain", "licensed", "permitted",
-                "promotional", "fair-use", "archival", "unknown"}
+        return None
+    return next((g for g in m.groups() if g is not None), "").strip()
+
+
+def load_vocab(name, fallback):
+    text = LIBRARY_YAML.read_text()
+    m = re.search(rf"^{name}:\s*\[([^\]]*)\]", text, re.MULTILINE)
+    if not m:
+        return fallback
     return {v.strip() for v in m.group(1).split(",") if v.strip()}
 
 
@@ -56,14 +97,15 @@ def parse_front_matter(text):
 
 def get_scalar(lines, key, default=""):
     for line in lines:
-        m = re.match(rf'^{key}:\s*"?([^"\n]*)"?\s*$', line)
-        if m:
-            return m.group(1).strip()
+        v = _scalar_match(rf"^{key}:\s*", line)
+        if v is not None and re.match(rf"^{key}:\s*\S", line):
+            return v
     return default
 
 
-def get_library_id_type(lines):
-    lib_id, lib_type = "", ""
+def get_library_meta(lines):
+    """Return (library.id, library.type, library.include) from the `library:` block."""
+    lib_id, lib_type, lib_include = "", "", False
     in_lib = False
     for line in lines:
         if re.match(r"^library:\s*$", line):
@@ -72,13 +114,21 @@ def get_library_id_type(lines):
         if in_lib:
             if re.match(r"^\S", line):
                 break
-            m = re.match(r'^\s*id:\s*"?([\w-]+)"?', line)
+            m = re.match(r'^\s*id:\s*', line)
             if m:
-                lib_id = m.group(1)
-            m = re.match(r'^\s*type:\s*"?([\w-]+)"?', line)
+                v = _scalar_match(r"^\s*id:\s*", line)
+                if v:
+                    lib_id = v
+                continue
+            m = re.match(r'^\s*type:\s*', line)
             if m:
-                lib_type = m.group(1)
-    return lib_id, lib_type
+                v = _scalar_match(r"^\s*type:\s*", line)
+                if v:
+                    lib_type = v
+                continue
+            if re.match(r"^\s*include:\s*true\s*$", line):
+                lib_include = True
+    return lib_id, lib_type, lib_include
 
 
 def parse_images(lines):
@@ -87,6 +137,7 @@ def parse_images(lines):
     in_images = False
     cur = None
     in_rights = False
+    in_use = False
     for line in lines:
         if re.match(r"^images:\s*$", line):
             in_images = True
@@ -94,44 +145,76 @@ def parse_images(lines):
         if in_images:
             if re.match(r"^\S", line):  # next top-level key — images block over
                 break
-            item_start = re.match(r'^\s{2}-\s*file:\s*"([^"]*)"', line)
+            item_start = re.match(r'^\s{2}-\s*file:\s*', line)
             if item_start:
                 if cur:
                     images.append(cur)
-                cur = {"file": item_start.group(1)}
+                file_ = _scalar_match(r'^\s{2}-\s*file:\s*', line) or ""
+                cur = {"file": file_}
                 in_rights = False
+                in_use = False
                 continue
             if cur is None:
                 continue
             if re.match(r"^\s{4}rights:\s*$", line):
-                in_rights = True
+                in_rights, in_use = True, False
                 continue
-            if in_rights:
-                m = re.match(r'^\s{6}status:\s*"?([\w-]+)"?', line)
-                if m:
-                    cur["rights_status"] = m.group(1)
-                    continue
-                m = re.match(r'^\s{6}note:\s*"([^"]*)"', line)
-                if m:
-                    cur["rights_note"] = m.group(1)
-                    continue
+            if re.match(r"^\s{4}use:\s*$", line):
+                in_rights, in_use = False, True
+                continue
+            if in_rights or in_use:
                 if not re.match(r"^\s{6}\S", line):
-                    in_rights = False
+                    in_rights = in_use = False
+                else:
+                    prefix = "rights_" if in_rights else "use_"
+                    v = _scalar_match(r"^\s{6}status:\s*", line)
+                    if in_rights and v is not None and re.match(r"^\s{6}status:\s*\S", line):
+                        cur[prefix + "status"] = v
+                        continue
+                    v = _scalar_match(r"^\s{6}basis:\s*", line)
+                    if in_use and v is not None and re.match(r"^\s{6}basis:\s*\S", line):
+                        cur[prefix + "basis"] = v
+                        continue
+                    v = _scalar_match(r"^\s{6}note:\s*", line)
+                    if v is not None and re.match(r"^\s{6}note:\s*\S", line):
+                        cur[prefix + "note"] = v
+                        continue
             for key in ("alt", "role", "caption", "credit", "source", "anchor"):
-                m = re.match(rf'^\s{{4}}{key}:\s*"([^"]*)"', line)
-                if m:
-                    cur[key] = m.group(1)
-                    break
+                if re.match(rf"^\s{{4}}{key}:\s*\S", line):
+                    v = _scalar_match(rf"^\s{{4}}{key}:\s*", line)
+                    if v is not None:
+                        cur[key] = v
+                        break
             else:
-                m = re.match(r"^\s{4}decorative:\s*true", line)
-                if m:
+                if re.match(r"^\s{4}decorative:\s*true", line):
                     cur["decorative"] = True
     if cur:
         images.append(cur)
     return images
 
 
-def audit_image(entry_path, entry_id, im, img_rights_vocab):
+def find_entries():
+    """Yield (path, front_matter_lines, library_id) for every catalog entry,
+    matching the Hugo validator's selection: content/library/* bundles, plus
+    any other page anywhere in content/ with library.include: true."""
+    for md in sorted(CONTENT_DIR.rglob("*.md")):
+        if md.name == "_index.md":
+            continue
+        text = md.read_text()
+        lines = parse_front_matter(text)
+        if get_scalar(lines, "draft") == "true":
+            continue
+        lib_id, lib_type, lib_include = get_library_meta(lines)
+        rel = md.relative_to(CONTENT_DIR)
+        in_library_section = rel.parts[0] == "library"
+        if not (in_library_section or lib_include):
+            continue
+        if not lib_id:
+            continue
+        yield md, lines, lib_id
+
+
+def audit_image(entry_path, im, img_rights_vocab, img_use_vocab):
     errors, warnings = [], []
     file_ = im.get("file", "")
     if file_ and not (entry_path.parent / file_).exists():
@@ -151,23 +234,28 @@ def audit_image(entry_path, entry_id, im, img_rights_vocab):
             warnings.append(f"source is a raw image file, not a contextual page: {src!r}")
 
     status = im.get("rights_status", "")
-    note = im.get("rights_note", "")
+    rnote = im.get("rights_note", "")
     if status:
         if status not in img_rights_vocab:
             errors.append(f"invalid rights.status {status!r}")
-        if status in ("licensed", "permitted") and not note:
+        if status in ("licensed", "permitted") and not rnote:
             errors.append(f"rights.status {status!r} has no note")
         if status == "public-domain" and not src:
             errors.append("rights.status public-domain with no source")
         if status == "unknown":
             warnings.append("rights status is unknown")
 
+    basis = im.get("use_basis", "")
+    if basis and basis not in img_use_vocab:
+        errors.append(f"invalid use.basis {basis!r}")
+
     credit = im.get("credit", "")
     if credit and credit.strip().lower() in PLATFORM_NAMES:
         warnings.append(f"credit {credit!r} names a platform, not a creator")
     if not src and status != "sarc-owned":
         warnings.append("no source recorded")
-    if im.get("role") == "cover" and not im.get("caption") and not credit and not note:
+    use_note = im.get("use_note", "")
+    if im.get("role") == "cover" and not im.get("caption") and not credit and not rnote and not use_note:
         warnings.append("cover doesn't identify its edition")
 
     return errors, warnings
@@ -175,7 +263,14 @@ def audit_image(entry_path, entry_id, im, img_rights_vocab):
 
 def main():
     strict = "--strict" in sys.argv
-    img_rights_vocab = load_image_rights_vocab()
+    img_rights_vocab = load_vocab(
+        "image_rights_status",
+        {"sarc-owned", "public-domain", "licensed", "permitted", "unknown"},
+    )
+    img_use_vocab = load_vocab(
+        "image_use_basis",
+        {"identification", "editorial", "promotional", "fair-use", "archival"},
+    )
 
     rows = []
     total_images = 0
@@ -187,26 +282,21 @@ def main():
     error_count = 0
     warning_count = 0
 
+    entries = list(find_entries())
+
     source_tally = {}
-    for md in sorted(LIB_DIR.glob("*/index.md")):
-        lines = parse_front_matter(md.read_text())
+    for md, lines, entry_id in entries:
         for im in parse_images(lines):
             src = im.get("source", "")
             if src:
                 source_tally[src] = source_tally.get(src, 0) + 1
 
-    for md in sorted(LIB_DIR.glob("*/index.md")):
-        text = md.read_text()
-        lines = parse_front_matter(text)
-        if get_scalar(lines, "draft") == "true":
-            continue
-        lib_id, lib_type = get_library_id_type(lines)
-        entry_id = lib_id or md.parent.name
+    for md, lines, entry_id in entries:
         images = parse_images(lines)
 
         for im in images:
             total_images += 1
-            errors, warnings = audit_image(md, entry_id, im, img_rights_vocab)
+            errors, warnings = audit_image(md, im, img_rights_vocab, img_use_vocab)
 
             src = im.get("source", "")
             if src and source_tally.get(src, 0) > 1:
@@ -243,12 +333,17 @@ def main():
         cells = [str(c)[:w].ljust(w) for c, w in zip(row[:6], widths)]
         print("  ".join(cells) + "  " + row[6])
 
-    print(f"\n{total_images} images audited", file=sys.stderr)
+    print(f"\n{len(entries)} catalog entries scanned "
+          f"(content/library/* plus any library.include: true pages)", file=sys.stderr)
+    print(f"{total_images} images audited", file=sys.stderr)
     print(f"{with_source} with source recorded", file=sys.stderr)
     print(f"{with_known_credit} with a non-platform credit", file=sys.stderr)
     print(f"{unresolved_credit} with an unresolved (platform-name) credit", file=sys.stderr)
     print(f"{unresolved_rights} with no/unknown rights status", file=sys.stderr)
-    print(f"{error_count} hard errors, {warning_count} warnings", file=sys.stderr)
+    print(f"{error_count} hard errors, {warning_count} warnings "
+          f"(a single image can trigger more than one warning category, so "
+          f"this total will not equal the count of images with warnings)",
+          file=sys.stderr)
     if needs_research:
         print(f"{len(needs_research)} images still need manual research:", file=sys.stderr)
         for r in needs_research:
