@@ -18,6 +18,7 @@ images:
   - file: "cover.jpg"
     alt: "Cover of Music and Trance by Gilbert Rouget"
     role: cover
+    anchor: Bottom
 
 access:
   - label: "Internet Archive"
