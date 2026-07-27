@@ -259,14 +259,20 @@
 
   // `fromNav` is true only when called right after fromURL() (initial load or
   // popstate) — see the two call sites at the bottom of this file. Only then
-  // do we force the disclosure open for an active filter, so a shared
-  // filtered link (or Back/Forward into one) doesn't hide its own
-  // explanation; an ordinary chip click never touches `open`, so it doesn't
-  // fight a visitor who's already opened or closed the panel themselves.
+  // do we set `open` explicitly (matching whether a filter is active), so a
+  // shared filtered link (or Back/Forward into one) doesn't hide its own
+  // explanation. This is deliberately unconditional (not "only force true"):
+  // browsers restore a <details> element's open/closed state across a normal
+  // reload/history navigation on their own (like scroll position or a form
+  // field), independent of any server-rendered attribute — so an unfiltered
+  // reload could otherwise show it open just because it was last left open.
+  // Setting `open` here on every nav-triggered apply() overrides that. An
+  // ordinary chip click never touches `open`, so it doesn't fight a visitor
+  // who's already opened or closed the panel themselves mid-session.
   function apply(fromNav) {
     var anyFilter = sel.type.length > 0 || sel.subject.length > 0;
     if (allHead) allHead.textContent = anyFilter ? "Matching entries" : "All entries";
-    if (fromNav && anyFilter && "open" in form) form.open = true;
+    if (fromNav && "open" in form) form.open = anyFilter;
 
     var shown = 0;
     records.forEach(function (rec) {

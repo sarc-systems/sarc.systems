@@ -8,12 +8,12 @@
     {{- with .Content }}<div class="page-intro">{{ . }}</div>{{ end }}
   </header>
 
+  {{ partial "library-random.html" . }}
+
   <div class="library-controls">
     {{ partial "library-filters.html" (dict "pages" $entries) }}
     {{ partial "library-view-switch.html" . }}
   </div>
-
-  {{ partial "library-random.html" . }}
 
   <h2 class="library-all-head" id="all-entries">All entries</h2>
   {{- with $entries }}

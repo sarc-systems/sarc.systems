@@ -74,12 +74,12 @@ research collection and small knowledge graph, not a set of sections. Every
 durable thing SARC wants to identify, annotate, connect, or point toward is an
 entry (essays, books, manuals, people, groups, recordings, releases, websites,
 systems, …). Type, subject, and access are metadata and **filters**, never shelves. The
-landing puts the **View** switch and **Type/Subject filters** (collapsed by
-default behind a native disclosure) first,
-then a chance-picked "From the Library" entry, then the full ruled catalog —
-in that order because the controls define one field, and the chance pick and
-the catalog below it are both sampled/filtered from that exact same field
-(one matching-set computation, not two). A Catalog/Images view switch presents
+landing shows a chance-picked "From the Library" entry, then the **View**
+switch and **Type/Subject filters** (collapsed by default behind a native
+disclosure), then the full ruled catalog. The controls render below the
+chance panel but still define its field: the chance pick and the catalog
+below it are both sampled/filtered from that exact same field (one
+matching-set computation, not two) regardless of DOM order. A Catalog/Images view switch presents
 the same filtered entries as a thumbnail-only grid instead of full records —
 same images, same crop, same order, filters and URL state shared with Catalog.
 **Images is the default view** (`?view=catalog` opts back into the ruled

@@ -443,25 +443,29 @@ composer's `part-of GRM` shows as *Member* on GRM) — so declare an affiliation
 once, on either side. Creator attribution uses `creators`, never `related`.
 Partials: `library-{creators,works,related}.html`.
 
-**Landing** (`layouts/library/list.html`): intro → **View** switch → **Filters**
-(Type/Subject, Clear, result count — collapsed by default behind a native
-`<details>`/`<summary>`, no custom disclosure JS; `library-filter.js` opens it
-automatically only when the URL already carries an active filter, so a shared
-filtered link isn't hiding its own explanation) → **From the Library** (one
-entry sampled from whatever the controls above currently define) → **All
-entries** (ruled records with thumbnails). The controls sit *above* the chance
-panel deliberately: View/Type/Subject define one field, and both the chance
-panel and the complete results beneath it are sampled/filtered from that same
-field — there is exactly one matching-set computation
-(`library-filter.js`'s `matchesFields`/`matchesDataset`/`matchesEntry`), never
-a separate one for the random pick. **Filter** by type + subject: OR within a
-facet, AND across; shareable `?type=a,b&subject=c`; history-aware; Clear;
-polite `aria-live` count. Without JS the whole catalog
-is visible and the filter form/view switch are hidden (CSS-gated on
-`data-nojs`), and the chance panel stands as its unfiltered deterministic
-fallback (`featured: true` or first) since there's no client-side filtering to
-apply it to. Records carry `data-type` / `data-subjects` / `data-sarc` /
-`data-library-id`.
+**Landing** (`layouts/library/list.html`): intro → **From the Library** (one
+entry sampled from whatever the controls below currently define) →
+**View**/**Filters** (`.library-controls` — Type/Subject, Clear, result count,
+and the View switch share one flex row, View pinned top-right so opening the
+Filter disclosure only grows the Filter column, not the whole row; Filter is
+collapsed by default behind a native `<details>`/`<summary>`, no custom
+disclosure JS; `library-filter.js` sets `open` explicitly on every
+load/history navigation — true when the URL already carries an active filter,
+false otherwise, overriding whatever a browser's own reload/history-state
+restoration would otherwise leave it at) → **All entries** (ruled records with
+thumbnails). Even though the controls render *below* the chance panel, they
+still define its field: View/Type/Subject define one matching set, and both
+the chance panel and the complete results are sampled/filtered from that same
+set — there is exactly one matching-set computation (`library-filter.js`'s
+`matchesFields`/`matchesDataset`/`matchesEntry`), never a separate one for the
+random pick; DOM position doesn't change that coupling. **Filter** by type +
+subject: OR within a facet, AND across; shareable `?type=a,b&subject=c`;
+history-aware; Clear; polite `aria-live` count. Without JS the whole catalog
+is visible and `.library-controls` (Filter + View) is hidden entirely
+(CSS-gated on `data-nojs`), and the chance panel stands as its unfiltered
+deterministic fallback (`featured: true` or first) since there's no
+client-side filtering to apply it to. Records carry `data-type` /
+`data-subjects` / `data-library-id`.
 
 **Catalog / Images view switch.** A presentation toggle, not a second page or a
 gallery — it changes what's visible, never the image itself. **Catalog** is the
