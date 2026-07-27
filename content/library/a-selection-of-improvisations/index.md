@@ -1,6 +1,6 @@
 ---
 title: "A Selection of Improvisations (1989-2017)"
-summary: "Hans Kulk's revised-edition compilation of nearly three decades of personal analog synthesizer improvisations, as Telesoniek Atelier."
+summary: "Hans Kulk's revised-edition compilation of nearly three decades of personal analog synthesizer improvisations."
 year: 1989
 
 library:

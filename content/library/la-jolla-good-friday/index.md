@@ -12,7 +12,7 @@ creators:
   - name: "Thorkell Sigurbjörnsson"
     role: composer
 
-subjects: [sound]
+subjects: [sound, tuning]
 
 images:
   - file: "cover.jpg"

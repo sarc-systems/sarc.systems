@@ -15,6 +15,12 @@ creators:
 
 subjects: [language, form, memory]
 
+images:
+  - file: "cover.jpg"
+    alt: "Cover of Tlön, Uqbar, Orbis Tertius by Jorge Luis Borges, illustrated by Rikki"
+    role: cover
+    credit: "Goodreads"
+
 draft: false
 ---
 
