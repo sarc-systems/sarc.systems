@@ -1,0 +1,36 @@
+{{- /* Build-time validation for data/homepage_quotes.yaml — the homepage
+       editorial quote collection (not part of the Library; see CLAUDE.md
+       § Homepage quote). Runs once per build via partialCached from head.html,
+       regardless of page. */ -}}
+{{- $quotes := site.Data.homepage_quotes | default slice -}}
+{{- $ids := slice -}}
+{{- $texts := slice -}}
+{{- range $i, $q := $quotes -}}
+  {{- $n := add $i 1 -}}
+  {{- if not $q.id }}{{ errorf "Homepage quote #%d has no id" $n }}{{ end -}}
+  {{- if and $q.id (in $ids $q.id) }}{{ errorf "Homepage quote #%d reuses id %q — ids must be unique" $n $q.id }}{{ end -}}
+  {{- if $q.id }}{{ $ids = $ids | append $q.id }}{{ end -}}
+  {{- if not $q.text }}{{ errorf "Homepage quote %q has no text" (default (string $n) $q.id) }}{{ end -}}
+  {{- if not $q.author }}{{ errorf "Homepage quote %q has no author" (default (string $n) $q.id) }}{{ end -}}
+  {{- if not $q.citation }}{{ errorf "Homepage quote %q has no citation (a verification note is required, even if unresolved)" (default (string $n) $q.id) }}{{ end -}}
+  {{- if and (isset $q "enabled") (ne (printf "%T" $q.enabled) "bool") }}{{ errorf "Homepage quote %q has a non-boolean enabled value" $q.id }}{{ end -}}
+
+  {{- with $q.source_url -}}
+    {{- if not (findRE "^https?://" .) }}{{ errorf "Homepage quote %q has a malformed source_url %q (must be an absolute http(s) URL)" $q.id . }}{{ end -}}
+    {{- if strings.Contains . "google.com" }}{{ errorf "Homepage quote %q source_url %q is a Google URL — cite the actual origin page" $q.id . }}{{ end -}}
+    {{- if findRE "^https?://[^/]+/?$" . }}{{ errorf "Homepage quote %q source_url %q is a bare homepage — link the exact record/page instead" $q.id . }}{{ end -}}
+  {{- end -}}
+
+  {{- with $q.library_ref -}}
+    {{- $matches := where site.RegularPages "Params.library.id" . -}}
+    {{- if ne (len $matches) 1 }}{{ errorf "Homepage quote %q has library_ref %q that does not resolve to exactly one published Library entry" $q.id . }}{{ end -}}
+  {{- end -}}
+
+  {{- if $q.text -}}
+    {{- $norm := lower (strings.TrimSpace (replaceRE `\s+` " " $q.text)) -}}
+    {{- if in $texts $norm }}{{ errorf "Homepage quote %q duplicates the text of an earlier quote (after normalizing whitespace/case)" $q.id }}{{ end -}}
+    {{- $texts = $texts | append $norm -}}
+    {{- $words := len (strings.Split $norm " ") -}}
+    {{- if gt $words 30 }}{{ warnf "Homepage quote %q is %d words — the editorial guideline is roughly 5-25 words" $q.id $words }}{{ end -}}
+  {{- end -}}
+{{- end -}}

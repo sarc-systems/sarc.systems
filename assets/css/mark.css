@@ -85,13 +85,30 @@
   margin: 0;
   color: var(--paper);
 }
-.inst-statement {
+/* Homepage editorial quote (replaces the old static discipline line) — same
+   position/measure as the former .inst-statement, same link treatment as the
+   rest of the masthead plate. Restrained: no card, no ornamental quotation
+   marks (the quote text carries its own “ ” characters, once), no
+   oversized pull-quote type, no animation. */
+.home-quote {
   max-width: var(--measure);
   margin: 1rem auto 0;
-  color: #cfc9ba;
+  border: 0;
+  padding: 0;
+}
+.home-quote__text {
+  font-family: var(--font-serif);
   font-size: var(--t-md);
   line-height: 1.5;
+  color: #cfc9ba;
+  margin: 0;
 }
-.inst-statement p { margin: 0 0 0.7em; }
-.inst-statement a { color: var(--paper); text-decoration-thickness: 1px; }
-.inst-statement a:hover { color: #fff; }
+.home-quote__attribution {
+  margin-top: 0.5rem;
+  font-family: var(--font-sans);
+  font-size: var(--t-sm);
+  color: #cfc9ba;
+}
+.home-quote__attribution cite { font-style: italic; }
+.home-quote__attribution a { color: var(--paper); text-decoration-thickness: 1px; }
+.home-quote__attribution a:hover { color: #fff; }

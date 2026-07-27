@@ -10,7 +10,7 @@
          No "Enter" screen. */ -}}
   <div class="masthead-inst">
     <h1 class="inst-name">Studio for Advanced Research in Cybernetics</h1>
-    {{- with .Content }}<div class="inst-statement">{{ . }}</div>{{ end }}
+    {{ partial "homepage-quote.html" . }}
   </div>
 </section>
 

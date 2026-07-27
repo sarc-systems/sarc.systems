@@ -1,0 +1,26 @@
+{{- /* Homepage editorial quote — replaces the old static discipline line
+       ("computation · nonlinear dynamics · feedback · synthesis") beneath the
+       mark. One SARC-curated quotation, chosen client-side and stable for
+       the browser session; optionally links into the Library but is never
+       part of it (not a Library entry, never in index.json/filters/random —
+       see data/homepage_quotes.yaml and CLAUDE.md § Homepage quote).
+       No-JS fallback: the first enabled quote (deterministic — Hugo builds
+       are static, so "random" here would just mean "random once, at build
+       time," which is not session-stable and not what's wanted). With JS,
+       homepage-quote.js reads the embedded JSON below (no fetch) and
+       replaces this fallback — via an inline, non-deferred script so it runs
+       as the parser reaches this point, before the fallback quote has a
+       chance to visibly paint. Context: unused (reads site.Data directly via
+       the two sub-partials below). */ -}}
+{{- $quotes := partial "homepage-quotes-resolve.html" . -}}
+{{- with $quotes -}}
+{{- $first := index . 0 -}}
+<blockquote class="home-quote" id="home-quote" data-quote-id="{{ $first.id }}">
+  <p class="home-quote__text">“{{ $first.text }}”</p>
+  <footer class="home-quote__attribution">{{ partial "homepage-quote-attribution.html" $first }}</footer>
+</blockquote>
+<script type="application/json" id="homepage-quotes-data">{{ . | jsonify | safeJS }}</script>
+{{- $j := resources.Get "js/homepage-quote.js" -}}
+{{- if hugo.IsProduction }}{{ $j = $j | minify }}{{ end -}}
+<script>{{ $j.Content | safeJS }}</script>
+{{- end -}}

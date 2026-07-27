@@ -1,0 +1,69 @@
+# Homepage editorial quotes — see CLAUDE.md § Homepage quote and
+# layouts/partials/homepage-quote.html. This is homepage editorial content,
+# not part of the Library: quotes are never Library entries, never stored in
+# Library front matter, and never affect Library filters/counts/JSON/random
+# selection. `library_ref` is an optional, one-way pointer INTO the Library
+# (validated to resolve — see homepage-quotes-validate.html) — it does not
+# make the quote part of the catalog.
+#
+# Fields: id (required, unique, stable, kebab-case — session storage and the
+# client script key on this, never on array position or on `text`), text
+# (required), author (required), work (optional), year (optional), citation
+# (required — an editorial verification note for maintainers, not shown on
+# the page), source_url (optional, the exact source page — never a bare
+# homepage or search result), library_ref (optional, another entry's
+# library.id), enabled (optional, default true).
+#
+# Quality over quantity: a small, carefully verified set. Wording believed
+# accurate for all of these; exact original page/edition citations are
+# intentionally left as open editorial notes below rather than guessed.
+
+- id: posiwid
+  text: "The purpose of a system is what it does."
+  author: "Stafford Beer"
+  work: ""
+  year:
+  citation: "Beer's own formulation (the acronym POSIWID is his coinage), widely repeated across his talks and writing from the 1970s on; exact first print source not yet pinned down."
+  source_url:
+  library_ref:
+  enabled: true
+
+- id: difference-that-makes-a-difference
+  text: "Information is a difference that makes a difference."
+  author: "Gregory Bateson"
+  work: "Steps to an Ecology of Mind"
+  year: 1972
+  citation: "Steps to an Ecology of Mind (1972); a recurring formulation across several essays in the collection (e.g. \"Form, Substance and Difference\"); exact page varies by edition."
+  source_url:
+  library_ref:
+  enabled: true
+
+- id: variety-destroys-variety
+  text: "Only variety can destroy variety."
+  author: "W. Ross Ashby"
+  work: "An Introduction to Cybernetics"
+  year: 1956
+  citation: "An Introduction to Cybernetics (1956), stating the Law of Requisite Variety; exact page not yet pinned down."
+  source_url:
+  library_ref:
+  enabled: true
+
+- id: patterns-that-perpetuate
+  text: "We are not stuff that abides, but patterns that perpetuate themselves."
+  author: "Norbert Wiener"
+  work: "The Human Use of Human Beings"
+  year: 1950
+  citation: "The Human Use of Human Beings: Cybernetics and Society (1950); exact page/edition not yet verified."
+  source_url:
+  library_ref:
+  enabled: true
+
+- id: objectivity-subjects-delusion
+  text: "Objectivity is a subject's delusion that observing can be done without him."
+  author: "Heinz von Foerster"
+  work: ""
+  year:
+  citation: "A recurring aphorism across von Foerster's writing and talks on second-order cybernetics; exact first print source not yet pinned down."
+  source_url:
+  library_ref:
+  enabled: true

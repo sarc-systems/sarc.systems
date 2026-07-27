@@ -1,0 +1,18 @@
+{{- /* Attribution line for one resolved homepage quote (see
+       homepage-quotes-resolve.html for the dict shape and the link_target
+       rule). Context: the quote dict. Mirrored in assets/js/homepage-quote.js
+       for whichever quote the client picks — kept in sync intentionally,
+       same duplication pattern as library-featured.html/cardHTML(). The
+       Library link (if any) and the external source link (if any) are
+       always distinct <a> elements, never the same link doing double duty. */ -}}
+{{- $q := . -}}
+{{- if eq $q.link_target "full" -}}
+— <a href="{{ $q.library_url }}">{{ $q.author }}{{ with $q.work }}, <cite>{{ . }}</cite>{{ end }}</a>
+{{- else if eq $q.link_target "author" -}}
+— <a href="{{ $q.library_url }}">{{ $q.author }}</a>{{ with $q.work }}, <cite>{{ . }}</cite>{{ end }}
+{{- else if eq $q.link_target "work" -}}
+— {{ $q.author }}{{ with $q.work }}, <cite><a href="{{ $q.library_url }}">{{ . }}</a></cite>{{ end }}
+{{- else -}}
+— {{ $q.author }}{{ with $q.work }}, <cite>{{ . }}</cite>{{ end }}
+{{- end -}}
+{{- with $q.source_url }} · <a href="{{ . }}" target="_blank" rel="noopener">Source <span aria-hidden="true">↗</span></a>{{ end -}}

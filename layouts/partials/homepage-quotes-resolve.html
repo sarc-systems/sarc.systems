@@ -1,0 +1,42 @@
+{{- /* Resolve data/homepage_quotes.yaml into enabled, render-ready quotes.
+       Each dict gets library_url + link_target ("work" | "author" | "full" |
+       "") computed here once, so neither the SSR fallback nor the client
+       script needs any Library vocabulary/relationship lookups of its own:
+       - "work"   when the quote names a `work` (assumed to be the entry)
+       - "author" when the resolved entry is a `person` and no work is named
+       - "full"   library_ref resolves but neither of the above applies
+       - ""       no library_ref at all — no link
+       See CLAUDE.md § Homepage quote for the full rule. This never touches
+       the Library catalog itself (read-only lookup by library.id) and the
+       quote collection is never added back into it.
+       Returns a slice of dicts: id, text, author, work, source_url,
+       library_url, link_target. No context needed.
+       Call: {{ partial "homepage-quotes-resolve.html" . }} */ -}}
+{{- $out := slice -}}
+{{- range site.Data.homepage_quotes -}}
+  {{- $q := . -}}
+  {{- if ne $q.enabled false -}}
+    {{- $libURL := "" }}{{ $libType := "" -}}
+    {{- with $q.library_ref -}}
+      {{- with (where site.RegularPages "Params.library.id" .) -}}
+        {{- $libURL = (index . 0).RelPermalink -}}
+        {{- $libType = (index . 0).Params.library.type -}}
+      {{- end -}}
+    {{- end -}}
+    {{- $linkTarget := "" -}}
+    {{- if $libURL -}}
+      {{- if $q.work }}{{ $linkTarget = "work" -}}
+      {{- else if eq $libType "person" }}{{ $linkTarget = "author" -}}
+      {{- else }}{{ $linkTarget = "full" }}{{ end -}}
+    {{- end -}}
+    {{- $out = $out | append (dict
+        "id" $q.id
+        "text" $q.text
+        "author" $q.author
+        "work" (default "" $q.work)
+        "source_url" (default "" $q.source_url)
+        "library_url" $libURL
+        "link_target" $linkTarget) -}}
+  {{- end -}}
+{{- end -}}
+{{- return $out -}}
