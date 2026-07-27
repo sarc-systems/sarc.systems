@@ -9,6 +9,13 @@ library:
 
 subjects: [sound, technology]
 
+images:
+  - file: "morton-subotnick.jpg"
+    alt: "Morton Subotnick beside a modular synthesizer"
+    role: portrait
+    credit: "Tape Op"
+    source: "https://images.tapeop.com/9e68c55c-0463-4fa4-b262-96375dc1d386"
+
 draft: false
 ---
 

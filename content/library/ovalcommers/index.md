@@ -11,7 +11,6 @@ library:
 creators:
   - name: "Oval"
     role: artist
-    ref: oval
 
 subjects: [sound, technology]
 

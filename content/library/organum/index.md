@@ -9,6 +9,12 @@ library:
 
 subjects: [sound, perception]
 
+images:
+  - file: "organum.jpg"
+    alt: "Illustrated release artwork for Organum: a stylized face surrounded by rose illustrations"
+    credit: "Discogs"
+    source: "https://www.discogs.com/"
+
 draft: false
 ---
 

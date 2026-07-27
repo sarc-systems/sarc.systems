@@ -9,6 +9,11 @@ library:
 
 subjects: [sound, perception]
 
+images:
+  - file: "susumu-yokota.png"
+    alt: "Susumu Yokota seated at home holding a Moog Rogue synthesizer, surrounded by studio equipment"
+    role: portrait
+
 access:
   - label: "Official website"
     kind: website

@@ -9,6 +9,12 @@ library:
 
 subjects: [sound, perception, technology]
 
+images:
+  - file: "pierre-schaeffer.jpg"
+    alt: "Pierre Schaeffer seated at a studio console"
+    role: portrait
+    credit: "Google"
+
 related:
   - ref: grm
     relation: part-of

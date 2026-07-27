@@ -11,7 +11,6 @@ library:
 creators:
   - name: "Mike Ratledge"
     role: composer
-    ref: mike-ratledge
 
 subjects: [sound, technology]
 

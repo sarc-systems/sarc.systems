@@ -15,6 +15,12 @@ creators:
 
 subjects: [sound, time]
 
+images:
+  - file: "fontana-mix-score.png"
+    alt: "Overlaid transparent score sheets for Fontana Mix, showing grids, dotted curves, and point patterns"
+    role: diagram
+    source: "https://miro.medium.com/max/652/1*XNz5CNGr7meFZ_lRPgl9fQ.png"
+
 access:
   - label: "Audio realization (Medien Kunst Netz)"
     kind: audio

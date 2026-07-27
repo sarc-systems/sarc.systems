@@ -9,6 +9,14 @@ library:
 
 subjects: [sound, technology]
 
+images:
+  - file: "tod-dockstader.jpg"
+    alt: "Tod Dockstader beside reel-to-reel tape machines in a studio"
+    role: portrait
+    anchor: Top
+    credit: "New Music USA"
+    source: "https://newmusicusa.org/wp-content/uploads/2015/03/Dockstader-Gotham-2.jpg"
+
 draft: false
 ---
 

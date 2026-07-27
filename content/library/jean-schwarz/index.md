@@ -9,6 +9,13 @@ library:
 
 subjects: [sound, space]
 
+images:
+  - file: "jean-schwarz.jpg"
+    alt: "Jean Schwarz at a mixing console in a studio"
+    role: portrait
+    credit: "Spotify"
+    source: "https://i.scdn.co/image/ab6761610000e5eb1d32096e5f33aa5bfa21c722"
+
 related:
   - ref: grm
     relation: part-of

@@ -9,6 +9,14 @@ library:
 
 subjects: [sound, technology, time]
 
+images:
+  - file: "delia-derbyshire.jpg"
+    alt: "Delia Derbyshire seated among tape machines and oscillators at the BBC Radiophonic Workshop"
+    role: portrait
+    anchor: Left
+    credit: "SoundGirls"
+    source: "https://soundgirls.org/wp-content/uploads/2019/03/DD2.jpg"
+
 draft: false
 ---
 

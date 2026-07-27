@@ -11,9 +11,14 @@ library:
 creators:
   - name: "Jean Piché"
     role: composer
-    ref: jean-piche
 
 subjects: [sound, time]
+
+images:
+  - file: "cover.jpg"
+    alt: "Cover of Heliograms by Jean Piché"
+    role: cover
+    credit: "Amoeba Music"
 
 access:
   - label: "YouTube (from Jean Piché - Heliograms)"

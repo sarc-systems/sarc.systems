@@ -9,6 +9,12 @@ library:
 
 subjects: [sound, technology]
 
+images:
+  - file: "pete-namlook.jpg"
+    alt: "Pete Namlook seated among racks of synthesizers and keyboards in his studio"
+    role: portrait
+    source: "https://a.radikal.ru/a21/1910/9b/800186131113.jpg"
+
 related:
   - ref: fax-records
     relation: part-of

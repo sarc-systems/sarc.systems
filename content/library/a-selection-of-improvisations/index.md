@@ -11,7 +11,6 @@ library:
 creators:
   - name: "Hans Kulk"
     role: artist
-    ref: hans-kulk
 
 subjects: [sound, instruments]
 

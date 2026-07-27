@@ -9,6 +9,12 @@ library:
 
 subjects: [sound, perception]
 
+images:
+  - file: "jon-hassell.jpg"
+    alt: "Jon Hassell playing trumpet through an effects rig, mixing console in the foreground"
+    role: portrait
+    anchor: Right
+
 access:
   - label: "Bandcamp"
     kind: bandcamp

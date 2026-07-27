@@ -11,7 +11,6 @@ library:
 creators:
   - name: "John McGuire"
     role: composer
-    ref: john-mcguire
 
 subjects: [sound, time, number]
 

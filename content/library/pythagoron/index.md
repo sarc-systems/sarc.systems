@@ -1,15 +1,37 @@
 ---
 title: "Pythagoron"
-summary: "Mysterious late-1970s project releasing sound described as engineered to alter brainwave states, possibly connected to the collective USCO."
+summary: "The sole, privately issued 1977 album from Pythagoron, sold via mail-order as sound for altering brainwave states."
+year: 1977
 
 library:
   id: pythagoron
-  type: group
+  type: release
   sarc_work: false
 
+creators:
+  - name: "Pythagoron"
+    role: artist
+
 subjects: [sound, perception, technology]
+
+images:
+  - file: "cover.jpg"
+    alt: "Cover of the self-titled Pythagoron album, a blue geometric pattern of interlocking triangles"
+    role: cover
+    credit: "Discogs"
+
+access:
+  - label: "Discogs"
+    kind: catalog-record
+    url: "https://www.discogs.com/release/833776-Pythagoron-Pythagoron"
+  - label: "Bandcamp (2020 reissue, Wah Wah Records)"
+    kind: bandcamp
+    url: "https://wahwahrecords.bandcamp.com/album/pythagoron"
+
+aliases:
+  - /library/pythagoron-1977/
 
 draft: false
 ---
 
-Pythagoron is the name behind a single privately issued 1977 album of psychedelic electronic drone, marketed as sound engineered through research into brainwave entrainment. The identities behind it remain unconfirmed, though it is thought to be connected to USCO (The Company of Us), an early multimedia art collective.
+Privately issued in 1977 and sold via mail-order advertisements in High Times, this self-titled album is Pythagoron's sole release — dense, tripped-out electronic drone marketed as sound engineered to alter states of awareness.

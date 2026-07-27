@@ -9,6 +9,13 @@ library:
 
 subjects: [sound, computation, tuning]
 
+images:
+  - file: "mark-fell.jpg"
+    alt: "Mark Fell in a cap and glasses against an acoustic-foam wall"
+    role: portrait
+    credit: "Red Bull Music Academy"
+    source: "https://media.redbullmusicacademy.com/assets/601/394/787/markfell-title.jpg"
+
 draft: false
 ---
 
