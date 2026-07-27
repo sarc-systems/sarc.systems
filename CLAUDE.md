@@ -548,9 +548,20 @@ in the repo — deploy credentials live outside it.
 
 ## Performance
 
-Minimal JS, minimal external requests. No autoplay media. No analytics,
-tracking pixels, or cookie banner (nothing to consent to). YouTube via
-click-to-load facade. Optimized images via Hugo image processing.
+Minimal JS, minimal external requests. No autoplay media. No cookie banner
+(nothing to consent to — see Analytics below). YouTube via click-to-load
+facade. Optimized images via Hugo image processing.
+
+## Analytics
+
+**GoatCounter** (`sarc.goatcounter.com`) — one small async script
+(`layouts/_default/baseof.html`, right before `</body>`), no cookies, no
+personal data collected, respects Do Not Track. This is a deliberate,
+narrow exception to "minimal external requests": one script, one request
+per page load, chosen specifically because it doesn't compromise the
+site's privacy posture the way conventional analytics would. Do not add
+any other analytics, tracking pixel, or A/B testing script without the
+same deliberate conversation.
 
 ## Deployment
 
@@ -587,8 +598,10 @@ template edit, the template is wrong.
 
 Store/cart, user accounts, comments, newsletter infrastructure, full-text
 search, interactive SARC-100 simulations, release or artist databases, headless
-CMS, analytics, multiple themes, dark/light toggle, complex animation,
-placeholder pages for unlaunched departments.
+CMS, heavier/conventional analytics beyond the one GoatCounter script (see
+Analytics above — no cookie-based tracking, no ad-tech, no session replay),
+multiple themes, dark/light toggle, complex animation, placeholder pages for
+unlaunched departments.
 
 ## Working rules for Claude Code
 
