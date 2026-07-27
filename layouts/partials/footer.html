@@ -9,8 +9,8 @@
         <li><a href="{{ "/journal/" | relURL }}">Journal</a></li>
         <li><a href="{{ "/library/" | relURL }}">Library</a></li>
         <li><a href="{{ "/about/" | relURL }}">About</a></li>
-        <li><a href="{{ with site.Params.youtube }}{{ . }}{{ end }}" rel="noopener" target="_blank">YouTube ↗</a></li>
-        <li><a href="{{ with site.Params.github }}{{ . }}{{ end }}" rel="noopener" target="_blank">GitHub ↗</a></li>
+        <li><a class="nav-link--icon" href="{{ with site.Params.youtube }}{{ . }}{{ end }}" rel="noopener" target="_blank">{{ partial "icon.html" "youtube" }}<span class="visually-hidden">YouTube</span></a></li>
+        <li><a class="nav-link--icon" href="{{ with site.Params.github }}{{ . }}{{ end }}" rel="noopener" target="_blank">{{ partial "icon.html" "github" }}<span class="visually-hidden">GitHub</span></a></li>
         <li><a href="{{ "/index.xml" | relURL }}">RSS</a></li>
       </ul>
     </nav>

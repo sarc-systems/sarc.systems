@@ -56,6 +56,12 @@
 .nav-menu a[aria-current="page"] { color: var(--ink); }
 .nav-menu a[aria-current="page"] { border-bottom: 2px solid var(--signal); padding-bottom: 2px; }
 .nav-menu .ext { color: var(--gray-2); }
+/* Icon-only nav links (YouTube/GitHub) — stroke: currentColor on the icon
+   itself means it always matches the link's own colour/hover state, same as
+   the text links either side of it. */
+.nav-menu a.nav-link--icon,
+.footer-nav a.nav-link--icon { display: inline-flex; align-items: center; }
+.icon { display: block; }
 
 @media (max-width: 26rem) {
   .site-header-inner { flex-wrap: wrap; gap: 0.5rem 1rem; }

@@ -8,11 +8,18 @@
     <nav class="nav-menu" aria-label="Primary">
       <ul>
         {{- range site.Menus.main -}}
-          {{- $active := or ($.IsMenuCurrent "main" .) ($.HasMenuCurrent "main" .) -}}
+          {{- $entry := . -}}
+          {{- $active := or ($.IsMenuCurrent "main" $entry) ($.HasMenuCurrent "main" $entry) -}}
           <li>
-            <a href="{{ .URL }}"
-               {{- if .Params.external }} rel="noopener" target="_blank"{{ end }}
-               {{- if $active }} aria-current="page"{{ end }}>{{ .Name | upper }}{{ if .Params.external }} <span class="ext" aria-hidden="true">↗</span>{{ end }}</a>
+            <a class="nav-link{{ with $entry.Params.icon }} nav-link--icon{{ end }}" href="{{ $entry.URL }}"
+               {{- if $entry.Params.external }} rel="noopener" target="_blank"{{ end }}
+               {{- if $active }} aria-current="page"{{ end }}>
+              {{- with $entry.Params.icon -}}
+                {{ partial "icon.html" . }}<span class="visually-hidden">{{ $entry.Name }}</span>
+              {{- else -}}
+                {{ $entry.Name | upper }}{{ if $entry.Params.external }} <span class="ext" aria-hidden="true">↗</span>{{ end }}
+              {{- end -}}
+            </a>
           </li>
         {{- end -}}
       </ul>
