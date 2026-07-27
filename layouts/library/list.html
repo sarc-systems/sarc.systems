@@ -8,10 +8,10 @@
     {{- with .Content }}<div class="page-intro">{{ . }}</div>{{ end }}
   </header>
 
-  {{ partial "library-random.html" . }}
-
   {{ partial "library-view-switch.html" . }}
   {{ partial "library-filters.html" (dict "pages" $entries) }}
+
+  {{ partial "library-random.html" . }}
 
   <h2 class="library-all-head" id="all-entries">All entries</h2>
   {{- with $entries }}
@@ -26,7 +26,7 @@
 {{ end }}
 
 {{ define "scripts" }}
-{{- range (slice "js/library-filter.js" "js/library-random.js") -}}
+{{- range (slice "js/library-filter.js") -}}
   {{- with resources.Get . -}}
     {{- $j := . -}}
     {{- if hugo.IsProduction }}{{ $j = $j | minify }}{{ end -}}

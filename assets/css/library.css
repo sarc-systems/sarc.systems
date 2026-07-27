@@ -131,8 +131,8 @@
 /* --- "From the Library" random featured entry ---------------------------- */
 /* A distinct framed panel with a faint Forest wash, clearly set apart from the
    plain catalog list below. */
-/* Tighten the catalog landing head (no eyebrow) so the panel sits close under
-   the intro. */
+/* Tighten the catalog landing head (no eyebrow) so the View/Filter controls
+   sit close under the intro. */
 .library-head { padding-bottom: 0.6rem; }
 .library-random {
   margin: 0.4rem 0 clamp(1.4rem, 3vw, 2rem);
@@ -153,19 +153,28 @@
   border-bottom: 1px solid var(--rule); color: var(--gray-1); cursor: pointer; padding: 0.1em 0;
 }
 .library-random-another:hover { color: var(--signal); border-bottom-color: var(--signal); }
-.library-featured { display: flex; gap: 1.2rem; align-items: stretch; margin-top: 0.8rem; }
-.library-featured-thumb { display: block; }
+.library-featured { display: flex; gap: 1.2rem; align-items: flex-start; margin-top: 0.8rem; }
+.library-featured-thumb { display: block; flex: 0 0 auto; }
+/* Fixed width+height (not height:100%/aspect-ratio derived from the text
+   column's height) so swapping the card on "Select again" can never change
+   the image's box size — the old design let the image's cross-axis size
+   depend on the sibling text's height via a stretched flex row, which meant a
+   shorter/taller summary on the new pick visibly resized the image and the
+   panel's border on every swap. Fixed dimensions mean the box is identical
+   before and after innerHTML is replaced, so only the image itself changes. */
 .library-featured-thumb img {
-  height: 100%; width: auto; aspect-ratio: 1; min-height: 148px; max-height: 220px; object-fit: cover; display: block;
+  width: 200px; height: 200px; object-fit: cover; display: block;
   border: 1px solid var(--rule); background: var(--paper-2);
 }
 /* Images view: the card's text is hidden (library-random.js), leaving just the
    thumbnail — let it read as the panel's focal image rather than the small
-   corner of a text card: centered, and considerably larger. */
+   corner of a text card: centered, and considerably larger. Still a fixed
+   size (viewport-driven via clamp, never content-driven) for the same
+   no-resize-on-swap reason as above. */
 :root[data-library-view="images"] .library-featured { justify-content: center; }
 :root[data-library-view="images"] .library-featured-thumb img {
-  min-height: 220px;
-  max-height: clamp(260px, 40vw, 440px);
+  width: clamp(260px, 40vw, 440px);
+  height: clamp(260px, 40vw, 440px);
 }
 .library-featured-kicker {
   font-family: var(--font-mono); font-size: var(--t-xs); letter-spacing: 0.1em;

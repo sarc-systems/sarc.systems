@@ -1,21 +1,29 @@
-// Library catalog filter + Catalog/Images view switch — progressive
-// enhancement, no dependencies.
+// Library catalog filter + Catalog/Images view switch + chance selection —
+// progressive enhancement, no dependencies.
 // Facets: type (multi, OR), subject (multi, OR), sarc/origin (single). Facets
 // combine with AND: (typeA OR typeB) AND (subjA OR subjB) AND origin.
 // State lives in the URL query string (?type=a,b&subject=c&sarc=true&view=images)
 // so views are shareable and survive back/forward. Without this script the
 // whole catalog is visible (the filter form and view switch are CSS-hidden on
-// the no-JS flag) and there is no Images view at all.
+// the no-JS flag), there is no Images view, and the "From the Library" panel
+// stands as its deterministic server-rendered fallback (unfiltered).
 //
-// The Images view is not a separate page or gallery — it's the same filtered
-// entry collection with two server-rendered presentations (#library-list,
-// the ruled Catalog records; #library-image-index, a thumbnail-only grid —
-// see library-image-index.html, which reuses the exact same processed image
-// as the Catalog thumbnail via library-thumbnail.html). This script only
-// toggles which one is hidden and applies one filter pass to both, so they
-// can never show different entries. It dispatches a `library:view-change`
-// event on `document` on every view change so library-random.js can keep the
-// "From the Library" panel's text visibility in sync.
+// One shared model, not two: View/Type/Subject/Origin define a single field,
+// and both the "From the Library" chance panel and the complete results below
+// it are sampled/filtered from that same field — never independently. This
+// script owns all of it:
+//   - #library-list / #library-image-index (the results — server-rendered
+//     .library-record/.library-image-index__item elements; reused, not
+//     rebuilt, filtered by their data-* attributes)
+//   - #library-random (the chance panel — rebuilt from /library/index.json,
+//     since a result record's DOM doesn't carry everything a featured card
+//     needs; see cardHTML() below, kept in sync with library-featured.html)
+// Filtering the results is synchronous (the DOM is already there). The chance
+// panel depends on an async JSON fetch, so until that resolves, its
+// server-rendered fallback (first `featured: true` entry, or first in catalog
+// order — see library-random.html) stands regardless of active filters; once
+// loaded, it's revalidated against the current field on every change from
+// then on, same as everything else.
 (function () {
   "use strict";
 
@@ -58,20 +66,146 @@
   var chips = Array.prototype.slice.call(form.querySelectorAll(".rf-chip"));
   var clearBtn = form.querySelector(".rf-clear");
   var countEl = form.querySelector(".rf-count");
-  // The "From the Library" random pick is independent of filters, so hide it
-  // while any filter is active (it returns when filters are cleared) — otherwise
-  // an unrelated featured entry above a filtered list reads as a broken filter.
-  var randomSection = document.getElementById("library-random");
   // The list heading must not claim "All entries" while a subset is shown.
   var allHead = document.getElementById("all-entries");
 
+  var catalogEmpty = null; // created on demand once results can be empty
   var imagesEmpty = null;
   if (imageIndex) {
     imagesEmpty = document.createElement("p");
     imagesEmpty.className = "library-image-index-empty";
     imagesEmpty.hidden = true;
-    imagesEmpty.textContent = "No matching entries have images.";
     imageIndex.insertAdjacentElement("afterend", imagesEmpty);
+  }
+  function ensureCatalogEmpty() {
+    if (catalogEmpty || !list) return catalogEmpty;
+    catalogEmpty = document.createElement("p");
+    catalogEmpty.className = "library-empty";
+    catalogEmpty.hidden = true;
+    catalogEmpty.textContent = "No matching entries.";
+    list.insertAdjacentElement("afterend", catalogEmpty);
+    return catalogEmpty;
+  }
+
+  // --- Chance panel (the "From the Library" section) ----------------------
+  var randomSection = document.getElementById("library-random");
+  var randomSlot = randomSection ? randomSection.querySelector("[data-random-slot]") : null;
+  var anotherBtn = randomSection ? randomSection.querySelector(".library-random-another") : null;
+  var announceEl = randomSection ? randomSection.querySelector("[data-chance-announce]") : null;
+  var STORE_KEY = "sarc-library-random";
+  var allEntries = null; // null until /library/index.json resolves
+  var currentId = null;
+
+  function esc(s) {
+    return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+    });
+  }
+
+  function cardHTML(e, imagesView) {
+    var img = e.primary_image;
+    var thumb = img ? (
+      '<a class="library-featured-thumb" href="' + esc(e.url) + '" aria-label="View ' + esc(e.title) + '"' +
+      (imagesView ? "" : ' tabindex="-1" aria-hidden="true"') +
+      '><img src="' + esc(img.url) +
+      '" style="object-position: ' + esc(img.pos || "center") + '" alt="' + esc(img.alt) +
+      '" loading="lazy" decoding="async"></a>'
+    ) : "";
+    var kick = [];
+    if (e.creator_names) kick.push(esc(e.creator_names));
+    if (e.type_label) kick.push(esc(e.type_label));
+    if (e.year) kick.push(esc(e.year));
+    var subs = (e.subject_labels || []).map(esc).join(' <span class="dot" aria-hidden="true">·</span> ');
+    return '<article class="library-featured" data-library-id="' + esc(e.library_id) + '">' +
+      thumb +
+      '<div class="library-featured-body"' + (imagesView ? " hidden" : "") + '>' +
+      '<p class="library-featured-kicker">' + kick.join(' <span class="dot" aria-hidden="true">·</span> ') + '</p>' +
+      '<p class="library-featured-title"><a href="' + esc(e.url) + '">' + esc(e.title) + '</a></p>' +
+      (e.summary ? '<p class="library-featured-annotation">' + esc(e.summary) + '</p>' : '') +
+      (subs ? '<p class="library-featured-subjects">' + subs + '</p>' : '') +
+      '</div></article>';
+  }
+
+  function announce(e) {
+    if (!announceEl) return;
+    announceEl.textContent = "Selected: " + e.title + (e.creator_names ? " by " + e.creator_names : "");
+  }
+
+  function pickFrom(pool, excludeId) {
+    if (pool.length === 1) return pool[0];
+    var e;
+    do { e = pool[Math.floor(Math.random() * pool.length)]; }
+    while (excludeId && e.library_id === excludeId);
+    return e;
+  }
+
+  // The chance pool is the exact same field as the results: matches() below
+  // applied to the JSON entries, further narrowed to entries with a primary
+  // image while Images view is active (Catalog may sample image-less entries).
+  function eligiblePool() {
+    if (!allEntries) return null;
+    var pool = allEntries.filter(matchesEntry);
+    if (view === "images") pool = pool.filter(function (e) { return !!e.primary_image; });
+    return pool;
+  }
+
+  // Renders the chance panel against `pool`. `forceNew` is true only for an
+  // explicit "Select again" click — it always picks a different entry.
+  // Otherwise (every filter/view change) the current pick is kept as long as
+  // it's still in the pool, so entries don't shuffle just because a filter
+  // changed elsewhere; only view-mode presentation (text hidden/shown) is
+  // re-rendered when the entry itself stays the same.
+  function renderPool(pool, forceNew) {
+    if (!randomSlot) return;
+    if (pool.length === 0) {
+      currentId = null;
+      try { sessionStorage.removeItem(STORE_KEY); } catch (e) {}
+      var matchingAtAll = allEntries.filter(matchesEntry).length > 0;
+      var msg = (view === "images" && matchingAtAll) ? "No matching entries have images." : "No matching entries.";
+      randomSlot.innerHTML = '<p class="library-empty">' + esc(msg) + '</p>';
+      if (anotherBtn) anotherBtn.hidden = true;
+      return;
+    }
+    var current = null;
+    if (!forceNew && currentId) {
+      current = pool.filter(function (e) { return e.library_id === currentId; })[0] || null;
+    }
+    if (!current) {
+      current = pickFrom(pool, forceNew ? currentId : null);
+      var changed = current.library_id !== currentId;
+      currentId = current.library_id;
+      try { sessionStorage.setItem(STORE_KEY, currentId); } catch (e) {}
+      if (changed) announce(current);
+    }
+    randomSlot.innerHTML = cardHTML(current, view === "images");
+    if (anotherBtn) anotherBtn.hidden = pool.length <= 1;
+  }
+
+  function revalidateChance() {
+    var pool = eligiblePool();
+    if (pool === null) return; // index.json hasn't resolved yet — keep the SSR fallback
+    renderPool(pool, false);
+  }
+  function selectAgain() {
+    var pool = eligiblePool();
+    if (pool === null) return;
+    renderPool(pool, true);
+  }
+  if (anotherBtn) anotherBtn.addEventListener("click", selectAgain);
+
+  fetch(new URL("index.json", location.href).href, { credentials: "same-origin" })
+    .then(function (r) { return r.ok ? r.json() : null; })
+    .then(function (data) {
+      if (!data || !data.entries) return;
+      allEntries = data.entries;
+      try { currentId = sessionStorage.getItem(STORE_KEY); } catch (e) { currentId = null; }
+      revalidateChance();
+    })
+    .catch(function () { /* keep the server fallback */ });
+
+  // --- Filters + view state -------------------------------------------------
+  function chipsFor(facet) {
+    return chips.filter(function (c) { return c.dataset.facet === facet; });
   }
 
   // Active state: multi sets for type + subject, single value for sarc, plus
@@ -80,10 +214,6 @@
   // fromURL/toURL below, which only ever add view=catalog to the URL).
   var sel = { type: [], subject: [], sarc: "" };
   var view = "images";
-
-  function chipsFor(facet) {
-    return chips.filter(function (c) { return c.dataset.facet === facet; });
-  }
 
   function setView(v) {
     view = v === "catalog" ? "catalog" : "images";
@@ -95,10 +225,6 @@
       b.setAttribute("aria-pressed", on ? "true" : "false");
       b.classList.toggle("is-active", on);
     });
-    // Harmless if library-random.js's listener isn't attached yet (its first
-    // render reads the attribute set above directly); on later view changes
-    // (button click, popstate) the listener is live and syncs the panel.
-    document.dispatchEvent(new CustomEvent("library:view-change", { detail: { view: view } }));
   }
 
   function paint() {
@@ -118,54 +244,63 @@
     if (clearBtn) clearBtn.hidden = !sel.type.length && !sel.subject.length && sel.sarc === "";
   }
 
-  function matches(ds) {
-    var recType = ds.type || "";
-    var recSubs = (ds.subjects || "").split(/\s+/).filter(Boolean);
-    var recSarc = ds.sarc || "false";
-    var typeOk = sel.type.length === 0 || sel.type.indexOf(recType) !== -1;
+  function matchesFields(type, subjects, sarc) {
+    var typeOk = sel.type.length === 0 || sel.type.indexOf(type) !== -1;
     var subjOk = sel.subject.length === 0 || sel.subject.some(function (s) {
-      return recSubs.indexOf(s) !== -1;
+      return subjects.indexOf(s) !== -1;
     });
-    var sarcOk = sel.sarc === "" || recSarc === sel.sarc;
+    var sarcOk = sel.sarc === "" || String(sarc) === sel.sarc;
     return typeOk && subjOk && sarcOk;
+  }
+  function matchesDataset(ds) {
+    return matchesFields(ds.type || "", (ds.subjects || "").split(/\s+/).filter(Boolean), ds.sarc === "true");
+  }
+  function matchesEntry(e) {
+    return matchesFields(e.type, e.subjects || [], e.sarc_work);
   }
 
   function apply() {
     var anyFilter = sel.type.length > 0 || sel.subject.length > 0 || sel.sarc !== "";
-    if (randomSection) randomSection.hidden = anyFilter;
     if (allHead) allHead.textContent = anyFilter ? "Matching entries" : "All entries";
 
     var shown = 0;
     records.forEach(function (rec) {
-      var visible = matches(rec.dataset);
+      var visible = matchesDataset(rec.dataset);
       rec.hidden = !visible;
       if (visible) shown++;
     });
+    var emptyEl = ensureCatalogEmpty();
+    if (emptyEl) emptyEl.hidden = shown !== 0 || view !== "catalog";
 
     var shownWithImages = 0;
     imageItems.forEach(function (item) {
-      var visible = matches(item.dataset);
+      var visible = matchesDataset(item.dataset);
       item.hidden = !visible;
       if (visible) shownWithImages++;
     });
+    if (imagesEmpty) {
+      imagesEmpty.textContent = shown === 0 ? "No matching entries." : "No matching entries have images.";
+      imagesEmpty.hidden = shownWithImages !== 0 || view !== "images";
+    }
 
     if (countEl) {
       if (view === "images") {
         if (shownWithImages === 0) {
-          countEl.textContent = "0 images among " + shown + (anyFilter ? " matching entries" : " entries");
+          countEl.textContent = shown === 0
+            ? "0 matching entries"
+            : "0 images among " + shown + (anyFilter ? " matching entries" : " entries");
         } else {
           countEl.textContent = shown + (anyFilter ? " matching entries" : " entries") +
             " · " + shownWithImages + " with images";
         }
-        if (imagesEmpty) imagesEmpty.hidden = shownWithImages !== 0;
       } else {
         countEl.textContent = shown === records.length
           ? shown + (shown === 1 ? " entry" : " entries")
           : shown + " of " + records.length + (records.length === 1 ? " entry" : " entries");
-        if (imagesEmpty) imagesEmpty.hidden = true;
       }
     }
     paint();
+    revalidateChance();
   }
 
   function toURL(push) {

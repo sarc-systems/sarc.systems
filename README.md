@@ -57,15 +57,21 @@ research collection and small knowledge graph, not a set of sections. Every
 durable thing SARC wants to identify, annotate, connect, or point toward is an
 entry (essays, books, manuals, people, groups, recordings, releases, websites,
 systems, …). Type, subject, and access are metadata and **filters**, never shelves. The
-landing shows a random featured entry, type/subject/SARC-work filters, and the
-full ruled catalog. A Catalog/Images view switch presents the same filtered
-entries as a thumbnail-only grid instead of full records — same images, same
-crop, same order, filters and URL state shared with Catalog. **Images is the
-default view** (`?view=catalog` opts back into the ruled records; an absent or
-invalid `view` resolves to Images). Requires JS; Catalog (server-rendered) is
-the no-JS fallback. See `CLAUDE.md` § Library for the
-full behavior (shared thumbnail partial, accessibility, chance-selection sync).
-Section colour is Forest.
+landing puts the **View** switch and **Type/Subject/Origin filters** first,
+then a chance-picked "From the Library" entry, then the full ruled catalog —
+in that order because the controls define one field, and the chance pick and
+the catalog below it are both sampled/filtered from that exact same field
+(one matching-set computation, not two). A Catalog/Images view switch presents
+the same filtered entries as a thumbnail-only grid instead of full records —
+same images, same crop, same order, filters and URL state shared with Catalog.
+**Images is the default view** (`?view=catalog` opts back into the ruled
+records; an absent or invalid `view` resolves to Images). The chance pick is
+revalidated against the active filters/view on every change (kept if still
+eligible, redrawn otherwise, restricted to image-bearing entries in Images
+view) and is `sessionStorage`-only — it never becomes URL state. Requires JS;
+Catalog with an unfiltered chance pick is the no-JS fallback. See `CLAUDE.md`
+§ Library for the full behavior (shared thumbnail partial, accessibility,
+chance-selection eligibility/revalidation). Section colour is Forest.
 
 **Add an entry** (one archetype for everything):
 

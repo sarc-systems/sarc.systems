@@ -1,7 +1,12 @@
-{{- /* "From the Library" — one featured entry. Server-renders a deterministic
-       fallback (first entry marked featured: true, else the first in catalog
-       order) so the slot is never blank without JS. library-random.js swaps in a
-       session-stable random pick and enables "Another entry". Context: the page
+{{- /* "From the Library" — one entry sampled from whatever the View/filter
+       controls above currently define (see library-filter.js: matches the
+       exact same field as the results below, not the whole catalog). Server-
+       renders a deterministic fallback (first entry marked featured: true,
+       else the first in catalog order) so the slot is never blank without JS
+       or before the client's index.json fetch resolves; library-filter.js
+       then revalidates/replaces it against the active filters, enables
+       "Select again" (only when more than one entry is eligible), and shows a
+       restrained empty state when nothing/no image matches. Context: the page
        calling it (used only to reach the site's pages via collect). */ -}}
 {{- $entries := partial "library-collect.html" (dict "ctx" .) -}}
 {{- $featured := "" -}}
@@ -16,5 +21,6 @@
   <div class="library-random-slot" data-random-slot>
     {{ partial "library-featured.html" . }}
   </div>
+  <p class="visually-hidden" role="status" aria-live="polite" data-chance-announce></p>
 </section>
 {{- end -}}

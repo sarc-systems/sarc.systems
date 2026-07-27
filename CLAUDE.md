@@ -433,15 +433,22 @@ composer's `part-of GRM` shows as *Member* on GRM) — so declare an affiliation
 once, on either side. Creator attribution uses `creators`, never `related`.
 Partials: `library-{creators,works,related}.html`.
 
-**Landing** (`layouts/library/list.html`): intro → **From the Library** (one
-random entry, `library-random.js` + `sessionStorage`, "Another entry"; a
-deterministic server-rendered fallback — `featured: true` or first — keeps it
-non-blank with no JS) → **filters** → **All entries** (ruled records with
-thumbnails). **Filter** by type + subject + SARC-work: OR within a facet, AND
-across; shareable `?type=a,b&subject=c&sarc=true`; history-aware; Clear; polite
-`aria-live` count; `library-filter.js`. Without JS the whole catalog is visible
-and the filter form is hidden (CSS-gated on `data-nojs`). Records carry
-`data-type` / `data-subjects` / `data-sarc` / `data-library-id`.
+**Landing** (`layouts/library/list.html`): intro → **View** switch → **Filters**
+(Type/Subject/Origin, Clear, result count) → **From the Library** (one entry
+sampled from whatever the controls above currently define) → **All entries**
+(ruled records with thumbnails). The controls sit *above* the chance panel
+deliberately: View/Type/Subject/Origin define one field, and both the chance
+panel and the complete results beneath it are sampled/filtered from that same
+field — there is exactly one matching-set computation
+(`library-filter.js`'s `matchesFields`/`matchesDataset`/`matchesEntry`), never
+a separate one for the random pick. **Filter** by type + subject + SARC-work:
+OR within a facet, AND across; shareable `?type=a,b&subject=c&sarc=true`;
+history-aware; Clear; polite `aria-live` count. Without JS the whole catalog
+is visible and the filter form/view switch are hidden (CSS-gated on
+`data-nojs`), and the chance panel stands as its unfiltered deterministic
+fallback (`featured: true` or first) since there's no client-side filtering to
+apply it to. Records carry `data-type` / `data-subjects` / `data-sarc` /
+`data-library-id`.
 
 **Catalog / Images view switch.** A presentation toggle, not a second page or a
 gallery — it changes what's visible, never the image itself. **Catalog** is the
@@ -458,23 +465,46 @@ item `width`/`height` both read it, so changing one changes both by
 construction. **Images is the default view** — state is `?view=catalog|images`
 in the URL, but an absent or invalid `view` resolves to Images, not Catalog
 (the switch lists Images first for the same reason); `library-filter.js` only
-ever adds `view=catalog` to the URL, never `view=images`. Combined with the
-existing filter params, `library-filter.js` (which
-also owns the view switch) applies one filter pass to both collections,
-updates a view-aware result count (`"N entries · M with images"` in Images
-view; `"0 images among N matching entries"` when none match), and fires a
-`library:view-change` `document` event on every change. Entries with no image
-are simply omitted from the Images grid (Catalog still lists them normally) —
-never a placeholder. The "From the Library" panel listens for that event too:
-in Images view it hides its own text (`hidden`, not just visually), grants the
-thumbnail link a real accessible name (`aria-label`, since the title link it
-normally defers to is now hidden) by removing the `aria-hidden`/`tabindex`
-that suppress it as a redundant link in Catalog view, and — if the currently
-featured entry has no image — swaps to one that does; switching back to
-Catalog restores the text and never re-picks. The whole view switch requires
-JS (there is no server-rendered Images view), so it's hidden under
-`data-nojs` exactly like the filter form; Catalog remains the complete no-JS
-fallback. Reuses `.rf-facet`/`.rf-chip` styling — no new visual theme.
+ever adds `view=catalog` to the URL, never `view=images`. One script
+(`library-filter.js`; there is no separate random script anymore) owns
+View/Type/Subject/Origin state, filters both result collections, updates a
+view-aware result count (`"N entries · M with images"` in Images view; `"0
+images among N matching entries"` when none match), and — every single time
+any of that state changes — revalidates the chance panel against the same
+field. Entries with no image are simply omitted from the Images grid (Catalog
+still lists them normally) — never a placeholder.
+
+**Chance panel eligibility & revalidation.** The chance panel's pool is exactly
+the matching entries (from `/library/index.json`, fetched once client-side —
+the DOM's result records don't carry enough to render a featured card),
+further narrowed to entries with a primary image whenever Images view is
+active (Catalog may sample an image-less entry; Images never does). On *any*
+filter/view change the current pick is kept if it's still in the pool — it
+does not reshuffle just because an unrelated facet changed — and only its
+presentation (Images-view text hidden/shown) re-renders if needed; only when
+the current pick falls outside the new pool is a fresh one drawn. **"Select
+again"** is the one action that always forces a different entry (excluding the
+current one) from the live pool, and is hidden entirely when the pool has ≤1
+eligible entry (a single-entry pool still displays that entry, just with
+nothing to select again into). A pool of zero entries replaces the panel
+content with a restrained empty state — `"No matching entries."`, or `"No
+matching entries have images."` specifically when entries match but none have
+one — and never falls back to an unrelated/unfiltered entry. In Images view,
+the featured thumbnail link gets a real accessible name (`aria-label`, since
+the title link it normally defers to is `hidden`) by removing the
+`aria-hidden`/`tabindex` that suppress it as a redundant link in Catalog view;
+switching back to Catalog restores the text without re-picking. A polite,
+sparse `aria-live` region (`[data-chance-announce]`, only updated when the
+picked entry's identity actually changes — never on every filter click)
+announces `"Selected: <title> by <creators>"`. The pick itself is
+`sessionStorage`-only, revalidated against the live pool on every read — it
+never becomes URL state (View/Type/Subject/Origin are the only URL-backed
+state); a stored id that's no longer eligible is simply discarded and redrawn.
+The whole view switch and chance-selection behavior requires JS (there is no
+server-rendered Images view or client-filtered chance pick), so the switch is
+hidden under `data-nojs` exactly like the filter form; Catalog with its
+unfiltered fallback pick remains the complete no-JS fallback. Reuses
+`.rf-facet`/`.rf-chip` styling — no new visual theme.
 
 **Images.** Resolved through Hugo page resources (never hotlink Bandcamp/Discogs/
 publishers; never auto-download third-party artwork). List = square thumbnail
