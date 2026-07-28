@@ -36,6 +36,7 @@
   if (!form || !list) return;
 
   var imageIndex = document.getElementById("library-image-index");
+  var mapView = document.getElementById("library-map");
   var viewSwitch = document.querySelector("[data-view-switch]");
   var viewButtons = viewSwitch ? Array.prototype.slice.call(viewSwitch.querySelectorAll("[data-library-view]")) : [];
 
@@ -213,17 +214,18 @@
   }
 
   // Active state: multi sets for type + subject, plus the presentation view
-  // ("catalog" | "images"). Images is the default — an absent or invalid
-  // ?view= resolves to "images", not "catalog" (see fromURL/toURL below,
-  // which only ever add view=catalog to the URL).
+  // ("catalog" | "images" | "map"). Images is the default — an absent or
+  // invalid ?view= resolves to "images" (see fromURL/toURL below, which only
+  // ever add view=catalog or view=map to the URL).
   var sel = { type: [], subject: [] };
   var view = "images";
 
   function setView(v) {
-    view = v === "catalog" ? "catalog" : "images";
+    view = (v === "catalog" || v === "map") ? v : "images";
     document.documentElement.dataset.libraryView = view;
-    list.hidden = view === "images";
+    list.hidden = view !== "catalog";
     if (imageIndex) imageIndex.hidden = view !== "images";
+    if (mapView) mapView.hidden = view !== "map";
     viewButtons.forEach(function (b) {
       var on = b.dataset.libraryView === view;
       b.setAttribute("aria-pressed", on ? "true" : "false");
@@ -305,6 +307,8 @@
             " · " + shownWithImages + " with images";
         }
       } else {
+        // Catalog and Map share the same plain count — Map's node set is the
+        // same matching set as Catalog, just diagrammed instead of listed.
         countEl.textContent = shown === records.length
           ? shown + (shown === 1 ? " entry" : " entries")
           : shown + " of " + records.length + (records.length === 1 ? " entry" : " entries");
@@ -312,13 +316,19 @@
     }
     paint();
     revalidateChance();
+    // library-map.js listens for this to know which entries currently match —
+    // it owns its own rendering entirely (see that file), so this is the only
+    // coupling between the two: one event, not a shared internal API.
+    document.dispatchEvent(new CustomEvent("library:filter-change", {
+      detail: { view: view, type: sel.type.slice(), subject: sel.subject.slice() }
+    }));
   }
 
   function toURL(push) {
     var params = new URLSearchParams();
     if (sel.type.length) params.set("type", sel.type.join(","));
     if (sel.subject.length) params.set("subject", sel.subject.join(","));
-    if (view === "catalog") params.set("view", "catalog");
+    if (view === "catalog" || view === "map") params.set("view", view);
     var qs = params.toString();
     if (push) history.pushState(null, "", location.pathname + (qs ? "?" + qs : ""));
   }
@@ -329,7 +339,7 @@
     sel.type = (params.get("type") || "").split(",").filter(function (v) { return valid.type[v]; });
     sel.subject = (params.get("subject") || "").split(",").filter(function (v) { return valid.subject[v]; });
     var v = params.get("view") || "";
-    setView(v === "catalog" ? "catalog" : "images");
+    setView(v === "catalog" ? "catalog" : v === "map" ? "map" : "images");
   }
 
   chips.forEach(function (c) {

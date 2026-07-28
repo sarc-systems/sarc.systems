@@ -7,34 +7,58 @@
 # display order and each entry carries its own key.
 
 # Primary entry type (one per entry, nested as `library.type`). Presentation
-# adapts to the type; there is no public section per type.
+# adapts to the type; there is no public section per type. `category` keys
+# into `type_categories` below (the shared type-color/shape system) — several
+# types deliberately share one category/token; see the comment there for why.
 types:
-  - {type: person,       label: "Person",         order: 15}
-  - {type: group,        label: "Group",          order: 18}
-  - {type: organization, label: "Organization",   order: 20}
-  - {type: book,         label: "Book",           order: 30}
-  - {type: essay,        label: "Essay",          order: 40}
-  - {type: story,        label: "Story",          order: 45}
-  - {type: paper,        label: "Paper",          order: 50}
-  - {type: article,      label: "Article",        order: 60}
-  - {type: manual,       label: "Manual",         order: 70}
-  - {type: recording,    label: "Recording",      order: 80}
-  - {type: release,      label: "Release",        order: 90}
-  - {type: composition,  label: "Composition",    order: 100}
-  - {type: film,         label: "Film",           order: 110}
-  - {type: video,        label: "Video",          order: 120}
-  - {type: lecture,      label: "Lecture",        order: 130}
-  - {type: audio,        label: "Audio",          order: 140}
-  - {type: podcast,      label: "Podcast",        order: 150}
-  - {type: website,      label: "Website",        order: 160}
-  - {type: archive,      label: "Archive",        order: 170}
-  - {type: software,     label: "Software",       order: 180}
-  - {type: repository,   label: "Code Repository", order: 190}
-  - {type: project,      label: "Project",        order: 200}
-  - {type: instrument,   label: "Instrument",     order: 210}
-  - {type: system,       label: "System",         order: 220}
-  - {type: document,     label: "Document",       order: 230}
-  - {type: other,        label: "Other",          order: 240}
+  - {type: person,       label: "Person",         order: 15,  category: people}
+  - {type: group,        label: "Group",          order: 18,  category: people}
+  - {type: organization, label: "Organization",   order: 20,  category: people}
+  - {type: book,         label: "Book",           order: 30,  category: written}
+  - {type: essay,        label: "Essay",          order: 40,  category: written}
+  - {type: story,        label: "Story",          order: 45,  category: written}
+  - {type: paper,        label: "Paper",          order: 50,  category: written}
+  - {type: article,      label: "Article",        order: 60,  category: written}
+  - {type: manual,       label: "Manual",         order: 70,  category: written}
+  - {type: recording,    label: "Recording",      order: 80,  category: audiovisual}
+  - {type: release,      label: "Release",        order: 90,  category: audiovisual}
+  - {type: composition,  label: "Composition",    order: 100, category: audiovisual}
+  - {type: film,         label: "Film",           order: 110, category: audiovisual}
+  - {type: video,        label: "Video",          order: 120, category: audiovisual}
+  - {type: lecture,      label: "Lecture",        order: 130, category: audiovisual}
+  - {type: audio,        label: "Audio",          order: 140, category: audiovisual}
+  - {type: podcast,      label: "Podcast",        order: 150, category: audiovisual}
+  - {type: website,      label: "Website",        order: 160, category: web}
+  - {type: archive,      label: "Archive",        order: 170, category: web}
+  - {type: software,     label: "Software",       order: 180, category: technical}
+  - {type: repository,   label: "Code Repository", order: 190, category: technical}
+  - {type: project,      label: "Project",        order: 200, category: technical}
+  - {type: instrument,   label: "Instrument",     order: 210, category: technical}
+  - {type: system,       label: "System",         order: 220, category: technical}
+  - {type: document,     label: "Document",       order: 230, category: written}
+  - {type: other,        label: "Other",          order: 240, category: other}
+
+# Shared type-color/shape system (Map nodes + Type filter chip markers — see
+# CLAUDE.md § Library map view "Node Type Encoding"). One canonical map,
+# defined here once and consumed by both layouts/partials/library-filters.html
+# (chip swatches) and assets/js/library-map.js (node fill/shape) via
+# list.json's exported `type_styles` — neither hard-codes a colour.
+#
+# 25+ individual types share this small handful of categories rather than each
+# getting a bespoke hue: a "restrained institutional palette" (per spec) means
+# a few legible, muted distinctions, not a rainbow no one can hold in their
+# head. `color` is a data/colorplan.json slug (resolved as
+# var(--colorplan-<slug>), never a hand-picked hex — Colorplan is this site's
+# only colour source, full stop). Deliberately avoids forest/slate/cobalt/
+# bitter-chocolate, already meaningful elsewhere (Library section, Journal
+# section, SARC-100 project, site default).
+type_categories:
+  - {category: people,      label: "People & groups",       color: bagdad-brown, shape: circle}
+  - {category: written,     label: "Written works",         color: sapphire,     shape: square}
+  - {category: audiovisual, label: "Audio & visual works",  color: claret,       shape: circle}
+  - {category: technical,   label: "Technical & systems",   color: emerald,      shape: diamond}
+  - {category: web,         label: "Web & reference",       color: amethyst,     shape: triangle}
+  - {category: other,       label: "Other",                 color: dark-grey,    shape: circle}
 
 # Controlled subjects (multiple per entry) — why an entry matters to SARC, not a
 # commercial genre. Keep small. `time` is deliberately broad (chronology,

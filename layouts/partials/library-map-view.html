@@ -1,0 +1,53 @@
+{{- /* Library Map view (experimental) — a force-directed diagram of explicit
+       editorial relationships (creators, related) among the currently
+       matching entries. Entirely client-built (assets/js/library-map.js):
+       there is no meaningful server-rendered graph, so this container starts
+       empty and hidden, gated behind JS the same way Images view is. See
+       CLAUDE.md § Library map view for the data flow and what this
+       deliberately does not do (no inferred/similarity edges, no semantic
+       search, no clustering — every edge is something SARC actually declared).
+       Call: {{ partial "library-map-view.html" . }} */ -}}
+<div class="library-map" id="library-map" hidden>
+  {{- /* role="group" (not "img") deliberately: role="img" on an SVG tells
+         assistive tech to treat it as one flat static image, which can
+         suppress the accessibility tree of the individually focusable/
+         labeled node <g> elements rendered inside it by library-map.js. */}}
+  <svg class="library-map-svg" id="library-map-svg" viewBox="0 0 1000 700" preserveAspectRatio="xMidYMid meet"
+       role="group" aria-label="Diagram of explicit editorial relationships between Library entries">
+    <g id="library-map-edges"></g>
+    <g id="library-map-nodes"></g>
+  </svg>
+  {{- /* Two lightweight catalog-style preview cards, not popup dialogs —
+         Selection-Centered Navigation: #library-map-card is the persistent
+         card for whichever node is *selected* ("where I am" — stays up
+         until another node is selected, click navigates); #library-map-
+         hover-card is a transient second card for whichever OTHER node is
+         currently hovered ("what I'm considering next") — both render at
+         once. Node shape/color (and, when available, the entry's own image
+         — see createNodeVisual() in library-map.js) is what tells two
+         same-titled entries (e.g. a person and a work of that name) apart at
+         rest; these cards add the rest of the disambiguating context on
+         demand. Both hidden by default; each is one instance, repositioned/
+         repopulated as its own focus changes rather than one per node. */}}
+  <div class="library-map-card" id="library-map-card" hidden>
+    <div class="library-map-card-media"></div>
+    <div class="library-map-card-body">
+      <p class="library-map-card-title"></p>
+      <p class="library-map-card-subtitle"></p>
+      <p class="library-map-card-summary"></p>
+    </div>
+  </div>
+  <div class="library-map-card library-map-card--hover" id="library-map-hover-card" hidden>
+    <div class="library-map-card-media"></div>
+    <div class="library-map-card-body">
+      <p class="library-map-card-title"></p>
+      <p class="library-map-card-subtitle"></p>
+      <p class="library-map-card-summary"></p>
+    </div>
+  </div>
+  {{- /* A caption strip below the canvas, not an overlay on top of it — see
+         library.css: the instructions must never sit over the diagram
+         itself, where they'd compete with nodes/edges underneath. */}}
+  <p class="library-map-hint">Drag to pan, scroll to zoom, hover or click a point to focus it, click its card to open it.</p>
+</div>
+<p class="library-map-empty" id="library-map-empty" hidden>No relationships among the matching entries.</p>

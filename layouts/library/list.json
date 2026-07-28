@@ -6,6 +6,19 @@
 {{- $typeLabels := dict }}{{ range $lib.types }}{{ $typeLabels = merge $typeLabels (dict .type .label) }}{{ end -}}
 {{- $subjectLabels := dict }}{{ range $lib.subjects }}{{ $subjectLabels = merge $subjectLabels (dict .subject .label) }}{{ end -}}
 {{- $extKind := dict }}{{ range $lib.access_kinds }}{{ $extKind = merge $extKind (dict .kind .external) }}{{ end -}}
+
+{{- /* Shared type-color/shape system — resolved here ONCE (type -> its
+       category's color/shape/label) so assets/js/library-map.js never
+       hard-codes a mapping of its own; see data/library.yaml's
+       type_categories for the single canonical definition, also consumed by
+       layouts/partials/library-filters.html for the chip swatches. */ -}}
+{{- $categoryStyles := dict }}{{ range $lib.type_categories }}{{ $categoryStyles = merge $categoryStyles (dict .category .) }}{{ end -}}
+{{- $otherStyle := index $categoryStyles "other" -}}
+{{- $typeStyles := dict -}}
+{{- range $lib.types -}}
+  {{- $cat := index $categoryStyles (.category | default "other") | default $otherStyle -}}
+  {{- $typeStyles = merge $typeStyles (dict .type (dict "category" $cat.category "label" $cat.label "color" $cat.color "shape" $cat.shape)) -}}
+{{- end -}}
 {{- $entries := partial "library-collect.html" (dict "ctx" .) -}}
 {{- $out := slice -}}
 {{- range $entries -}}
@@ -35,8 +48,15 @@
     {{- else }}{{ with $a.url }}{{ $access = $access | append (dict "label" ($a.label | default "Link") "kind" ($a.kind | default "other") "url" . "external" (index $extKind ($a.kind | default "other") | default true)) }}{{ end }}{{ end -}}
   {{- end -}}
 
-  {{- /* related ids */ -}}
-  {{- $related := slice }}{{ range .Params.related }}{{ with .ref }}{{ $related = $related | append . }}{{ end }}{{ end -}}
+  {{- /* related — {ref, relation}, one entry per declaration (forward direction
+         only; the reverse/inverse shown on the target entry's own page is a
+         display-only convention in library-related.html, not a second stored
+         edge, so this never double-counts a relationship). */ -}}
+  {{- $related := slice -}}
+  {{- range .Params.related -}}
+    {{- $rel := . -}}
+    {{- with $rel.ref }}{{ $related = $related | append (dict "ref" . "relation" ($rel.relation | default "")) }}{{ end -}}
+  {{- end -}}
 
   {{- $rec := dict
       "library_id" .Params.library.id
@@ -56,4 +76,4 @@
       "related" $related -}}
   {{- $out = $out | append $rec -}}
 {{- end -}}
-{{ dict "count" (len $out) "entries" $out | jsonify (dict "indent" "  ") }}
+{{ dict "count" (len $out) "entries" $out "type_styles" $typeStyles | jsonify (dict "indent" "  ") }}

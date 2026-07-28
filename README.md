@@ -83,7 +83,13 @@ matching-set computation, not two) regardless of DOM order. A Catalog/Images vie
 the same filtered entries as a thumbnail-only grid instead of full records —
 same images, same crop, same order, filters and URL state shared with Catalog.
 **Images is the default view** (`?view=catalog` opts back into the ruled
-records; an absent or invalid `view` resolves to Images). The chance pick is
+records; an absent or invalid `view` resolves to Images). A third,
+experimental **Map view** (`?view=map`) draws the same matching entries as a
+force-directed diagram of explicit editorial relationships only —
+`creators[].ref` and `related[].ref`, nothing inferred from shared subjects —
+via `assets/js/library-map.js`; see `CLAUDE.md` § Library for the full
+data-flow and what it deliberately doesn't do (no knowledge graph, no
+similarity/recommendation logic, no clustering). The chance pick is
 revalidated against the active filters/view on every change (kept if still
 eligible, redrawn otherwise, restricted to image-bearing entries in Images
 view) and is `sessionStorage`-only — it never becomes URL state. Requires JS;

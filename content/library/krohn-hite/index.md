@@ -10,11 +10,13 @@ library:
 subjects: [instruments, technology]
 
 images:
-  - file: "krohn-hite-logo.webp"
-    alt: "Krohn-Hite Corporation logo"
-    source: "https://krohn-hite.com/wp-content/uploads/2025/08/KHLogo-removebg-preview-1920w.webp"
+  - file: "krohn-hite-catalog-c.png"
+    alt: "Cover of a vintage Krohn-Hite Instrument Co. catalog (\"Catalog C\"), stamped Received Aug. 1953"
+    role: document
+    caption: "Krohn-Hite Instrument Co. \"Catalog C,\" Cambridge, Mass., received August 1953."
     rights:
       status: unknown
+      note: "Scan of a vintage company catalog; provenance/photographer not established."
 
 access:
   - label: "Official website"

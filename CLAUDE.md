@@ -81,11 +81,12 @@ content/
   library/<slug>/cover.jpg            # entry images live in the bundle
 layouts/          # custom theme: baseof, home, journal list/single, taxonomies, 404
 layouts/library/{list,single}.html + list.json   # unified catalog + JSON index
-layouts/partials/library-*.html      # collect, record, random, featured, filters, images,
+layouts/partials/library-*.html      # collect, record, featured, filters, view-switch,
+                                      #   image-index, map-view, thumbnail, images,
                                       #   image-caption, access, creators, works, related,
                                       #   rights, validate
-assets/js/library-filter.js          # catalog filter (type/subject/sarc; progressive enhancement)
-assets/js/library-random.js          # "From the Library" random entry
+assets/js/library-filter.js          # catalog filter, view switch, and chance selection
+assets/js/library-map.js             # experimental Map view (force-directed relationship diagram)
 scripts/audit-library-images.py      # offline image credit/source/rights report (`make library-image-audit`)
 layouts/partials/mark.html           # generated four-row mark SVG — do not edit
 design/fonts/Nasalization-Rg.otf     # mark source font (build-time only, unchanged)
@@ -523,6 +524,156 @@ hidden under `data-nojs` exactly like the filter form; Catalog with its
 unfiltered fallback pick remains the complete no-JS fallback. Reuses
 `.rf-facet`/`.rf-chip` styling — no new visual theme.
 
+**Map view (experimental).** A third View option — `layouts/partials/library-map-view.html`
+(`#library-map`) + `assets/js/library-map.js`. A restrained research diagram of
+**explicit editorial relationships only** — never a knowledge graph, semantic
+search, similarity/recommendation engine, or automatic clustering. Every edge
+is something SARC actually declared in front matter: `creators[].ref` (a
+person/group credited on a work) and `related[].ref` (carrying its
+`data/library.yaml` relation type through, e.g. `part-of`, `influenced-by`,
+`documents`). Nothing is inferred from shared subjects/tags. Deliberately
+separate stages, kept that way for future layouts: Library data
+(`/library/index.json`, already the canonical client export — extended so
+`related` carries `{ref, relation}` instead of a bare id) → `buildGraph()`
+(nodes + deduplicated edges) → `layout()` (a small dependency-free
+force/spring simulation — repulsion between all pairs, spring attraction along
+edges, a weak centering force — run to full completion *synchronously*, not
+animated frame-by-frame, so the graph is static the instant it appears; no
+"continuously drifting layout") → `render()` (plain SVG — see "Node Type
+Encoding" below for node styling; edges are thin lines, dashed for `related`
+vs solid for `creator`, no rainbow colour, no glow, no 3D) → interaction (pan
+via pointer drag on the SVG viewBox, zoom via wheel; hover/focus drives the
+Selection Hierarchy below plus a preview card — click navigates to the
+entry, same as an Images thumbnail; the hint text is a caption strip below
+the canvas, never an overlay on top of it). `library-map.js` runs independently of
+`library-filter.js`; the two coordinate through exactly one channel, a
+`library:filter-change` `document` event (view + active Type/Subject), plus
+`library-map.js` reading `location.search` directly once at startup for the
+same information (script load order means the very first firing of that
+event predates its own listener existing). Filtering hides non-matching nodes
+and any edge touching one (the "future versions may preserve neighboring
+context" case in the spec this shipped from is intentionally not attempted
+here) — same field as Catalog/Images, never a separate one. Requires JS like
+Images/Map's siblings; hidden under `data-nojs`. This is expected to evolve;
+treat the force layout itself as replaceable, not load-bearing.
+
+**Node Type Encoding.** One canonical color+shape token per Library type,
+shared by Map nodes *and* the Type filter chip swatches — never two separate
+mappings. Defined once in `data/library.yaml`'s `type_categories` (a handful
+of muted institutional categories — `people`, `written`, `audiovisual`,
+`technical`, `web`, `other` — since 25+ individual types each getting a
+bespoke hue would be visual noise, not restraint; several types deliberately
+share one token) and resolved once per type in `list.json`'s exported
+`type_styles`, so neither `library-map.js` nor `library-filters.html`
+hard-codes a mapping of its own. `color` is always a `data/colorplan.json`
+slug, referenced as `var(--colorplan-<slug>)` — Colorplan is this site's only
+colour source, full stop. Shape is the type cue whenever an entry has no
+image (see "Image nodes" below for when it does) — one of `circle | square |
+diamond | triangle` — reinforced by colour, never a permanent text badge. On
+Type filter chips, the same token renders as a small decorative
+(`aria-hidden`) swatch before the label — a legend, not a redesign: chips
+stay the existing plain outlined buttons, never full-colour pills.
+
+**Image nodes.** Any entry with a `primary_image` renders using that image
+— already processed/cropped for `index.json` elsewhere (the chance-selection
+panel's asset; no separate map-specific derivative, per "reuse the existing
+processed image assets") — instead of the abstract type shape;
+`createNodeVisual()` is the fallback switch, one function, one call site.
+Sized noticeably larger than the abstract dots (`~18–22px` across) but still
+plainly "a node," not a card: a bordered background rect (`.map-image-node-bg`)
+keeps a small photo from reading as a loose floating picture, and both it and
+the `<image>` carry `.map-shape` so they fade through the emphasis tiers
+below in step, exactly like an abstract node would. This — not permanent
+text — is what tells a same-titled person and a work of that name apart at a
+glance; the preview card (below) resolves any remaining ambiguity on demand.
+Entries without an image keep the plain type shape/colour; the graph stays
+complete either way.
+
+**Selection-Centered Navigation.** Clicking a node makes it *the selection* —
+a stable point of focus (`selectedId`) that persists until another node is
+selected, a filter change removes it from the matching set, or it's
+explicitly cleared. Hovering a *different* node never replaces it — the
+Selection Hierarchy below is driven entirely by `selectedId`; hover is a
+separate, secondary layer (see "Hover" below) that never touches it. This is
+what makes the graph "walkable": select a neighbor, its own neighbors become
+the next thing to explore, select one of those, and so on, without ever
+leaving the map. `selectedId` has an explicit way out (`deselectNode()`):
+clicking anywhere that isn't a node or a card (empty canvas, the hint text,
+elsewhere on the page), or pressing Escape, drops it — otherwise walking the
+graph would be a one-way ratchet with no way back to the unfocused resting
+state. A filter change that hides the current selection clears it
+(`applyFilter()`) rather than leaving a phantom focus on an invisible node.
+
+**Selection Hierarchy.** A node's visual (shape or image, whichever
+`createNodeVisual()` chose) shows at full opacity at rest — no node reads as
+lesser than another until something is actually selected. Selecting a node
+drives four tiers, computed fresh each time (`applySelectionTiers()`, nodes
+and edges together): the node itself (`is-selected`, full opacity); its
+direct edges (`is-neighbor`, medium); everything else in the same connected
+component reachable by *some* path but not directly adjacent (`is-connected`
+— "connected background," a plain union-find over the edge list computed
+once after `buildGraph()`, not exposed on its own); and everything in a
+different component entirely, which recedes the most (no extra class — just
+the parent `#library-map-nodes.has-selection` default). Directly-connected
+edges also pick up `is-active` (heavier stroke, `--signal` color) so the
+connected path reads clearly — but never a text label on the edge itself,
+hover or not; the preview cards are where relation/role context surfaces on
+demand instead.
+
+**Hover — secondary, never replacing the selection.** Hovering a node other
+than the current selection (`setHovered()`) adds a light dashed outline
+(`.is-hovered`, `:not(.is-selected)` so it never fights the selected node's
+own stronger outline) and shows a second, transient card (see below) — "what
+I'm considering next," visible *alongside* the selected node's persistent
+card, "where I am." Neither the hovered node's own opacity tier nor the
+selection's tiers change because of this — hover is purely additive. Ending
+the hover (`clearHovered()`) removes the outline and hides the hover card;
+hovering the already-selected node is a no-op, since its card is already the
+one showing. Keyboard access skips this whole split and stays simple:
+Enter/Space on a focused node always navigates directly, since neither card
+is independently reachable by Tab.
+
+**Preview cards.** Two independent instances of the same small controller
+(`makeCardController()`/`populateCard()`/`positionCardFor()`/
+`showCardFor()`/`hideCardFor()`) — `#library-map-card` (the persistent
+selected card) and `#library-map-hover-card` (the transient hover card,
+`.library-map-card--hover` modifier: lower opacity, higher z-index, no other
+redesign) — so both can render at once without duplicating logic. Each
+shows: primary image (when the entry has one) + title + subtitle
+(`creator_names · year`, whichever are present — deliberately not
+`type_label`: shape/color on the node itself is the type cue, so a card
+doesn't also spell out "Person"/"Release"/etc in words) + a short,
+JS-truncated summary snippet. Sized as a real catalog card, not a small
+tooltip, though still deliberately restrained ("a catalog preview, not a
+popup dialog"): plain ruled/paper styling matching the rest of the Library,
+no shadow, no rounded corners. Being ordinary HTML positioned by pixel
+coordinates derived from a node's current on-screen position
+(`nodeScreenPosition()`, using the SVG's bounding rect + current viewBox)
+means each card is entirely outside the SVG coordinate system — pan/zoom
+never affects its size. Panning/zooming re-derives just that position on
+every step (`repositionVisibleCards()`) so a visible card tracks its node
+instead of staying pinned to its old screen location while the graph moves
+underneath it — a node's own SVG-space coordinates never change during a
+pan, only the viewBox does. A drag-to-pan gesture that starts and ends over
+empty canvas still fires a trailing DOM `click`; `initPanZoom()` tracks
+whether the pointer actually moved past a small threshold (`didPan`) so that
+trailing click is not misread by the click-away deselect handler above as
+"clicked away" — panning the map must never clear the selection. Clicking
+either card is the one gesture that actually navigates to the entry's real
+page — a plain click on a node only selects it.
+
+**Recenter.** Selecting a node animates the viewBox (`recenterOn()`,
+~300ms, ease-in-out) so the node lands at the current viewBox's *center* —
+"a consistent focal position," current zoom preserved (only `currentVB.x/y`
+move, never `.w/.h`), no abrupt jump. `prefers-reduced-motion: reduce`
+skips the animation and jumps straight there. This is deliberately pan-only:
+`layout()` still runs once, synchronously, to completion (see that
+function's own comment on why) and never re-runs on selection — a modest
+local re-layout around the selection (spreading out crowded neighbors) is a
+deliberately deferred follow-up, not part of this pass. A user-initiated
+pan or zoom cancels any in-flight recenter animation (`panAnimHandle`) so
+the two never fight each other.
+
 **Images.** Resolved through Hugo page resources (never hotlink Bandcamp/Discogs/
 publishers; never auto-download third-party artwork). List = square thumbnail
 (`Fill`, srcset, w/h, lazy, `object-fit: cover`); no image → clean text-only row.
@@ -566,9 +717,11 @@ related, an absent optional field, or a subject with one entry.
 
 **Templates/JS/CSS.** `layouts/library/{list,single}.html`, `list.json`;
 `partials/library-{collect,record,random,featured,filters,view-switch,
-image-index,thumbnail,images,access,creators,works,related,rights,validate}.html`;
-`assets/js/library-{filter,random}.js`; `assets/css/library.css`. Ruled catalog
-rows — never commercial cards, cover
+image-index,map-view,thumbnail,images,access,creators,works,related,rights,
+validate}.html`; `assets/js/library-{filter,map}.js` (there is no separate
+random script — that logic lives in `library-filter.js`, see the chance-panel
+paragraph above); `assets/css/library.css`. Ruled catalog rows — never
+commercial cards, cover
 grids, shadows, ratings, badges, hover-zoom, or streaming-service styling. Images
 are documentary, not decoration. Reuse the base shell/header/footer/type — don't
 fork the layout. One archetype: `archetypes/library-entry.md`

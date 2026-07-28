@@ -13,6 +13,7 @@ images:
   - file: "pharoah-sanders.jpg"
     alt: "Pharoah Sanders seated, 1977"
     role: portrait
+    anchor: Top
     credit: "Photograph by Rob Miseur, 1977"
     rights:
       status: unknown

@@ -10,7 +10,14 @@
        The Origin (SARC-work) facet is removed for now — sarc_work stays a
        valid per-entry field and in the JSON index, just not filterable here
        — this can come back the same way Type/Subject work if it's wanted
-       later. */ -}}
+       later.
+       Each Type chip carries a small colour swatch from the shared
+       type-color system (data/library.yaml's type_categories — see CLAUDE.md
+       § Library map view "Node Type Encoding"), the same tokens
+       assets/js/library-map.js uses for node fill/shape. It's a legend, not
+       a redesign: chips stay plain outlined buttons, never fully-colored
+       pills, and the swatch is decorative (aria-hidden) — the chip's own
+       text is still the only thing that matters for state/accessibility. */ -}}
 {{- $lib := hugo.Data.library -}}
 {{- $pages := .pages -}}
 {{- $haveType := slice }}{{ $haveSub := slice -}}
@@ -19,6 +26,8 @@
   {{- range .Params.subjects }}{{ $haveSub = $haveSub | append . }}{{ end -}}
 {{- end -}}
 {{- $haveType = uniq $haveType }}{{ $haveSub = uniq $haveSub -}}
+{{- $categoryStyles := dict }}{{ range $lib.type_categories }}{{ $categoryStyles = merge $categoryStyles (dict .category .) }}{{ end -}}
+{{- $otherStyle := index $categoryStyles "other" -}}
 <details class="reference-filters">
   <summary class="rf-head">Filter</summary>
   <form aria-label="Filter the Library">
@@ -27,7 +36,8 @@
     <legend>Type</legend>
     <button type="button" class="rf-chip is-active" data-facet="type" data-value="" aria-pressed="true">All</button>
     {{- range $lib.types }}{{ if in $haveType .type }}
-    <button type="button" class="rf-chip" data-facet="type" data-value="{{ .type }}" aria-pressed="false">{{ .label }}</button>
+    {{- $cat := index $categoryStyles (.category | default "other") | default $otherStyle -}}
+    <button type="button" class="rf-chip" data-facet="type" data-value="{{ .type }}" aria-pressed="false"><span class="type-swatch type-swatch--{{ $cat.shape | default "circle" }}" style="background: var(--colorplan-{{ $cat.color | default "dark-grey" }})" aria-hidden="true"></span>{{ .label }}</button>
     {{- end }}{{ end }}
   </fieldset>
 

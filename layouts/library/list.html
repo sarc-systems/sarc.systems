@@ -21,6 +21,7 @@
     {{ range . }}{{ partial "library-record.html" . }}{{ end }}
   </ul>
   {{ partial "library-image-index.html" (dict "pages" $entries) }}
+  {{ partial "library-map-view.html" . }}
   {{- else }}
   <p class="library-empty">No entries yet.</p>
   {{- end }}
@@ -28,7 +29,7 @@
 {{ end }}
 
 {{ define "scripts" }}
-{{- range (slice "js/library-filter.js") -}}
+{{- range (slice "js/library-filter.js" "js/library-map.js") -}}
   {{- with resources.Get . -}}
     {{- $j := . -}}
     {{- if hugo.IsProduction }}{{ $j = $j | minify }}{{ end -}}
