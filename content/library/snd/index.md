@@ -11,6 +11,7 @@ library:
 creators:
   - name: "Microstoria"
     role: artist
+    ref: microstoria
 
 subjects: [sound, technology]
 

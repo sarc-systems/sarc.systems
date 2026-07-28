@@ -34,6 +34,9 @@ access:
     kind: bandcamp
     url: "https://62eulengasse.bandcamp.com/album/62-eulengasse"
 
+related:
+  - {ref: fax-records, relation: release-of}
+
 draft: false
 ---
 

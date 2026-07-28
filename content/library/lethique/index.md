@@ -1,7 +1,7 @@
 ---
 title: "L'Ethique"
-summary: "Richard Pinhas' 2019 solo album on Bureau B."
-year: 2019
+summary: "Richard Pinhas' 1982 album featuring Gilles Deleuze's spoken voice, reissued by Bureau B in 2019."
+year: 1982
 
 library:
   id: lethique
@@ -12,6 +12,9 @@ creators:
   - name: "Richard Pinhas"
     role: artist
     ref: richard-pinhas
+  - name: "Gilles Deleuze"
+    role: lecturer
+    ref: gilles-deleuze
 
 subjects: [sound, technology, cybernetics]
 
@@ -19,7 +22,7 @@ images:
   - file: "cover.jpg"
     alt: "Cover of L'Ethique by Richard Pinhas"
     role: cover
-    caption: "2019 Bureau B LP/CD artwork."
+    caption: "2019 Bureau B reissue artwork."
     source: "https://richardpinhas.bandcamp.com/album/lethique"
     rights:
       status: unknown
@@ -31,8 +34,11 @@ access:
   - label: "Bandcamp"
     kind: bandcamp
     url: "https://richardpinhas.bandcamp.com/album/lethique"
+  - label: "Discogs"
+    kind: discogs
+    url: "https://www.discogs.com/release/351914-Richard-Pinhas-LEthique"
 
 draft: false
 ---
 
-Richard Pinhas' 2019 solo album on Bureau B, continuing his long-running practice of layered guitar and synthesizer built on a philosophical engagement with cybernetics.
+Recorded at Ramses Studio in 1981 and released in 1982, Richard Pinhas' fifth solo album sets his layered guitar and synthesizer, backed by former Magma players Bernard Paganotti and Clément Bailly, against the spoken voice of his close friend Gilles Deleuze on two tracks — a direct thread from his philosophical engagement with cybernetics to Deleuze's own thought.

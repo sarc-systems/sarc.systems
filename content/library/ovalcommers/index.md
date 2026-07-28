@@ -11,6 +11,7 @@ library:
 creators:
   - name: "Oval"
     role: artist
+    ref: markus-popp
 
 subjects: [sound, technology]
 
