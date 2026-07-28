@@ -77,3 +77,43 @@
   source_url:
   library_ref:
   enabled: true
+
+- id: give-them-a-tool
+  text: "If you want to teach people a new way of thinking, don't bother trying to teach them. Instead, give them a tool, the use of which will lead to new ways of thinking."
+  author: "Richard Buckminster Fuller"
+  work: ""
+  year:
+  citation: "Widely attributed to Fuller across secondary sources in this exact wording; no primary speech/publication has been pinned down, so treat the attribution as probable rather than confirmed."
+  source_url:
+  library_ref: buckminster-fuller
+  enabled: true
+
+- id: used-to-them
+  text: "Young man, in mathematics you don't understand things. You just get used to them."
+  author: "John von Neumann"
+  work: ""
+  year:
+  citation: "A famous piece of mathematical folklore recounting something von Neumann reportedly said to a colleague/student; recounted in multiple secondhand memoirs with no single authoritative primary source, so this is an attributed anecdote, not a verified direct quotation."
+  source_url:
+  library_ref: john-von-neumann
+  enabled: true
+
+- id: surrender-preconceptions
+  text: "You must surrender whatever preconceptions you have about music if you're really interested in it."
+  author: "Cecil Taylor"
+  work: ""
+  year:
+  citation: "From a Cecil Taylor interview; exact publication/date not yet pinned down."
+  source_url:
+  library_ref: cecil-taylor
+  enabled: true
+
+- id: militant-attitude-towards-sounds
+  text: "I took a militant attitude towards sounds. I wanted sounds to be a metaphor, that they could be as free as a human being might be free."
+  author: "Morton Feldman"
+  work: ""
+  year:
+  citation: "From a Feldman interview/essay on his early influences; exact publication not yet pinned down (commonly quoted in writing on his work)."
+  source_url:
+  library_ref: morton-feldman
+  enabled: true
