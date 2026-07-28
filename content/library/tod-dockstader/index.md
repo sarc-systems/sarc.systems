@@ -17,6 +17,11 @@ images:
     credit: "New Music USA"
     source: "https://newmusicusa.org/wp-content/uploads/2015/03/Dockstader-Gotham-2.jpg"
 
+access:
+  - label: "Official website"
+    kind: website
+    url: "https://dockstader.info"
+
 draft: false
 ---
 

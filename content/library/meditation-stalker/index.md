@@ -15,7 +15,14 @@ creators:
 
 subjects: [sound, time]
 
-images: []
+images:
+  - file: "stalker-still.jpg"
+    alt: "Still from Andrei Tarkovsky's Stalker"
+    role: still
+    credit: "The Criterion Collection"
+    source: "https://www.criterion.com/films/28150-stalker"
+    rights:
+      status: unknown
 
 access:
   - label: "YouTube"

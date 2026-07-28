@@ -15,7 +15,17 @@ creators:
 
 subjects: [sound, time]
 
-images: []
+images:
+  - file: "cover.jpg"
+    alt: "Cover of the Guerssen/Mirumir reissue of Solaris by Eduard Artemyev"
+    role: cover
+    caption: "Guerssen/Mirumir LP reissue artwork, from Artemyev's own 1989–90 re-recording of the score."
+    source: "https://guerssen.com/product/solaris/"
+    rights:
+      status: unknown
+    use:
+      basis: identification
+      note: "Label cover art used for identification."
 
 access:
   - label: "YouTube"

@@ -9,7 +9,14 @@ library:
 
 subjects: [sound, time]
 
-images: []
+images:
+  - file: "eduard-artemyev.jpg"
+    alt: "Eduard Artemyev"
+    role: portrait
+    source: "https://i.redd.it/qjo8nmj9bx8a1.jpg"
+    rights:
+      status: unknown
+      note: "Source page not traced; photographer/original context not yet established."
 
 access: []
 
