@@ -11,13 +11,9 @@ library:
 creators:
   - name: "Gordon Pask"
     role: author
+    ref: gordon-pask
 
 subjects: [cybernetics]
-
-images:
-  - file: "cover.jpg"
-    alt: "Cover of Gordon Pask's An Approach to Cybernetics (1961)"
-    role: cover
 
 access:
   - label: "PDF"

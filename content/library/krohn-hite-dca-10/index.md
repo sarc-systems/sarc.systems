@@ -10,6 +10,7 @@ library:
 creators:
   - name: "Krohn-Hite"
     role: manufacturer
+    ref: krohn-hite
 
 subjects:
   - technology

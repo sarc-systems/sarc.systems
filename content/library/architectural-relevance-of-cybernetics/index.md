@@ -11,6 +11,7 @@ library:
 creators:
   - name: "Gordon Pask"
     role: author
+    ref: gordon-pask
 
 subjects: [cybernetics]
 
