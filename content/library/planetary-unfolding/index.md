@@ -11,16 +11,11 @@ library:
 creators:
   - name: "Michael Stearns"
     role: artist
+    ref: michael-stearns
 
 subjects: [sound, space]
 
-images:
-  - file: "cover.jpg"
-    alt: "Michael Stearns"
-    role: portrait
-    anchor: Right
-    credit: "15 Questions"
-    source: "https://15questions.net/interview/fifteen-questions-interview-michael-stearns/"
+images: []
 
 access:
   - label: "Bandcamp"

@@ -18,7 +18,17 @@ creators:
 
 subjects: [sound, perception]
 
-images: []
+images:
+  - file: "cover.jpg"
+    alt: "Cover of Flayed / Crux by Eddie Prévost / Organum"
+    role: cover
+    caption: "1987 Silent Records LP artwork."
+    source: "https://www.discogs.com/master/108238-Eddie-Pr%C3%A9vost-Organum-Flayed-Crux"
+    rights:
+      status: unknown
+    use:
+      basis: identification
+      note: "Label cover art used for identification."
 
 access:
   - label: "Discogs"

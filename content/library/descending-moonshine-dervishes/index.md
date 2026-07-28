@@ -32,6 +32,9 @@ access:
     kind: catalog-record
     url: "https://www.discogs.com/master/49968-Terry-Riley-Descending-Moonshine-Dervishes"
 
+related:
+  - {ref: don-cherry-terry-riley-koln-1975, relation: related-work}
+
 draft: false
 ---
 

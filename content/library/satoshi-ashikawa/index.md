@@ -15,6 +15,9 @@ images:
     role: portrait
     source: "https://substackcdn.com/image/fetch/$s_!Peyf!,f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2F8da540c0-351b-4093-9a37-604184282f00_599x402.jpeg"
 
+related:
+  - {ref: wave-notation, relation: part-of}
+
 draft: false
 ---
 

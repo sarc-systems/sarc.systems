@@ -11,6 +11,9 @@ library:
 creators:
   - name: "Charles Tyler Ensemble"
     role: artist
+  - name: "Steve Reid"
+    role: performer
+    ref: steve-reid
 
 subjects: [sound, time]
 

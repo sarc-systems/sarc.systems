@@ -12,6 +12,12 @@ creators:
   - name: "Sonny Sharrock"
     role: artist
     ref: sonny-sharrock
+  - name: "Pharoah Sanders"
+    role: artist
+    ref: pharoah-sanders
+  - name: "Bill Laswell"
+    role: artist
+    ref: bill-laswell
 
 subjects: [sound, instruments, time]
 

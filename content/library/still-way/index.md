@@ -26,6 +26,9 @@ access:
     kind: bandcamp
     url: "https://wereleasewhateverthefuckwewantrecords.bandcamp.com/album/still-way-wave-notation-2"
 
+related:
+  - {ref: wave-notation, relation: release-of}
+
 draft: false
 ---
 

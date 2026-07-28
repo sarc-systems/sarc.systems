@@ -26,6 +26,9 @@ access:
     kind: catalog-record
     url: "https://www.discogs.com/master/552512-Hiroshi-Yoshimura-Music-For-Nine-Post-Cards"
 
+related:
+  - {ref: wave-notation, relation: release-of}
+
 draft: false
 ---
 

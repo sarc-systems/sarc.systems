@@ -11,6 +11,7 @@ library:
 creators:
   - name: "Robert Ashley"
     role: artist
+    ref: robert-ashley
   - name: "Paul DeMarinis"
     role: performer
 
