@@ -3,6 +3,11 @@
        entries are exempt from vocabulary checks but the hosted-rights guard
        still forces review/unset hosted files to stay drafts. */ -}}
 {{- $lib := hugo.Data.library -}}
+{{- /* Triggers library-public-types.html's own build-time checks: every
+       specific type maps to a public type, and every public type has a
+       color + shape (data/library.yaml). See CLAUDE.md § Library "Public
+       Type vs Specific Type". */ -}}
+{{- $pt := partialCached "library-public-types.html" . "library-public-types" -}}
 {{- $types := slice }}{{ range $lib.types }}{{ $types = $types | append .type }}{{ end -}}
 {{- $subjects := slice }}{{ range $lib.subjects }}{{ $subjects = $subjects | append .subject }}{{ end -}}
 {{- $roles := $lib.creator_roles -}}
@@ -123,4 +128,41 @@
   {{- if and $hasHosted (not (in $okRights $status)) -}}
     {{- errorf "Library: hosted item %q must not publish with rights status %q — establish rights (%s) or keep it a draft" $page.Path (default "unset" $status) (delimit $okRights ", ") -}}
   {{- end -}}
+{{- end -}}
+
+{{- /* Public/specific type audit — dev server only (hugo.IsServer), so
+       production build logs stay quiet. Counts every published entry by its
+       public type, then breaks down the specific types within any public
+       type that has more than one mapped specific type (today, only Work —
+       Person/Group/Organization map 1:1, and Event/Place/Concept have no
+       specific types yet). See CLAUDE.md § Library "Public Type vs Specific
+       Type" — this is the audit summary that section describes. */ -}}
+{{- if hugo.IsServer -}}
+  {{- $publicCounts := dict -}}
+  {{- $specificCounts := dict -}}
+  {{- range $entries -}}
+    {{- $t := "" }}{{ with .Params.library }}{{ $t = .type }}{{ end -}}
+    {{- $p := index $pt.typeOf $t -}}
+    {{- $publicCounts = merge $publicCounts (dict $p (add (int (index $publicCounts $p | default 0)) 1)) -}}
+    {{- $specificCounts = merge $specificCounts (dict $t (add (int (index $specificCounts $t | default 0)) 1)) -}}
+  {{- end -}}
+  {{- $publicTypesOrdered := sort $lib.public_types "order" -}}
+  {{- $lines := slice "Library public/specific type audit —" -}}
+  {{- $lines = $lines | append "  Public Types" -}}
+  {{- range $publicTypesOrdered -}}
+    {{- $n := index $publicCounts .public_type | default 0 -}}
+    {{- $lines = $lines | append (printf "    %s: %d" .label $n) -}}
+  {{- end -}}
+  {{- range $publicTypesOrdered -}}
+    {{- $pub := . -}}
+    {{- $subtypes := where $lib.types "public_type" $pub.public_type -}}
+    {{- if gt (len $subtypes) 1 -}}
+      {{- $lines = $lines | append (printf "  %s Subtypes" $pub.label) -}}
+      {{- range $subtypes -}}
+        {{- $n := index $specificCounts .type | default 0 -}}
+        {{- if gt $n 0 }}{{ $lines = $lines | append (printf "    %s: %d" .label $n) }}{{ end -}}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
+  {{- warnf "%s" (delimit $lines "\n") -}}
 {{- end -}}

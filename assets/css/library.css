@@ -273,14 +273,15 @@
   letter-spacing: 0.04em;
   color: var(--gray-2);
 }
-/* Node Type Encoding — one shared color+shape per type category (see
-   data/library.yaml's type_categories; the same tokens back the Type filter
-   chip swatches above). `.map-shape` is whichever SVG element
-   library-map.js used for this node's category (circle/rect/polygon) — its
-   *fill color* is set inline per node (it varies by type, CSS can't know
-   it); shape is the primary type cue, color reinforces it, and together
-   they're what tells a same-titled person and work apart at rest — never
-   permanent on-graph text (see the hover card further down).
+/* Node Type Encoding — one shared color+shape per PUBLIC type (see
+   data/library.yaml's public_types; the same tokens back the Type filter
+   chip swatches above — see CLAUDE.md § Library "Public Type vs Specific
+   Type"). `.map-shape` is whichever SVG element library-map.js used for this
+   node's public type (circle/rect/polygon) — its *fill color* is set inline
+   per node (it varies by public type, CSS can't know it); shape is the
+   primary type cue, color reinforces it, and together they're what tells a
+   same-titled person and work apart at rest — never permanent on-graph text
+   (see the hover card further down).
    CSS controls the emphasis (opacity) tiers only — the Selection Hierarchy,
    driven entirely by the *selected* (clicked) node, never by hover:
      - resting (nothing selected): full opacity — every node reads clearly.
@@ -318,10 +319,14 @@
    index.json elsewhere; no separate map derivative) stands in for the
    abstract shape, "approximately node-sized," per data/library.yaml/
    list.json's shared image pipeline. The bordered background rect keeps a
-   small image reading as "a node" rather than a loose floating picture;
-   both it and the image itself carry .map-shape so they fade through the
-   same emphasis tiers as everything else, in step. */
-.map-image-node-bg { fill: var(--paper-2); stroke: var(--rule); stroke-width: 1; }
+   small image reading as "a node" rather than a loose floating picture, AND
+   carries the node's public-type color as its stroke (set inline per node
+   in library-map.js, like the fill on a plain shape) — an image node still
+   reads as its broad type at a glance without ever recoloring the artwork
+   itself. Both the background and the image carry .map-shape so they fade
+   through the same emphasis tiers as everything else, in step. stroke here
+   is a fallback only; every node sets its own inline stroke color. */
+.map-image-node-bg { fill: var(--paper-2); stroke: var(--rule); stroke-width: 1.5; }
 .map-image-node-img { image-rendering: auto; }
 .map-edge {
   /* A couple of shades darker than the hairline --rule token — at --rule
@@ -538,7 +543,7 @@
   font-weight: 700;
 }
 /* Type-color legend swatch (shared with Map nodes — see data/library.yaml's
-   type_categories and CLAUDE.md § Library map view "Node Type Encoding").
+   public_types and CLAUDE.md § Library map view "Node Type Encoding").
    Decorative only (aria-hidden in the template): a small color+shape marker
    beside the label, never a fully-colored pill — the chip itself stays the
    plain outlined button defined above. A border keeps the mark legible

@@ -7,18 +7,13 @@
 {{- $subjectLabels := dict }}{{ range $lib.subjects }}{{ $subjectLabels = merge $subjectLabels (dict .subject .label) }}{{ end -}}
 {{- $extKind := dict }}{{ range $lib.access_kinds }}{{ $extKind = merge $extKind (dict .kind .external) }}{{ end -}}
 
-{{- /* Shared type-color/shape system — resolved here ONCE (type -> its
-       category's color/shape/label) so assets/js/library-map.js never
-       hard-codes a mapping of its own; see data/library.yaml's
-       type_categories for the single canonical definition, also consumed by
-       layouts/partials/library-filters.html for the chip swatches. */ -}}
-{{- $categoryStyles := dict }}{{ range $lib.type_categories }}{{ $categoryStyles = merge $categoryStyles (dict .category .) }}{{ end -}}
-{{- $otherStyle := index $categoryStyles "other" -}}
-{{- $typeStyles := dict -}}
-{{- range $lib.types -}}
-  {{- $cat := index $categoryStyles (.category | default "other") | default $otherStyle -}}
-  {{- $typeStyles = merge $typeStyles (dict .type (dict "category" $cat.category "label" $cat.label "color" $cat.color "shape" $cat.shape)) -}}
-{{- end -}}
+{{- /* The one centralized specific-type -> public-type mapping (colors,
+       shapes, labels) — see partials/library-public-types.html and
+       data/library.yaml's public_types for the single canonical definition,
+       also consumed by library-filters.html (chip swatches) and
+       assets/js/library-map.js (node fill/shape) via this file's exported
+       `public_type` per entry and top-level `public_type_styles`. */ -}}
+{{- $pt := partialCached "library-public-types.html" . "library-public-types" -}}
 {{- $entries := partial "library-collect.html" (dict "ctx" .) -}}
 {{- $out := slice -}}
 {{- range $entries -}}
@@ -64,6 +59,7 @@
       "url" .RelPermalink
       "type" $type
       "type_label" (index $typeLabels $type | default $type)
+      "public_type" (index $pt.typeOf $type)
       "sarc_work" (eq .Params.library.sarc_work true)
       "summary" (.Params.summary | default "")
       "year" (.Params.year | default (cond .Date.IsZero "" (string .Date.Year)))
@@ -76,4 +72,4 @@
       "related" $related -}}
   {{- $out = $out | append $rec -}}
 {{- end -}}
-{{ dict "count" (len $out) "entries" $out "type_styles" $typeStyles | jsonify (dict "indent" "  ") }}
+{{ dict "count" (len $out) "entries" $out "public_type_styles" $pt.styles | jsonify (dict "indent" "  ") }}

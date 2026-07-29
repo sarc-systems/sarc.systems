@@ -557,22 +557,56 @@ here) — same field as Catalog/Images, never a separate one. Requires JS like
 Images/Map's siblings; hidden under `data-nojs`. This is expected to evolve;
 treat the force layout itself as replaceable, not load-bearing.
 
-**Node Type Encoding.** One canonical color+shape token per Library type,
-shared by Map nodes *and* the Type filter chip swatches — never two separate
-mappings. Defined once in `data/library.yaml`'s `type_categories` (a handful
-of muted institutional categories — `people`, `written`, `audiovisual`,
-`technical`, `web`, `other` — since 25+ individual types each getting a
-bespoke hue would be visual noise, not restraint; several types deliberately
-share one token) and resolved once per type in `list.json`'s exported
-`type_styles`, so neither `library-map.js` nor `library-filters.html`
+**Public Type vs Specific Type.** Every entry's `library.type` (book, essay,
+release, composition, film, person, group, organization, …) is the SPECIFIC
+type — what form the thing takes — and stays exactly that granular in
+front matter; nothing here flattens or renames it. A separate, much smaller
+vocabulary, `data/library.yaml`'s `public_types` (seven values: `person`,
+`group`, `organization`, `work`, `event`, `place`, `concept`), is what the
+site actually **filters and colors by** — "what kind of thing is this?"
+rather than "what form does this work take?". Every specific type maps to
+exactly one public type (`types[].public_type` in the same file); a handful
+of specific types (book, essay, story, paper, article, manual, recording,
+release, composition, film, video, lecture, audio, podcast, website, archive,
+software, repository, project, instrument, system, document, other) all map
+to the single public type `work` — 25 possible forms collapse to one
+navigable, one visually-encoded category, while `person`/`group`/
+`organization` map 1:1 (they have no finer subtypes to distinguish). The
+mapping lives in exactly one place, `partials/library-public-types.html`
+(a pure function of `data/library.yaml`, called via `partialCached` so its
+small double loop runs once per build, not once per entry) — every Hugo
+template that needs either direction of the mapping (`list.json`,
+`library-filters.html`, `library-record.html`, `library-image-index.html`)
+resolves through this one partial, and it fails the build (`errorf`) if a
+type has no `public_type`, a `public_type` doesn't exist, or a public type is
+missing its `color`/`shape`. Client-side JS (`library-filter.js`,
+`library-map.js`) never re-derives this mapping — it only ever reads the
+already-resolved `public_type` field `list.json` exports per entry, plus the
+`public_type_styles` dict, both computed server-side. A dev-only audit
+(`library-validate.html`, gated on `hugo.IsServer` so it never runs in
+production builds) prints entry counts per public type, and per specific
+type within any public type that has more than one (today, only Work).
+
+**Node Type Encoding.** One canonical color+shape token per PUBLIC type
+(not per specific type), shared by Map nodes *and* the Type filter chip
+swatches — never two separate mappings. Defined once in
+`data/library.yaml`'s `public_types` and resolved by
+`partials/library-public-types.html` (see "Public Type vs Specific Type"
+above), then exported once per public type in `list.json`'s
+`public_type_styles`, so neither `library-map.js` nor `library-filters.html`
 hard-codes a mapping of its own. `color` is always a `data/colorplan.json`
 slug, referenced as `var(--colorplan-<slug>)` — Colorplan is this site's only
 colour source, full stop. Shape is the type cue whenever an entry has no
 image (see "Image nodes" below for when it does) — one of `circle | square |
-diamond | triangle` — reinforced by colour, never a permanent text badge. On
-Type filter chips, the same token renders as a small decorative
-(`aria-hidden`) swatch before the label — a legend, not a redesign: chips
-stay the existing plain outlined buttons, never full-colour pills.
+diamond | triangle`, reused across public types by design (color is the
+primary distinguisher, shape reinforces it) — reinforced by colour, never a
+permanent text badge. On Type filter chips, the same token renders as a
+small decorative (`aria-hidden`) swatch before the label — a legend, not a
+redesign: chips stay the existing plain outlined buttons, never full-colour
+pills, and the filter itself only ever offers the seven public types (the
+chip's `data-value`/URL `?type=` is always a public type slug like `work`,
+never a specific type), narrowed to whichever are actually present among
+published entries.
 
 **Image nodes.** Any entry with a `primary_image` renders using that image
 — already processed/cropped for `index.json` elsewhere (the chance-selection
@@ -583,11 +617,14 @@ Sized noticeably larger than the abstract dots (`~18–22px` across) but still
 plainly "a node," not a card: a bordered background rect (`.map-image-node-bg`)
 keeps a small photo from reading as a loose floating picture, and both it and
 the `<image>` carry `.map-shape` so they fade through the emphasis tiers
-below in step, exactly like an abstract node would. This — not permanent
-text — is what tells a same-titled person and a work of that name apart at a
-glance; the preview card (below) resolves any remaining ambiguity on demand.
-Entries without an image keep the plain type shape/colour; the graph stays
-complete either way.
+below in step, exactly like an abstract node would. The border's *stroke
+color* is the node's public-type color (set inline, same mechanism as a
+plain shape's fill) — an image node still reads as its broad type at a
+glance without the artwork itself ever being recolored. This — not
+permanent text — is what tells a same-titled person and a work of that name
+apart at a glance; the preview card (below) resolves any remaining ambiguity
+on demand. Entries without an image keep the plain type shape/colour; the
+graph stays complete either way.
 
 **Selection-Centered Navigation.** Clicking a node makes it *the selection* —
 a stable point of focus (`selectedId`) that persists until another node is
@@ -640,11 +677,13 @@ selected card) and `#library-map-hover-card` (the transient hover card,
 `.library-map-card--hover` modifier: lower opacity, higher z-index, no other
 redesign) — so both can render at once without duplicating logic. Each
 shows: primary image (when the entry has one) + title + subtitle
-(`creator_names · year`, whichever are present — deliberately not
-`type_label`: shape/color on the node itself is the type cue, so a card
-doesn't also spell out "Person"/"Release"/etc in words) + a short,
-JS-truncated summary snippet. Sized as a real catalog card, not a small
-tooltip, though still deliberately restrained ("a catalog preview, not a
+(`creator_names · type_label · year`, whichever are present — SPECIFIC type,
+e.g. "Composition"/"Album"/"Essay", real disambiguating metadata for a work;
+suppressed only for `person`/`group` entries, exactly like
+`library-record.html`'s catalog kicker, since the node's own shape/color
+already says "Person" and restating it in words would be redundant) + a
+short, JS-truncated summary snippet. Sized as a real catalog card, not a
+small tooltip, though still deliberately restrained ("a catalog preview, not a
 popup dialog"): plain ruled/paper styling matching the rest of the Library,
 no shadow, no rounded corners. Being ordinary HTML positioned by pixel
 coordinates derived from a node's current on-screen position

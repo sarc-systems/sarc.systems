@@ -256,7 +256,7 @@
     return matchesFields(ds.type || "", (ds.subjects || "").split(/\s+/).filter(Boolean));
   }
   function matchesEntry(e) {
-    return matchesFields(e.type, e.subjects || []);
+    return matchesFields(e.public_type, e.subjects || []);
   }
 
   // `fromNav` is true only when called right after fromURL() (initial load or

@@ -6,59 +6,62 @@
 # separate content shelves. Ordered lists (not maps) so templates iterate in
 # display order and each entry carries its own key.
 
-# Primary entry type (one per entry, nested as `library.type`). Presentation
-# adapts to the type; there is no public section per type. `category` keys
-# into `type_categories` below (the shared type-color/shape system) — several
-# types deliberately share one category/token; see the comment there for why.
+# Primary entry type (one per entry, nested as `library.type`) — the SPECIFIC
+# type: what form the thing takes (book, essay, release, composition, …).
+# `public_type` keys into `public_types` below — the seven broad ontological
+# classes used for navigation and visual identity (see CLAUDE.md § Library
+# "Public Type vs Specific Type"). Every specific type must map to exactly one
+# public type; validation fails the build on anything unmapped. Presentation
+# adapts to the specific type; there is no public section per type.
 types:
-  - {type: person,       label: "Person",         order: 15,  category: people}
-  - {type: group,        label: "Group",          order: 18,  category: people}
-  - {type: organization, label: "Organization",   order: 20,  category: people}
-  - {type: book,         label: "Book",           order: 30,  category: written}
-  - {type: essay,        label: "Essay",          order: 40,  category: written}
-  - {type: story,        label: "Story",          order: 45,  category: written}
-  - {type: paper,        label: "Paper",          order: 50,  category: written}
-  - {type: article,      label: "Article",        order: 60,  category: written}
-  - {type: manual,       label: "Manual",         order: 70,  category: written}
-  - {type: recording,    label: "Recording",      order: 80,  category: audiovisual}
-  - {type: release,      label: "Release",        order: 90,  category: audiovisual}
-  - {type: composition,  label: "Composition",    order: 100, category: audiovisual}
-  - {type: film,         label: "Film",           order: 110, category: audiovisual}
-  - {type: video,        label: "Video",          order: 120, category: audiovisual}
-  - {type: lecture,      label: "Lecture",        order: 130, category: audiovisual}
-  - {type: audio,        label: "Audio",          order: 140, category: audiovisual}
-  - {type: podcast,      label: "Podcast",        order: 150, category: audiovisual}
-  - {type: website,      label: "Website",        order: 160, category: web}
-  - {type: archive,      label: "Archive",        order: 170, category: web}
-  - {type: software,     label: "Software",       order: 180, category: technical}
-  - {type: repository,   label: "Code Repository", order: 190, category: technical}
-  - {type: project,      label: "Project",        order: 200, category: technical}
-  - {type: instrument,   label: "Instrument",     order: 210, category: technical}
-  - {type: system,       label: "System",         order: 220, category: technical}
-  - {type: document,     label: "Document",       order: 230, category: written}
-  - {type: other,        label: "Other",          order: 240, category: other}
+  - {type: person,       label: "Person",          order: 15,  public_type: person}
+  - {type: group,        label: "Group",           order: 18,  public_type: group}
+  - {type: organization, label: "Organization",    order: 20,  public_type: organization}
+  - {type: book,         label: "Book",            order: 30,  public_type: work}
+  - {type: essay,        label: "Essay",           order: 40,  public_type: work}
+  - {type: story,        label: "Story",           order: 45,  public_type: work}
+  - {type: paper,        label: "Paper",           order: 50,  public_type: work}
+  - {type: article,      label: "Article",         order: 60,  public_type: work}
+  - {type: manual,       label: "Manual",          order: 70,  public_type: work}
+  - {type: recording,    label: "Recording",       order: 80,  public_type: work}
+  - {type: release,      label: "Release",         order: 90,  public_type: work}
+  - {type: composition,  label: "Composition",     order: 100, public_type: work}
+  - {type: film,         label: "Film",            order: 110, public_type: work}
+  - {type: video,        label: "Video",           order: 120, public_type: work}
+  - {type: lecture,      label: "Lecture",         order: 130, public_type: work}
+  - {type: audio,        label: "Audio",           order: 140, public_type: work}
+  - {type: podcast,      label: "Podcast",         order: 150, public_type: work}
+  - {type: website,      label: "Website",         order: 160, public_type: work}
+  - {type: archive,      label: "Archive",         order: 170, public_type: work}
+  - {type: software,     label: "Software",        order: 180, public_type: work}
+  - {type: repository,   label: "Code Repository", order: 190, public_type: work}
+  - {type: project,      label: "Project",         order: 200, public_type: work}
+  - {type: instrument,   label: "Instrument",      order: 210, public_type: work}
+  - {type: system,       label: "System",          order: 220, public_type: work}
+  - {type: document,     label: "Document",        order: 230, public_type: work}
+  - {type: other,        label: "Other",           order: 240, public_type: work}
 
-# Shared type-color/shape system (Map nodes + Type filter chip markers — see
-# CLAUDE.md § Library map view "Node Type Encoding"). One canonical map,
-# defined here once and consumed by both layouts/partials/library-filters.html
-# (chip swatches) and assets/js/library-map.js (node fill/shape) via
-# list.json's exported `type_styles` — neither hard-codes a colour.
-#
-# 25+ individual types share this small handful of categories rather than each
-# getting a bespoke hue: a "restrained institutional palette" (per spec) means
-# a few legible, muted distinctions, not a rainbow no one can hold in their
-# head. `color` is a data/colorplan.json slug (resolved as
-# var(--colorplan-<slug>), never a hand-picked hex — Colorplan is this site's
-# only colour source, full stop). Deliberately avoids forest/slate/cobalt/
-# bitter-chocolate, already meaningful elsewhere (Library section, Journal
-# section, SARC-100 project, site default).
-type_categories:
-  - {category: people,      label: "People & groups",       color: bagdad-brown, shape: circle}
-  - {category: written,     label: "Written works",         color: sapphire,     shape: square}
-  - {category: audiovisual, label: "Audio & visual works",  color: claret,       shape: circle}
-  - {category: technical,   label: "Technical & systems",   color: emerald,      shape: diamond}
-  - {category: web,         label: "Web & reference",       color: amethyst,     shape: triangle}
-  - {category: other,       label: "Other",                 color: dark-grey,    shape: circle}
+# The seven public types — canonical visual identity (Map nodes, Type filter
+# chip markers, image-node borders, future legends/badges) AND primary
+# filtering. One centralized mapping, defined here once, resolved by the
+# shared partials/library-public-types.html and consumed by
+# layouts/library/list.json (exports `public_type` per entry + the
+# `public_type_styles` dict), library-filters.html (chip swatches), and
+# assets/js/library-map.js (node fill/shape) — none of them hard-codes a
+# colour or duplicates this mapping. `color` is always a data/colorplan.json
+# slug (resolved as var(--colorplan-<slug>)); shapes repeat across types by
+# design (color is the primary distinguisher, shape reinforces) — see
+# CLAUDE.md § Library "Public Type vs Specific Type". Deliberately avoids
+# forest/slate/cobalt/bitter-chocolate, already meaningful elsewhere (Library
+# section, Journal section, SARC-100 project, site default).
+public_types:
+  - {public_type: person,       label: "Person",       order: 10, color: bagdad-brown, shape: circle}
+  - {public_type: group,        label: "Group",        order: 20, color: claret,       shape: diamond}
+  - {public_type: organization, label: "Organization", order: 30, color: dark-grey,     shape: square}
+  - {public_type: work,         label: "Work",         order: 40, color: sapphire,     shape: circle}
+  - {public_type: event,        label: "Event",        order: 50, color: emerald,      shape: triangle}
+  - {public_type: place,        label: "Place",        order: 60, color: amethyst,     shape: square}
+  - {public_type: concept,      label: "Concept",      order: 70, color: purple,       shape: diamond}
 
 # Controlled subjects (multiple per entry) — why an entry matters to SARC, not a
 # commercial genre. Keep small. `time` is deliberately broad (chronology,

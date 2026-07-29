@@ -9,16 +9,18 @@
        shown only when JS switches to Images view (see library-filter.js).
        Call: {{ partial "library-image-index.html" (dict "pages" $entries) }} */ -}}
 {{- $pages := .pages -}}
+{{- $pt := partialCached "library-public-types.html" . "library-public-types" -}}
 <div class="library-image-index" id="library-image-index" hidden>
   {{- range $pages -}}
     {{- $page := . -}}
     {{- $id := $page.Params.library.id -}}
     {{- $type := $page.Params.library.type -}}
+    {{- $publicType := index $pt.typeOf $type -}}
     {{- $subs := $page.Params.subjects | default slice -}}
     {{- $thumb := partial "library-thumbnail.html" $page -}}
     {{- if $thumb.has }}
   <a class="library-image-index__item" href="{{ $page.RelPermalink }}" aria-label="View {{ $page.Title }}"
-     data-library-id="{{ $id }}" data-type="{{ $type }}" data-subjects="{{ delimit $subs " " }}">
+     data-library-id="{{ $id }}" data-type="{{ $publicType }}" data-subjects="{{ delimit $subs " " }}">
     <img src="{{ $thumb.url }}" srcset="{{ $thumb.url }} 1x, {{ $thumb.url2x }} 2x"
          style="object-position: {{ $thumb.pos }}" alt="{{ $thumb.alt }}" width="240" height="240" loading="lazy" decoding="async">
   </a>

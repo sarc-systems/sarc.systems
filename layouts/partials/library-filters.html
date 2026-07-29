@@ -1,7 +1,7 @@
 {{- /* Unified catalog filter UI. Context: dict "pages" <entries>. Offers only
-       the types and subjects actually present (in vocabulary order). Native
-       buttons carry state via aria-pressed; the whole control is shown only
-       with JS (CSS-gated on data-nojs) so no-JS visitors see the full
+       the public types and subjects actually present (in vocabulary order).
+       Native buttons carry state via aria-pressed; the whole control is shown
+       only with JS (CSS-gated on data-nojs) so no-JS visitors see the full
        catalog. Collapsed by default behind a native <details>/<summary>
        disclosure — library-filter.js opens it automatically on load only
        when the URL already carries an active filter, so a shared filtered
@@ -11,23 +11,26 @@
        valid per-entry field and in the JSON index, just not filterable here
        — this can come back the same way Type/Subject work if it's wanted
        later.
-       Each Type chip carries a small colour swatch from the shared
-       type-color system (data/library.yaml's type_categories — see CLAUDE.md
-       § Library map view "Node Type Encoding"), the same tokens
-       assets/js/library-map.js uses for node fill/shape. It's a legend, not
-       a redesign: chips stay plain outlined buttons, never fully-colored
-       pills, and the swatch is decorative (aria-hidden) — the chip's own
-       text is still the only thing that matters for state/accessibility. */ -}}
+       Type filters the seven broad PUBLIC types (Person/Group/Organization/
+       Work/Event/Place/Concept), not the ~25 specific entry types — see
+       CLAUDE.md § Library "Public Type vs Specific Type". Each Type chip
+       carries a small colour swatch from the shared public-type style system
+       (partials/library-public-types.html — see CLAUDE.md § Library map view
+       "Node Type Encoding"), the same tokens assets/js/library-map.js uses
+       for node fill/shape. It's a legend, not a redesign: chips stay plain
+       outlined buttons, never fully-colored pills, and the swatch is
+       decorative (aria-hidden) — the chip's own text is still the only thing
+       that matters for state/accessibility. */ -}}
 {{- $lib := hugo.Data.library -}}
 {{- $pages := .pages -}}
+{{- $pt := partialCached "library-public-types.html" . "library-public-types" -}}
 {{- $haveType := slice }}{{ $haveSub := slice -}}
 {{- range $pages -}}
-  {{- with .Params.library.type }}{{ $haveType = $haveType | append . }}{{ end -}}
+  {{- with .Params.library.type }}{{ $haveType = $haveType | append (index $pt.typeOf .) }}{{ end -}}
   {{- range .Params.subjects }}{{ $haveSub = $haveSub | append . }}{{ end -}}
 {{- end -}}
 {{- $haveType = uniq $haveType }}{{ $haveSub = uniq $haveSub -}}
-{{- $categoryStyles := dict }}{{ range $lib.type_categories }}{{ $categoryStyles = merge $categoryStyles (dict .category .) }}{{ end -}}
-{{- $otherStyle := index $categoryStyles "other" -}}
+{{- $publicTypesOrdered := sort $lib.public_types "order" -}}
 <details class="reference-filters">
   <summary class="rf-head">Filter</summary>
   <form aria-label="Filter the Library">
@@ -35,9 +38,8 @@
   <fieldset class="rf-facet">
     <legend>Type</legend>
     <button type="button" class="rf-chip is-active" data-facet="type" data-value="" aria-pressed="true">All</button>
-    {{- range $lib.types }}{{ if in $haveType .type }}
-    {{- $cat := index $categoryStyles (.category | default "other") | default $otherStyle -}}
-    <button type="button" class="rf-chip" data-facet="type" data-value="{{ .type }}" aria-pressed="false"><span class="type-swatch type-swatch--{{ $cat.shape | default "circle" }}" style="background: var(--colorplan-{{ $cat.color | default "dark-grey" }})" aria-hidden="true"></span>{{ .label }}</button>
+    {{- range $publicTypesOrdered }}{{ if in $haveType .public_type }}
+    <button type="button" class="rf-chip" data-facet="type" data-value="{{ .public_type }}" aria-pressed="false"><span class="type-swatch type-swatch--{{ .shape }}" style="background: var(--colorplan-{{ .color }})" aria-hidden="true"></span>{{ .label }}</button>
     {{- end }}{{ end }}
   </fieldset>
 

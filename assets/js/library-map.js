@@ -19,10 +19,17 @@
 // file's listener exists. Visibility of the whole view (#library-map hidden
 // or not) is still owned by library-filter.js, same as Images.
 //
-// Node Type Encoding: color + shape come from index.json's `type_styles`,
-// itself resolved once at build time from data/library.yaml's
-// type_categories — the one canonical map, shared with the Type filter
-// chip swatches (library-filters.html). This file never hard-codes a color.
+// Node Type Encoding: color + shape are keyed by PUBLIC type (person/group/
+// organization/work/event/place/concept — index.json's `public_type` per
+// entry, styled via `public_type_styles`), not an entry's specific type
+// (release/composition/essay/…) — see CLAUDE.md § Library "Public Type vs
+// Specific Type". Both are resolved once at build time from data/library.yaml
+// via partials/library-public-types.html, the one canonical map shared with
+// the Type filter chip swatches (library-filters.html). This file never
+// hard-codes a color, and the Type filter itself only ever operates on
+// public_type (`matchesEntry()` below, and the chip values it reads from
+// `library:filter-change` / the URL) — specific type stays purely
+// descriptive, shown as `type_label` on preview cards.
 //
 // Image nodes: any entry with a primary_image renders using that image
 // (already processed/cropped by Hugo for index.json elsewhere — no separate
@@ -75,7 +82,7 @@
   var panAnimHandle = null; // in-flight recenter animation, if any
 
   function matchesEntry(e) {
-    var typeOk = sel.type.length === 0 || sel.type.indexOf(e.type) !== -1;
+    var typeOk = sel.type.length === 0 || sel.type.indexOf(e.public_type) !== -1;
     var subjOk = sel.subject.length === 0 || sel.subject.some(function (s) {
       return (e.subjects || []).indexOf(s) !== -1;
     });
@@ -98,6 +105,7 @@
         id: e.library_id,
         title: e.title,
         type: e.type,
+        publicType: e.public_type,
         url: e.url,
         hub: !!HUB_TYPES[e.type],
         x: W / 2 + (Math.random() - 0.5) * W * 0.8,
@@ -217,7 +225,7 @@
     return e;
   }
 
-  // One shape element per the node's type-category — see the module comment.
+  // One shape element per the node's public type — see the module comment.
   // All carry the shared "map-shape" class CSS uses for the emphasis
   // (opacity) tiers, and an inline fill color (the one thing CSS can't know,
   // since it varies node-to-node by type). Used as the fallback whenever an
@@ -246,16 +254,20 @@
   // map thumbnail derivative), framed in a small square with a border so it
   // still reads as "a node," not a loose picture; falls back to the type
   // shape otherwise. Both cases return an element already carrying the
-  // "map-shape" class(es) the emphasis-tier CSS keys off.
+  // "map-shape" class(es) the emphasis-tier CSS keys off. The frame's border
+  // carries the node's public-type color — image nodes still read as their
+  // broad type at a glance without ever recoloring the artwork itself.
   function createNodeVisual(n, style, entry) {
     var img = entry && entry.primary_image;
     if (!img || !img.url) return createShape(style, n.hub ? 6 : 4);
     var s = n.hub ? 11 : 9;
     var group = el("g", { "class": "map-image-node" });
-    group.appendChild(el("rect", {
+    var bg = el("rect", {
       "class": "map-shape map-image-node-bg",
       x: -s, y: -s, width: s * 2, height: s * 2
-    }));
+    });
+    bg.style.stroke = "var(--colorplan-" + style.color + ")";
+    group.appendChild(bg);
     var imageEl = el("image", {
       "class": "map-shape map-image-node-img",
       x: -s, y: -s, width: s * 2, height: s * 2,
@@ -286,7 +298,7 @@
     });
 
     nodes.forEach(function (n) {
-      var style = typeStyles[n.type] || FALLBACK_STYLE;
+      var style = typeStyles[n.publicType] || FALLBACK_STYLE;
       var entry = entryById[n.id];
       var g = el("g", { "class": "map-node", transform: "translate(" + n.x + "," + n.y + ")" });
       g.appendChild(createNodeVisual(n, style, entry));
@@ -368,6 +380,11 @@
     if (ctrl.subtitle) {
       var bits = [];
       if (entry.creator_names) bits.push(entry.creator_names);
+      // Specific type (Composition, Album, Essay, …) is real disambiguating
+      // metadata for a work — but on a person's or group's own card it would
+      // just restate the obvious ("Person"), so it's suppressed there
+      // exactly like library-record.html's catalog kicker.
+      if (entry.type_label && entry.type !== "person" && entry.type !== "group") bits.push(entry.type_label);
       if (entry.year) bits.push(entry.year);
       ctrl.subtitle.textContent = bits.join(" · ");
     }
@@ -642,7 +659,7 @@
     .then(function (r) { return r.ok ? r.json() : null; })
     .then(function (data) {
       if (!data || !data.entries || !data.entries.length) return;
-      typeStyles = data.type_styles || {};
+      typeStyles = data.public_type_styles || {};
       buildGraph(data.entries);
       layout();
       render();

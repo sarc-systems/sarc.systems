@@ -1,0 +1,27 @@
+{{- /* The one centralized specific-type -> public-type mapping (see
+       data/library.yaml's `types`/`public_types` and CLAUDE.md § Library
+       "Public Type vs Specific Type"). Returns {styles, typeOf}: `styles` is
+       a dict keyed by public_type (each {public_type, label, color, shape,
+       order}); `typeOf` is a dict keyed by specific type, valued with its
+       public_type string. Pure function of hugo.Data.library (no dependency
+       on the calling page) — always call via partialCached with a fixed key
+       so the ~30-entry double loop runs once for the whole build, not once
+       per record/JSON entry:
+       {{ $pt := partialCached "library-public-types.html" . "library-public-types" }}
+       Every caller (list.json, library-filters.html, library-record.html,
+       library-image-index.html) resolves through this one partial — never a
+       second copy of the mapping. */ -}}
+{{- $lib := hugo.Data.library -}}
+{{- $styles := dict -}}
+{{- range $lib.public_types -}}
+  {{- if not .color }}{{ errorf "Library: public_type %q has no color defined" .public_type }}{{ end -}}
+  {{- if not .shape }}{{ errorf "Library: public_type %q has no shape defined" .public_type }}{{ end -}}
+  {{- $styles = merge $styles (dict .public_type .) -}}
+{{- end -}}
+{{- $typeOf := dict -}}
+{{- range $lib.types -}}
+  {{- if not .public_type }}{{ errorf "Library: type %q has no public_type mapping in data/library.yaml" .type }}{{ end -}}
+  {{- if not (index $styles .public_type) }}{{ errorf "Library: type %q maps to unknown public_type %q (not in data/library.yaml's public_types)" .type .public_type }}{{ end -}}
+  {{- $typeOf = merge $typeOf (dict .type .public_type) -}}
+{{- end -}}
+{{- return (dict "styles" $styles "typeOf" $typeOf) -}}

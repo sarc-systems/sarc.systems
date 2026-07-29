@@ -1,10 +1,16 @@
 {{- /* One unified catalog record — a ruled row (never a card), optionally with a
        square thumbnail from the entry's first image. Carries data-* for the
        client filter and a data-library-id for stable identity (future comments).
-       Context is the entry page. Hidden by filtering via the `hidden` attribute. */ -}}
+       Context is the entry page. Hidden by filtering via the `hidden` attribute.
+       data-type carries the broad PUBLIC type (person/group/.../work/…) —
+       what the Type filter actually matches against — while the visible
+       kicker text below still names the SPECIFIC type (Release, Composition,
+       …); see CLAUDE.md § Library "Public Type vs Specific Type". */ -}}
 {{- $lib := hugo.Data.library -}}
 {{- $id := .Params.library.id -}}
 {{- $type := .Params.library.type -}}
+{{- $pt := partialCached "library-public-types.html" . "library-public-types" -}}
+{{- $publicType := index $pt.typeOf $type -}}
 
 {{- $typeLabel := "" -}}{{ range $lib.types }}{{ if eq .type $type }}{{ $typeLabel = .label }}{{ end }}{{ end -}}
 {{- /* Person/Group entries: the title already reads as the name — the type
@@ -25,7 +31,7 @@
        grows the row; a per-image `anchor` sets both the Fill focus and the
        CSS object-position. */ -}}
 {{- $thumb := partial "library-thumbnail.html" . -}}
-<li class="library-record{{ if $thumb.has }} has-thumb{{ end }}" data-library-id="{{ $id }}" data-type="{{ $type }}" data-subjects="{{ delimit $subs " " }}" data-has-image="{{ if $thumb.has }}true{{ else }}false{{ end }}">
+<li class="library-record{{ if $thumb.has }} has-thumb{{ end }}" data-library-id="{{ $id }}" data-type="{{ $publicType }}" data-subjects="{{ delimit $subs " " }}" data-has-image="{{ if $thumb.has }}true{{ else }}false{{ end }}">
   {{- with $thumb.has }}
   <a class="library-record-thumb" href="{{ $.RelPermalink }}" tabindex="-1" aria-hidden="true">
     <img src="{{ $thumb.url }}" srcset="{{ $thumb.url }} 1x, {{ $thumb.url2x }} 2x"
