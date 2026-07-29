@@ -14,7 +14,6 @@ creators:
     ref: thomas-lehn
   - name: "Gerry Hemingway"
     role: performer
-    ref: gerry-hemingway
 
 subjects: [sound, instruments, time]
 

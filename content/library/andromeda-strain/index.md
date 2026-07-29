@@ -11,7 +11,6 @@ library:
 creators:
   - name: "Gil Mellé"
     role: composer
-    ref: gil-melle
 
 subjects: [sound, technology]
 
