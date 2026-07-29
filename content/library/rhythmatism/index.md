@@ -5,7 +5,7 @@ year: 1976
 
 library:
   id: rhythmatism
-  type: release
+  type: album
   sarc_work: false
 
 creators:

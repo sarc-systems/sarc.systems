@@ -5,7 +5,7 @@ year: 1970
 
 library:
   id: bitches-brew
-  type: release
+  type: album
   sarc_work: false
 
 creators:

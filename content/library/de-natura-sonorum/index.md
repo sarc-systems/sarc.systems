@@ -5,7 +5,7 @@ year: 1975
 
 library:
   id: de-natura-sonorum
-  type: release
+  type: album
   sarc_work: false
 
 creators:

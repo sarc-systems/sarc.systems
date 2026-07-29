@@ -5,7 +5,7 @@ year: 1978
 
 library:
   id: con
-  type: release
+  type: album
   sarc_work: false
 
 creators:

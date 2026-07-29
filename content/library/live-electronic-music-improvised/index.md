@@ -5,7 +5,7 @@ year: 1970
 
 library:
   id: live-electronic-music-improvised
-  type: release
+  type: album
   sarc_work: false
 
 creators:

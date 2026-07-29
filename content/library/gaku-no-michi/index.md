@@ -5,7 +5,7 @@ year: 1978
 
 library:
   id: gaku-no-michi
-  type: release
+  type: album
   sarc_work: false
 
 creators:

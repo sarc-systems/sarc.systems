@@ -5,7 +5,7 @@ year: 2018
 
 library:
   id: rhizosphere
-  type: release
+  type: album
   sarc_work: false
 
 creators:

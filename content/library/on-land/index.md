@@ -5,7 +5,7 @@ year: 1982
 
 library:
   id: on-land
-  type: release
+  type: album
   sarc_work: false
 
 creators:

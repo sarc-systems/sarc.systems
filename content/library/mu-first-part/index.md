@@ -5,7 +5,7 @@ year: 1969
 
 library:
   id: mu-first-part
-  type: release
+  type: album
   sarc_work: false
 
 creators:

@@ -5,7 +5,7 @@ year: 1968
 
 library:
   id: jaap-vink-recollection-grm
-  type: release
+  type: album
   sarc_work: false
 
 creators:

@@ -5,7 +5,7 @@ year: 2020
 
 library:
   id: duo-exchange-complete-sessions
-  type: release
+  type: album
   sarc_work: false
 
 creators:

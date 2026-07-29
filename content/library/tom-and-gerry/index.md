@@ -5,7 +5,7 @@ year: 1999
 
 library:
   id: tom-and-gerry
-  type: release
+  type: album
   sarc_work: false
 
 creators:

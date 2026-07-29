@@ -5,7 +5,7 @@ year: 1967
 
 library:
   id: nommo
-  type: release
+  type: album
   sarc_work: false
 
 creators:

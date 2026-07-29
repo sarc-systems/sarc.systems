@@ -5,7 +5,7 @@ year: 1979
 
 library:
   id: iceland-pinhas
-  type: release
+  type: album
   sarc_work: false
 
 creators:

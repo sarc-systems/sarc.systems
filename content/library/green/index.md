@@ -5,7 +5,7 @@ year: 1986
 
 library:
   id: green
-  type: release
+  type: album
   sarc_work: false
 
 creators:

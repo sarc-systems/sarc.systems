@@ -5,7 +5,7 @@ year: 1995
 
 library:
   id: 62-eulengasse
-  type: release
+  type: album
   sarc_work: false
 
 creators:

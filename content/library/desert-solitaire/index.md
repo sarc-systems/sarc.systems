@@ -5,7 +5,7 @@ year: 1989
 
 library:
   id: desert-solitaire
-  type: release
+  type: album
   sarc_work: false
 
 creators:

@@ -5,7 +5,7 @@ year: 1978
 
 library:
   id: tremblements
-  type: release
+  type: album
   sarc_work: false
 
 creators:

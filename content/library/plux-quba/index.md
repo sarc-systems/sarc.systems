@@ -5,7 +5,7 @@ year: 1988
 
 library:
   id: plux-quba
-  type: release
+  type: album
   sarc_work: false
 
 creators:

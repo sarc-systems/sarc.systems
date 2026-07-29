@@ -5,7 +5,7 @@ year: 1977
 
 library:
   id: pythagoron
-  type: release
+  type: album
   sarc_work: false
 
 creators:

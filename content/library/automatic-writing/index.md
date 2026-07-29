@@ -5,7 +5,7 @@ year: 1979
 
 library:
   id: automatic-writing
-  type: release
+  type: album
   sarc_work: false
 
 creators:

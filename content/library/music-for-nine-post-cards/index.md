@@ -5,7 +5,7 @@ year: 1982
 
 library:
   id: music-for-nine-post-cards
-  type: release
+  type: album
   sarc_work: false
 
 creators:

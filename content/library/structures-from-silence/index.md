@@ -5,7 +5,7 @@ year: 1984
 
 library:
   id: structures-from-silence
-  type: release
+  type: album
   sarc_work: false
 
 creators:

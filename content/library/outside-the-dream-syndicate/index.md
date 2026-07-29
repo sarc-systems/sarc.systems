@@ -5,7 +5,7 @@ year: 1973
 
 library:
   id: outside-the-dream-syndicate
-  type: release
+  type: album
   sarc_work: false
 
 creators:

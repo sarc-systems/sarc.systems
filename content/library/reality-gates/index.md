@@ -5,7 +5,7 @@ year: 1973
 
 library:
   id: reality-gates
-  type: release
+  type: album
   sarc_work: false
 
 creators:

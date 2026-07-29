@@ -5,7 +5,7 @@ year: 1974
 
 library:
   id: in-sara-mencken-christ-and-beethoven
-  type: release
+  type: album
   sarc_work: false
 
 creators:

@@ -5,7 +5,7 @@ year: 2000
 
 library:
   id: feldstaerken
-  type: release
+  type: album
   sarc_work: false
 
 creators:

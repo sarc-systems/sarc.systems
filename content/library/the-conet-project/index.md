@@ -5,7 +5,7 @@ year: 1997
 
 library:
   id: the-conet-project
-  type: release
+  type: album
   sarc_work: false
 
 creators:

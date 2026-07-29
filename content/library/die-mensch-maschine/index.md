@@ -5,7 +5,7 @@ year: 1978
 
 library:
   id: die-mensch-maschine
-  type: release
+  type: album
   sarc_work: false
 
 creators:

@@ -5,7 +5,7 @@ year:
 
 library:
   id: "{{ .File.ContentBaseName }}"   # stable, unique id — don't reuse the title/URL
-  type: ""                            # one of data/library.yaml types (book, person, manual, release, essay, website, …)
+  type: ""                            # one of data/library.yaml types (book, person, manual, album, essay, website, …)
   sarc_work: false                    # true if produced by SARC
 
 # Who made it. `ref` (another entry's library.id) links the name and adds a

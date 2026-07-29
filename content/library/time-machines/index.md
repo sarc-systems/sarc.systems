@@ -5,7 +5,7 @@ year: 1998
 
 library:
   id: time-machines
-  type: release
+  type: album
   sarc_work: false
 
 creators:

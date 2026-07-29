@@ -5,7 +5,7 @@ year: 1982
 
 library:
   id: lethique
-  type: release
+  type: album
   sarc_work: false
 
 creators:

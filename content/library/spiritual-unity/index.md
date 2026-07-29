@@ -5,7 +5,7 @@ year: 1965
 
 library:
   id: spiritual-unity
-  type: release
+  type: album
   sarc_work: false
 
 creators:

@@ -5,7 +5,7 @@ year: 1983
 
 library:
   id: pulsation
-  type: release
+  type: album
   sarc_work: false
 
 creators:

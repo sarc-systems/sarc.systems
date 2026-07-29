@@ -5,7 +5,7 @@ year: 1991
 
 library:
   id: ask-the-ages
-  type: release
+  type: album
   sarc_work: false
 
 creators:

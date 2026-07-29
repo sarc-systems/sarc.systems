@@ -5,7 +5,7 @@ year: 1975
 
 library:
   id: don-cherry-terry-riley-koln-1975
-  type: release
+  type: album
   sarc_work: false
 
 creators:

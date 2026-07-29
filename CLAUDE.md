@@ -341,7 +341,7 @@ manual, a Studio doc) joins the catalog with `library: { include: true, id: … 
 ```yaml
 library:
   id: the-expanding-universe
-  type: release        # one of data/library.yaml types (person, book, manual, release, essay, website, system, …)
+  type: album          # one of data/library.yaml types (person, book, manual, album, essay, website, system, …)
   sarc_work: false     # true if produced by SARC — a filter axis, not a shelf
 creators:              # who made it; drives internal links + reverse "works"
   - {ref: laurie-spiegel, name: "Laurie Spiegel", role: artist}

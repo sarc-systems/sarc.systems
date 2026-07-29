@@ -5,7 +5,7 @@ year: 1981
 
 library:
   id: planetary-unfolding
-  type: release
+  type: album
   sarc_work: false
 
 creators:

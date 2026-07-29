@@ -4,7 +4,7 @@ summary: "Takashi Sekiguchi's album exploring bamboo and Asian wind instruments.
 
 library:
   id: bamboo-from-asia-plus
-  type: release
+  type: album
   sarc_work: false
 
 creators:

@@ -4,7 +4,7 @@ summary: "Roland Kayn's cybernetic music of autonomously evolving electronic pro
 
 library:
   id: infra
-  type: release
+  type: album
   sarc_work: false
 
 creators:

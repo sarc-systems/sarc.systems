@@ -5,7 +5,7 @@ year: 1986
 
 library:
   id: last-exit
-  type: release
+  type: album
   sarc_work: false
 
 creators:

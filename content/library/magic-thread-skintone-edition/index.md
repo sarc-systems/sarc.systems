@@ -5,7 +5,7 @@ year: 1998
 
 library:
   id: magic-thread-skintone-edition
-  type: release
+  type: album
   sarc_work: false
 
 creators:

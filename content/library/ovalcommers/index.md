@@ -5,7 +5,7 @@ year: 2001
 
 library:
   id: ovalcommers
-  type: release
+  type: album
   sarc_work: false
 
 creators:

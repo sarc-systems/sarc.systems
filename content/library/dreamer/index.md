@@ -8,7 +8,7 @@ aliases:
 
 library:
   id: dreamer-lo91
-  type: release
+  type: album
   sarc_work: false
 
 creators:

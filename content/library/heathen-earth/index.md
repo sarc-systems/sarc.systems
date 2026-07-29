@@ -5,7 +5,7 @@ year: 1980
 
 library:
   id: heathen-earth
-  type: release
+  type: album
   sarc_work: false
 
 creators:

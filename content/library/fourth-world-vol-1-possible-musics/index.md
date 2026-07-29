@@ -5,7 +5,7 @@ year: 1980
 
 library:
   id: fourth-world-vol-1-possible-musics
-  type: release
+  type: album
   sarc_work: false
 
 creators:

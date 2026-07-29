@@ -5,7 +5,7 @@ year: 1971
 
 library:
   id: andromeda-strain
-  type: release
+  type: album
   sarc_work: false
 
 creators:

@@ -5,7 +5,7 @@ year: 1979
 
 library:
   id: 20-jazz-funk-greats
-  type: release
+  type: album
   sarc_work: false
 
 creators:

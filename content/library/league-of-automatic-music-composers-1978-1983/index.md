@@ -5,7 +5,7 @@ year: 2007
 
 library:
   id: league-of-automatic-music-composers-1978-1983
-  type: release
+  type: album
   sarc_work: false
 
 creators:

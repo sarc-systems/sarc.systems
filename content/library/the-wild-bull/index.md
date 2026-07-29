@@ -5,7 +5,7 @@ year: 1970
 
 library:
   id: the-wild-bull
-  type: release
+  type: album
   sarc_work: false
 
 creators:

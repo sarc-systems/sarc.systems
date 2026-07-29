@@ -5,7 +5,7 @@ year: 1997
 
 library:
   id: city-of-light
-  type: release
+  type: album
   sarc_work: false
 
 creators:

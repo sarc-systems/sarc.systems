@@ -5,7 +5,7 @@ year: 1961
 
 library:
   id: eight-electronic-pieces
-  type: release
+  type: album
   sarc_work: false
 
 creators:

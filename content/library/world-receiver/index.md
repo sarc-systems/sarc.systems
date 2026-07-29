@@ -5,7 +5,7 @@ year: 1996
 
 library:
   id: world-receiver
-  type: release
+  type: album
   sarc_work: false
 
 creators:

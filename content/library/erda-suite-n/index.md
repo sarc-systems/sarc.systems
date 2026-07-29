@@ -5,7 +5,7 @@ year: 1972
 
 library:
   id: erda-suite-n
-  type: release
+  type: album
   sarc_work: false
 
 creators:

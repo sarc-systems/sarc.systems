@@ -5,7 +5,7 @@ year: 1989
 
 library:
   id: a-selection-of-improvisations
-  type: release
+  type: album
   sarc_work: false
 
 creators:

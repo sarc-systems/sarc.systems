@@ -4,7 +4,7 @@ summary: "A collection of the five Psychonavigation albums by Pete Namlook and B
 
 library:
   id: psychonavigation-i-v
-  type: release
+  type: album
   sarc_work: false
 
 creators:

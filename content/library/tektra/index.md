@@ -5,7 +5,7 @@ year: 1985
 
 library:
   id: tektra
-  type: release
+  type: album
   sarc_work: false
 
 creators:

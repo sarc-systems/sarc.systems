@@ -5,7 +5,7 @@ year: 1987
 
 library:
   id: eddie-prevost-organum-flayed-crux
-  type: release
+  type: album
   sarc_work: false
 
 creators:

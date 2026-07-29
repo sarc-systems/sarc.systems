@@ -5,7 +5,7 @@ year: 1994
 
 library:
   id: organum-veil-of-tears
-  type: release
+  type: album
   sarc_work: false
 
 creators:

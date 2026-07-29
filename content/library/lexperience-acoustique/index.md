@@ -5,7 +5,7 @@ year: 1972
 
 library:
   id: lexperience-acoustique
-  type: release
+  type: album
   sarc_work: false
 
 creators:

@@ -5,7 +5,7 @@ year: 1975
 
 library:
   id: voyage-from-jericho
-  type: release
+  type: album
   sarc_work: false
 
 creators:

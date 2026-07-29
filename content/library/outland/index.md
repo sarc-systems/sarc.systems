@@ -5,7 +5,7 @@ year: 2023
 
 library:
   id: outland
-  type: release
+  type: album
   sarc_work: false
 
 creators:

@@ -5,7 +5,7 @@ year: 2008
 
 library:
   id: keio-line
-  type: release
+  type: album
   sarc_work: false
 
 creators:

@@ -4,7 +4,7 @@ summary: "Emerald Web's synthesizer duo album, remastered."
 
 library:
   id: valley-of-the-birds-remastered
-  type: release
+  type: album
   sarc_work: false
 
 creators:
