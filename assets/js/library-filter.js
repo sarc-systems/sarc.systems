@@ -26,6 +26,11 @@
 // order — see library-random.html) stands regardless of active filters; once
 // loaded, it's revalidated against the current field on every change from
 // then on, same as everything else.
+// The chance panel has no presentation of its own in Map view — it isn't a
+// display of the matching set the way Catalog/Images are — so it inherits
+// whichever of Catalog/Images was last actually active (see chanceView()):
+// image-bearing-only pool and image-only card in Map right after Images,
+// full pool and full card in Map right after Catalog.
 (function () {
   "use strict";
 
@@ -144,13 +149,19 @@
     return e;
   }
 
+  // Map view has no presentation of its own for the chance panel to mirror,
+  // so it inherits whichever of Catalog/Images the visitor was last actually
+  // looking at (lastRealView) rather than defaulting to either one.
+  function chanceView() { return view === "map" ? lastRealView : view; }
+
   // The chance pool is the exact same field as the results: matches() below
   // applied to the JSON entries, further narrowed to entries with a primary
-  // image while Images view is active (Catalog may sample image-less entries).
+  // image while Images (view or last-real-view) is active (Catalog may
+  // sample image-less entries).
   function eligiblePool() {
     if (!allEntries) return null;
     var pool = allEntries.filter(matchesEntry);
-    if (view === "images") pool = pool.filter(function (e) { return !!e.primary_image; });
+    if (chanceView() === "images") pool = pool.filter(function (e) { return !!e.primary_image; });
     return pool;
   }
 
@@ -166,7 +177,7 @@
       currentId = null;
       try { sessionStorage.removeItem(STORE_KEY); } catch (e) {}
       var matchingAtAll = allEntries.filter(matchesEntry).length > 0;
-      var msg = (view === "images" && matchingAtAll) ? "No matching entries have images." : "No matching entries.";
+      var msg = (chanceView() === "images" && matchingAtAll) ? "No matching entries have images." : "No matching entries.";
       randomSlot.innerHTML = '<p class="library-empty">' + esc(msg) + '</p>';
       if (anotherBtn) anotherBtn.hidden = true;
       return;
@@ -182,7 +193,7 @@
       try { sessionStorage.setItem(STORE_KEY, currentId); } catch (e) {}
       if (changed) announce(current);
     }
-    randomSlot.innerHTML = cardHTML(current, view === "images");
+    randomSlot.innerHTML = cardHTML(current, chanceView() === "images");
     if (anotherBtn) anotherBtn.hidden = pool.length <= 1;
   }
 
@@ -219,9 +230,16 @@
   // ever add view=catalog or view=map to the URL).
   var sel = { type: [], subject: [] };
   var view = "images";
+  // The chance panel has no defined behavior of its own in Map view (unlike
+  // Catalog/Images, it isn't itself a display of the matching set) — so it
+  // keeps behaving like whichever of Catalog/Images was last actually
+  // active, rather than silently defaulting to one. Only ever updated to
+  // "catalog" or "images", never "map" — see chanceView() below.
+  var lastRealView = "images";
 
   function setView(v) {
     view = (v === "catalog" || v === "map") ? v : "images";
+    if (view !== "map") lastRealView = view;
     document.documentElement.dataset.libraryView = view;
     list.hidden = view !== "catalog";
     if (imageIndex) imageIndex.hidden = view !== "images";
