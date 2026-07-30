@@ -26,6 +26,9 @@ access:
     kind: bandcamp
     url: "https://lauriespiegel.bandcamp.com/album/the-expanding-universe"
 
+related:
+  - {ref: groove-system, relation: made-with}
+
 draft: false
 ---
 

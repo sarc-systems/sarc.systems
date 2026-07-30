@@ -15,6 +15,7 @@ access: []
 
 related:
   - {ref: c-language, relation: version-of}
+  - {ref: bell-labs, relation: part-of}
 
 draft: false
 ---

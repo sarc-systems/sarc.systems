@@ -29,6 +29,9 @@ access:
     kind: bandcamp
     url: "https://robert-ashley.bandcamp.com/album/in-sara-mencken-christ-and-beethoven-there-were-men-and-women"
 
+related:
+  - {ref: moog-modular-synthesizer, relation: made-with}
+
 draft: false
 ---
 

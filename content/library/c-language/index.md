@@ -13,6 +13,9 @@ images: []
 
 access: []
 
+related:
+  - {ref: bell-labs, relation: part-of}
+
 draft: false
 ---
 

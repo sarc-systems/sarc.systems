@@ -11,6 +11,7 @@ library:
 creators:
   - name: "Coil"
     role: artist
+    ref: coil
 
 subjects: [time, sound, perception]
 

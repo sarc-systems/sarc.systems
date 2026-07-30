@@ -1,6 +1,6 @@
 ---
 title: "City of Light"
-summary: "Bill Laswell's 1997 solo album."
+summary: "Bill Laswell's 1997 album, featuring a 13-minute Coil composition among its collaborators."
 year: 1997
 
 library:
@@ -12,6 +12,9 @@ creators:
   - name: "Bill Laswell"
     role: artist
     ref: bill-laswell
+  - name: "Coil"
+    role: artist
+    ref: coil
 
 subjects: [sound, technology]
 
@@ -34,4 +37,4 @@ access:
 draft: false
 ---
 
-Bill Laswell's 1997 solo album.
+Bill Laswell's 1997 album, drawing on a wide roster of collaborators including tabla player Trilok Gurtu, vocalist Lori Carson, Tetsu Inoue, and John Balance and Peter Christopherson of Coil, whose track "Kála" runs to thirteen minutes.
