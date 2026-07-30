@@ -841,11 +841,20 @@
 
   // Candidate directions/distances positionCardFor() probes when the default
   // corner placement would cover another node — see that function's comment.
+  // The minimum distance (24px) is deliberately larger than a typical node's
+  // own on-screen radius: a hover card positioned right at a node's edge
+  // caused a flicker loop in practice — the card (an ordinary HTML element,
+  // on top of the SVG) intercepts the pointer the instant it appears under
+  // the cursor that's still resting on the node, firing that node's
+  // `pointerleave` and hiding the card again, which puts the cursor back
+  // over the node and re-triggers `pointerenter`. Keeping real clearance
+  // from the anchor node itself (not just OTHER nodes, see below) is what
+  // actually prevents that, not just a visual nicety.
   var CARD_DIRS = [
     { dx: 1, dy: 1 }, { dx: 1, dy: -1 }, { dx: -1, dy: 1 }, { dx: -1, dy: -1 },
     { dx: 1, dy: 0 }, { dx: -1, dy: 0 }, { dx: 0, dy: 1 }, { dx: 0, dy: -1 }
   ];
-  var CARD_DISTANCES = [14, 50, 90, 140];
+  var CARD_DISTANCES = [24, 50, 90, 140];
 
   // Split out from showCardFor() so panning/zooming can re-run just the
   // positioning math (a node's on-screen point moves with the viewBox even
@@ -860,6 +869,19 @@
   // would cover another currently-visible node, probe a handful of other
   // directions/distances and use whichever leaves the fewest nodes hidden
   // underneath (ties favor the smallest distance, then the default corner).
+  // A direction's dx/dy sign picks which edge of the card anchors near the
+  // node — a naive "shift the top-left corner by dx*dist" only actually
+  // moves the card's BULK away from the node for the (+1,+1) quadrant; for
+  // every other direction the card's top-left corner moves while the card
+  // still extends across the node in the direction it grows (right/down by
+  // width/height), so e.g. "leftward" candidates kept re-covering the node
+  // instead of clearing it. Extend AWAY from the origin on whichever side
+  // dx/dy points to instead (0 centers the card on that axis).
+  function cardEdge(origin, dist, dir, size) {
+    if (dir > 0) return origin + dist;
+    if (dir < 0) return origin - dist - size;
+    return origin - size / 2;
+  }
   function positionCardFor(ctrl, n) {
     if (!ctrl || ctrl.root.hidden) return;
     var containerRect = container.getBoundingClientRect();
@@ -869,32 +891,43 @@
     var maxLeft = Math.max(4, containerRect.width - cardRect.width - 4);
     var maxTop = Math.max(4, containerRect.height - cardRect.height - 4);
 
+    // The anchor node's OWN position is included here too (not excluded) —
+    // see the module comment on CARD_DISTANCES on why covering it specifically
+    // causes a hover flicker loop, not just visual overlap like any other node.
     var otherPts = [];
     nodes.forEach(function (nd) {
-      if (nd.id === n.id || !visible[nd.id]) return;
+      if (!visible[nd.id]) return;
       var p = nodeScreenPosition(nd);
-      otherPts.push({ x: p.x - containerRect.left, y: p.y - containerRect.top });
+      otherPts.push({ x: p.x - containerRect.left, y: p.y - containerRect.top, self: nd.id === n.id });
     });
-    function coveredCount(left, top) {
-      var count = 0;
+    function coverage(left, top) {
+      var count = 0, selfCovered = false;
       for (var i = 0; i < otherPts.length; i++) {
         var p = otherPts[i];
-        if (p.x >= left && p.x <= left + cardRect.width && p.y >= top && p.y <= top + cardRect.height) count++;
+        if (p.x >= left && p.x <= left + cardRect.width && p.y >= top && p.y <= top + cardRect.height) {
+          count++;
+          if (p.self) selfCovered = true;
+        }
       }
-      return count;
+      return { count: count, selfCovered: selfCovered };
     }
 
+    // Ranking hard-prioritizes NOT covering the anchor node itself (that's
+    // what actually causes the flicker loop) over minimizing how many other
+    // nodes get covered, which is a best-effort secondary goal.
     var best = null;
-    for (var d = 0; d < CARD_DISTANCES.length && (!best || best.covered > 0); d++) {
+    for (var d = 0; d < CARD_DISTANCES.length; d++) {
       var dist = CARD_DISTANCES[d];
       for (var i = 0; i < CARD_DIRS.length; i++) {
         var dir = CARD_DIRS[i];
-        var left = Math.max(4, Math.min(originX + dir.dx * dist, maxLeft));
-        var top = Math.max(4, Math.min(originY + dir.dy * dist, maxTop));
-        var covered = coveredCount(left, top);
-        if (!best || covered < best.covered) best = { left: left, top: top, covered: covered };
-        if (covered === 0) break;
+        var left = Math.max(4, Math.min(cardEdge(originX, dist, dir.dx, cardRect.width), maxLeft));
+        var top = Math.max(4, Math.min(cardEdge(originY, dist, dir.dy, cardRect.height), maxTop));
+        var cov = coverage(left, top);
+        var rank = (cov.selfCovered ? 1000 : 0) + cov.count;
+        if (!best || rank < best.rank) best = { left: left, top: top, rank: rank };
+        if (rank === 0) break;
       }
+      if (best && best.rank === 0) break;
     }
     ctrl.root.style.left = best.left + "px";
     ctrl.root.style.top = best.top + "px";
