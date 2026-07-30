@@ -157,6 +157,13 @@ relation_types:
   - implements
   - programmed-in
   - compatible-with
+  # A Work declares made-with pointing at the System (instrument/software/
+  # hardware) it was created with — e.g. Riddles of the Sphinx made-with
+  # EMS Synthi AKS. Reads "Made With" on the Work, "Used In" (its inverse,
+  # below) on the System. Only declare this where a specific, named system is
+  # actually documented (an interview, liner notes, gear-history writeup) —
+  # never inferred from genre or period.
+  - made-with
 
 # Inverse labels for reverse-resolved `related` links. `related` is bidirectional:
 # a relation declared on one entry also renders on its target, labelled by the
@@ -180,6 +187,7 @@ relation_inverse:
   implements: implemented-by
   programmed-in: implementation-language-of
   compatible-with: compatible-with
+  made-with: used-in
 
 # Access kinds (`access[].kind`). `url` and `file` are mutually exclusive per
 # item; `hosted-file` requires a bundle-relative `file` (and is the only kind

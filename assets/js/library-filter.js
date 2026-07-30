@@ -126,7 +126,7 @@
     if (e.type_label) kick.push(esc(e.type_label));
     if (e.year) kick.push(esc(e.year));
     var subs = (e.subject_labels || []).map(esc).join(' <span class="dot" aria-hidden="true">·</span> ');
-    return '<article class="library-featured" data-library-id="' + esc(e.library_id) + '">' +
+    return '<article class="library-featured' + (imagesView ? " library-featured--image-only" : "") + '" data-library-id="' + esc(e.library_id) + '">' +
       thumb +
       '<div class="library-featured-body"' + (imagesView ? " hidden" : "") + '>' +
       '<p class="library-featured-kicker">' + kick.join(' <span class="dot" aria-hidden="true">·</span> ') + '</p>' +
@@ -179,6 +179,7 @@
       var matchingAtAll = allEntries.filter(matchesEntry).length > 0;
       var msg = (chanceView() === "images" && matchingAtAll) ? "No matching entries have images." : "No matching entries.";
       randomSlot.innerHTML = '<p class="library-empty">' + esc(msg) + '</p>';
+      if (randomSection) randomSection.classList.remove("library-random--image-only");
       if (anotherBtn) anotherBtn.hidden = true;
       return;
     }
@@ -193,7 +194,13 @@
       try { sessionStorage.setItem(STORE_KEY, currentId); } catch (e) {}
       if (changed) announce(current);
     }
-    randomSlot.innerHTML = cardHTML(current, chanceView() === "images");
+    var imagesView = chanceView() === "images";
+    randomSlot.innerHTML = cardHTML(current, imagesView);
+    // The "big, centered image" panel sizing (library.css) keys off this
+    // class, not the page's own data-library-view — Map inheriting Images'
+    // presentation (see chanceView() above) needs the same sizing Images
+    // itself gets, not the plain has-text-alongside layout.
+    if (randomSection) randomSection.classList.toggle("library-random--image-only", imagesView);
     if (anotherBtn) anotherBtn.hidden = pool.length <= 1;
   }
 

@@ -27,7 +27,10 @@ access:
     kind: audio
     url: "https://soundcloud.com/jeanpiche/rouge-heliograms"
 
+related:
+  - {ref: frequency-modulation, relation: implements}
+
 draft: false
 ---
 
-Rouge is a piece for percussion and tape built on rhythmic sequencer programming and live percussion, recorded 1977-80 during Jean Piché's time at Simon Fraser University and released on his 1982 album Heliograms — the most lively and agitated piece on the record.
+Rouge is a piece for percussion and tape built on FM synthesis and rhythmic sequencer programming against live percussion, recorded 1977-80 during Jean Piché's time at Simon Fraser University and released on his 1982 album Heliograms — the most lively and agitated piece on the record.

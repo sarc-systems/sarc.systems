@@ -32,7 +32,10 @@ access:
     kind: bandcamp
     url: "https://imprec.bandcamp.com/album/adnos"
 
+related:
+  - {ref: arp-2500, relation: made-with}
+
 draft: false
 ---
 
-Éliane Radigue's slowly unfolding drone cycle (Adnos I–III).
+Éliane Radigue's slowly unfolding drone cycle (Adnos I–III), built on her ARP 2500.

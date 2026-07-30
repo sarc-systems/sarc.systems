@@ -170,19 +170,26 @@
   width: 200px; height: 200px; object-fit: cover; display: block;
   border: 1px solid var(--rule); background: var(--paper-2);
 }
-/* Images view: the card's text is hidden (library-random.js), leaving just the
-   thumbnail — let it read as the panel's focal image rather than the small
-   corner of a text card: centered, and considerably larger. Still a fixed
-   size (viewport-driven via clamp, never content-driven) for the same
-   no-resize-on-swap reason as above. */
-:root[data-library-view="images"] .library-featured { justify-content: center; }
-:root[data-library-view="images"] .library-featured-thumb img {
+/* Image-only presentation: the card's text is hidden (library-filter.js),
+   leaving just the thumbnail — let it read as the panel's focal image rather
+   than the small corner of a text card: centered, and considerably larger.
+   Still a fixed size (viewport-driven via clamp, never content-driven) for
+   the same no-resize-on-swap reason as above. Keyed on the JS-applied
+   .library-featured--image-only / .library-random--image-only classes, NOT
+   on [data-library-view="images"] — Map view inherits whichever of Catalog/
+   Images was last active (chanceView() in library-filter.js), so the panel
+   can be showing image-only content while the page's own view is "map"; a
+   selector tied to the page's view attribute would size it as if it had
+   text alongside, and the image would visibly shrink for no reason the
+   moment you switch to Map. */
+.library-featured--image-only { justify-content: center; }
+.library-featured--image-only .library-featured-thumb img {
   width: clamp(260px, 40vw, 440px);
   height: clamp(260px, 40vw, 440px);
 }
 /* Shrink the framed panel to hug the centred image (and header) rather than
    spanning the full content width with wide empty wash on either side. */
-:root[data-library-view="images"] .library-random {
+.library-random--image-only {
   width: fit-content;
   max-width: 100%;
   margin-inline: auto;
@@ -463,13 +470,13 @@
 @media (max-width: 30rem) {
   .library-featured { flex-direction: column; }
   /* flex-direction: column swaps which axis justify-content/align-items
-     control — the Images-view centering rule above is a justify-content
+     control — the image-only centering rule above is a justify-content
      (main/horizontal-axis) rule that does nothing once the axis is
      vertical, leaving the image at align-items's default (flex-start,
      i.e. left-aligned) instead of centered. Center on the cross axis here
-     specifically for Images view; Catalog view's stacked image+text keeps
-     its left alignment. */
-  :root[data-library-view="images"] .library-featured { align-items: center; }
+     specifically for the image-only case; the has-text-alongside case's
+     stacked image+text keeps its left alignment. */
+  .library-featured--image-only { align-items: center; }
 }
 
 /* --- References filter --------------------------------------------------- */

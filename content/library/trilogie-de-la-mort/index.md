@@ -32,7 +32,10 @@ access:
     kind: bandcamp
     url: "https://elianeradigue.bandcamp.com/album/trilogie-de-la-mort"
 
+related:
+  - {ref: arp-2500, relation: made-with}
+
 draft: false
 ---
 
-Éliane Radigue's three-part electronic meditation on death and passage.
+Éliane Radigue's three-part electronic meditation on death and passage, composed on her ARP 2500.

@@ -25,7 +25,10 @@ access:
     kind: bandcamp
     url: "https://johnmcguire.bandcamp.com/track/pulse-music-iii"
 
+related:
+  - {ref: ems-synthi-100, relation: made-with}
+
 draft: false
 ---
 
-John McGuire's Pulse Music III, composed 1978-79 and realized in the Studio for Electronic Music at West German Radio (WDR), builds dense, slowly phasing pulse patterns from electronic sound.
+John McGuire's Pulse Music III, composed 1978-79 and realized on the EMS Synthi 100 at West German Radio's Studio for Electronic Music (WDR), builds dense, slowly phasing pulse patterns from electronic sound.

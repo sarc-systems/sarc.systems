@@ -24,7 +24,10 @@ access:
     kind: video
     url: "https://youtu.be/zP4BF_s3GB4"
 
+related:
+  - {ref: synclavier-ii, relation: made-with}
+
 draft: false
 ---
 
-Jon Appleton electronic composition made in the course of his work developing the Synclavier synthesizer at Dartmouth's electronic music program.
+Jon Appleton electronic composition made on the Synclavier II in the course of his work developing the instrument at Dartmouth's electronic music program.
