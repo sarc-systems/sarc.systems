@@ -11,7 +11,10 @@ subjects: [sound, instruments, technology]
 
 images: []
 
-access: []
+access:
+  - label: "Bandcamp"
+    kind: bandcamp
+    url: "https://krohn-hite.com"
 
 related:
   - {ref: steve-roach, relation: collaborator-of}

@@ -25,7 +25,15 @@ subjects: [instruments, technology]
 
 images: []
 
-access: []
+access:
+  - label: "website"
+    kind: website
+    url: "https://www.synclavier.com"
+
+related:
+  - {ref: frequency-modulation, relation: implements}
+  - {ref: digital-sampling, relation: implements}
+  - {ref: additive-synthesis, relation: implements}
 
 draft: false
 ---
