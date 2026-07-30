@@ -338,15 +338,36 @@
 .map-edge {
   /* A couple of shades darker than the hairline --rule token — at --rule
      itself the unhighlighted lines were too faint to read as a diagram.
-     Neutral regardless of the connected nodes' type colors or the
-     relationship's kind (creator vs related is a dash pattern, not a color —
-     "do not color edges by relationship type yet"). */
+     Neutral regardless of the connected nodes' type colors — edges are
+     never colored by relationship type, only by interaction state (below).
+     Line STYLE (solid/dashed/dotted) is the one restrained exception: three
+     relationship categories — structural, historical, contextual — resolved
+     once per edge in library-map.js from data/library.yaml's relation_types
+     (a creator credit is always structural; every related[] relation type is
+     looked up in a small table there). Kept deliberately subtle: dash
+     patterns only, never a second color. */
   stroke: var(--gray-2);
   stroke-width: 1;
   transition: stroke 120ms ease, stroke-width 120ms ease;
 }
-.map-edge--related { stroke-dasharray: 2 3; }
+.map-edge--historical { stroke-dasharray: 4 3; }
+.map-edge--contextual { stroke-dasharray: 1 3; }
 .map-edge.is-active { stroke: var(--signal); stroke-width: 1.5; }
+/* The strongest edge tier: touching the currently HOVERED node (not the
+   selection — see the JS module comment). Transient, gone the instant the
+   hover ends, same as the hover card. */
+.map-edge.is-hovered { stroke: var(--signal); stroke-width: 2; }
+.map-edge-label {
+  font-family: var(--font-mono);
+  font-size: 8px;
+  fill: var(--ink);
+  paint-order: stroke;
+  stroke: var(--paper);
+  stroke-width: 3px;
+  stroke-linejoin: round;
+  text-anchor: middle;
+  pointer-events: none;
+}
 @media (prefers-reduced-motion: reduce) {
   .map-shape, .map-edge { transition: none; }
 }

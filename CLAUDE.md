@@ -531,31 +531,87 @@ search, similarity/recommendation engine, or automatic clustering. Every edge
 is something SARC actually declared in front matter: `creators[].ref` (a
 person/group credited on a work) and `related[].ref` (carrying its
 `data/library.yaml` relation type through, e.g. `part-of`, `influenced-by`,
-`documents`). Nothing is inferred from shared subjects/tags. Deliberately
-separate stages, kept that way for future layouts: Library data
-(`/library/index.json`, already the canonical client export — extended so
-`related` carries `{ref, relation}` instead of a bare id) → `buildGraph()`
-(nodes + deduplicated edges) → `layout()` (a small dependency-free
-force/spring simulation — repulsion between all pairs, spring attraction along
-edges, a weak centering force — run to full completion *synchronously*, not
-animated frame-by-frame, so the graph is static the instant it appears; no
-"continuously drifting layout") → `render()` (plain SVG — see "Node Type
-Encoding" below for node styling; edges are thin lines, dashed for `related`
-vs solid for `creator`, no rainbow colour, no glow, no 3D) → interaction (pan
-via pointer drag on the SVG viewBox, zoom via wheel; hover/focus drives the
-Selection Hierarchy below plus a preview card — click navigates to the
-entry, same as an Images thumbnail; the hint text is a caption strip below
-the canvas, never an overlay on top of it). `library-map.js` runs independently of
-`library-filter.js`; the two coordinate through exactly one channel, a
-`library:filter-change` `document` event (view + active Type/Subject), plus
-`library-map.js` reading `location.search` directly once at startup for the
-same information (script load order means the very first firing of that
-event predates its own listener existing). Filtering hides non-matching nodes
-and any edge touching one (the "future versions may preserve neighboring
-context" case in the spec this shipped from is intentionally not attempted
-here) — same field as Catalog/Images, never a separate one. Requires JS like
-Images/Map's siblings; hidden under `data-nojs`. This is expected to evolve;
-treat the force layout itself as replaceable, not load-bearing.
+`documents`). Nothing is inferred from shared subjects/tags.
+
+*Layout.* Full, genuinely force-directed — over the whole visible graph, over
+every filtered subset, and stable across reloads, not a live physics demo.
+Every node's initial position is a **deterministic seed** derived from its own
+stable `library.id` (a small hash → seeded PRNG), never `Math.random()` — the
+same graph produces substantially the same layout every time. Connected
+components (plain union-find, recomputed against whichever subset is
+currently *visible* — filtering changes reachability) are treated as layout
+units: each gets its own small local force+collision simulation
+(`layoutComponent()`, warm-started from current positions, with a trivial
+direct-placement fast path for singletons/pairs — a typical Library-sized
+graph is heavily fragmented, most components are singletons or pairs, not
+"one giant component plus stragglers"), then packed into shared coordinates.
+The very first load does a fresh deterministic multi-row shelf-pack
+(`packComponents()` — sorted by size then id, wraps rows to roughly match the
+canvas's own aspect ratio, so a fragmented graph doesn't degenerate into one
+long strip of tiny islands); every relayout after that instead resolves
+overlaps incrementally (`resolveComponentOverlaps()`) rather than re-tiling
+everything from scratch — this is what gives a **filter change spatial
+continuity**: survivors keep roughly where they were, and only genuinely
+new/newly-conflicting content moves. `relayout(visibleIds)` is the one
+orchestrator for both the initial load and every filter change (recompute
+components → lay out → pack/resolve → fit viewport with padding → render);
+it always runs to convergence synchronously and then **stops** — settled, not
+continuously drifting. Collision uses a static radius per node (precomputed
+once in `buildGraph()`, larger for image-capable nodes regardless of whether
+they're currently rendering as an image — see Image nodes below) so
+selecting a node never needs to re-run collision or repacking. Node type
+still only affects appearance, never physical placement.
+
+*Selection deliberately bypasses `relayout()` entirely* — it must never
+regenerate the whole graph or destroy the user's mental map of it. Selecting
+a node instead runs `reheatNeighborhood()`, a short bounded local relax: the
+selected node + its direct neighbors + their neighbors get full movement
+against each other (genuine breathing room, not just a held-flat position),
+while every other currently-visible node gets only a small capped nudge
+(rather than being perfectly immovable) so the neighborhood has something to
+yield into instead of hitting a wall of frozen nodes — a real risk for a hub
+node embedded deep in a densely-linked component. Distant/unrelated nodes
+still barely move (a few px, not a repositioning). This runs once,
+synchronously, then the existing pan-only `recenterOn()`/`animateViewBox()`
+brings the selected node to a consistent focal position at the *current*
+zoom — selection never refits or rescales the viewport, only pans to it.
+
+*Edges.* Every explicit relationship between visible nodes stays visible at
+all times — never hidden just because nothing is selected. Three restrained
+line-style categories, resolved once per edge in `buildGraph()` from its
+`kind`/`label` against a small table (`RELATION_CATEGORY`, checked against
+every one of `data/library.yaml`'s `relation_types` — nothing falls through
+unmapped): **structural** (solid — a creator credit, `part-of`, `made-with`,
+`implements`, `based-at`, …), **historical** (dashed — `influenced-by`,
+`successor-to`, `predecessor-to`), **contextual** (dotted —
+`affiliated-with`, `used-by`, `discusses`, …). Never colored by relationship
+type, only by interaction state: a default thin/low-opacity line at rest, a
+brighter/thicker `is-active` tier for edges touching the *selected* node, and
+the strongest tier (`is-hovered`, plus a small relationship label near the
+midpoint) for edges touching whichever node is currently *hovered* — the
+label vanishes the instant that hover ends, reusing the existing node-hover
+mechanism rather than adding separate hover handling on `<line>` elements.
+
+*Render/interaction.* `render()` builds SVG once (`renderInitial()`); every
+subsequent `relayout()`/reheat only updates positions/visibility
+(`updatePositions()`/`applyVisibility()`), never rebuilds node/edge DOM
+structure. Pan via pointer drag on the SVG viewBox, zoom via wheel; hover/
+focus drives the Selection Hierarchy below plus a preview card — click
+navigates to the entry, same as an Images thumbnail; the hint text is a
+caption strip below the canvas, never an overlay on top of it.
+`library-map.js` runs independently of `library-filter.js`; the two
+coordinate through exactly one channel, a `library:filter-change` `document`
+event (view + active Type/Subject), plus `library-map.js` reading
+`location.search` directly once at startup for the same information (script
+load order means the very first firing of that event predates its own
+listener existing). Filtering hides non-matching nodes and any edge touching
+one — same field as Catalog/Images, never a separate one. Requires JS like
+Images/Map's siblings; hidden under `data-nojs`. `prefers-reduced-motion`
+skips the viewBox tween (filter-fit and selection-recenter both jump straight
+to their final state) and skips `reheatNeighborhood()` entirely — the
+simplest, safest reading, even though the reheat itself is a synchronous
+instant recompute rather than a frame-by-frame animation. This is expected to
+evolve; treat the force layout itself as replaceable, not load-bearing.
 
 **Public Type vs Specific Type.** Every entry's `library.type` (book, essay,
 album, composition, film, person, group, organization, instrument, software,
@@ -690,23 +746,36 @@ chip's `data-value`/URL `?type=` is always a public type slug like `work`,
 never a specific type), narrowed to whichever are actually present among
 published entries.
 
-**Image nodes.** Any entry with a `primary_image` renders using that image
-— already processed/cropped for `index.json` elsewhere (the chance-selection
-panel's asset; no separate map-specific derivative, per "reuse the existing
-processed image assets") — instead of the abstract type shape;
-`createNodeVisual()` is the fallback switch, one function, one call site.
-Sized noticeably larger than the abstract dots (`~18–22px` across) but still
-plainly "a node," not a card: a bordered background rect (`.map-image-node-bg`)
-keeps a small photo from reading as a loose floating picture, and both it and
-the `<image>` carry `.map-shape` so they fade through the emphasis tiers
-below in step, exactly like an abstract node would. The border's *stroke
-color* is the node's public-type color (set inline, same mechanism as a
-plain shape's fill) — an image node still reads as its broad type at a
-glance without the artwork itself ever being recolored. This — not
-permanent text — is what tells a same-titled person and a work of that name
-apart at a glance; the preview card (below) resolves any remaining ambiguity
-on demand. Entries without an image keep the plain type shape/colour; the
-graph stays complete either way.
+**Image nodes.** Selection-dependent, not unconditional: only the *selected*
+node and its *direct neighbors* render using their primary_image (already
+processed/cropped for `index.json` elsewhere — no separate map-specific
+derivative); every other entry, even one with an image, shows the plain
+abstract type shape until it becomes selected or adjacent — a dense unfiltered
+map (400+ nodes) stays legible at rest instead of turning into a wall of
+photos, while images still do their real job of disambiguating same-titled
+entries exactly where it matters: around the current focus. Both
+representations exist in the DOM for any `hasImage` node from the very first
+`renderInitial()` pass (`createShape()` + `createImageVisual()`, a cheap
+`display` toggle between `.map-node-shape`/`.map-node-image` driven by
+`setNodeImageActive()`, called from `applySelectionTiers()` — never a
+destroy/recreate on every selection change); the `<image>`'s `href` itself is
+only ever set the first time a node actually becomes image-active
+(`showNodeImage()`), so panning/hovering/selecting around the graph doesn't
+eagerly fetch hundreds of images up front. Collision uses a **static** radius
+per node regardless of which representation is currently showing — any entry
+that has an image gets the larger image-node footprint even while it's
+rendering as the smaller abstract shape (`nodeRadius()` in `buildGraph()`) —
+so a selection change never needs to re-run collision or repacking, only
+re-render that one node's own visual. Sized noticeably larger than the
+abstract dots but still plainly "a node," not a card: a bordered background
+rect (`.map-image-node-bg`) keeps a small photo from reading as a loose
+floating picture, and both it and the `<image>` carry `.map-shape` so they
+fade through the emphasis tiers below in step, exactly like an abstract node
+would. The border's *stroke color* is the node's public-type color (set
+inline, same mechanism as a plain shape's fill) — an image node still reads
+as its broad type at a glance without the artwork itself ever being
+recolored. Entries without an image never get a `.map-node-image` group at
+all; the graph stays complete either way.
 
 **Selection-Centered Navigation.** Clicking a node makes it *the selection* —
 a stable point of focus (`selectedId`) that persists until another node is
@@ -783,17 +852,33 @@ trailing click is not misread by the click-away deselect handler above as
 either card is the one gesture that actually navigates to the entry's real
 page — a plain click on a node only selects it.
 
-**Recenter.** Selecting a node animates the viewBox (`recenterOn()`,
-~300ms, ease-in-out) so the node lands at the current viewBox's *center* —
-"a consistent focal position," current zoom preserved (only `currentVB.x/y`
-move, never `.w/.h`), no abrupt jump. `prefers-reduced-motion: reduce`
-skips the animation and jumps straight there. This is deliberately pan-only:
-`layout()` still runs once, synchronously, to completion (see that
-function's own comment on why) and never re-runs on selection — a modest
-local re-layout around the selection (spreading out crowded neighbors) is a
-deliberately deferred follow-up, not part of this pass. A user-initiated
-pan or zoom cancels any in-flight recenter animation (`panAnimHandle`) so
-the two never fight each other.
+Card placement actively avoids covering other nodes, not just a fixed
+corner offset: a selected node's own direct neighbors are, by construction,
+usually the *closest* nodes to it (spring attraction pulls connected nodes
+together), so always anchoring the card at the same +14px corner regularly
+parked it directly on top of exactly the neighbors it exists to help the
+user see. `positionCardFor()` tries that default corner first and, if any
+currently-visible node's screen position would fall under the card, probes
+a small set of other directions/distances (`CARD_DIRS`/`CARD_DISTANCES`),
+using whichever placement covers the fewest nodes (ties favor the smallest
+distance, then the default corner) — cheap since it's only checked once per
+`showCardFor()`/pan-reposition, not per frame.
+
+**Recenter.** Selecting a node animates the viewBox (`recenterOn()`, built on
+the shared `animateViewBox()` helper — see "Map view" above — ~320ms,
+ease-in-out) so the node lands at the current viewBox's *center* — "a
+consistent focal position," current zoom preserved (only `currentVB.x/y`
+move, never `.w/.h`), no abrupt jump. `prefers-reduced-motion: reduce` skips
+the animation and jumps straight there. This is deliberately pan-only —
+`relayout()`'s packing/fit-to-viewport never re-runs on selection. What
+*does* now run on selection is `reheatNeighborhood()` (see "Map view"
+above), a short bounded local relax giving the selected node's immediate
+neighborhood real breathing room — the "modest local re-layout around the
+selection, spreading out crowded neighbors" once deferred here is exactly
+what that function is. A user-initiated pan or zoom cancels any in-flight
+view animation (`animateViewBox()`'s single shared handle — the same one
+`relayout()`'s filter-change viewport fit uses, so the two can never fight
+each other either) so nothing stomps on `currentVB` mid-transition.
 
 **Images.** Resolved through Hugo page resources (never hotlink Bandcamp/Discogs/
 publishers; never auto-download third-party artwork). List = square thumbnail
