@@ -14,6 +14,7 @@ creators:
     role: director
   - name: "Karlheinz Stockhausen"
     role: director
+    ref: karlheinz-stockhausen
 
 subjects: [sound, technology]
 

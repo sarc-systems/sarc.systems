@@ -23,6 +23,7 @@ access: []
 related:
   - {ref: buchla-and-associates, relation: part-of}
   - {ref: san-francisco-tape-music-center, relation: affiliated-with}
+  - {ref: morton-subotnick, relation: collaborator-of}
 
 draft: false
 ---

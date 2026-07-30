@@ -29,6 +29,7 @@ access: []
 
 related:
   - {ref: mills-center-for-contemporary-music, relation: predecessor-to}
+  - {ref: terry-riley, relation: affiliated-with}
 
 draft: false
 ---

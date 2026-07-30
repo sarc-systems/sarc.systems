@@ -22,6 +22,9 @@ access:
     kind: video
     url: "https://youtu.be/a_BAwf9s_Ho"
 
+related:
+  - {ref: siemens-studio-fur-elektronische-musik, relation: created-at}
+
 draft: false
 ---
 

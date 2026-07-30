@@ -19,6 +19,9 @@ images:
       status: unknown
       note: "Exact photographer and original publication page not established; caption details as reported by bygrecords.com."
 
+related:
+  - {ref: cecil-taylor, relation: collaborator-of}
+
 draft: false
 ---
 

@@ -12,6 +12,9 @@ creators:
   - name: "Organum"
     role: artist
     ref: organum
+  - name: "Eddie Prévost"
+    role: label
+    ref: eddie-prevost
 
 subjects: [sound, perception]
 

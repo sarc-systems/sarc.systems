@@ -1,6 +1,6 @@
 ---
 title: "Synton Fénix II"
-summary: "A 1997 analog modular synthesizer reviving the Synton Fenix line, with 31 modules."
+summary: "An expanded modular synthesizer following the original Fénix, with an accompanying Fénix III sequencer, produced around 2010."
 
 library:
   id: synton-fenix-ii
@@ -8,8 +8,6 @@ library:
   sarc_work: false
 
 creators:
-  - name: "Marc Paping"
-    role: designer
   - name: "Bert Vermeulen"
     role: designer
 
@@ -21,8 +19,9 @@ access: []
 
 related:
   - {ref: synton-fenix-i, relation: successor-to}
+  - {ref: synton, relation: affiliated-with}
 
 draft: false
 ---
 
-Created in 1997 by Marc Paping and Bert Vermeulen — reuniting after Synton's 1989 bankruptcy — the Fénix II is an analog modular synthesizer spanning 31 distinct modules, reviving the Fenix name.
+Following the original Fénix's success, Bert Vermeulen developed the larger Fénix II — expanding from 63 potentiometers, 3 switches, and 158 banana sockets to 103 potentiometers, 9 switches, and 230 sockets — alongside a companion Fénix III sequencer. Around 75 units of each were produced beginning circa 2010.

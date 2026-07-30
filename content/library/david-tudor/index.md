@@ -29,4 +29,4 @@ access:
 draft: false
 ---
 
-David Tudor began as a virtuoso pianist of the postwar avant-garde before turning to live electronics, building idiosyncratic feedback circuits and instruments — most notably Rainforest — that treated electronic systems themselves as living, resonant bodies.
+David Tudor began as a virtuoso pianist of the postwar avant-garde — becoming John Cage's essential long-term interpreter, premiering the vast majority of his piano and live-electronic works from the early 1950s on — before turning to live electronics himself, building idiosyncratic feedback circuits and instruments — most notably Rainforest — that treated electronic systems themselves as living, resonant bodies.

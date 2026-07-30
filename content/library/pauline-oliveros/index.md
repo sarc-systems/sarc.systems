@@ -24,6 +24,9 @@ access:
     kind: bandcamp
     url: "https://imprec.bandcamp.com/album/pauline-oliveros-reverberations-tape-electronic-music-1960-1970-12cd"
 
+related:
+  - {ref: san-francisco-tape-music-center, relation: affiliated-with}
+
 draft: false
 ---
 

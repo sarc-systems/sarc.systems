@@ -21,6 +21,7 @@ access: []
 related:
   - {ref: music-v, relation: successor-to}
   - {ref: c-language, relation: programmed-in}
+  - {ref: computer-music, relation: implements}
 
 draft: false
 ---

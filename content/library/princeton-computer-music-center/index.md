@@ -21,6 +21,9 @@ images: []
 
 access: []
 
+related:
+  - {ref: columbia-princeton-electronic-music-center, relation: successor-to}
+
 draft: false
 ---
 

@@ -22,6 +22,7 @@ access: []
 
 related:
   - {ref: e-mu-systems, relation: part-of}
+  - {ref: tom-oberheim, relation: collaborator-of}
 
 draft: false
 ---

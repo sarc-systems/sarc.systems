@@ -27,6 +27,7 @@ access:
 
 related:
   - {ref: grm, relation: part-of}
+  - {ref: pierre-schaeffer, relation: collaborator-of}
 
 draft: false
 ---

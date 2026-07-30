@@ -117,7 +117,11 @@
     {{- $creditLower := lower ($im.credit | default "") -}}
     {{- if and $im.credit (in $platformNames $creditLower) }}{{ warnf "Library: %q image %q has credit %q, which names a platform, not a creator — move it to source and leave credit for an actual photographer/designer/archive" $page.Path $im.file $im.credit }}{{ end -}}
     {{- if and (not $src) (ne $rstatus "sarc-owned") }}{{ warnf "Library: %q image %q has no source recorded" $page.Path $im.file }}{{ end -}}
-    {{- if and $src (findRE `\.(jpg|jpeg|png|webp|gif)(\?.*)?$` (lower $src)) }}{{ warnf "Library: %q image %q source %q is a raw image file, not a contextual page — link the page it appears on if one exists" $page.Path $im.file $src }}{{ end -}}
+    {{- /* A Wikimedia Commons/Wikipedia File: page IS the contextual page —
+           its title is the filename, so it always ends in an image
+           extension despite being a wiki page, not a raw CDN URL. Only warn
+           when the extension match ISN'T explained by that. */ -}}
+    {{- if and $src (findRE `\.(jpg|jpeg|png|webp|gif)(\?.*)?$` (lower $src)) (not (findRE `wiki(pedia|media)\.org/wiki/File:` $src)) }}{{ warnf "Library: %q image %q source %q is a raw image file, not a contextual page — link the page it appears on if one exists" $page.Path $im.file $src }}{{ end -}}
     {{- if and $src (gt (int (index $sourceTally $src | default 0)) 1) }}{{ warnf "Library: image source %q is reused across %d different Library entries — confirm it's genuinely the same image/edition each time" $src (index $sourceTally $src) }}{{ end -}}
     {{- if and (eq $im.role "cover") (not $im.caption) (not $im.credit) (not $rnote) (not $unote) }}{{ warnf "Library: %q cover image %q doesn't identify its edition — add a caption or credit naming the specific printing/label pictured" $page.Path $im.file }}{{ end -}}
     {{- if eq $rstatus "unknown" }}{{ warnf "Library: %q image %q rights status is unknown — resolve when possible" $page.Path $im.file }}{{ end -}}

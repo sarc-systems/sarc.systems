@@ -13,6 +13,9 @@ images: []
 
 access: []
 
+related:
+  - {ref: throbbing-gristle, relation: affiliated-with}
+
 draft: false
 ---
 

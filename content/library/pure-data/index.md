@@ -20,6 +20,7 @@ access: []
 
 related:
   - {ref: max-software, relation: successor-to}
+  - {ref: computer-music, relation: implements}
 
 draft: false
 ---

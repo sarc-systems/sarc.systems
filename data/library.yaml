@@ -180,6 +180,17 @@ relation_types:
   - commissioned-by
   - affiliated-with
   - created-at
+  # A documented, ongoing artistic partnership between two people (or
+  # groups) — distinct from affiliated-with (a Person-to-Organization/Place
+  # tie) and from the graph's existing work-mediated connections (two
+  # creators sharing credit on one entry already link through that work).
+  # collaborator-of is for a relationship that's real independent of any
+  # single shared work — e.g. David Tudor as John Cage's essential
+  # long-term performer, or Cage and Morton Feldman as close artistic
+  # partners in the New York School — not a substitute for creators, and
+  # never inferred from merely sharing an organization or subject. Symmetric
+  # (its own inverse), like compatible-with.
+  - collaborator-of
 
 # Inverse labels for reverse-resolved `related` links. `related` is bidirectional:
 # a relation declared on one entry also renders on its target, labelled by the
@@ -208,6 +219,7 @@ relation_inverse:
   commissioned-by: commissioned
   affiliated-with: affiliated-with
   created-at: creation-site
+  collaborator-of: collaborator-of
 
 # Access kinds (`access[].kind`). `url` and `file` are mutually exclusive per
 # item; `hosted-file` requires a bundle-relative `file` (and is the only kind

@@ -13,6 +13,11 @@ images: []
 
 access: []
 
+creators:
+  - name: "CNMAT"
+    role: developer
+    ref: cnmat
+
 related:
   - {ref: midi, relation: related-work}
 

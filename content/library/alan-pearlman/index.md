@@ -9,7 +9,17 @@ library:
 
 subjects: [instruments, technology]
 
-images: []
+images:
+  - file: "alan-pearlman.jpg"
+    alt: "Alan R. Pearlman"
+    role: portrait
+    source: "https://musicaficionado.blog/2019/01/30/arp-instruments-in-the-1970s/"
+    rights:
+      status: unknown
+      note: "Photographer/rights not established."
+    use:
+      basis: editorial
+      note: "Portrait used to illustrate his Library entry; no confirmed public-domain or licensed source found."
 
 access: []
 

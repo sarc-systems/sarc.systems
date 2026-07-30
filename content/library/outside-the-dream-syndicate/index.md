@@ -11,6 +11,7 @@ library:
 creators:
   - name: "Tony Conrad"
     role: artist
+    ref: tony-conrad
   - name: "Faust"
     role: artist
 

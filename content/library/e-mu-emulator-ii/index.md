@@ -21,6 +21,9 @@ images: []
 
 access: []
 
+related:
+  - {ref: digital-sampling, relation: implements}
+
 draft: false
 ---
 

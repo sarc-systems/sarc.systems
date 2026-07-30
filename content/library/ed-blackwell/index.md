@@ -17,6 +17,9 @@ images:
       status: unknown
       note: "Photographer not established."
 
+related:
+  - {ref: don-cherry, relation: collaborator-of}
+
 draft: false
 ---
 

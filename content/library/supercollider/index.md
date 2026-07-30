@@ -20,6 +20,7 @@ access: []
 
 related:
   - {ref: cpp-language, relation: programmed-in}
+  - {ref: computer-music, relation: implements}
 
 draft: false
 ---

@@ -15,6 +15,9 @@ images:
     role: portrait
     credit: "Photo: Andy Freeberg"
 
+related:
+  - {ref: jon-appleton, relation: collaborator-of}
+
 draft: false
 ---
 

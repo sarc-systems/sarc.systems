@@ -13,6 +13,9 @@ images: []
 
 access: []
 
+related:
+  - {ref: rex-probe, relation: affiliated-with}
+
 draft: false
 ---
 

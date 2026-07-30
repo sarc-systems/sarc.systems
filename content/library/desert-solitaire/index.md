@@ -14,6 +14,7 @@ creators:
     ref: steve-roach
   - name: "Kevin Braheny"
     role: artist
+    ref: kevin-fortune
   - name: "Michael Stearns"
     role: artist
     ref: michael-stearns

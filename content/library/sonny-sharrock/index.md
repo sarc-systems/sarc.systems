@@ -17,6 +17,9 @@ images:
       status: unknown
       note: "Photographer not established."
 
+related:
+  - {ref: pharoah-sanders, relation: collaborator-of}
+
 draft: false
 ---
 

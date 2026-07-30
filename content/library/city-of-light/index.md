@@ -15,6 +15,9 @@ creators:
   - name: "Coil"
     role: artist
     ref: coil
+  - name: "Tetsu Inoue"
+    role: artist
+    ref: tetsu-inoue
 
 subjects: [sound, technology]
 

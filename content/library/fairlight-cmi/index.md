@@ -24,6 +24,10 @@ images: []
 
 access: []
 
+related:
+  - {ref: digital-sampling, relation: implements}
+  - {ref: brian-eno, relation: used-by}
+
 draft: false
 ---
 

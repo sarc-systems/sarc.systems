@@ -18,6 +18,8 @@ images:
 related:
   - ref: fax-records
     relation: part-of
+  - {ref: bill-laswell, relation: collaborator-of}
+  - {ref: tetsu-inoue, relation: collaborator-of}
 
 draft: false
 ---

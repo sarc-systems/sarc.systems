@@ -13,6 +13,10 @@ creators:
     role: artist
     ref: hiroshi-yoshimura
 
+related:
+  - {ref: green, relation: related-work}
+  - {ref: music-for-nine-post-cards, relation: related-work}
+
 subjects: [sound, space, perception]
 
 images:

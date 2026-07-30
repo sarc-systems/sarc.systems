@@ -12,6 +12,9 @@ creators:
   - name: "Microstoria"
     role: artist
     ref: microstoria
+  - name: "Markus Popp"
+    role: artist
+    ref: markus-popp
 
 subjects: [sound, technology]
 

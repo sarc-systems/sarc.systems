@@ -11,6 +11,7 @@ library:
 creators:
   - name: "David Rosenboom"
     role: editor
+    ref: david-rosenboom
 
 subjects: [feedback, perception, sound]
 

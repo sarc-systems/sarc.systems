@@ -26,8 +26,9 @@ access:
 related:
   - ref: grm
     relation: influenced-by
+  - {ref: philips-research-laboratories-electronic-music-studio, relation: affiliated-with}
 
 draft: false
 ---
 
-Iannis Xenakis (1922-2001) was a Greek-French composer.
+Iannis Xenakis (1922-2001) was a Greek-French composer and architect who, before turning to music, worked with Le Corbusier and co-designed the Philips Pavilion for the 1958 Brussels World's Fair — the building for which he composed his early tape piece *Concret PH*, alongside Edgard Varèse's *Poème électronique*.

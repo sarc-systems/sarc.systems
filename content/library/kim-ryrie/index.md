@@ -15,6 +15,8 @@ access: []
 
 related:
   - {ref: fairlight-instruments, relation: part-of}
+  - {ref: peter-vogel, relation: collaborator-of}
+  - {ref: wendy-carlos, relation: influenced-by}
 
 draft: false
 ---

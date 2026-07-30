@@ -13,6 +13,9 @@ creators:
   - name: "James Tenney"
     role: author
     ref: james-tenney
+  - name: "Frog Peak Music"
+    role: publisher
+    ref: frog-peak
 
 subjects:
   - perception

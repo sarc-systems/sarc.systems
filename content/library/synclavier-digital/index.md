@@ -7,6 +7,11 @@ library:
   type: organization
   sarc_work: false
 
+creators:
+  - name: "Cameron Jones"
+    role: founder
+    ref: cameron-jones
+
 subjects: [instruments, technology]
 
 images: []

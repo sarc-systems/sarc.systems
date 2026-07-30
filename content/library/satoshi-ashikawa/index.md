@@ -17,6 +17,7 @@ images:
 
 related:
   - {ref: wave-notation, relation: part-of}
+  - {ref: hiroshi-yoshimura, relation: collaborator-of}
 
 draft: false
 ---

@@ -14,6 +14,9 @@ creators:
   - name: "Sydney Alonso"
     role: designer
     ref: sydney-alonso
+  - name: "Jon Appleton"
+    role: designer
+    ref: jon-appleton
   - name: "New England Digital"
     role: manufacturer
     ref: new-england-digital

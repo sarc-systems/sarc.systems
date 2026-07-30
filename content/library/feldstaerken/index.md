@@ -32,6 +32,9 @@ access:
     kind: discogs
     url: "https://www.discogs.com/release/633913-Thomas-Lehn-Feldst%C3%A4rken"
 
+related:
+  - {ref: ems-synthi-100, relation: made-with}
+
 draft: false
 ---
 

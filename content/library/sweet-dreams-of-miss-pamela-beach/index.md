@@ -10,6 +10,7 @@ library:
 creators:
   - name: "Jon Appleton"
     role: composer
+    ref: jon-appleton
 
 subjects: [sound, technology]
 

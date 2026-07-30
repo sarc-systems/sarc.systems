@@ -17,6 +17,9 @@ images:
       status: unknown
       note: "Photographer not established."
 
+related:
+  - {ref: milford-graves, relation: collaborator-of}
+
 draft: false
 ---
 

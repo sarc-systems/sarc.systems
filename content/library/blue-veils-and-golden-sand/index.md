@@ -22,6 +22,9 @@ access:
     kind: video
     url: "https://youtu.be/OyUkmxy5VMI"
 
+related:
+  - {ref: bbc-radiophonic-workshop, relation: created-at}
+
 draft: false
 ---
 

@@ -20,7 +20,8 @@ images:
 
 access: []
 
-related: []
+related:
+  - {ref: alvin-lucier, relation: collaborator-of}
 
 draft: false
 ---

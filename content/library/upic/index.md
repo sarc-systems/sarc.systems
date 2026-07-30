@@ -30,6 +30,7 @@ access: []
 
 related:
   - {ref: cemamu, relation: part-of}
+  - {ref: les-ateliers-upic, relation: used-by}
 
 draft: false
 ---

@@ -32,6 +32,10 @@ access:
     kind: discogs
     url: "https://www.discogs.com/release/113243-Morton-Subotnick-The-Wild-Bull"
 
+related:
+  - {ref: silver-apples-of-the-moon, relation: related-work}
+  - {ref: buchla-100, relation: made-with}
+
 draft: false
 ---
 

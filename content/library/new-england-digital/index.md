@@ -16,4 +16,4 @@ access: []
 draft: false
 ---
 
-Founded in Norwich, Vermont in 1976 by Cameron Jones and Sydney Alonso to commercialize the Synclavier they'd developed at Dartmouth College, New England Digital shipped the first commercially available real-time digital synthesis instrument in 1978 before closing in 1993.
+Founded in Norwich, Vermont in 1976 by Cameron Jones and Sydney Alonso — students who began building the Synclavier that year at the instigation of Dartmouth composer Jon Appleton — to commercialize the instrument, New England Digital shipped the first commercially available real-time digital synthesis instrument in 1978 before closing in 1993.

@@ -23,6 +23,10 @@ images: []
 
 access: []
 
+related:
+  - {ref: brian-eno, relation: used-by}
+  - {ref: kraftwerk, relation: used-by}
+
 draft: false
 ---
 

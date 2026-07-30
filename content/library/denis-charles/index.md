@@ -19,6 +19,9 @@ access:
     kind: website
     url: "https://www.denischarles.com"
 
+related:
+  - {ref: cecil-taylor, relation: collaborator-of}
+
 draft: false
 ---
 

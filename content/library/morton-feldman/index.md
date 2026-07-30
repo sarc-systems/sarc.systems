@@ -19,4 +19,4 @@ images:
 draft: false
 ---
 
-Morton Feldman (1926-1987) was an American composer.
+Morton Feldman (1926-1987) was an American composer known for quiet, indeterminately-notated music built from extended, barely-shifting durations. Alongside John Cage, Earle Brown, and Christian Wolff, he was a central figure of the "New York School" of composers who gathered informally through the 1950s.

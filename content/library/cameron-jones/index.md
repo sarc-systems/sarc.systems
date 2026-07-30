@@ -15,6 +15,7 @@ access: []
 
 related:
   - {ref: new-england-digital, relation: part-of}
+  - {ref: sydney-alonso, relation: collaborator-of}
 
 draft: false
 ---

@@ -22,6 +22,9 @@ access:
     kind: website
     url: "https://www.michaelstearns.com/"
 
+related:
+  - {ref: steve-roach, relation: collaborator-of}
+
 draft: false
 ---
 

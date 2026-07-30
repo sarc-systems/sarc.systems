@@ -1,6 +1,6 @@
 ---
 title: "Planetary Unfolding"
-summary: "Michael Stearns' 1981 analog space-music album."
+summary: "Michael Stearns' 1981 analog space-music album, made on a Serge modular synthesizer."
 year: 1981
 
 library:
@@ -32,7 +32,10 @@ access:
     kind: bandcamp
     url: "https://projektrecords.bandcamp.com/album/planetary-unfolding"
 
+related:
+  - {ref: serge-modular-synthesizer, relation: made-with}
+
 draft: false
 ---
 
-Michael Stearns' 1981 analog space-music album.
+Michael Stearns' 1981 analog space-music album, built from the slow-evolving textures of a Serge modular synthesizer.

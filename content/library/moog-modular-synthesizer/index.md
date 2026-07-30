@@ -23,8 +23,9 @@ access: []
 
 related:
   - {ref: minimoog-model-d, relation: predecessor-to}
+  - {ref: wendy-carlos, relation: used-by}
 
 draft: false
 ---
 
-The original cabinet-format Moog modular system, built from individually patched voltage-controlled modules — the instrument the compact, fixed-configuration Minimoog Model D was later distilled from.
+The original cabinet-format Moog modular system, built from individually patched voltage-controlled modules — the instrument the compact, fixed-configuration Minimoog Model D was later distilled from, and the one Wendy Carlos famously played (and painstakingly overdubbed track by track, since it had no polyphony or sequencer memory) on *Switched-On Bach* (1968).

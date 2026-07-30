@@ -21,6 +21,9 @@ access:
     kind: bandcamp
     url: "https://recollectiongrm.bandcamp.com/album/s-t"
 
+related:
+  - {ref: institute-of-sonology, relation: affiliated-with}
+
 draft: false
 ---
 
