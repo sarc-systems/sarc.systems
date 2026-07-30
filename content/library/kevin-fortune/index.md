@@ -1,6 +1,6 @@
 ---
 title: "Kevin Fortune"
-summary: "American ambient musician and engineer, on the Serge synthesizer's design team from its earliest days and later chief engineer at Sound Transform Systems."
+summary: "American ambient musician and engineer who began prototyping Serge circuits in the mid-1970s and later became chief engineer at Sound Transform Systems."
 
 library:
   id: kevin-fortune
@@ -20,4 +20,4 @@ related:
 draft: false
 ---
 
-Kevin Fortune (b. 1952), recording as Kevin Braheny or simply Braheny, was on the Serge synthesizer's design team from its earliest days and built his own highly customized 15-panel "Mighty Serge" in 1977. He relocated to the Bay Area in 1993 to become chief engineer at Rex Probe's Sound Transform Systems, continuing the Serge line under license from Serge Tcherepnin, while releasing ambient recordings of his own — including *Desert Solitaire* (1989) with Steve Roach and Michael Stearns.
+Kevin Fortune (b. 1952), recording as Kevin Braheny or simply Braheny, arrived in Los Angeles in 1975 and began working with Malcolm Cecil on T.O.N.T.O. — the ultra-stable oscillator Serge Tcherepnin had designed for that instrument led Fortune to start prototyping circuits directly for Tcherepnin, building his own highly customized 15-panel "Mighty Serge" in 1976–77 and continuing that work until Tcherepnin relocated. He moved to the Bay Area in 1993 to become chief engineer at Rex Probe's Sound Transform Systems, continuing the Serge line under license from Tcherepnin, while releasing ambient recordings of his own — including *Desert Solitaire* (1989) with Steve Roach and Michael Stearns.

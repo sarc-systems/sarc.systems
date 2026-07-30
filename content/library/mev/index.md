@@ -1,13 +1,24 @@
 ---
 title: "Musica Elettronica Viva"
-summary: "Electroacoustic improvisation ensemble."
+summary: "Rome electroacoustic improvisation ensemble, founded 1966 by Alvin Curran, Frederic Rzewski, and Richard Teitelbaum."
 
 library:
   id: mev
   type: group
   sarc_work: false
 
-subjects: [sound, instruments]
+creators:
+  - name: "Alvin Curran"
+    role: founder
+    ref: alvin-curran
+  - name: "Frederic Rzewski"
+    role: founder
+    ref: frederic-rzewski
+  - name: "Richard Teitelbaum"
+    role: founder
+    ref: richard-teitelbaum
+
+subjects: [sound, instruments, feedback]
 
 images:
   - file: "mev.jpg"
@@ -24,4 +35,4 @@ access:
 draft: false
 ---
 
-Musica Elettronica Viva (MEV) was an early electroacoustic improvisation ensemble formed in Rome in 1966.
+Musica Elettronica Viva (MEV) was formed in Rome in 1966, coalescing around the core trio of Alvin Curran, Frederic Rzewski, and Richard Teitelbaum alongside early participants Allan Bryant, Jon Phetteplace, Carol Plantamura, and Ivan Vandor. Working with contact microphones on unconventional objects — bed springs, glass, tin cans, toy pianos — alongside conventional instruments and homemade synthesizers, MEV became one of the first live electronic improvisation groups; soprano saxophonist Steve Lacy performed with Curran and Rzewski in its late-1960s sets. The group remained active into the 2010s.

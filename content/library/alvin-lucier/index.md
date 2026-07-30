@@ -15,7 +15,10 @@ images:
     role: portrait
     anchor: Right
 
+related:
+  - {ref: sonic-arts-union, relation: part-of}
+
 draft: false
 ---
 
-American composer exploring acoustic phenomena, resonance, and the physics of sound in space.
+American composer exploring acoustic phenomena, resonance, and the physics of sound in space, and a co-founder of the Sonic Arts Union in 1966.

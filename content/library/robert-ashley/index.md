@@ -22,6 +22,7 @@ access: []
 
 related:
   - {ref: alvin-lucier, relation: collaborator-of}
+  - {ref: sonic-arts-union, relation: part-of}
 
 draft: false
 ---

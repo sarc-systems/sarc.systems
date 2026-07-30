@@ -23,7 +23,10 @@ access:
     kind: bandcamp
     url: "https://rolandkayn.bandcamp.com"
 
+related:
+  - {ref: herbert-brun, relation: influenced-by}
+
 draft: false
 ---
 
-Roland Kayn (1933-2011) was a composer who utilized cybernetic frameworks.
+Roland Kayn (1933-2011) was a composer who utilized cybernetic frameworks, drawing inspiration from Herbert Brün's own cybernetic approach to composition.
