@@ -119,6 +119,7 @@ creator_roles:
   - composer
   - performer
   - director
+  - founder
   - lecturer
   - editor
   - researcher
@@ -164,6 +165,21 @@ relation_types:
   # actually documented (an interview, liner notes, gear-history writeup) —
   # never inferred from genre or period.
   - made-with
+  # Studios/institutions branch (see CLAUDE.md § Library "Institutions and
+  # Studios"). Founding and directing a specific person did is a creators
+  # role (founder/director, above) exactly like designer/developer/
+  # manufacturer on a System — never a related relation. These four cover
+  # what's left: an Organization sited at a Place (GRM based-at GRM
+  # Studios); a Work commissioned by an Organization or Person (distinct
+  # from creators, who actually made it); a loose Person-to-Organization/
+  # Place tie where "creator" doesn't fit (staff, resident, associate —
+  # collapses the spec's "worked at"/"associated with"); and a Work's
+  # creation site (collapses "recorded at"/"composed at"/"produced at" —
+  # one relation, the prose can carry the distinction).
+  - based-at
+  - commissioned-by
+  - affiliated-with
+  - created-at
 
 # Inverse labels for reverse-resolved `related` links. `related` is bidirectional:
 # a relation declared on one entry also renders on its target, labelled by the
@@ -188,6 +204,10 @@ relation_inverse:
   programmed-in: implementation-language-of
   compatible-with: compatible-with
   made-with: used-in
+  based-at: hosts
+  commissioned-by: commissioned
+  affiliated-with: affiliated-with
+  created-at: creation-site
 
 # Access kinds (`access[].kind`). `url` and `file` are mutually exclusive per
 # item; `hosted-file` requires a bundle-relative `file` (and is the only kind

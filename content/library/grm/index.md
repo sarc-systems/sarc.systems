@@ -7,6 +7,11 @@ library:
   type: organization
   sarc_work: false
 
+creators:
+  - name: "Pierre Schaeffer"
+    role: founder
+    ref: pierre-schaeffer
+
 subjects: [sound, technology]
 
 images:
@@ -26,7 +31,11 @@ access:
     kind: bandcamp
     url: "https://recollectiongrm.bandcamp.com"
 
+related:
+  - {ref: ina, relation: part-of}
+  - {ref: grm-studios, relation: based-at}
+
 draft: false
 ---
 
-French institution for musique concrète and electroacoustic research.
+French institution for musique concrète and electroacoustic research, reorganized in 1958 from Pierre Schaeffer's Groupe de Recherche de Musique Concrète and administratively part of the INA since 1975.

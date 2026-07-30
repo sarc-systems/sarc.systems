@@ -27,6 +27,7 @@ access:
 
 related:
   - {ref: ems-synthi-100, relation: made-with}
+  - {ref: studio-fur-elektronische-musik-des-wdr, relation: created-at}
 
 draft: false
 ---

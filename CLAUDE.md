@@ -635,6 +635,40 @@ same split applies to instruments-vs-methods generally: a specific real
 device (PPG Wave 2) is always a System; the abstract technique it embodies
 (wavetable synthesis) is always a Concept.
 
+**Institutions and Studios.** Electronic-music studios, labs, and research
+centers are `Organization` or `Place`, never a `Studio` public type — an
+entry gets exactly one of the two. **Organization** = a continuing
+institutional/administrative/creative body (Groupe de Recherches Musicales,
+BBC Radiophonic Workshop, Institute of Sonology). **Place** = a specific
+room, building, or physical facility (GRM Studios, Studio 54 du GRM, Maida
+Vale Studios, Espace de Projection). When an institution and its premises
+share a name closely, split them only when the distinction is historically
+or graphically useful (e.g. GRM the organization vs. GRM Studios the
+building it's based at) — don't default to splitting. Historical relocation
+is a `related` fact (`based-at` pointing at a new Place, `predecessor-to`/
+`successor-to` across a renaming), never a change to an entity's type.
+Founding and directing are `creators[].role` (`founder`, `director`) exactly
+like System's designer/developer/manufacturer — never `related` — since the
+site's "creator attribution uses `creators`, never `related`" rule applies
+here unchanged; likewise an organization "developing" a system (GRM
+developing GRM Tools) is that System's `developer` creator credit, not a
+studio-side relation. What's left uses four relations added for this
+branch: `based-at` (Organization → Place it's sited at or headquartered in;
+inverse "Hosts"), `commissioned-by` (a Work commissioned by an Organization
+or Person, distinct from who actually made it), `affiliated-with` (a
+looser Person↔Organization/Place tie than a creator credit — staff,
+resident, associate; collapses the vaguer "worked at"/"associated with"
+cases), and `created-at` (a Work's recording/composition/production site —
+one relation covers all three; distinguish them in prose, not vocabulary,
+matching "prefer a smaller, well-connected graph over a large set of
+isolated entries"). Physical containment (a room part of a building, a
+studio housing a specific instrument) reuses `part-of` like System
+hierarchy — no new containment relation. Detailed institutional flavor
+(broadcast workshop, computer music center, university laboratory, …) is
+prose, not a new specific type per flavor, unless a genuine cluster of
+entries shares one (see the actual `types:` entries added for this branch
+in `data/library.yaml`, all mapping to `organization` or `place`).
+
 **Node Type Encoding.** One canonical color+shape token per PUBLIC type
 (not per specific type), shared by Map nodes *and* the Type filter chip
 swatches — never two separate mappings. Defined once in

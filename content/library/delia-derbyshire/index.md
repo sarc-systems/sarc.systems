@@ -17,6 +17,9 @@ images:
     credit: "SoundGirls"
     source: "https://soundgirls.org/wp-content/uploads/2019/03/DD2.jpg"
 
+related:
+  - {ref: bbc-radiophonic-workshop, relation: affiliated-with}
+
 draft: false
 ---
 

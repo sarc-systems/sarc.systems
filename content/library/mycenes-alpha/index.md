@@ -1,6 +1,6 @@
 ---
 title: "Mycènes Alpha"
-summary: "Electroacoustic work by Iannis Xenakis."
+summary: "Xenakis's 1978 work, the first piece ever composed on the UPIC system."
 year: 1978
 
 library:
@@ -26,7 +26,10 @@ access:
     kind: bandcamp
     url: "https://karlrecords.bandcamp.com/track/mycenae-alpha-1978"
 
+related:
+  - {ref: upic, relation: made-with}
+
 draft: false
 ---
 
-Electroacoustic work by Iannis Xenakis.
+Composed in 1978, *Mycènes Alpha* was the first piece Iannis Xenakis realized on the UPIC system he had just completed at CEMAMu — drawn directly onto the system's digitizing tablet rather than notated or patched.

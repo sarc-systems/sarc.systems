@@ -1,0 +1,28 @@
+---
+title: "CLAEM"
+summary: "Latin American composition institute at Buenos Aires's Instituto Torcuato Di Tella, founded 1962 by Alberto Ginastera."
+
+library:
+  id: claem
+  type: organization
+  sarc_work: false
+
+creators:
+  - name: "Alberto Ginastera"
+    role: founder
+  - name: "Alberto Ginastera"
+    role: director
+
+subjects: [sound, technology]
+
+images: []
+
+access: []
+
+related:
+  - {ref: instituto-torcuato-di-tella, relation: part-of}
+
+draft: false
+---
+
+Founded in 1962 by composer Alberto Ginastera as one of the arts centers of Buenos Aires's Instituto Torcuato Di Tella, the Centro Latinoamericano de Altos Estudios Musicales (CLAEM) ran a scholarship program bringing young composers from across Latin America together, adding an Electronic Music Laboratory in 1963 under engineer Horacio Raúl Bozzarello.

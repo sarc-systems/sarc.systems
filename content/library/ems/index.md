@@ -7,11 +7,23 @@ library:
   type: organization
   sarc_work: false
 
+creators:
+  - name: "Peter Zinovieff"
+    role: founder
+    ref: peter-zinovieff
+  - name: "David Cockerell"
+    role: founder
+  - name: "Tristram Cary"
+    role: founder
+
 subjects: [instruments, technology]
 
 images: []
 
 access: []
+
+related:
+  - {ref: ems-putney, relation: based-at}
 
 draft: false
 ---

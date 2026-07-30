@@ -13,6 +13,9 @@ images: []
 
 access: []
 
+related:
+  - {ref: ircam-studios, relation: based-at}
+
 draft: false
 ---
 
