@@ -9,7 +9,14 @@ library:
 
 subjects: [instruments, technology]
 
-images: []
+images:
+  - file: "dave-rossum.jpg"
+    alt: "Dave Rossum at the 2025 NAMM Show"
+    role: portrait
+    source: "https://commons.wikimedia.org/wiki/File:Dave_Rossum.jpg"
+    rights:
+      status: licensed
+      note: "CC BY-SA 4.0 International, via Wikimedia Commons."
 
 access: []
 

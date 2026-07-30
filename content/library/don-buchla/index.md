@@ -9,7 +9,14 @@ library:
 
 subjects: [instruments, technology]
 
-images: []
+images:
+  - file: "don-buchla-200e.jpg"
+    alt: "Don Buchla with a 200e synthesizer at the 2006 NAMM Show"
+    role: portrait
+    source: "https://commons.wikimedia.org/wiki/File:Don_Buchla_and_200e.jpg"
+    rights:
+      status: licensed
+      note: "CC BY-SA 2.0 Generic, via Wikimedia Commons."
 
 access: []
 

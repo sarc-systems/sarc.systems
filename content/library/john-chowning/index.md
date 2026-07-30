@@ -9,7 +9,14 @@ library:
 
 subjects: [computation, sound, tuning]
 
-images: []
+images:
+  - file: "john-chowning.jpg"
+    alt: "John Chowning"
+    role: portrait
+    source: "https://commons.wikimedia.org/wiki/File:Chowning.jpg"
+    rights:
+      status: licensed
+      note: "CC BY-SA 3.0 Unported, via Wikimedia Commons."
 
 access: []
 

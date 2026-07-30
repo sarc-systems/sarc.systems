@@ -9,7 +9,15 @@ library:
 
 subjects: [instruments, technology]
 
-images: []
+images:
+  - file: "tom-oberheim-namm2022.jpg"
+    alt: "Tom Oberheim at the 2022 NAMM Show"
+    role: portrait
+    credit: "Alison Cassidy"
+    source: "https://commons.wikimedia.org/wiki/File:Tom_Oberheim.jpg"
+    rights:
+      status: licensed
+      note: "CC BY-SA 4.0 International, via Wikimedia Commons."
 
 access: []
 

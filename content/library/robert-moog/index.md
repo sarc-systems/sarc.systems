@@ -9,7 +9,14 @@ library:
 
 subjects: [instruments, technology]
 
-images: []
+images:
+  - file: "robert-moog-mid1970s.jpg"
+    alt: "Robert Moog, mid-1970s"
+    role: portrait
+    source: "https://commons.wikimedia.org/wiki/File:Bob_Moog_(mid-1970s).jpg"
+    rights:
+      status: public-domain
+      note: "Public domain, via Wikimedia Commons."
 
 access: []
 

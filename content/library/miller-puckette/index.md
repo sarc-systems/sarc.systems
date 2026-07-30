@@ -9,7 +9,15 @@ library:
 
 subjects: [computation, sound]
 
-images: []
+images:
+  - file: "miller-puckette-2014.jpg"
+    alt: "Miller Puckette at the Linux Audio Conference, 2014"
+    role: portrait
+    credit: "Andreas Möllenkamp"
+    source: "https://commons.wikimedia.org/wiki/File:Miller_Puckette_auf_der_Linux_Audio_Conference_2014_in_Karlsruhe.jpg"
+    rights:
+      status: licensed
+      note: "CC BY 3.0 Unported, via Wikimedia Commons."
 
 access: []
 
