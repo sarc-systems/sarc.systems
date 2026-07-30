@@ -1,0 +1,22 @@
+---
+title: "Dave Rossum"
+summary: "American engineer, founder of E-mu Systems and pioneer of sampling instrument design."
+
+library:
+  id: dave-rossum
+  type: person
+  sarc_work: false
+
+subjects: [instruments, technology]
+
+images: []
+
+access: []
+
+related:
+  - {ref: e-mu-systems, relation: part-of}
+
+draft: false
+---
+
+Dave Rossum founded E-mu Systems in Santa Cruz in 1972 while a graduate student, going on to invent the polyphonic synthesizer keyboard, pioneer microprocessor use in music instruments, and develop the DSP architectures behind E-mu's Emulator and Proteus lines and the SP-12/SP-1200 sampling drum machines — technology also licensed into the Oberheim Four Voice and Sequential Circuits Prophet-5. He co-designed Oberheim's SEM with Tom Oberheim in 1974, and continues designing instruments through Rossum Electro-Music.

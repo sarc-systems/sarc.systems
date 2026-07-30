@@ -15,6 +15,9 @@ images:
     role: portrait
     source: "https://modular-station.com/modulisme/itatiom/serge/"
 
+related:
+  - {ref: serge-modular-music-systems, relation: part-of}
+
 draft: false
 ---
 

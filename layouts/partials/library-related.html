@@ -3,11 +3,18 @@
        AT this one, labelled with the inverse relation (data/library.yaml
        relation_inverse). So a composer's `part-of GRM` shows as "Part Of · GRM"
        on the composer and "Member · <composer>" on GRM, from one declaration.
+       `part-of` doubles as System hierarchy (a module part-of a panel, a panel
+       part-of a synthesizer — see CLAUDE.md § Library "Systems Ontology"), so
+       its inverse is resolved CONTEXTUALLY here rather than as one fixed
+       label from data/library.yaml: "Contains" when the entry declaring
+       part-of is itself public_type `system`, "Member" otherwise (a person
+       or group joining an organization, unchanged).
        Renders nothing when there is neither a forward nor a reverse link.
        Call: {{ partial "library-related.html" (dict "page" .) }} */ -}}
 {{- $page := .page -}}
 {{- $id := $page.Params.library.id -}}
 {{- $inv := hugo.Data.library.relation_inverse -}}
+{{- $pt := partialCached "library-public-types.html" . "library-public-types" -}}
 {{- $rows := slice -}}
 {{- /* forward: relations this entry declares */ -}}
 {{- range $page.Params.related -}}
@@ -23,7 +30,12 @@
     {{- range $p.Params.related -}}
       {{- if eq .ref $id -}}
         {{- $r := .relation | default "related-work" -}}
-        {{- $rows = $rows | append (dict "target" $p "relation" (index $inv $r | default $r)) -}}
+        {{- $inverse := index $inv $r | default $r -}}
+        {{- if eq $r "part-of" -}}
+          {{- $srcType := "" }}{{ with $p.Params.library }}{{ $srcType = .type }}{{ end -}}
+          {{- if eq (index $pt.typeOf $srcType) "system" }}{{ $inverse = "contains" }}{{ end -}}
+        {{- end -}}
+        {{- $rows = $rows | append (dict "target" $p "relation" $inverse) -}}
       {{- end -}}
     {{- end -}}
   {{- end -}}

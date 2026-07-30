@@ -16,9 +16,6 @@ images:
     source: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ-xFA4yzTH1fmlPqPxr7XTZWUULa61pU5AkGo_U0shAGG004HTaoWOSh0"
 
 access:
-  - label: "YouTube"
-    kind: video
-    url: "https://youtu.be/a_BAwf9s_Ho"
   - label: "Official website"
     kind: website
     url: "https://www.herbertbrun.org"

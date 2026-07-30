@@ -558,21 +558,23 @@ Images/Map's siblings; hidden under `data-nojs`. This is expected to evolve;
 treat the force layout itself as replaceable, not load-bearing.
 
 **Public Type vs Specific Type.** Every entry's `library.type` (book, essay,
-release, composition, film, person, group, organization, …) is the SPECIFIC
-type — what form the thing takes — and stays exactly that granular in
-front matter; nothing here flattens or renames it. A separate, much smaller
-vocabulary, `data/library.yaml`'s `public_types` (seven values: `person`,
-`group`, `organization`, `work`, `event`, `place`, `concept`), is what the
-site actually **filters and colors by** — "what kind of thing is this?"
-rather than "what form does this work take?". Every specific type maps to
-exactly one public type (`types[].public_type` in the same file); a handful
-of specific types (book, essay, story, paper, article, manual, recording,
-release, composition, film, video, lecture, audio, podcast, website, archive,
-software, repository, project, instrument, system, document, other) all map
-to the single public type `work` — 25 possible forms collapse to one
-navigable, one visually-encoded category, while `person`/`group`/
-`organization` map 1:1 (they have no finer subtypes to distinguish). The
-mapping lives in exactly one place, `partials/library-public-types.html`
+album, composition, film, person, group, organization, instrument, software,
+…) is the SPECIFIC type — what form the thing takes — and stays exactly
+that granular in front matter; nothing here flattens or renames it. A
+separate, much smaller vocabulary, `data/library.yaml`'s `public_types`
+(eight values: `person`, `group`, `organization`, `work`, `system`, `event`,
+`place`, `concept`), is what the site actually **filters and colors by** —
+"what kind of thing is this?" rather than "what form does this work take?".
+Every specific type maps to exactly one public type (`types[].public_type`
+in the same file); a handful of specific types (book, essay, story, paper,
+article, manual, recording, album, composition, film, video, lecture, audio,
+podcast, website, archive, repository, project, document, other) all map to
+the single public type `work`, and a separate handful (instrument, module,
+software, hardware, language, interface, method, technique, system) all map
+to `system` — see "Systems Ontology" below for why that's its own public
+type, not a Work subtype — while `person`/`group`/`organization` map 1:1
+(they have no finer subtypes to distinguish). The mapping lives in exactly
+one place, `partials/library-public-types.html`
 (a pure function of `data/library.yaml`, called via `partialCached` so its
 small double loop runs once per build, not once per entry) — every Hugo
 template that needs either direction of the mapping (`list.json`,
@@ -585,7 +587,53 @@ already-resolved `public_type` field `list.json` exports per entry, plus the
 `public_type_styles` dict, both computed server-side. A dev-only audit
 (`library-validate.html`, gated on `hugo.IsServer` so it never runs in
 production builds) prints entry counts per public type, and per specific
-type within any public type that has more than one (today, only Work).
+type within any public type that has more than one (today, Work and System).
+
+**Systems Ontology.** The Library distinguishes three fundamental kinds of
+entities: **Agents** (who creates — Person/Group/Organization), **Works**
+(what is created), and **Systems** (what creation happens *through*) — a
+synthesizer, programming language, modular panel, software environment, or
+hardware module is a System, never a Work, even though it's a "thing" in
+the same sense a book or album is. `system` is a public type coequal with
+`work`, not a subtype of it. System subtypes (specific types, purely
+descriptive, same mechanism as any Work subtype): `instrument`, `module`,
+`software`, `hardware`, `language`, `interface`, `method`, `technique`, and
+the generic `system` (when no finer subtype fits — a whole platform, say —
+exactly how bare `person`/`group`/`organization` work). **No `panel`
+subtype, ever** — a Serge "Soup Kitchen" panel and its "Resonant Equalizer"
+module are both just `type: instrument` / `type: module` System entries;
+what makes one a sub-assembly of the other is a `related` declaration
+(`part-of`), not a type distinction — hierarchy is relationships, not
+vocabulary, so it nests arbitrarily deep (a module part-of a panel part-of
+a synthesizer) without ever growing the type list. Who designed, developed,
+or manufactured a System is a `creators[].role` (`designer`/`developer`/
+`manufacturer`, crediting a person OR an organization — e.g. Wolfgang Palm
+as `designer` and PPG as `manufacturer` on the same entry) exactly like any
+other creator credit, **never** a `related` relation — this follows directly
+from the site's existing "creator attribution uses `creators`, never
+`related`" rule, so Systems introduced no new relation types for this.
+`related` relation types Systems actually do use: `part-of` (hierarchy, see
+above — also still used unchanged for a person/group joining an
+organization), `influenced-by` (e.g. the PPG Wave 2 influencing the Waldorf
+Microwave XT), `successor-to`/`predecessor-to` (e.g. the Synclavier Regen
+succeeding the Synclavier II), plus three added for this: `implements`,
+`programmed-in` (a piece of software and the language it's written in —
+e.g. SuperCollider `programmed-in` C++), and `compatible-with` (symmetric).
+`part-of`'s inverse label is resolved CONTEXTUALLY (`library-related.html`,
+not a static `data/library.yaml` lookup like every other relation): a
+System declaring `part-of` renders as **"Contains"** on its target (a
+synthesizer's page shows the panels it contains), while a Person/Group
+declaring `part-of` an Organization still renders as **"Member"** — same
+relation type, different inverse label, chosen by the DECLARING entry's own
+public type. A `MIDI`-vs-`control voltage` distinction is the guiding
+example for classifying ambiguous cases: a concrete, adopted protocol (MIDI,
+1 V/octave pitch control) is a System (subtype `protocol`) — something
+with an actual specification someone can implement or violate; a general
+idea or technique (voltage control, modular synthesis, FM synthesis) is a
+Concept — nothing to "implement," just a way of thinking about sound. The
+same split applies to instruments-vs-methods generally: a specific real
+device (PPG Wave 2) is always a System; the abstract technique it embodies
+(wavetable synthesis) is always a Concept.
 
 **Node Type Encoding.** One canonical color+shape token per PUBLIC type
 (not per specific type), shared by Map nodes *and* the Type filter chip

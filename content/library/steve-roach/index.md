@@ -18,6 +18,9 @@ access:
   - label: "Bandcamp"
     kind: bandcamp
     url: "https://steveroach.bandcamp.com"
+  - label: "YouTube"
+    kind: video
+    url: "https://youtu.be/etoLHpbFuqU"
 
 draft: false
 ---

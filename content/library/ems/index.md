@@ -1,0 +1,19 @@
+---
+title: "Electronic Music Studios (EMS)"
+summary: "British synthesizer manufacturer, founded 1969, maker of the VCS3 and Synthi 100."
+
+library:
+  id: ems
+  type: organization
+  sarc_work: false
+
+subjects: [instruments, technology]
+
+images: []
+
+access: []
+
+draft: false
+---
+
+Founded in London in 1969 by Peter Zinovieff, David Cockerell, and Tristram Cary, EMS built the portable VCS3 — used by Pink Floyd, Roxy Music, Kraftwerk, and Jean-Michel Jarre — and the large-format Synthi 100, before going bankrupt in 1979.

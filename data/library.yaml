@@ -7,12 +7,21 @@
 # display order and each entry carries its own key.
 
 # Primary entry type (one per entry, nested as `library.type`) — the SPECIFIC
-# type: what form the thing takes (book, essay, release, composition, …).
-# `public_type` keys into `public_types` below — the seven broad ontological
+# type: what form the thing takes (book, essay, album, composition, …).
+# `public_type` keys into `public_types` below — the eight broad ontological
 # classes used for navigation and visual identity (see CLAUDE.md § Library
 # "Public Type vs Specific Type"). Every specific type must map to exactly one
 # public type; validation fails the build on anything unmapped. Presentation
 # adapts to the specific type; there is no public section per type.
+#
+# `system` is NOT a subtype of `work` — see CLAUDE.md § Library "Systems
+# Ontology": a synthesizer, programming language, modular panel, software
+# environment, or hardware module is the thing creation happens *through*,
+# not a created work in itself. instrument/module/software/hardware/language/
+# interface/method/technique are system SUBTYPES (descriptive metadata, same
+# as any other specific type); `system` itself is also a specific type — the
+# generic case when no finer subtype applies (e.g. a whole platform), exactly
+# how `person`/`group`/`organization` each map 1:1 to their own public type.
 types:
   - {type: person,       label: "Person",          order: 15,  public_type: person}
   - {type: group,        label: "Group",           order: 18,  public_type: group}
@@ -33,15 +42,25 @@ types:
   - {type: podcast,      label: "Podcast",         order: 150, public_type: work}
   - {type: website,      label: "Website",         order: 160, public_type: work}
   - {type: archive,      label: "Archive",         order: 170, public_type: work}
-  - {type: software,     label: "Software",        order: 180, public_type: work}
   - {type: repository,   label: "Code Repository", order: 190, public_type: work}
   - {type: project,      label: "Project",         order: 200, public_type: work}
-  - {type: instrument,   label: "Instrument",      order: 210, public_type: work}
-  - {type: system,       label: "System",          order: 220, public_type: work}
   - {type: document,     label: "Document",        order: 230, public_type: work}
   - {type: other,        label: "Other",           order: 240, public_type: work}
+  - {type: event,        label: "Event",           order: 250, public_type: event}
+  - {type: place,        label: "Place",           order: 260, public_type: place}
+  - {type: concept,      label: "Concept",         order: 270, public_type: concept}
+  - {type: instrument,   label: "Instrument",      order: 310, public_type: system}
+  - {type: module,       label: "Module",          order: 320, public_type: system}
+  - {type: software,     label: "Software",        order: 330, public_type: system}
+  - {type: hardware,     label: "Hardware",        order: 340, public_type: system}
+  - {type: language,     label: "Language",        order: 350, public_type: system}
+  - {type: interface,    label: "Interface",       order: 360, public_type: system}
+  - {type: method,       label: "Method",          order: 370, public_type: system}
+  - {type: technique,    label: "Technique",       order: 380, public_type: system}
+  - {type: protocol,     label: "Protocol",        order: 390, public_type: system}
+  - {type: system,       label: "System",          order: 400, public_type: system}
 
-# The seven public types — canonical visual identity (Map nodes, Type filter
+# The eight public types — canonical visual identity (Map nodes, Type filter
 # chip markers, image-node borders, future legends/badges) AND primary
 # filtering. One centralized mapping, defined here once, resolved by the
 # shared partials/library-public-types.html and consumed by
@@ -59,6 +78,7 @@ public_types:
   - {public_type: group,        label: "Group",        order: 20, color: claret,       shape: diamond}
   - {public_type: organization, label: "Organization", order: 30, color: dark-grey,     shape: square}
   - {public_type: work,         label: "Work",         order: 40, color: sapphire,     shape: circle}
+  - {public_type: system,       label: "System",       order: 45, color: rust,         shape: square}
   - {public_type: event,        label: "Event",        order: 50, color: emerald,      shape: triangle}
   - {public_type: place,        label: "Place",        order: 60, color: amethyst,     shape: square}
   - {public_type: concept,      label: "Concept",      order: 70, color: purple,       shape: diamond}
@@ -87,7 +107,12 @@ subjects:
 
 # Controlled creator roles (`creators[].role`). A creator always has a `name`; an
 # optional `ref` (another entry's library.id) links the name and generates the
-# reverse "works" relationship on that entry.
+# reverse "works" relationship on that entry. Who designed/developed/
+# manufactured a System entry (e.g. Wolfgang Palm designing the PPG Wave 2,
+# PPG manufacturing it) is a `creators[].role` (designer/developer/
+# manufacturer) exactly like any other credit — see CLAUDE.md § Library
+# "Systems Ontology": never a `related` relation, per the rule directly above
+# relation_types below.
 creator_roles:
   - author
   - artist
@@ -97,6 +122,7 @@ creator_roles:
   - lecturer
   - editor
   - researcher
+  - designer
   - developer
   - manufacturer
   - organization
@@ -104,7 +130,15 @@ creator_roles:
   - publisher
 
 # Controlled editorial relationship types (`related[].relation`). Creator
-# attribution uses `creators`, never `related`.
+# attribution uses `creators`, never `related` — so there is deliberately no
+# designed-by/manufactured-by/developed-by here (see creator_roles above).
+# `part-of` is also how System hierarchy nests (a module part-of a panel,
+# a panel part-of a synthesizer) — see CLAUDE.md § Library "Systems
+# Ontology": no separate "Panel" type, no separate containment relation,
+# hierarchy is just `part-of` declared arbitrarily deep. Its inverse label
+# is resolved contextually (library-related.html): "Contains" when the
+# entry declaring it is public_type `system`, "Member" otherwise (unchanged
+# for person/group-in-organization).
 relation_types:
   - related-work
   - version-of
@@ -120,6 +154,9 @@ relation_types:
   - part-of
   - successor-to
   - predecessor-to
+  - implements
+  - programmed-in
+  - compatible-with
 
 # Inverse labels for reverse-resolved `related` links. `related` is bidirectional:
 # a relation declared on one entry also renders on its target, labelled by the
@@ -140,6 +177,9 @@ relation_inverse:
   performance-of: performed-as
   successor-to: predecessor-to
   predecessor-to: successor-to
+  implements: implemented-by
+  programmed-in: implementation-language-of
+  compatible-with: compatible-with
 
 # Access kinds (`access[].kind`). `url` and `file` are mutually exclusive per
 # item; `hosted-file` requires a bundle-relative `file` (and is the only kind

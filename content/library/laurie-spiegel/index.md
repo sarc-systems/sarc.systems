@@ -22,6 +22,9 @@ access:
     kind: video
     url: "https://youtu.be/oconRQBZff0"
 
+related:
+  - {ref: bell-labs, relation: part-of}
+
 draft: false
 ---
 

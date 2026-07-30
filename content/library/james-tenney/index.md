@@ -22,6 +22,9 @@ access:
     kind: website
     url: "http://www.jamestenney.net"
 
+related:
+  - {ref: bell-labs, relation: part-of}
+
 draft: false
 ---
 

@@ -1,0 +1,19 @@
+---
+title: "E-mu Systems"
+summary: "American sampling instrument manufacturer founded by Dave Rossum."
+
+library:
+  id: e-mu-systems
+  type: organization
+  sarc_work: false
+
+subjects: [instruments, technology]
+
+images: []
+
+access: []
+
+draft: false
+---
+
+Founded in Santa Cruz in 1972 by Dave Rossum, E-mu Systems built the E-mu Modular System, the Emulator and Emax sampler lines, and the SP-12/SP-1200 sampling drum machines before its 1994 acquisition by Creative Labs.

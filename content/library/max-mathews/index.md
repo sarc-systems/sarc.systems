@@ -15,6 +15,9 @@ images:
     role: portrait
     credit: "Wikipedia"
 
+related:
+  - {ref: bell-labs, relation: part-of}
+
 draft: false
 ---
 
