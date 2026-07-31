@@ -42,7 +42,10 @@ from as early as 1958, when they built an experimental electrochemical
 "learning" system — suspended electrodes in a ferrous solution — in Pask's
 London flat; the two remained connected through British cybernetics circles
 for decades, Pask later contributing the operations-room instrumentation for
-Beer's Project Cybersyn. In 1971–73 Beer led Cybersyn for Salvador Allende's
-government, a real-time cybernetic system for managing the Chilean economy,
-ended by the 1973 coup. His 1973 CBC Massey Lectures, published as *Designing
-Freedom*, were delivered shortly after his return from Chile.
+Beer's [Project Cybersyn](/library/project-cybersyn/). In 1971–73 Beer led
+Cybersyn for Salvador Allende's government, a real-time cybernetic system
+for managing the Chilean economy, ended by the 1973 coup. His 1973 CBC
+Massey Lectures, published as *[Designing Freedom](/library/designing-freedom/)*, were delivered shortly
+after his return from Chile. His theory of the Viable System Model,
+underlying Cybersyn's design, was laid out in *[Brain of the
+Firm](/library/brain-of-the-firm/)* (1972).
