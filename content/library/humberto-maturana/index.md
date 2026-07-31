@@ -28,4 +28,4 @@ related:
 draft: false
 ---
 
-Humberto Maturana (1928–2021) was a frequent visitor to Heinz von Foerster's Biological Computer Laboratory, whose second-order cybernetics shaped his own research into cognition as a biological process. With his student Francisco Varela, he coined the term "autopoiesis" for the self-producing, self-maintaining organization of living systems, developing the idea across their jointly authored *The Tree of Knowledge* (1987).
+Humberto Maturana (1928–2021) was a frequent visitor to Heinz von Foerster's Biological Computer Laboratory, whose second-order cybernetics shaped his own research into cognition as a biological process. With his student Francisco Varela, he coined the term "[autopoiesis](/library/autopoiesis/)" for the self-producing, self-maintaining organization of living systems, developing the idea across their jointly authored *The Tree of Knowledge* (1987).
