@@ -10,6 +10,7 @@ library:
 creators:
   - name: "Klein + Hummel"
     role: manufacturer
+    ref: klein-hummel
 
 subjects:
   - sound
@@ -47,4 +48,4 @@ draft: false
 ---
 
 The **Klein + Hummel UE-100** is a graphic equalizer from the German professional audio
-manufacturer Klein + Hummel.
+manufacturer [Klein + Hummel](/library/klein-hummel/).

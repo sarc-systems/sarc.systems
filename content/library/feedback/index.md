@@ -7,6 +7,9 @@ library:
   type: concept
   sarc_work: false
 
+creators:
+  - {name: "Norbert Wiener", role: researcher, ref: norbert-wiener}
+
 subjects: [cybernetics, feedback]
 
 images: []
