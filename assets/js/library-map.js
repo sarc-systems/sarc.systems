@@ -30,7 +30,7 @@
 //
 // The force simulation itself is completely renderer-agnostic: buildGraph(),
 // detectCommunities(), forceIterationWithCentering(), runContinuousSettle(),
-// resolveOverlapsOnly(), relayout() all operate on plain
+// resolveOverlapsOnce(), relayout() all operate on plain
 // {id,x,y,vx,vy,radius,fx,fy} node objects and a plain edge array — none of
 // them touch a canvas, an SVG element, or the DOM. Only
 // the renderer (drawBackground()/drawInteraction()), the spatial index, and
@@ -482,31 +482,38 @@
   // SIM_ALPHA_MIN) that still leaves a couple of nodes closer than their
   // combined collision radius — the generic collision FORCE nudges them
   // apart but has to share the tug-of-war with every other force in the
-  // same iteration, and isn't guaranteed to fully win. This runs after the
-  // whole visible graph has already settled into its overall shape, so it
-  // only has small residual overlaps left to resolve and converges in a
-  // handful of iterations.
-  function resolveOverlapsOnly(nodeList) {
-    var maxIter = 40;
-    for (var iter = 0; iter < maxIter; iter++) {
-      var anyOverlap = false;
-      for (var i = 0; i < nodeList.length; i++) {
-        for (var j = i + 1; j < nodeList.length; j++) {
-          var a = nodeList[i], b = nodeList[j];
-          var dx = a.x - b.x, dy = a.y - b.y;
-          var dist = Math.sqrt(dx * dx + dy * dy) || 0.01;
-          var minSep = a.radius + b.radius + COLLISION_PAD;
-          if (dist < minSep) {
-            anyOverlap = true;
-            var push = (minSep - dist) / 2 + 0.5;
-            var ux = dx / dist, uy = dy / dist;
-            a.x += ux * push; a.y += uy * push;
-            b.x -= ux * push; b.y -= uy * push;
-          }
+  // same iteration, and isn't guaranteed to fully win.
+  //
+  // Does exactly ONE pass per call and reports whether it found any overlap
+  // left to fix — settleTick() below calls this once per animated tick
+  // (still inside runContinuousSettle's normal per-frame loop) once alpha
+  // has decayed, rather than this file's earlier design, which ran a whole
+  // batch of these passes synchronously in finishRelayout() right as the
+  // settle finished. That synchronous batch could visibly relocate a node
+  // in one un-animated jump at the exact moment the settle "froze" — a real
+  // bug a user could perceive directly (motion after the animation had
+  // already visually stopped is worse than motion during it). Folding this
+  // into the same animated loop means any correction it makes is still
+  // ordinary settle motion the user watches happen, never a discontinuity
+  // applied after the fact.
+  function resolveOverlapsOnce(nodeList) {
+    var anyOverlap = false;
+    for (var i = 0; i < nodeList.length; i++) {
+      for (var j = i + 1; j < nodeList.length; j++) {
+        var a = nodeList[i], b = nodeList[j];
+        var dx = a.x - b.x, dy = a.y - b.y;
+        var dist = Math.sqrt(dx * dx + dy * dy) || 0.01;
+        var minSep = a.radius + b.radius + COLLISION_PAD;
+        if (dist < minSep) {
+          anyOverlap = true;
+          var push = (minSep - dist) / 2 + 0.5;
+          var ux = dx / dist, uy = dy / dist;
+          a.x += ux * push; a.y += uy * push;
+          b.x -= ux * push; b.y -= uy * push;
         }
       }
-      if (!anyOverlap) break;
     }
+    return anyOverlap;
   }
   // The graph's one force+collision iteration: pairwise repulsion (with a
   // collision correction once two nodes' actual rendered footprints —
@@ -653,6 +660,14 @@
                                 // settled too early; now takes roughly
                                 // 500 ticks to cross instead of 300.
   var SIM_SAFETY_TICKS = 3000;
+  // Once alpha crosses SIM_ALPHA_MIN, settleTick() switches from force
+  // integration to calling resolveOverlapsOnce() once per tick — still
+  // inside the same animated per-frame loop — until a pass finds nothing
+  // left to fix. This cap just guards against a pathological graph where
+  // overlaps can't fully resolve (e.g. more mutually-adjacent same-size
+  // nodes than can physically ring around each other); a normal graph
+  // converges in a handful of ticks, well under this.
+  var SIM_OVERLAP_MAX_TICKS = 60;
   var simFrameHandle = null;
   var currentSim = null; // the whole-graph sim currently ticking, if any — see
                           // ensureSimRunning(), which drag reheats/reuses directly.
@@ -661,6 +676,25 @@
                         // newer filter change has already started its own.
 
   function settleTick(sim) {
+    // Force integration has done essentially all the work it can once alpha
+    // has decayed this low — but a densely triangulated cluster can still
+    // hold a couple of nodes slightly inside each other's collision radius,
+    // since the collision FORCE has to share every iteration with spring/
+    // repulsion forces pulling the other way and isn't guaranteed to fully
+    // win. Rather than declaring the settle done and fixing that afterward
+    // in one synchronous, un-animated jump (this file's earlier design —
+    // see resolveOverlapsOnce()'s own comment), keep ticking through the
+    // SAME animated per-frame loop, now applying direct overlap correction
+    // instead of a force step, until a pass finds nothing left to resolve.
+    // Any motion this produces is still ordinary settle motion the user
+    // watches happen, frame by frame, never a jump applied after the fact.
+    if (sim.alpha < SIM_ALPHA_MIN) {
+      var stillOverlapping = resolveOverlapsOnce(sim.nodes);
+      sim.overlapTicks = (sim.overlapTicks || 0) + 1;
+      sim.ticks++;
+      if (!stillOverlapping || sim.overlapTicks > SIM_OVERLAP_MAX_TICKS || sim.ticks > SIM_SAFETY_TICKS) sim.done = true;
+      return;
+    }
     var cx = 0, cy = 0, i;
     for (i = 0; i < sim.nodes.length; i++) { cx += sim.nodes[i].x; cy += sim.nodes[i].y; }
     cx /= sim.nodes.length; cy /= sim.nodes.length;
@@ -675,7 +709,7 @@
     if (draggedNode) { draggedNode.x = dragTarget.x; draggedNode.y = dragTarget.y; draggedNode.vx = 0; draggedNode.vy = 0; }
     sim.alpha += (0 - sim.alpha) * SIM_ALPHA_DECAY;
     sim.ticks++;
-    if (sim.alpha < SIM_ALPHA_MIN || sim.ticks > SIM_SAFETY_TICKS) sim.done = true;
+    if (sim.ticks > SIM_SAFETY_TICKS) sim.done = true;
   }
 
   function runContinuousSettle(sim, gen, onDone) {
@@ -802,7 +836,9 @@
   // under them.
   function finishRelayout(gen, visibleNodes, idSet) {
     if (gen !== relayoutGen) return; // superseded
-    resolveOverlapsOnly(visibleNodes);
+    // No separate overlap-resolution pass here anymore — settleTick() now
+    // keeps ticking (still animated) until overlaps are already resolved
+    // before sim.done ever becomes true, so nothing here should move a node.
 
     buildSpatialIndex(visibleNodes);
     recomputeCommunityHulls(visibleNodes); // final, accurate cache now that the settle has genuinely converged
