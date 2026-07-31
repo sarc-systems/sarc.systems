@@ -22,15 +22,22 @@ degree entries, basic data-integrity checks (duplicate IDs, dangling refs,
 unknown relation types/creator roles, near-duplicate titles, missing
 metadata) — the same checks the site's own build-time validator
 (layouts/partials/library-validate.html) enforces as hard errors, surfaced
-here as a browsable report instead — plus two content-quality sections used
-by the "librarian" agent (.claude/agents/librarian.md) alongside the
-connection work: entries whose body prose is notably short (a thin one-
-liner rather than a real researched paragraph), and person/group/
-organization entries with no image at all (the highest-value image gap —
-see CLAUDE.md's Library image rules before ever proposing a fix for this
-one). This is a read-only, offline analysis tool for planning what most
-needs improving — it does not replace `make check`, which is the
-authoritative build-time gate.
+here as a browsable report instead — plus content-quality sections used by
+the "librarian" agent (.claude/agents/librarian.md) alongside the connection
+work: entries whose body prose is notably short (a thin one-liner rather
+than a real researched paragraph), person/group/organization entries with no
+image at all (the highest-value image gap — see CLAUDE.md's Library image
+rules before ever proposing a fix for this one), and a grouped breakdown of
+creator credits with no `ref` (a plain name only) — Librarian Mode D's own
+research queue (see .claude/agents/librarian.md), grouping every unresolved
+name across the whole catalog, flagging names that exactly match an existing
+entry's title (a likely-resolvable candidate — still needs a human/agent to
+confirm identity before adding a ref, never auto-matched), and splitting
+repeated names (worth research — connects several works at once) from
+single-use ones (usually a minor credit, fine to leave as a plain name).
+This is a read-only, offline analysis tool for planning what most needs
+improving — it does not replace `make check`, which is the authoritative
+build-time gate.
 
 Usage: python3 scripts/library-structural-report.py [--json]
   --json   also write a machine-readable dump (research/library-audit/
@@ -120,7 +127,7 @@ def build_graph(entries, vocab):
                 else:
                     dangling.append((eid, "creators", ref))
             else:
-                missing_ref_creator.append((eid, c.get("name", "")))
+                missing_ref_creator.append((eid, c.get("name", ""), role or ""))
         for r in e["related"]:
             if not isinstance(r, dict):
                 continue
@@ -206,6 +213,38 @@ def main():
         if not e["images"] and vocab["type_to_public"].get(e["type"]) in PORTRAIT_PUBLIC_TYPES
     )
 
+    # Unresolved creator credits, grouped by normalized name — Librarian
+    # Mode D's research queue (see .claude/agents/librarian.md). Grouping
+    # (not just listing) is the point: the same real name typically recurs
+    # verbatim in front matter across several works, so a plain per-credit
+    # list would make a single frequently-credited person look like several
+    # unrelated one-off mentions.
+    def norm_name(name):
+        return re.sub(r"\s+", " ", name.strip().lower())
+
+    by_creator_name = defaultdict(list)  # normalized name -> [(eid, role), ...]
+    display_name = {}  # normalized name -> an actual as-written name, for display
+    for eid, name, role in missing_ref_creator:
+        if not name:
+            continue
+        key = norm_name(name)
+        by_creator_name[key].append((eid, role))
+        display_name.setdefault(key, name)
+
+    title_lookup = {norm_name(e["title"]): eid for eid, e in entries.items() if e["title"]}
+    exact_title_candidates = sorted(
+        (key for key in by_creator_name if key in title_lookup),
+        key=lambda k: -len(by_creator_name[k])
+    )
+    repeated_unresolved = sorted(
+        (key for key in by_creator_name if len(by_creator_name[key]) >= 2),
+        key=lambda k: -len(by_creator_name[k])
+    )
+    single_use_unresolved = sorted(
+        (key for key in by_creator_name if len(by_creator_name[key]) == 1),
+        key=lambda k: display_name[k].lower()
+    )
+
     lines = [
         "# Library Structural Report",
         "",
@@ -247,6 +286,52 @@ def main():
         f"- Entries with no images: {sum(1 for e in entries.values() if not e['images'])}"
         " (expected to be common — images are optional)",
         f"- Creator credits with no `ref` (plain name only): {len(missing_ref_creator)}",
+        "",
+        "## Creator credits without refs", "",
+        "Librarian Mode D's research queue (see .claude/agents/librarian.md) "
+        "— grouped by normalized name so a person credited on several works "
+        "shows up once, not as several unrelated one-off mentions. This is "
+        "for research prioritization only: never treat a match here as "
+        "confirmed identity without checking it.",
+        "",
+        f"### Exact existing-title candidates ({len(exact_title_candidates)})", "",
+        "An unresolved credit whose name exactly matches an existing "
+        "entry's title — a likely candidate for adding `ref`, but confirm "
+        "identity before doing so (a same-named different person/entity is "
+        "possible, if less common).",
+        "",
+    ]
+    lines += [
+        f"- \"{display_name[k]}\" -> candidate: {title_lookup[k]} — "
+        + ", ".join(f"{eid} ({role})" if role else eid for eid, role in by_creator_name[k])
+        for k in exact_title_candidates
+    ]
+    lines += [
+        "", f"### Repeated unresolved creators ({len(repeated_unresolved)})", "",
+        "Credited on 2+ works — worth researching even without an obvious "
+        "existing-entry match, since resolving the name once connects "
+        "every work it appears on.",
+        "",
+    ]
+    lines += [
+        f"- \"{display_name[k]}\" — {len(by_creator_name[k])} credits: "
+        + ", ".join(f"{eid} ({role})" if role else eid for eid, role in by_creator_name[k])
+        for k in repeated_unresolved
+    ]
+    lines += [
+        "", f"### Single-use unresolved creators ({len(single_use_unresolved)})", "",
+        "Credited on exactly one work — usually a minor/one-off credit; "
+        "most of these are fine to leave as a plain name (see the hard "
+        "rules in .claude/agents/librarian.md Mode D before creating an "
+        "entry for one).",
+        "",
+    ]
+    lines += [
+        f"- \"{display_name[k]}\" — {by_creator_name[k][0][0]}"
+        + (f" ({by_creator_name[k][0][1]})" if by_creator_name[k][0][1] else "")
+        for k in single_use_unresolved
+    ]
+    lines += [
         "",
         f"## Short bios (body prose <= {SHORT_BIO_THRESHOLD} words) — candidates for expansion", "",
         "A heuristic, not a judgment — read the actual entry before deciding "
