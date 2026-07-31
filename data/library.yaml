@@ -92,14 +92,13 @@ subjects:
   - {subject: number,            label: "Number"}
   - {subject: form,              label: "Form"}
   - {subject: morphogenesis,     label: "Morphogenesis"}
-  - {subject: dynamical-systems, label: "Dynamical Systems"}
+  - {subject: dynamics,          label: "Dynamics"}
   - {subject: cybernetics,       label: "Cybernetics"}
   - {subject: computation,       label: "Computation"}
   - {subject: perception,        label: "Perception"}
   - {subject: sound,             label: "Sound"}
   - {subject: tuning,            label: "Tuning"}
   - {subject: instruments,       label: "Instruments"}
-  - {subject: technology,        label: "Technology"}
   - {subject: space,             label: "Space"}
   - {subject: memory,            label: "Memory"}
   - {subject: feedback,          label: "Feedback"}
