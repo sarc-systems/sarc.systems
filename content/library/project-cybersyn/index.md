@@ -18,9 +18,21 @@ creators:
 
 subjects: [cybernetics, computation]
 
-images: []
+images:
+  - file: "diagram.jpg"
+    alt: "Stafford Beer's diagram of Project Cybersyn's political and media scope"
+    caption: "Diagram showing how Stafford Beer envisioned the scope of his work in Chile and its connection to the political context."
+    credit: "Liverpool John Moores University, Learning and Information Services, Special Collections and Archives"
+    source: "https://www.cabinetmagazine.org/issues/46/medina.php"
+    rights:
+      status: unknown
+      note: "Courtesy Liverpool John Moores University Special Collections and Archives (the Stafford Beer papers), as published in Cabinet magazine."
+    use:
+      basis: archival
+      note: "Beer's own diagram documenting Cybersyn's intended scope, reproduced for historical/editorial context."
 
-access: []
+access:
+  - {label: "Cabinet: \"Cybernetic Revolutionaries\" (Eden Medina)", kind: external-copy, url: "https://www.cabinetmagazine.org/issues/46/medina.php"}
 
 related:
   - {ref: brain-of-the-firm, relation: influenced-by}
