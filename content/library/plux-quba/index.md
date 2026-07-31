@@ -26,7 +26,10 @@ access:
     kind: bandcamp
     url: "https://nunocanavarro.bandcamp.com/album/plux-quba"
 
+related:
+  - {ref: ensoniq-mirage, relation: made-with}
+
 draft: false
 ---
 
-Nuno Canavarro's 1988 album, originally released on Ama Romanta, assembling short, intimate electronic and acoustic fragments into a singular, widely cited work of dreamlike sound-collage.
+Nuno Canavarro's 1988 album, originally released on Ama Romanta, assembling short, intimate electronic and acoustic fragments into a singular, widely cited work of dreamlike sound-collage, built largely around an [Ensoniq Mirage](/library/ensoniq-mirage/) sampler.

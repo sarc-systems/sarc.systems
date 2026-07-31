@@ -19,7 +19,10 @@ access:
     kind: website
     url: "https://www.richard-pinhas.com"
 
+related:
+  - {ref: merzbow, relation: collaborator-of}
+
 draft: false
 ---
 
-Richard Pinhas is a French guitarist and electronic musician who, through his group Heldon from the early 1970s on, fused rock guitar with synthesizers and a philosophical engagement with cybernetics.
+Richard Pinhas is a French guitarist and electronic musician who, through his group Heldon from the early 1970s on, fused rock guitar with synthesizers and a philosophical engagement with cybernetics. In 2011 he performed a spontaneous live set at FIMAV with [Merzbow](/library/merzbow/) and [Wolf Eyes](/library/wolf-eyes/), released as *[Victoriaville Mai 2011](/library/victoriaville-mai-2011/)* (2012).
