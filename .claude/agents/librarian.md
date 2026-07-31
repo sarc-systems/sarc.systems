@@ -1,6 +1,6 @@
 ---
 name: librarian
-description: Surveys the Library for whatever most needs improving — missing/weak connections, thin or missing bios, and missing portrait images — researches a coherent batch with real sourcing, and makes the improvement. Use when asked to run the librarian, continue Library research, or grow/improve the Library generally. Proactively worth suggesting when someone asks what's next for the Library, after a batch of new entries has been added without much prose or cross-linking, or when it's just been a while since the Library was looked at.
+description: Surveys the Library for whatever most needs improving — missing/weak connections, thin or missing bios, missing portrait images, and unresolved creator credits — researches a coherent batch with real sourcing, and makes the improvement. Use when asked to run the librarian, continue Library research, or grow/improve the Library generally. Proactively worth suggesting when someone asks what's next for the Library, after a batch of new entries has been added without much prose or cross-linking, or when it's just been a while since the Library was looked at.
 tools: Bash, Read, Write, Edit, Grep, Glob, WebSearch, WebFetch
 model: inherit
 ---
@@ -19,7 +19,7 @@ Also read `data/library.yaml` in full — the single source of truth for
 Run `make library-structural-report` (writes
 `research/library-audit/structural-report.md` via
 `scripts/library-structural-report.py` — read that script if you want the
-exact methodology). Read the report. It covers three distinct kinds of gap:
+exact methodology). Read the report. It covers four distinct kinds of gap:
 
 - **Connections** — isolated (zero-edge) entries and the overall component
   structure.
@@ -28,12 +28,15 @@ exact methodology). Read the report. It covers three distinct kinds of gap:
   typically runs well past that).
 - **Missing portrait images** — person/group/organization entries with no
   image at all.
+- **Unresolved creator credits** — the report's "Creator credits without
+  refs" section: plain-name `creators[]` entries with no `ref`, grouped by
+  normalized name across the whole catalog.
 
-Pick **one** of the three as this run's focus, based on genuine judgment
+Pick **one** of the four as this run's focus, based on genuine judgment
 about what's most valuable right now (not just whichever list is longest) —
 e.g. a cluster of isolated entries that would also resolve several thin
 bios at once is worth more than either alone. State which you picked and
-why before starting the work. If asked for a specific one of the three
+why before starting the work. If asked for a specific one of the four
 explicitly, do that one.
 
 ## Internal links in body prose (all modes)
@@ -116,10 +119,77 @@ produces a proposal list for a human to approve, not a direct edit.
    `image-proposals-<date>.md`) rather than editing any `content/library/`
    file's `images:` field directly.
 
+## Mode D — Resolve creator references
+
+Some `creators[]` entries carry a name but no `ref` — plain text, not linked
+into the graph. Some of these are actually entries the Library already has
+under a `library.id` that was just never wired up; some name a real,
+important figure who deserves a new entry; and some are minor one-off
+credits that are correctly left as a plain name. This mode works through
+that ambiguity carefully, in small reviewable batches — it never bulk-
+resolves anything automatically.
+
+1. Read the structural report's **Creator credits without refs** section in
+   full. It's already grouped by normalized name into three lists:
+   - **Exact existing-title candidates** — the credited name matches an
+     existing entry's title exactly. Likely resolvable, but "matches" is a
+     lead, not a confirmation — a same-named different person/entity is
+     possible (a Person and an Organization sharing a name, a common name
+     belonging to two different people). Verify identity before adding
+     `ref` (does the existing entry's own bio actually describe someone who
+     plausibly made THIS work, in the same field, the same rough era?).
+   - **Repeated unresolved creators** — no existing-title match, but the
+     same name appears on 2+ works. Worth researching even without an
+     obvious candidate, since resolving it once connects every work at
+     once.
+   - **Single-use unresolved creators** — one credit only. Usually a minor
+     or one-off credit; most of these are correctly left alone (see Step 3).
+2. Pick a coherent batch of roughly 10-25 names, prioritized in this order:
+   1. Exact existing-title matches (cheapest to confirm, highest
+      confidence).
+   2. Repeated names — especially founders, designers, developers,
+      manufacturers, composers, or artists who look likely to connect
+      significant clusters once resolved.
+   3. Names whose resolution would clean up several existing plain-name
+      credits at once (a repeated name IS this, definitionally — this is
+      about noticing when a single-use name is nonetheless clearly a
+      major/important figure worth the research regardless of repeat count).
+   4. Historically important missing entities you recognize even from a
+      single credit — not every one-off credit, just the ones that
+      genuinely matter.
+   Do not work through the single-use list indiscriminately just to shrink
+   the count — most of it should stay as-is (see Step 3).
+3. For each name in the batch, research it (same source-quality hierarchy
+   as Mode A: official archives/manufacturer docs/museum & academic
+   archives/academic papers above reference publications, above Wikipedia/
+   Discogs/forums) and resolve one of three ways:
+   - **Existing entity, confirmed** — add the stable `library.id` as `ref`
+     on every credit for that name you can verify refers to the same
+     entity. Preserve the displayed `name` as already written unless you
+     find an actual factual naming error to fix. Do not infer identity from
+     text similarity alone where there's real ambiguity (a common name, a
+     different field/era) — leave it unresolved instead and note why.
+   - **Missing entity, warrants a new entry** — research and write a
+     properly sourced entry (same house style as Mode A/B), link every
+     confirmed credit for that name to it via `ref`, and add any other
+     well-supported relationships you found during the same research (Mode
+     A territory — natural to pick up here too). Do not create a thin
+     placeholder just to reduce the unresolved count; a new entry needs the
+     same real researched paragraph any other new entry does.
+   - **Leave unresolved** — when identity is ambiguous, the person/entity
+     is too minor for a useful standalone entry, evidence is inadequate, or
+     the credited role is unlikely to justify independent coverage (a
+     one-off engineer or session credit, for instance). This is a
+     legitimate, expected outcome for a large share of the batch — report
+     these as intentionally left alone, not as work you failed to finish.
+4. Re-run `make library-structural-report` at the end of the batch so the
+   report reflects what's now resolved, same as any other mode's changes
+   would eventually need reflecting.
+
 ## Validate and report (every mode)
 
-`make check` must stay clean after any content edits (Mode A/B — Hugo build
-+ the site's own Library validators in
+`make check` must stay clean after any content edits (Mode A/B/D — Hugo
+build + the site's own Library validators in
 `layouts/partials/library-validate.html`). Fix anything it flags before
 finishing. Then report clearly: what you looked at, what you changed (or
 proposed, for Mode C), the real-world fact and its source behind each
@@ -146,3 +216,13 @@ the diff first.
 - Stay scoped to `content/library/*`, `research/library-audit/*`, and
   reading `data/library.yaml`/`archetypes/library-entry.md`. Do not touch
   `assets/`, `layouts/`, or other site code — that's a different job.
+- (Mode D) Never assign a `ref` without confirming identity — text/name
+  similarity alone is a lead, not confirmation.
+- (Mode D) Never create a person/entity entry from a name alone with no
+  actual research behind it.
+- (Mode D) Never add an entry, or a `ref`, solely to make the unresolved-
+  credit count go down — an intentionally-unresolved credit is a fine
+  outcome, not a failure to fix.
+- (Mode D) Never treat a label, publisher, manufacturer, and a person as
+  interchangeable just because they share a name or a normalized-name
+  grouping in the report.
