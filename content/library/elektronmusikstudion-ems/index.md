@@ -10,8 +10,10 @@ library:
 creators:
   - name: "Knut Wiggen"
     role: founder
+    ref: knut-wiggen
   - name: "Knut Wiggen"
     role: director
+    ref: knut-wiggen
 
 subjects: [sound, computation]
 

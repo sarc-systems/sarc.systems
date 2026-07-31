@@ -10,6 +10,7 @@ library:
 creators:
   - name: "Lejaren Hiller"
     role: founder
+    ref: lejaren-hiller
 
 subjects: [sound, computation, number]
 

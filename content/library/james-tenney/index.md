@@ -24,6 +24,7 @@ access:
 
 related:
   - {ref: bell-labs, relation: part-of}
+  - {ref: kenneth-gaburo, relation: influenced-by}
 
 draft: false
 ---

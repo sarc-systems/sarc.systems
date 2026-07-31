@@ -14,6 +14,7 @@ creators:
     role: director
   - name: "Kenneth Gaburo"
     role: director
+    ref: kenneth-gaburo
 
 subjects: [sound, computation]
 

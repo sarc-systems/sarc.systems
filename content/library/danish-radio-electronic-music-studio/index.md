@@ -10,6 +10,7 @@ library:
 creators:
   - name: "Else Marie Pade"
     role: founder
+    ref: else-marie-pade
 
 subjects: [sound, technology]
 

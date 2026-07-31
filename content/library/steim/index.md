@@ -10,14 +10,17 @@ library:
 creators:
   - name: "Misha Mengelberg"
     role: founder
+    ref: misha-mengelberg
   - name: "Louis Andriessen"
     role: founder
+    ref: louis-andriessen
   - name: "Peter Schat"
     role: founder
   - name: "Dick Raaymakers"
     role: founder
   - name: "Michel Waisvisz"
     role: director
+    ref: michel-waisvisz
 
 subjects: [sound, instruments, technology]
 

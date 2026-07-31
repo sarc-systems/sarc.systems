@@ -10,8 +10,10 @@ library:
 creators:
   - name: "Józef Patkowski"
     role: founder
+    ref: jozef-patkowski
   - name: "Józef Patkowski"
     role: director
+    ref: jozef-patkowski
 
 subjects: [sound, technology]
 

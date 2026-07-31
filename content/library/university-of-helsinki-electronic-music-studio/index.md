@@ -10,6 +10,7 @@ library:
 creators:
   - name: "Erkki Kurenniemi"
     role: founder
+    ref: erkki-kurenniemi
 
 subjects: [sound, technology]
 
