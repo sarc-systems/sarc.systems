@@ -7,6 +7,10 @@ library:
   type: group
   sarc_work: false
 
+creators:
+  - {name: "Dieter Moebius", role: performer, ref: dieter-moebius}
+  - {name: "Hans-Joachim Roedelius", role: performer, ref: hans-joachim-roedelius}
+
 subjects: [sound]
 
 images:
