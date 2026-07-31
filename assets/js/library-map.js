@@ -478,16 +478,29 @@
   // because something re-sorted them into a grid.
   //
   // Alpha (1 -> ~0) is the standard force-simulation convergence model
-  // (these constants are d3-force's own long-tuned defaults — alphaMin=
-  // 0.001, decay derived so alpha crosses it in ~300 ticks — reimplemented
-  // here in plain vanilla JS, not imported). Per the user's own explicit
-  // choice: this runs every frame for as long as the graph actually needs
-  // to settle, rather than a fixed iteration cap — but it still comes to a
-  // genuine rest and stops (not perpetual motion): once alpha decays below
-  // ALPHA_MIN, positions have essentially stopped moving on their own, so
-  // continuing to tick costs CPU for no visible benefit. SIM_SAFETY_TICKS
-  // is a generous cap so a pathological configuration can't tick forever —
-  // a normal settle finishes via alpha decay well before it.
+  // (these constants started as d3-force's own long-tuned defaults —
+  // alphaMin=0.001, decay derived so alpha crosses it in ~300 ticks —
+  // reimplemented here in plain vanilla JS, not imported). Per the user's
+  // own explicit choice: this runs every frame for as long as the graph
+  // actually needs to settle, rather than a fixed iteration cap — but it
+  // still comes to a genuine rest and stops (not perpetual motion): once
+  // alpha decays below ALPHA_MIN, positions have essentially stopped
+  // moving on their own, so continuing to tick costs CPU for no visible
+  // benefit. SIM_SAFETY_TICKS is a generous cap so a pathological
+  // configuration can't tick forever — a normal settle finishes via alpha
+  // decay well before it.
+  //
+  // IMPORTANT: SIM_ALPHA_DECAY is a FIXED rate, deliberately NOT derived
+  // from SIM_ALPHA_MIN (an earlier version computed it as
+  // `1 - Math.pow(SIM_ALPHA_MIN, 1/300)`, which self-calibrates the decay
+  // rate to whatever ALPHA_MIN currently is — meaning alpha always crossed
+  // ALPHA_MIN in exactly ~300 ticks no matter how low ALPHA_MIN was set,
+  // silently defeating it as a "settle longer" control; per direct user
+  // feedback that the map was settling too early, lowering ALPHA_MIN alone
+  // had done nothing, because of this coupling). The rate below is fixed
+  // once, computed from the original 0.001-in-300-ticks reference point;
+  // with a fixed rate, a LOWER ALPHA_MIN genuinely requires more ticks to
+  // reach — the two are now properly independent.
   //
   // SIM_SPEED is a pure playback-speed control, separate from all of the
   // above: 1.0 ticks the simulation at the rate this file was originally
@@ -503,8 +516,11 @@
   // evenly into whole ticks-per-frame. ------------------------------------
   var SIM_TICKS_PER_FRAME_BASE = 3;
   var SIM_SPEED = 0.3;
-  var SIM_ALPHA_MIN = 0.001;
-  var SIM_ALPHA_DECAY = 1 - Math.pow(SIM_ALPHA_MIN, 1 / 300);
+  var SIM_ALPHA_DECAY = 1 - Math.pow(0.001, 1 / 300); // fixed rate — see comment above
+  var SIM_ALPHA_MIN = 0.00001; // much lower than the old 0.001 — per direct
+                                // user feedback the map was calling itself
+                                // settled too early; now takes roughly
+                                // 500 ticks to cross instead of 300.
   var SIM_SAFETY_TICKS = 3000;
   var simFrameHandle = null;
   var currentSim = null; // the whole-graph sim currently ticking, if any — see

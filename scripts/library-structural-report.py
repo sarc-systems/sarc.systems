@@ -18,13 +18,19 @@ the fix; this script does not have a regex fallback.
 
 Reports: counts by public/specific type, edge count, connected components
 (largest component size/percentage), isolated (zero-edge) entries, highest-
-degree entries, and basic data-integrity checks (duplicate IDs, dangling
-refs, unknown relation types/creator roles, near-duplicate titles, missing
+degree entries, basic data-integrity checks (duplicate IDs, dangling refs,
+unknown relation types/creator roles, near-duplicate titles, missing
 metadata) — the same checks the site's own build-time validator
 (layouts/partials/library-validate.html) enforces as hard errors, surfaced
-here as a browsable report instead. This is a read-only, offline analysis
-tool for planning which entries most need connecting — it does not replace
-`make check`, which is the authoritative build-time gate.
+here as a browsable report instead — plus two content-quality sections used
+by the "librarian" agent (.claude/agents/librarian.md) alongside the
+connection work: entries whose body prose is notably short (a thin one-
+liner rather than a real researched paragraph), and person/group/
+organization entries with no image at all (the highest-value image gap —
+see CLAUDE.md's Library image rules before ever proposing a fix for this
+one). This is a read-only, offline analysis tool for planning what most
+needs improving — it does not replace `make check`, which is the
+authoritative build-time gate.
 
 Usage: python3 scripts/library-structural-report.py [--json]
   --json   also write a machine-readable dump (research/library-audit/
@@ -82,6 +88,7 @@ def load_entries():
         eid = lib.get("id", slug)
         if eid in entries:
             duplicate_ids[eid].append(slug)
+        body = parts[2].strip() if len(parts) > 2 else ""
         entries[eid] = {
             "slug": slug,
             "title": fm.get("title", ""),
@@ -92,6 +99,7 @@ def load_entries():
             "subjects": fm.get("subjects") or [],
             "images": fm.get("images") or [],
             "draft": fm.get("draft", False),
+            "body_words": len(body.split()),
         }
     return entries, duplicate_ids, parse_errors
 
@@ -176,6 +184,28 @@ def main():
     top_degree = sorted(degree.items(), key=lambda kv: -kv[1])[:20]
     total = len(entries)
 
+    # A rough, deliberately simple heuristic — not a quality judgment, just
+    # "worth a second look": a real researched paragraph in this catalog's
+    # own house style typically runs 60-150+ words; anything at or under 25
+    # reads as a thin one-liner stub. False positives (a legitimately
+    # concise, complete entry) are expected and fine — a human/agent still
+    # reads the actual text before deciding to expand anything.
+    SHORT_BIO_THRESHOLD = 25
+    short_bios = sorted(
+        (eid for eid, e in entries.items() if e["body_words"] <= SHORT_BIO_THRESHOLD),
+        key=lambda eid: entries[eid]["body_words"],
+    )
+
+    # Missing images, scoped to the public types where a portrait/likeness
+    # is the highest-value gap (person/group/organization) — images are
+    # optional generally (see CLAUDE.md), and a Work/System/Concept/Place/
+    # Event entry with no image is routine, not a gap worth flagging here.
+    PORTRAIT_PUBLIC_TYPES = {"person", "group", "organization"}
+    missing_portrait_image = sorted(
+        eid for eid, e in entries.items()
+        if not e["images"] and vocab["type_to_public"].get(e["type"]) in PORTRAIT_PUBLIC_TYPES
+    )
+
     lines = [
         "# Library Structural Report",
         "",
@@ -217,8 +247,30 @@ def main():
         f"- Entries with no images: {sum(1 for e in entries.values() if not e['images'])}"
         " (expected to be common — images are optional)",
         f"- Creator credits with no `ref` (plain name only): {len(missing_ref_creator)}",
-        "", "## Isolated entries (full list)", "",
+        "",
+        f"## Short bios (body prose <= {SHORT_BIO_THRESHOLD} words) — candidates for expansion", "",
+        "A heuristic, not a judgment — read the actual entry before deciding "
+        "it needs work; some legitimately concise entries will show up here.",
+        "",
     ]
+    lines += [
+        f"- {eid} ({entries[eid]['type']}, {entries[eid]['body_words']} words): \"{entries[eid]['title']}\""
+        for eid in short_bios
+    ]
+    lines += [
+        "", "## Person/group/organization entries with no image", "",
+        "Scoped to the public types where a portrait/likeness is the "
+        "highest-value image gap — see CLAUDE.md's Library image rules "
+        "(credit vs source, rights status) before proposing a fix for any "
+        "of these; portraits prefer black-and-white when there's a genuine "
+        "choice of sourced options.",
+        "",
+    ]
+    lines += [
+        f"- {eid} ({entries[eid]['type']}): \"{entries[eid]['title']}\""
+        for eid in missing_portrait_image
+    ]
+    lines += ["", "## Isolated entries (full list)", ""]
     lines += [f"- {eid} ({entries[eid]['type']}): \"{entries[eid]['title']}\"" for eid in sorted(isolated)]
 
     OUT_MD.parent.mkdir(parents=True, exist_ok=True)
