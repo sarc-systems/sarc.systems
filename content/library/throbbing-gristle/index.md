@@ -7,6 +7,12 @@ library:
   type: group
   sarc_work: false
 
+creators:
+  - {name: "Genesis P-Orridge", role: performer, ref: genesis-p-orridge}
+  - {name: "Cosey Fanni Tutti", role: performer, ref: cosey-fanni-tutti}
+  - {name: "Peter Christopherson", role: performer, ref: peter-christopherson}
+  - {name: "Chris Carter", role: performer, ref: chris-carter}
+
 subjects: [sound]
 
 images:
@@ -28,4 +34,4 @@ access:
 draft: false
 ---
 
-British industrial group pioneering industrial music, alchemical investigations into audio electronics, and confrontational live performance.
+Formed in Kingston upon Hull in 1975 by [Genesis P-Orridge](/library/genesis-p-orridge/), [Cosey Fanni Tutti](/library/cosey-fanni-tutti/), [Peter Christopherson](/library/peter-christopherson/), and [Chris Carter](/library/chris-carter/), Throbbing Gristle grew directly out of P-Orridge and Fanni Tutti's performance-art collective COUM Transmissions — the group's public debut coincided with COUM's final show, the October 1976 exhibition *Prostitution* at London's Institute of Contemporary Arts. Pioneering industrial music and founding Industrial Records to release it, the group recorded *The Second Annual Report* (1977), *D.o.A.* (1978), and *[20 Jazz Funk Greats](/library/20-jazz-funk-greats/)* (1979) before splitting in 1981; they reformed in 2004, recording three further albums before Christopherson's death in 2010 ended the group permanently.
