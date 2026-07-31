@@ -11,6 +11,7 @@ library:
 creators:
   - name: "D'Arcy Wentworth Thompson"
     role: author
+    ref: darcy-thompson
 
 subjects: [morphogenesis, form, number]
 

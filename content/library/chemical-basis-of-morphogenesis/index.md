@@ -25,6 +25,9 @@ access:
     kind: external-copy
     url: "https://royalsocietypublishing.org/rstb/article/237/641/37/112910/The-chemical-basis-of-morphogenesis"
 
+related:
+  - {ref: on-growth-and-form, relation: influenced-by}
+
 draft: false
 ---
 

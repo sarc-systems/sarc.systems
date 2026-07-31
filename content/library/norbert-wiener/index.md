@@ -23,6 +23,9 @@ access:
     kind: website
     url: "https://www.norbertwiener.org"
 
+related:
+  - {ref: john-von-neumann, relation: collaborator-of}
+
 draft: false
 ---
 

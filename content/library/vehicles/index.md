@@ -13,6 +13,7 @@ library:
 creators:
   - name: "Valentino Braitenberg"
     role: author
+    ref: valentino-braitenberg
 
 subjects:
   - cybernetics

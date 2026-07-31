@@ -20,6 +20,9 @@ access:
     kind: archive
     url: "https://turingarchive.kings.cam.ac.uk"
 
+related:
+  - {ref: darcy-thompson, relation: influenced-by}
+
 draft: false
 ---
 

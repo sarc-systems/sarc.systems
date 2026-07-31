@@ -11,8 +11,10 @@ library:
 creators:
   - name: "Humberto Maturana"
     role: author
+    ref: humberto-maturana
   - name: "Francisco Varela"
     role: author
+    ref: francisco-varela
 
 subjects: [cybernetics, perception, feedback]
 

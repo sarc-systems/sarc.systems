@@ -14,6 +14,10 @@ images:
     alt: "Christopher Langton"
     role: portrait
 
+related:
+  - {ref: john-conway, relation: influenced-by}
+  - {ref: stephen-wolfram, relation: influenced-by}
+
 draft: false
 ---
 

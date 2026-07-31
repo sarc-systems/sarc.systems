@@ -11,6 +11,7 @@ library:
 creators:
   - name: "Douglas Hofstadter"
     role: author
+    ref: douglas-hofstadter
 
 subjects: [number, form, computation]
 

@@ -18,6 +18,9 @@ images:
       status: unknown
       note: "Appears to be a Getty Images stock photograph (visible watermark); photographer not established. Moved here from An Approach to Cybernetics, which it had been mislabeled as cover art for."
 
+related:
+  - {ref: norbert-wiener, relation: influenced-by}
+
 draft: false
 ---
 

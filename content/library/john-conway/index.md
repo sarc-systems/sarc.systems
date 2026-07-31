@@ -14,6 +14,9 @@ images:
     alt: "John Horton Conway"
     role: portrait
 
+related:
+  - {ref: john-von-neumann, relation: influenced-by}
+
 draft: false
 ---
 
