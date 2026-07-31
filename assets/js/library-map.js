@@ -29,7 +29,7 @@
 // same as Images.
 //
 // The force simulation itself is completely renderer-agnostic: buildGraph(),
-// computeComponents(), forceIterationWithCentering(), runContinuousSettle(),
+// detectCommunities(), forceIterationWithCentering(), runContinuousSettle(),
 // resolveOverlapsOnly(), relayout() all operate on plain
 // {id,x,y,vx,vy,radius,fx,fy} node objects and a plain edge array — none of
 // them touch a canvas, an SVG element, or the DOM. Only
@@ -159,6 +159,33 @@
   var SHAPE_SIZE = { hub: 6, leaf: 4 };
   var IMAGE_SIZE = { hub: 11, leaf: 9 };
 
+  // --- Visual Hierarchy Pass: degree-based sizing, community fields,
+  // cross-community edge curvature, and restrained selection/hover states.
+  // Every tunable number introduced for this pass lives here, not scattered
+  // through the render/layout code below. -----------------------------------
+  var MAP_VISUALS = {
+    nodeDegreeScale: { min: 0.85, max: 1.5, factor: 0.12 },
+    // fillOpacity/strokeOpacity are deliberately much lower than the spec's
+    // own suggested starting values (0.04/0.05) — this graph's communities
+    // overlap heavily in the force-directed layout (a community is a purely
+    // visual annotation, not a layout constraint, so nothing pulls same-
+    // community nodes into a tidy non-overlapping region), and ordinary
+    // canvas alpha-compositing stacks each overlapping hull's opacity on
+    // top of the last. At the spec's suggested values this compounded into
+    // a visible haze across most of the graph, not the "visible only after
+    // looking for it" restraint the spec calls for — confirmed visually
+    // (real browser screenshot) before tuning down, not guessed.
+    communityFields: { enabled: true, minNodes: 6, padding: 36, fillOpacity: 0.02, strokeOpacity: 0.025, updateEveryFrames: 4 },
+    crossCommunityEdges: { opacityMultiplier: 0.72, curvatureMin: 8, curvatureMax: 42 },
+    // opacitySteps[0] = 1st-degree (direct) neighbors, [1] = 2nd degree,
+    // [2] = 3rd degree, ... — a node/edge farther than the array's length
+    // clamps to the LAST value (the floor), same as a node the selection
+    // can't reach at all (different component). A flat single "everyone
+    // else" tier read as too subtle in practice (direct user feedback) —
+    // this is deliberately a much steeper falloff than that first attempt.
+    selection: { opacitySteps: [1, 0.5, 0.25, 0.1], selectedScale: 1.12, hoveredScale: 1.08 }
+  };
+
   // Every relation_type in data/library.yaml's controlled vocabulary maps to
   // exactly one of three restrained line styles — see CLAUDE.md § Library
   // "Map view" for the full rationale. A creator-kind edge (author, artist,
@@ -189,7 +216,25 @@
                           // container's real CSS box (see resizeCanvases()).
   var nodes = [], edges = [];
   var nodeById = {}, entryById = {};
-  var nodeComponent = {}; // recomputed per visible set on every relayout — see computeComponents()
+  // Community membership (label propagation, see detectCommunities()) is
+  // recomputed only when the visible graph itself changes (relayout — a
+  // filter change or the initial load), never per settle-tick or per drag,
+  // since topology (not position) is all that determines it. communityHulls
+  // holds the current cached, drawable hull geometry (world-space points,
+  // already padded) — see recomputeCommunityHulls(), which DOES rerun
+  // periodically while positions are actively settling.
+  var nodeCommunity = {}, communityMembers = {}, communityHulls = [];
+  var communityTickCounter = 0;
+  // graphAdjacency: id -> [neighbor ids], rebuilt once per relayout (see
+  // buildAdjacency()) — shared with detectCommunities() and consumed by
+  // computeSelectionDistances() below for the stepped-by-hop-distance
+  // dimming a selection drives (see module comment on selectNode()).
+  // selectionDistance: id -> hop count FROM the current selection, or
+  // absent for a node the BFS never reached (different component / not
+  // currently visible) — recomputed whenever the selection changes AND
+  // whenever a relayout leaves the selection in place but changes the
+  // reachable set (a filter change).
+  var graphAdjacency = {}, selectionDistance = {};
   var typeStyles = {};
   var sel = { type: [], subject: [] };
   var visible = {}; // id -> bool, the current filtered set
@@ -292,7 +337,16 @@
       var key = a + ">" + b + ":" + kind + ":" + label;
       if (seen[key]) return;
       seen[key] = true;
-      edges.push({ source: a, target: b, kind: kind, label: label || "", category: edgeCategory(kind, label) });
+      // Cross-community curvature (see edgeGeometry()) needs a per-edge
+      // sign + variance that's stable across every render and never
+      // recomputed per frame — derived once here from the same key that
+      // already dedupes edges, so two edges between the same pair of nodes
+      // (different kind/label) get independently deterministic curves.
+      var h = hashId(key);
+      edges.push({
+        source: a, target: b, kind: kind, label: label || "", category: edgeCategory(kind, label),
+        _curveSign: (h & 1) ? 1 : -1, _curveVariance: seededRng(h)()
+      });
     }
     entries.forEach(function (e) {
       (e.creators || []).forEach(function (c) {
@@ -302,21 +356,98 @@
         if (r.ref) addEdge(e.library_id, r.ref, "related", r.relation);
       });
     });
+
+    // Degree-based sizing: a node's on-screen size communicates STRUCTURAL
+    // connectivity across the whole fetched graph (never just the currently
+    // visible/filtered subset — a hub shouldn't visually shrink just because
+    // a filter currently hides some of its neighbors), computed once here
+    // and cached on the node — see MAP_VISUALS.nodeDegreeScale. A nonlinear
+    // (sqrt) mapping, clamped to [min, max], keeps a few very high-degree
+    // hubs from dominating the composition while still giving isolated
+    // nodes a smaller-but-clearly-visible floor. node.radius (used by both
+    // collision and hit-testing) is overwritten here so there is exactly
+    // one place — not two — that determines a node's effective footprint.
+    var degree = {};
+    edges.forEach(function (e) {
+      degree[e.source] = (degree[e.source] || 0) + 1;
+      degree[e.target] = (degree[e.target] || 0) + 1;
+    });
+    var ds = MAP_VISUALS.nodeDegreeScale;
+    nodes.forEach(function (n) {
+      n.degree = degree[n.id] || 0;
+      n.sizeScale = Math.max(ds.min, Math.min(ds.max, ds.min + Math.sqrt(n.degree) * ds.factor));
+      n.radius = nodeRadius(n.hub, n.hasImage) * n.sizeScale;
+    });
   }
 
-  // Plain union-find, restricted to a given node/edge subset — filtering
-  // changes reachability (a node visible only through a now-hidden edge
-  // becomes its own singleton), so this is recomputed on every relayout, not
-  // just once at load.
-  function computeComponents(nodeList, edgeList) {
-    var parent = {};
-    function find(x) { while (parent[x] !== x) { parent[x] = parent[parent[x]]; x = parent[x]; } return x; }
-    function union(a, b) { var ra = find(a), rb = find(b); if (ra !== rb) parent[ra] = rb; }
-    nodeList.forEach(function (n) { parent[n.id] = n.id; });
-    edgeList.forEach(function (e) { if (parent[e.source] !== undefined && parent[e.target] !== undefined) union(e.source, e.target); });
-    var comp = {};
-    nodeList.forEach(function (n) { comp[n.id] = find(n.id); });
-    return comp;
+  // Community detection (label propagation) — deliberately NOT the same
+  // thing as a connected component: an edge only exists between two nodes
+  // that are, by definition, already in the same component, so components
+  // alone could never produce a "cross-community" edge for §4 of the
+  // Visual Hierarchy Pass to style differently. Label propagation is the
+  // simplest well-known community algorithm that actually subdivides a
+  // single large, densely-connected component into smaller neighborhoods —
+  // no npm dependency exists or is allowed here (see CLAUDE.md), and this
+  // is a few dozen lines of plain iteration, not a Louvain-grade modularity
+  // optimizer. Determinism matters as much as it does everywhere else in
+  // this file (same graph -> same layout -> same communities on reload), so
+  // the per-iteration node visit order is shuffled with the same seeded PRNG
+  // used for initial node placement, keyed by iteration index rather than
+  // Math.random(); tie-breaking among equally-frequent neighbor labels sorts
+  // lexicographically so it never depends on object key enumeration order.
+  // Runs to a fixed point or maxIter, whichever comes first — typically a
+  // handful of passes. Called ONCE per relayout() (topology-driven, not
+  // position-driven), never per settle-tick or per drag — see the module
+  // comment on nodeCommunity above.
+  function buildAdjacency(nodeList, edgeList) {
+    var adjacency = {};
+    nodeList.forEach(function (n) { adjacency[n.id] = []; });
+    edgeList.forEach(function (e) {
+      if (adjacency[e.source]) adjacency[e.source].push(e.target);
+      if (adjacency[e.target]) adjacency[e.target].push(e.source);
+    });
+    return adjacency;
+  }
+  function detectCommunities(nodeList, edgeList, adjacency) {
+    var label = {};
+    nodeList.forEach(function (n) { label[n.id] = n.id; });
+    // Synchronous (Jacobi-style) updates: every node's next label is
+    // computed from the SAME frozen snapshot of the previous iteration,
+    // then all applied at once. An earlier asynchronous version (each node
+    // updated in place immediately, next node sees the fresh value)
+    // verifiably failed on the simplest adversarial case — two dense
+    // cliques joined by a single bridge edge — because one clique's label
+    // could cross the bridge and flood the entire other clique within the
+    // SAME pass, merging two communities that should stay separate and
+    // silently defeating §4's whole cross-community-edge distinction.
+    // Synchronous updates need the bridge to survive multiple full passes
+    // before it can flood the far side, giving each clique's own internal
+    // majority a real chance to hold. This also makes per-node visit order
+    // irrelevant to the result (every node reads only the frozen snapshot),
+    // so the previous seeded per-iteration shuffle is gone — determinism no
+    // longer depends on it at all.
+    var maxIter = 20;
+    for (var iter = 0; iter < maxIter; iter++) {
+      var next = {};
+      var changed = false;
+      nodeList.forEach(function (n) {
+        var neighbors = adjacency[n.id];
+        if (!neighbors.length) { next[n.id] = label[n.id]; return; }
+        var counts = {};
+        neighbors.forEach(function (nb) { counts[label[nb]] = (counts[label[nb]] || 0) + 1; });
+        var bestLabel = label[n.id], bestCount = counts[label[n.id]] || 0;
+        Object.keys(counts).sort().forEach(function (l) {
+          if (counts[l] > bestCount) { bestCount = counts[l]; bestLabel = l; }
+        });
+        next[n.id] = bestLabel;
+        if (bestLabel !== label[n.id]) changed = true;
+      });
+      label = next;
+      if (!changed) break;
+    }
+    var members = {};
+    nodeList.forEach(function (n) { (members[label[n.id]] || (members[label[n.id]] = [])).push(n.id); });
+    return { label: label, members: members };
   }
 
   // --- Stage 2: layout ------------------------------------------------------
@@ -555,6 +686,7 @@
     // animating it across frames.
     if (reduceMotion()) {
       while (!sim.done) settleTick(sim);
+      recomputeCommunityHulls(sim.nodes);
       currentSim = null;
       onDone();
       return;
@@ -569,6 +701,15 @@
       // Approximate hit-testing and a visible "watch it relax" repaint
       // while the settle is still in progress — see the module comment.
       buildSpatialIndex(sim.nodes);
+      // Community hull geometry only needs to track positions loosely while
+      // things are still actively moving — recomputed every Nth frame
+      // rather than every frame (see MAP_VISUALS.communityFields.updateEveryFrames),
+      // same "lower rate while active, final pass once settled" split the
+      // spec itself calls for.
+      communityTickCounter++;
+      if (communityTickCounter % MAP_VISUALS.communityFields.updateEveryFrames === 0) {
+        recomputeCommunityHulls(sim.nodes);
+      }
       invalidate();
       if (!sim.done) {
         simFrameHandle = requestAnimationFrame(frame);
@@ -664,6 +805,7 @@
     resolveOverlapsOnly(visibleNodes);
 
     buildSpatialIndex(visibleNodes);
+    recomputeCommunityHulls(visibleNodes); // final, accurate cache now that the settle has genuinely converged
     invalidate();
 
     var anyVisible = visibleNodes.length > 0;
@@ -712,7 +854,24 @@
       currentVB = fitTargetFor(visibleNodes);
     }
 
-    nodeComponent = computeComponents(visibleNodes, visibleEdges);
+    // Built once here, per relayout — shared by detectCommunities() below
+    // AND by every selectNode()'s BFS hop-distance computation (see
+    // graphAdjacency), rather than each rebuilding its own copy.
+    graphAdjacency = buildAdjacency(visibleNodes, visibleEdges);
+    var communities = detectCommunities(visibleNodes, visibleEdges, graphAdjacency);
+    nodeCommunity = communities.label;
+    communityMembers = communities.members;
+    // A selection that survives this filter change (still in idSet) needs
+    // its hop-distance ladder recomputed against the NEW reachable set — a
+    // node's neighbors, and thus its degree of separation from the
+    // selection, can genuinely change under a different filter.
+    if (selectedId && idSet[selectedId]) selectionDistance = computeSelectionDistances(selectedId);
+    // First-paint hulls, computed against the just-seeded (pre-settle)
+    // positions so the field isn't simply absent for however long the
+    // settle takes — recomputeCommunityHulls() runs again periodically as
+    // positions move (see runContinuousSettle()) and once more, finally, in
+    // finishRelayout().
+    recomputeCommunityHulls(visibleNodes);
 
     function done() { finishRelayout(gen, visibleNodes, idSet); }
     if (visibleNodes.length >= 2) {
@@ -720,6 +879,108 @@
     } else {
       done();
     }
+  }
+
+  // --- Community fields: a soft, low-opacity hull behind each sufficiently
+  // large detected community — a restrained "territory" cue, never a hard
+  // container, never a per-community color (see MAP_VISUALS.communityFields
+  // and CLAUDE.md's own "never a knowledge graph... automatic clustering"
+  // caution — this stays a purely visual read of graph structure, nothing
+  // is inferred or added to the data model). Andrew's monotone-chain convex
+  // hull — a concave hull/metaball would hug the actual point cloud more
+  // tightly, but a convex hull is the "acceptable for the first experiment"
+  // option the spec itself calls out, and it's a fraction of the code.
+  function convexHull(points) {
+    var pts = points.slice().sort(function (a, b) { return a.x - b.x || a.y - b.y; });
+    if (pts.length < 3) return pts;
+    function cross(o, a, b) { return (a.x - o.x) * (b.y - o.y) - (a.y - o.y) * (b.x - o.x); }
+    var lower = [], i;
+    for (i = 0; i < pts.length; i++) {
+      while (lower.length >= 2 && cross(lower[lower.length - 2], lower[lower.length - 1], pts[i]) <= 0) lower.pop();
+      lower.push(pts[i]);
+    }
+    var upper = [];
+    for (i = pts.length - 1; i >= 0; i--) {
+      while (upper.length >= 2 && cross(upper[upper.length - 2], upper[upper.length - 1], pts[i]) <= 0) upper.pop();
+      upper.push(pts[i]);
+    }
+    lower.pop(); upper.pop();
+    return lower.concat(upper);
+  }
+  // "expand each point by padding" (spec §3) — done here as a single radial
+  // expansion of the already-computed hull from its own centroid, rather
+  // than padding every member point before hulling: visually equivalent for
+  // a convex shape, far cheaper (a handful of hull vertices, not the whole
+  // community), and keeps the padding uniform regardless of how many points
+  // a community actually has.
+  function expandHull(hull, padding) {
+    if (hull.length < 3) return hull;
+    var cx = 0, cy = 0;
+    hull.forEach(function (p) { cx += p.x; cy += p.y; });
+    cx /= hull.length; cy /= hull.length;
+    return hull.map(function (p) {
+      var dx = p.x - cx, dy = p.y - cy;
+      var d = Math.sqrt(dx * dx + dy * dy) || 1;
+      return { x: p.x + (dx / d) * padding, y: p.y + (dy / d) * padding };
+    });
+  }
+  // Rebuilds the CACHED hull geometry (world-space) from current node
+  // positions — cheap enough to call periodically during an active settle
+  // (see runContinuousSettle()) but not worth calling every single tick, so
+  // it's throttled there to every communityFields.updateEveryFrames frames.
+  // Communities below the configured minNodes simply get no field — small
+  // components and singletons are common in this graph and must stay
+  // ordinary, ungrouped nodes (never hidden, never a placeholder).
+  function recomputeCommunityHulls(nodeList) {
+    var cfg = MAP_VISUALS.communityFields;
+    if (!cfg.enabled) { communityHulls = []; return; }
+    var byCommunity = {};
+    nodeList.forEach(function (n) {
+      var c = nodeCommunity[n.id];
+      if (c === undefined) return;
+      (byCommunity[c] || (byCommunity[c] = [])).push(n);
+    });
+    var hulls = [];
+    Object.keys(byCommunity).forEach(function (c) {
+      var members = byCommunity[c];
+      if (members.length < cfg.minNodes) return;
+      var hull = convexHull(members.map(function (n) { return { x: n.x, y: n.y }; }));
+      if (hull.length < 3) return;
+      hulls.push(expandHull(hull, cfg.padding));
+    });
+    communityHulls = hulls;
+  }
+  // Rounded-blob smoothing through hull vertices (quadratic curves via each
+  // edge's own midpoint) — the standard cheap trick for turning a polygon
+  // into a soft shape without a real spline library. Drawn in SCREEN space
+  // (after world->local conversion) purely for simplicity; this is an
+  // aesthetic smoothing pass, not something that needs to survive the
+  // camera transform exactly.
+  function drawCommunityFields(ctx, w, h) {
+    var cfg = MAP_VISUALS.communityFields;
+    if (!cfg.enabled || !communityHulls.length) return;
+    var tone = cssVar("--ink"); // neutral — never a bright per-community color, see module comment
+    communityHulls.forEach(function (hull) {
+      var pts = hull.map(function (p) { return worldToLocal(p.x, p.y, w, h); });
+      ctx.beginPath();
+      var start = { x: (pts[0].x + pts[pts.length - 1].x) / 2, y: (pts[0].y + pts[pts.length - 1].y) / 2 };
+      ctx.moveTo(start.x, start.y);
+      for (var i = 0; i < pts.length; i++) {
+        var cur = pts[i], next = pts[(i + 1) % pts.length];
+        ctx.quadraticCurveTo(cur.x, cur.y, (cur.x + next.x) / 2, (cur.y + next.y) / 2);
+      }
+      ctx.closePath();
+      ctx.globalAlpha = cfg.fillOpacity;
+      ctx.fillStyle = tone;
+      ctx.fill();
+      if (cfg.strokeOpacity > 0) {
+        ctx.globalAlpha = cfg.strokeOpacity;
+        ctx.strokeStyle = tone;
+        ctx.lineWidth = 1;
+        ctx.stroke();
+      }
+    });
+    ctx.globalAlpha = 1;
   }
 
   // --- Stage 3: spatial index -----------------------------------------------
@@ -809,6 +1070,63 @@
     return HIT_RADIUS_PX / t.scale;
   }
 
+  // --- Cross-community edge geometry: every explicit edge stays visible
+  // (see module comment / CLAUDE.md — no edge is ever hidden by this pass),
+  // but an edge whose two endpoints fall in different detected communities
+  // (see detectCommunities()) renders with a gentle, deterministic curve
+  // instead of a straight line — the visual cue that this is a longer-range
+  // relationship, not a purely local one. edgeGeometry() is the ONE place
+  // that decides an edge's path (straight vs curved) and its label anchor;
+  // both drawBackground()'s ordinary edges and drawInteraction()'s hovered-
+  // edge emphasis call through it, so a curved edge can never straighten
+  // out just because it's hovered or touches the selection (§4's own
+  // "Do not temporarily straighten it").
+  function isCrossCommunity(e) {
+    var ca = nodeCommunity[e.source], cb = nodeCommunity[e.target];
+    return ca !== undefined && cb !== undefined && ca !== cb;
+  }
+  // Sign/variance are cached per-edge at buildGraph() time (deterministic
+  // from the edge's own stable id, never Math.random()); only the length
+  // term below needs recomputing per call, since node positions move during
+  // a settle. "increase modestly with edge length, subject to a clamp."
+  function edgeCurveAmount(e) {
+    var a = nodeById[e.source], b = nodeById[e.target];
+    var cc = MAP_VISUALS.crossCommunityEdges;
+    var worldDist = Math.hypot(a.x - b.x, a.y - b.y);
+    var lengthFactor = Math.min(1, worldDist / (BASE_K * 6));
+    var mag = cc.curvatureMin + (cc.curvatureMax - cc.curvatureMin) * (0.35 + 0.65 * e._curveVariance) * lengthFactor;
+    return e._curveSign * Math.min(mag, cc.curvatureMax);
+  }
+  // Returns screen-space {pa, pb, control, mid} for one edge — control is
+  // null for a straight (intra-community) edge. The control point is
+  // computed in WORLD space (an offset perpendicular to the source->target
+  // line) and only THEN transformed to screen space — a quadratic Bézier is
+  // preserved under the affine map fitTransform() already uses, so this
+  // stays exactly in sync with panning/zooming without any special-casing.
+  // `mid` is the curve's true midpoint (the quadratic Bézier point at
+  // t=0.5), used for relationship-label placement so a label never drifts
+  // off a curved line the way a naive endpoint-average would.
+  function edgeGeometry(e, w, h) {
+    var a = nodeById[e.source], b = nodeById[e.target];
+    var pa = worldToLocal(a.x, a.y, w, h), pb = worldToLocal(b.x, b.y, w, h);
+    if (!isCrossCommunity(e)) {
+      return { pa: pa, pb: pb, control: null, mid: { x: (pa.x + pb.x) / 2, y: (pa.y + pb.y) / 2 } };
+    }
+    var amt = edgeCurveAmount(e);
+    var mx = (a.x + b.x) / 2, my = (a.y + b.y) / 2;
+    var dx = b.x - a.x, dy = b.y - a.y, len = Math.hypot(dx, dy) || 1;
+    var control = worldToLocal(mx + (-dy / len) * amt, my + (dx / len) * amt, w, h);
+    return {
+      pa: pa, pb: pb, control: control,
+      mid: { x: 0.25 * pa.x + 0.5 * control.x + 0.25 * pb.x, y: 0.25 * pa.y + 0.5 * control.y + 0.25 * pb.y }
+    };
+  }
+  function traceEdgePath(ctx, geo) {
+    ctx.moveTo(geo.pa.x, geo.pa.y);
+    if (geo.control) ctx.quadraticCurveTo(geo.control.x, geo.control.y, geo.pb.x, geo.pb.y);
+    else ctx.lineTo(geo.pb.x, geo.pb.y);
+  }
+
   // CSS custom properties resolved to concrete color/font values once and
   // cached — a canvas 2D context has no idea what `var(--signal)` means, so
   // every color/font this file draws with is resolved through here instead
@@ -870,8 +1188,8 @@
     else ctx.setLineDash([]);
   }
 
-  function drawShapeNode(ctx, n, p, style, scale) {
-    var size = (n.hub ? SHAPE_SIZE.hub : SHAPE_SIZE.leaf) * scale;
+  function drawShapeNode(ctx, n, p, style, scale, extraScale) {
+    var size = (n.hub ? SHAPE_SIZE.hub : SHAPE_SIZE.leaf) * scale * (n.sizeScale || 1) * (extraScale || 1);
     ctx.fillStyle = cssVar("--colorplan-" + style.color);
     ctx.beginPath();
     if (style.shape === "square") {
@@ -898,8 +1216,8 @@
   // preserveAspectRatio="xMidYMid slice" equivalent: scale the source image
   // up to COVER the square (not fit within it), centered, then clip to the
   // square — matches the previous SVG <image>'s crop behavior exactly.
-  function drawImageNode(ctx, n, p, style, scale) {
-    var s = (n.hub ? IMAGE_SIZE.hub : IMAGE_SIZE.leaf) * scale;
+  function drawImageNode(ctx, n, p, style, scale, extraScale) {
+    var s = (n.hub ? IMAGE_SIZE.hub : IMAGE_SIZE.leaf) * scale * (n.sizeScale || 1) * (extraScale || 1);
     ctx.fillStyle = cssVar("--paper-2");
     ctx.fillRect(p.x - s, p.y - s, s * 2, s * 2);
     var img = getNodeImage(n);
@@ -919,21 +1237,19 @@
     ctx.strokeRect(p.x - s, p.y - s, s * 2, s * 2);
   }
 
-  function nodeVisualHalfSize(n, scale, showImage) {
-    return showImage ? (n.hub ? IMAGE_SIZE.hub : IMAGE_SIZE.leaf) * scale : (n.hub ? SHAPE_SIZE.hub : SHAPE_SIZE.leaf) * scale;
+  function nodeVisualHalfSize(n, scale, showImage, extraScale) {
+    var mult = (n.sizeScale || 1) * (extraScale || 1);
+    return showImage ? (n.hub ? IMAGE_SIZE.hub : IMAGE_SIZE.leaf) * scale * mult : (n.hub ? SHAPE_SIZE.hub : SHAPE_SIZE.leaf) * scale * mult;
   }
 
   // --- Background layer: the full graph at rest, plus the Selection
-  // Hierarchy's four opacity tiers (see module comment — driven ENTIRELY by
-  // selectedId, never by hover). Redrawn whenever anything that could change
-  // WHAT's drawn or WHERE happens: layout (relayout/reheat), a filter
-  // change, a resize, a pan/zoom step, or a selection change (since that
-  // changes every node's opacity tier, not just the selected node's own
-  // appearance) — see invalidate() below. Edges are NOT dimmed by
-  // selection (matching the previous SVG/CSS behavior exactly: only
-  // `.is-active`, touching the selected node, and `.is-hovered`, drawn on
-  // the interaction layer, ever change edge styling) — only node opacity
-  // participates in the four-tier ladder. --------------------------------
+  // Hierarchy's stepped-by-hop-distance opacity ladder (see module comment
+  // on selectionDistance — driven ENTIRELY by selectedId, never by hover).
+  // Redrawn whenever anything that could change WHAT's drawn or WHERE
+  // happens: layout (relayout/reheat), a filter change, a resize, a
+  // pan/zoom step, or a selection change (since that changes every node's
+  // opacity tier, not just the selected node's own appearance) — see
+  // invalidate() below. --------------------------------------------------
   function drawBackground() {
     var rect = bgCanvas.getBoundingClientRect();
     var w = rect.width, h = rect.height;
@@ -941,34 +1257,52 @@
     if (!nodes.length) return;
     var t = fitTransform(w, h);
 
-    var hasSel = !!(selectedId && nodeById[selectedId] && visible[selectedId]);
-    var direct = {};
-    if (hasSel) neighborsOf(selectedId).forEach(function (id) { direct[id] = true; });
-    var selComp = hasSel ? nodeComponent[selectedId] : null;
+    drawCommunityFields(bgCtx, w, h);
 
-    function tierAlpha(n) {
+    var hasSel = !!(selectedId && nodeById[selectedId] && visible[selectedId]);
+    var steps = MAP_VISUALS.selection.opacitySteps;
+    // Distance-1 (direct neighbors) reads at step index 0, distance-2 at
+    // index 1, and so on; anything past the array's length — or never
+    // reached by the BFS at all (a different component, effectively
+    // "infinitely" far) — clamps to the last (dimmest) entry.
+    function stepFor(dist) {
+      if (dist === undefined) return steps[steps.length - 1];
+      return steps[Math.min(Math.max(dist, 1) - 1, steps.length - 1)];
+    }
+    function nodeAlpha(n) {
       if (!hasSel) return 1;
       if (n.id === selectedId) return 1;
-      if (direct[n.id]) return 0.85;
-      if (nodeComponent[n.id] === selComp) return 0.4;
-      return 0.12;
+      return stepFor(selectionDistance[n.id]);
     }
 
     // Edges first — drawn under nodes, matching the previous SVG paint
-    // order (edges group before nodes group).
+    // order (edges group before nodes group). Cross-community edges get a
+    // deterministic curve (see edgeGeometry()) and a slightly reduced
+    // opacity relative to intra-community edges — on top of, not instead
+    // of, the selection-driven step. A non-active edge's own step is
+    // whichever of its two endpoints is CLOSER to the selection — an edge
+    // reaching out from a 1st-degree node is itself part of the 1st-degree
+    // neighborhood, not the far end's dimmer tier.
     edges.forEach(function (e) {
       if (!visible[e.source] || !visible[e.target]) return;
-      var a = nodeById[e.source], b = nodeById[e.target];
-      var pa = worldToLocal(a.x, a.y, w, h), pb = worldToLocal(b.x, b.y, w, h);
+      var geo = edgeGeometry(e, w, h);
       var active = hasSel && (e.source === selectedId || e.target === selectedId);
+      var alpha = 1;
+      if (hasSel && !active) {
+        var dS = selectionDistance[e.source], dT = selectionDistance[e.target];
+        var minD = dS === undefined ? dT : (dT === undefined ? dS : Math.min(dS, dT));
+        alpha = stepFor(minD);
+      }
+      if (isCrossCommunity(e)) alpha *= MAP_VISUALS.crossCommunityEdges.opacityMultiplier;
+      bgCtx.globalAlpha = alpha;
       bgCtx.beginPath();
-      bgCtx.moveTo(pa.x, pa.y);
-      bgCtx.lineTo(pb.x, pb.y);
+      traceEdgePath(bgCtx, geo);
       setEdgeDash(bgCtx, e.category);
       bgCtx.strokeStyle = active ? cssVar("--signal") : cssVar("--gray-2");
       bgCtx.lineWidth = active ? 1.5 : 1;
       bgCtx.stroke();
     });
+    bgCtx.globalAlpha = 1;
     bgCtx.setLineDash([]);
 
     nodes.forEach(function (n) {
@@ -976,11 +1310,15 @@
       var p = worldToLocal(n.x, n.y, w, h);
       var style = typeStyles[n.publicType] || FALLBACK_STYLE;
       var showImage = isImageActive(n);
-      bgCtx.globalAlpha = tierAlpha(n);
-      if (showImage) drawImageNode(bgCtx, n, p, style, t.scale);
-      else drawShapeNode(bgCtx, n, p, style, t.scale);
+      // Only the selected node itself gets the modest size bump — direct
+      // neighbors and everyone else keep their plain degree-based size
+      // ("Do not significantly resize the neighborhood" — §5).
+      var extraScale = n.id === selectedId ? MAP_VISUALS.selection.selectedScale : 1;
+      bgCtx.globalAlpha = nodeAlpha(n);
+      if (showImage) drawImageNode(bgCtx, n, p, style, t.scale, extraScale);
+      else drawShapeNode(bgCtx, n, p, style, t.scale, extraScale);
       if (n.id === selectedId) {
-        var half = nodeVisualHalfSize(n, t.scale, showImage);
+        var half = nodeVisualHalfSize(n, t.scale, showImage, extraScale);
         bgCtx.globalAlpha = 1;
         bgCtx.beginPath();
         bgCtx.setLineDash([]);
@@ -995,7 +1333,7 @@
 
   // --- Interaction layer: hover and/or an in-progress drag (see module
   // comment — neither touches the selection's tiers, so this never needs
-  // the background layer's tierAlpha() logic). A hovered node's touching
+  // the background layer's nodeAlpha() logic). A hovered node's touching
   // edges are drawn here at the strongest emphasis, each with its
   // relationship label near the midpoint if it has one — both gone the
   // instant the hover ends. Cheap enough to redraw on every hover/pan/zoom/
@@ -1027,31 +1365,38 @@
     edges.forEach(function (e) {
       if (e.source !== hoveredId && e.target !== hoveredId) return;
       if (!visible[e.source] || !visible[e.target]) return;
-      var a = nodeById[e.source], b = nodeById[e.target];
-      var pa = worldToLocal(a.x, a.y, w, h), pb = worldToLocal(b.x, b.y, w, h);
+      // Goes through the same edgeGeometry() every other edge draw uses, so
+      // a curved cross-community edge keeps its curve under hover emphasis
+      // rather than snapping straight (§4: "Do not temporarily straighten
+      // it") — only color/width/label change here, never the path shape.
+      var geo = edgeGeometry(e, w, h);
       fxCtx.beginPath();
       fxCtx.setLineDash([]);
-      fxCtx.moveTo(pa.x, pa.y);
-      fxCtx.lineTo(pb.x, pb.y);
+      traceEdgePath(fxCtx, geo);
       fxCtx.strokeStyle = cssVar("--signal");
       fxCtx.lineWidth = 2;
       fxCtx.stroke();
       if (e.label) {
-        var mx = (pa.x + pb.x) / 2, my = (pa.y + pb.y) / 2;
         fxCtx.font = "8px " + cssVar("--font-mono");
         fxCtx.textAlign = "center";
         fxCtx.textBaseline = "middle";
         fxCtx.lineJoin = "round";
         fxCtx.lineWidth = 3;
         fxCtx.strokeStyle = cssVar("--paper");
-        fxCtx.strokeText(e.label, mx, my);
+        fxCtx.strokeText(e.label, geo.mid.x, geo.mid.y);
         fxCtx.fillStyle = cssVar("--ink");
-        fxCtx.fillText(e.label, mx, my);
+        fxCtx.fillText(e.label, geo.mid.x, geo.mid.y);
       }
     });
 
     var p = worldToLocal(n.x, n.y, w, h);
-    var half = nodeVisualHalfSize(n, t.scale, isImageActive(n));
+    // The ring alone carries the hover size cue (MAP_VISUALS.selection.
+    // hoveredScale) — the node's own drawn shape/image, already painted by
+    // drawBackground(), is deliberately left untouched: redrawing it larger
+    // here would mean hover has to invalidate the background layer too,
+    // exactly the per-move background repaint this two-layer split exists
+    // to avoid (see module comment on invalidate()/invalidateHover()).
+    var half = nodeVisualHalfSize(n, t.scale, isImageActive(n), MAP_VISUALS.selection.hoveredScale);
     fxCtx.beginPath();
     fxCtx.setLineDash([2, 2]);
     fxCtx.strokeStyle = cssVar("--signal");
@@ -1096,6 +1441,30 @@
     bgCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
     fxCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
     invalidate();
+  }
+
+  // Plain BFS over graphAdjacency, restricted to the currently visible set —
+  // gives every reachable node's hop count from the selection, which
+  // drives the stepped opacity falloff in drawBackground() (§5's "2nd
+  // degree connections are dimmer than 1st, 3rd dimmer still" — a flat
+  // selected/neighbor/everyone-else split read as too subtle in practice,
+  // per direct user feedback, so this replaced it). A node the BFS never
+  // reaches (different component, or simply not in the currently visible
+  // set) has no entry at all — drawBackground() treats that as the
+  // dimmest floor tier, same as "too many hops out to bother counting."
+  function computeSelectionDistances(fromId) {
+    var dist = {};
+    if (!fromId || !graphAdjacency[fromId]) return dist;
+    dist[fromId] = 0;
+    var queue = [fromId], qi = 0;
+    while (qi < queue.length) {
+      var id = queue[qi++];
+      var d = dist[id];
+      (graphAdjacency[id] || []).forEach(function (nb) {
+        if (dist[nb] === undefined && visible[nb]) { dist[nb] = d + 1; queue.push(nb); }
+      });
+    }
+    return dist;
   }
 
   function neighborsOf(id) {
@@ -1203,6 +1572,7 @@
   function selectNode(id) {
     if (id === selectedId) return;
     selectedId = id;
+    selectionDistance = computeSelectionDistances(id);
     invalidate();
     showCardFor(selectedCard, id);
     // The hover card only ever shows something OTHER than the selection —
@@ -1218,6 +1588,7 @@
   function deselectNode() {
     if (!selectedId) return;
     selectedId = null;
+    selectionDistance = {};
     invalidate();
     hideCardFor(selectedCard);
   }
