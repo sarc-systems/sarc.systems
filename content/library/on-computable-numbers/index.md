@@ -29,7 +29,10 @@ access:
     kind: external-copy
     url: "https://www.cs.virginia.edu/~robins/Turing_Paper_1936.pdf"
 
+related:
+  - {ref: david-hilbert, relation: discusses}
+
 draft: false
 ---
 
-Turing's 1936 paper defining the Turing machine and proving the undecidability of the Entscheidungsproblem, founding theoretical computer science.
+Turing's 1936 paper defining the Turing machine and proving the undecidability of the Entscheidungsproblem — the decision problem posed by [David Hilbert](/library/david-hilbert/) and Wilhelm Ackermann in 1928 — founding theoretical computer science.

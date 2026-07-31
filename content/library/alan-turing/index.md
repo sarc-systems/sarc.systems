@@ -26,6 +26,6 @@ related:
 draft: false
 ---
 
-Alan Turing (1912-1954) was not only a profoundly influential figure in the development of theoretical computater science,
+Alan Turing (1912-1954) was not only a profoundly influential figure in the development of theoretical computer science,
 but a central figure in the formalization of procedure, machine intelligence, morphogenesis,
 and the relation between discrete rules and emergent form.
