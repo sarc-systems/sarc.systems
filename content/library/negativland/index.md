@@ -9,7 +9,15 @@ library:
 
 subjects: [sound, language]
 
-images: []
+images:
+  - file: "photo.jpg"
+    alt: "Negativland"
+    caption: "Negativland performing, 2007."
+    credit: "Photograph by Nelson Pavlosky"
+    source: "https://commons.wikimedia.org/wiki/File:Negativland_2007.jpg"
+    rights:
+      status: licensed
+      note: "CC BY-SA 2.0, via Wikimedia Commons."
 
 access:
   - label: "Official website"

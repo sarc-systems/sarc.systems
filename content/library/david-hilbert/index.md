@@ -9,7 +9,15 @@ library:
 
 subjects: [number, form, computation]
 
-images: []
+images:
+  - file: "portrait.jpg"
+    alt: "David Hilbert"
+    role: portrait
+    caption: "David Hilbert, 1912."
+    source: "https://commons.wikimedia.org/wiki/File:Hilbert.jpg"
+    rights:
+      status: public-domain
+      note: "1912 postcard photograph of Göttingen faculty, photographer unknown; public domain (published before 1931), via Wikimedia Commons."
 
 access: []
 

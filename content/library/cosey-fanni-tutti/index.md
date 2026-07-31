@@ -9,7 +9,15 @@ library:
 
 subjects: [sound, perception]
 
-images: []
+images:
+  - file: "portrait.jpg"
+    alt: "Cosey Fanni Tutti"
+    role: portrait
+    credit: "Photograph by Seth Tisue"
+    source: "https://commons.wikimedia.org/wiki/File:Cosey_Fanni_Tutti.jpg"
+    rights:
+      status: licensed
+      note: "CC BY-SA 2.0, via Wikimedia Commons."
 
 access: []
 

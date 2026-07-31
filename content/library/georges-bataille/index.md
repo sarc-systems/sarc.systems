@@ -9,7 +9,15 @@ library:
 
 subjects: [dynamics]
 
-images: []
+images:
+  - file: "portrait.jpg"
+    alt: "Georges Bataille"
+    role: portrait
+    caption: "Georges Bataille, c. 1943."
+    source: "https://commons.wikimedia.org/wiki/File:Georges_Bataille_vers_1943.jpg"
+    rights:
+      status: public-domain
+      note: "Public Domain Mark 1.0 via Wikimedia Commons; original source cited as pileface.com."
 
 access: []
 

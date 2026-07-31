@@ -9,7 +9,15 @@ library:
 
 subjects: [computation, language]
 
-images: []
+images:
+  - file: "portrait.jpg"
+    alt: "Stanisław Lem"
+    role: portrait
+    credit: "Courtesy of Wojciech Zemek"
+    source: "https://commons.wikimedia.org/wiki/File:Stanislaw_Lem.jpg"
+    rights:
+      status: permitted
+      note: "Permission granted by Lem's secretary Wojciech Zemek, via Wikimedia Commons."
 
 access: []
 

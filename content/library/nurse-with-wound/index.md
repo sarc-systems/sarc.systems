@@ -17,7 +17,15 @@ creators:
 
 subjects: [sound, feedback]
 
-images: []
+images:
+  - file: "photo.jpg"
+    alt: "Nurse With Wound"
+    caption: "Nurse With Wound performing at Avantgarde Festival, Schiphorst, 2008."
+    credit: "Photograph by jdlennon"
+    source: "https://commons.wikimedia.org/wiki/File:Nurse_With_Wound_2008.jpg"
+    rights:
+      status: licensed
+      note: "CC BY 2.0, via Wikimedia Commons."
 
 access: []
 

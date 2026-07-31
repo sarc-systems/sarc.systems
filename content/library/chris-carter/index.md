@@ -9,7 +9,15 @@ library:
 
 subjects: [sound, instruments]
 
-images: []
+images:
+  - file: "portrait.jpg"
+    alt: "Chris Carter"
+    role: portrait
+    credit: "Photograph by Carsten Stiller"
+    source: "https://commons.wikimedia.org/wiki/File:Chris_Carter.jpg"
+    rights:
+      status: licensed
+      note: "CC BY 2.0, via Wikimedia Commons."
 
 access: []
 

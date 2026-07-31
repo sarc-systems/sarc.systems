@@ -9,7 +9,15 @@ library:
 
 subjects: [cybernetics]
 
-images: []
+images:
+  - file: "portrait.jpg"
+    alt: "W. Ross Ashby"
+    role: portrait
+    caption: "W. Ross Ashby, 1948."
+    source: "https://commons.wikimedia.org/wiki/File:W._Ross_Ashby_(1948).jpg"
+    rights:
+      status: public-domain
+      note: "UK public domain (unknown-author photo made available more than 70 years before 1 January 1956), via Wikimedia Commons; traced to rossashby.info's own biography page."
 
 access: []
 

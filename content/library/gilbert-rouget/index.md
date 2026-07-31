@@ -9,7 +9,16 @@ library:
 
 subjects: [sound, perception]
 
-images: []
+images:
+  - file: "portrait.jpg"
+    alt: "Gilbert Rouget with Jean Jamin and Hélène Balfet"
+    role: portrait
+    caption: "Gilbert Rouget (left) with Jean Jamin and Hélène Balfet at the Musée de l'Homme, 1987."
+    credit: "Photograph by Charles Mallison"
+    source: "https://commons.wikimedia.org/wiki/File:Gilbert_Rouget,_Jean_Jamin_et_H%C3%A9l%C3%A8ne_Balfet.jpg"
+    rights:
+      status: unknown
+      note: "Rights status not established; used for identification pending further research."
 
 access: []
 

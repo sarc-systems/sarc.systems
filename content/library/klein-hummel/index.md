@@ -9,7 +9,13 @@ library:
 
 subjects: [sound, instruments]
 
-images: []
+images:
+  - file: "logo.png"
+    alt: "Klein + Hummel logo"
+    source: "https://commons.wikimedia.org/wiki/File:Klein%2BHummel_Logo.svg"
+    rights:
+      status: public-domain
+      note: "Simple typographic logo below the threshold of originality; via Wikimedia Commons."
 
 access: []
 

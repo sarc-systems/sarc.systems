@@ -9,7 +9,15 @@ library:
 
 subjects: [sound, form]
 
-images: []
+images:
+  - file: "portrait.jpg"
+    alt: "Ornette Coleman"
+    role: portrait
+    credit: "Photograph by Andy Newcombe"
+    source: "https://commons.wikimedia.org/wiki/File:Ornette_Coleman.jpg"
+    rights:
+      status: licensed
+      note: "CC BY-SA 2.0, via Wikimedia Commons."
 
 access: []
 

@@ -9,7 +9,15 @@ library:
 
 subjects: [sound]
 
-images: []
+images:
+  - file: "portrait.jpg"
+    alt: "Hans-Joachim Roedelius"
+    role: portrait
+    credit: "Photograph by deepskyobject"
+    source: "https://commons.wikimedia.org/wiki/File:Roedelius.jpg"
+    rights:
+      status: licensed
+      note: "CC BY-SA 2.0, via Wikimedia Commons."
 
 access: []
 

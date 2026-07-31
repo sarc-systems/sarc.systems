@@ -13,7 +13,15 @@ creators:
 
 subjects: [sound, instruments]
 
-images: []
+images:
+  - file: "photo.jpg"
+    alt: "Tangerine Dream"
+    caption: "Tangerine Dream at Elbphilharmonie, Hamburg, 2018."
+    credit: "Photograph by Frank Schwichtenberg"
+    source: "https://commons.wikimedia.org/wiki/File:Tangerine_Dream_(Elbphilharmonie_2018).jpg"
+    rights:
+      status: licensed
+      note: "CC BY-SA 4.0, via Wikimedia Commons."
 
 access: []
 

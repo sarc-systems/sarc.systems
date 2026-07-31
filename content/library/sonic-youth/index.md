@@ -14,7 +14,15 @@ creators:
 
 subjects: [sound]
 
-images: []
+images:
+  - file: "photo.jpg"
+    alt: "Sonic Youth"
+    caption: "Sonic Youth performing, 2009."
+    credit: "LivePict.com"
+    source: "https://commons.wikimedia.org/wiki/File:Sonic_Youth_2009.jpg"
+    rights:
+      status: licensed
+      note: "CC BY-SA 3.0, via Wikimedia Commons."
 
 access: []
 

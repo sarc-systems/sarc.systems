@@ -9,7 +9,15 @@ library:
 
 subjects: [sound, perception]
 
-images: []
+images:
+  - file: "portrait.jpg"
+    alt: "Peter Christopherson"
+    role: portrait
+    credit: "Photograph by Kikokos"
+    source: "https://commons.wikimedia.org/wiki/File:Peter_Christopherson.jpg"
+    rights:
+      status: licensed
+      note: "Dual-licensed CC BY-SA 3.0 / GFDL, via Wikimedia Commons."
 
 access: []
 

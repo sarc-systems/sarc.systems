@@ -9,7 +9,16 @@ library:
 
 subjects: [instruments, sound]
 
-images: []
+images:
+  - file: "portrait.jpg"
+    alt: "Suzanne Ciani"
+    role: portrait
+    caption: "Suzanne Ciani with a Buchla 200e, KQED."
+    credit: "Photograph by Binksternet"
+    source: "https://commons.wikimedia.org/wiki/File:Suzanne_Ciani_at_KQED.jpg"
+    rights:
+      status: public-domain
+      note: "Released CC0 by the photographer, via Wikimedia Commons."
 
 access:
   - label: "Official website"

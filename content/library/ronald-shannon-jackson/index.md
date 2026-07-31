@@ -9,7 +9,15 @@ library:
 
 subjects: [sound, time]
 
-images: []
+images:
+  - file: "portrait.jpg"
+    alt: "Ronald Shannon Jackson"
+    role: portrait
+    credit: "Photograph by Michael Hoefner (Nomo)"
+    source: "https://commons.wikimedia.org/wiki/File:Ronald_Shannon_Jackson.jpg"
+    rights:
+      status: licensed
+      note: "CC BY-SA 3.0, via Wikimedia Commons."
 
 access: []
 

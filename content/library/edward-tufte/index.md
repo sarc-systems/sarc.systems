@@ -9,7 +9,15 @@ library:
 
 subjects: [form, perception, number]
 
-images: []
+images:
+  - file: "portrait.jpg"
+    alt: "Edward Tufte"
+    role: portrait
+    credit: "Photograph by Keegan Peterzell"
+    source: "https://commons.wikimedia.org/wiki/File:Edward_Tufte.jpg"
+    rights:
+      status: licensed
+      note: "CC BY-SA 4.0, via Wikimedia Commons."
 
 access: []
 

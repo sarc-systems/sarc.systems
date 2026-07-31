@@ -9,7 +9,16 @@ library:
 
 subjects: [language, memory]
 
-images: []
+images:
+  - file: "portrait.jpg"
+    alt: "George Orwell"
+    role: portrait
+    caption: "George Orwell, press/accreditation photograph, 1943."
+    credit: "British National Union of Journalists"
+    source: "https://commons.wikimedia.org/wiki/File:George_Orwell_press_photo.jpg"
+    rights:
+      status: public-domain
+      note: "UK public domain (unknown-author photo over 70 years old) and US public domain, via Wikimedia Commons; also used as Wikipedia's own infobox image."
 
 access: []
 

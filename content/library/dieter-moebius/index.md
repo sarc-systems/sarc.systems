@@ -9,7 +9,16 @@ library:
 
 subjects: [sound]
 
-images: []
+images:
+  - file: "portrait.jpg"
+    alt: "Dieter Moebius"
+    role: portrait
+    caption: "Dieter Moebius performing with Cluster at Fusion Festival, 2010."
+    credit: "Photograph by Alice d25"
+    source: "https://commons.wikimedia.org/wiki/File:Dieter_Moebius_2010_(cropped).jpg"
+    rights:
+      status: licensed
+      note: "CC BY-SA 3.0, via Wikimedia Commons."
 
 access: []
 

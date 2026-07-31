@@ -14,7 +14,15 @@ creators:
 
 subjects: [sound, feedback]
 
-images: []
+images:
+  - file: "photo.jpg"
+    alt: "Wolf Eyes"
+    caption: "Wolf Eyes performing at Triptych festival, Glasgow, 2006."
+    credit: "Photograph by Goodnight London"
+    source: "https://commons.wikimedia.org/wiki/File:Wolf_Eyes_2006.jpg"
+    rights:
+      status: licensed
+      note: "CC BY 2.0, via Wikimedia Commons."
 
 access: []
 

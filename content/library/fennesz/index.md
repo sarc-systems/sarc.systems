@@ -9,7 +9,15 @@ library:
 
 subjects: [sound]
 
-images: []
+images:
+  - file: "portrait.jpg"
+    alt: "Fennesz"
+    role: portrait
+    credit: "Photograph by Jonas Ahrentorp"
+    source: "https://commons.wikimedia.org/wiki/File:Fennesz.jpg"
+    rights:
+      status: licensed
+      note: "CC BY-SA 2.0, via Wikimedia Commons."
 
 access: []
 

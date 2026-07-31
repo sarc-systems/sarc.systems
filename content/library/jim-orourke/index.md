@@ -9,7 +9,16 @@ library:
 
 subjects: [sound, instruments]
 
-images: []
+images:
+  - file: "portrait.jpg"
+    alt: "Jim O'Rourke"
+    role: portrait
+    caption: "Jim O'Rourke performing, October 4, 2003."
+    credit: "Photograph by Seth Tisue"
+    source: "https://commons.wikimedia.org/wiki/File:Jim_O%27Rourke-7.jpg"
+    rights:
+      status: licensed
+      note: "CC BY-SA 2.0, via Wikimedia Commons."
 
 access:
   - label: "Steamroom (Bandcamp)"

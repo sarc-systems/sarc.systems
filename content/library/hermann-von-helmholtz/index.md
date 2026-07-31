@@ -9,7 +9,15 @@ library:
 
 subjects: [sound, perception, tuning]
 
-images: []
+images:
+  - file: "portrait.jpg"
+    alt: "Hermann von Helmholtz"
+    role: portrait
+    caption: "Hermann von Helmholtz, from Practical Physics (1914)."
+    source: "https://commons.wikimedia.org/wiki/File:Hermann_von_Helmholtz.jpg"
+    rights:
+      status: public-domain
+      note: "Reproduced from a 1914 Macmillan textbook; public domain (pre-1931 publication), via Wikimedia Commons."
 
 access: []
 
