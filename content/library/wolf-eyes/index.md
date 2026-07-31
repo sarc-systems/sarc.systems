@@ -1,0 +1,29 @@
+---
+title: "Wolf Eyes"
+summary: "Michigan noise group formed by Nate Young in 1996, later a duo with John Olson."
+
+library:
+  id: wolf-eyes
+  type: group
+  sarc_work: false
+
+creators:
+  - {name: "Nate Young", role: founder}
+  - {name: "Aaron Dilloway", role: performer, ref: aaron-dilloway}
+  - {name: "John Olson", role: performer}
+
+subjects: [sound, feedback]
+
+images: []
+
+access: []
+
+related:
+  - {ref: american-tapes, relation: affiliated-with}
+  - {ref: hanson-records, relation: affiliated-with}
+  - {ref: merzbow, relation: collaborator-of}
+
+draft: false
+---
+
+Nate Young began Wolf Eyes as a solo project in Ann Arbor, Michigan, in 1996. [Aaron Dilloway](/library/aaron-dilloway/) joined in 1998, and John Olson — previously of Universal Indians — in 2000, forming the lineup that carried the group through its mid-2000s signing to Sub Pop. Dilloway left in 2005, uninterested in extensive touring, replaced by Mike Connelly (2006–2012) and later Jim Baljo (2013–2017); Young and Olson have continued as a core duo since. The group has released extensively through Olson's own [American Tapes](/library/american-tapes/) and Dilloway's [Hanson Records](/library/hanson-records/), and recorded *Live Frying* (2014, American Tapes) with [Merzbow](/library/merzbow/).
