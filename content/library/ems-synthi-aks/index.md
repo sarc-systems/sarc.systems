@@ -19,9 +19,9 @@ images: []
 access: []
 
 related:
-  - {ref: ems-vcs3, relation: version-of}
+  - {ref: ems-synthi-a, relation: version-of}
 
 draft: false
 ---
 
-A suitcase-cased variant of the VCS3 circuit, adding a built-in digital sequencer and touch-sensitive keyboard for a self-contained, portable instrument.
+A [Synthi A](/library/ems-synthi-a/) with a built-in digital sequencer and touch-sensitive keyboard added, for a self-contained, portable instrument built on the same VCS3 circuit.

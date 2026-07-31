@@ -1,6 +1,6 @@
 ---
 title: "Thomas Lehn"
-summary: "German analog synthesist known for improvised performance on the EMS Synthi 100."
+summary: "German analog synthesist known for improvised performance on the EMS Synthi A."
 
 library:
   id: thomas-lehn
@@ -28,4 +28,4 @@ access:
 draft: false
 ---
 
-Thomas Lehn is a German musician known for his improvised performance practice on the EMS Synthi 100 analog synthesizer, working across free improvisation and electroacoustic contexts.
+Thomas Lehn is a German musician known for his improvised performance practice on the [EMS Synthi A](/library/ems-synthi-a/) analog synthesizer, played since 1989, working across free improvisation and electroacoustic contexts.

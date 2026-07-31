@@ -22,9 +22,8 @@ access: []
 
 related:
   - {ref: bbc-radiophonic-workshop, relation: used-by}
-  - {ref: thomas-lehn, relation: used-by}
 
 draft: false
 ---
 
-Designed by David Cockerell and documented in 1971, the large-format Synthi 100 was produced in only 30 units at £6,500 each, finding homes at institutions including the BBC Radiophonic Workshop.
+Designed by David Cockerell and documented in 1971, the large-format Synthi 100 was produced in only 30 units at £6,500 each, finding homes at institutions including the BBC Radiophonic Workshop — a studio-scale instrument, distinct from EMS's contemporaneous portable [Synthi A](/library/ems-synthi-a/) and [Synthi AKS](/library/ems-synthi-aks/).

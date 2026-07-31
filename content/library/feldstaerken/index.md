@@ -33,9 +33,9 @@ access:
     url: "https://www.discogs.com/release/633913-Thomas-Lehn-Feldst%C3%A4rken"
 
 related:
-  - {ref: ems-synthi-100, relation: made-with}
+  - {ref: ems-synthi-a, relation: made-with}
 
 draft: false
 ---
 
-Thomas Lehn's 2000 solo album for the EMS Synthi 100, an exploration of improvised free electronics — the title German for "field strengths."
+Thomas Lehn's 2000 solo album for the EMS Synthi A, an exploration of improvised free electronics — the title German for "field strengths."
