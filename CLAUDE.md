@@ -681,15 +681,21 @@ System declaring `part-of` renders as **"Contains"** on its target (a
 synthesizer's page shows the panels it contains), while a Person/Group
 declaring `part-of` an Organization still renders as **"Member"** — same
 relation type, different inverse label, chosen by the DECLARING entry's own
-public type. A `MIDI`-vs-`control voltage` distinction is the guiding
-example for classifying ambiguous cases: a concrete, adopted protocol (MIDI,
-1 V/octave pitch control) is a System (subtype `protocol`) — something
-with an actual specification someone can implement or violate; a general
-idea or technique (voltage control, modular synthesis, FM synthesis) is a
-Concept — nothing to "implement," just a way of thinking about sound. The
-same split applies to instruments-vs-methods generally: a specific real
-device (PPG Wave 2) is always a System; the abstract technique it embodies
-(wavetable synthesis) is always a Concept.
+public type. A `MIDI`-vs-`FM synthesis` distinction is the guiding example
+for classifying ambiguous cases: a concrete, adopted protocol (MIDI) is a
+System (subtype `protocol`) — something with an actual specification
+someone can implement or violate; a general idea or technique (FM
+synthesis, wavetable synthesis) is a Concept — nothing to "implement," just
+a way of thinking about sound. The same split applies to instruments-vs-
+methods generally: a specific real device (PPG Wave 2) is always a System;
+the abstract technique it embodies (wavetable synthesis) is always a
+Concept. Concept entries are a small, deliberately dictionary-like
+vocabulary — cybernetics/systems-theory/mathematics terms (phase,
+feedback, memory, variety, limit cycle, state machine, …) and genuine
+cross-instrument sound-synthesis techniques (FM, granular, wavetable, …),
+not a glossary of one instrument family's own operational jargon (patching,
+matrix mixing, voltage-control conventions and the like) — those belong in
+an entry's own prose, not as their own Concept entries.
 
 **Institutions and Studios.** Electronic-music studios, labs, and research
 centers are `Organization` or `Place`, never a `Studio` public type — an
