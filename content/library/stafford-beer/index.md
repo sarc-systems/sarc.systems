@@ -34,7 +34,7 @@ draft: false
 Stafford Beer (1926–2002) founded management cybernetics, applying Norbert
 Wiener's cybernetics to the "science of effective organization" — first in
 *Cybernetics and Management* (1959), then across three decades of work
-culminating in the Viable System Model. After reading Wiener's *Cybernetics*,
+culminating in the [Viable System Model](/library/viable-system-model/). After reading Wiener's *Cybernetics*,
 Beer wrote to him directly; the two corresponded and became close, with
 Wiener reportedly telling Beer that if he was the father of cybernetics, Beer
 was the father of management cybernetics. Beer and Gordon Pask collaborated
