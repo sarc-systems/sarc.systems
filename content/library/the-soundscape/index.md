@@ -11,6 +11,7 @@ library:
 creators:
   - name: "R. Murray Schafer"
     role: author
+    ref: r-murray-schafer
 
 subjects: [sound, perception, space]
 

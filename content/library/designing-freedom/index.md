@@ -13,11 +13,15 @@ library:
 creators:
   - name: "Stafford Beer"
     role: lecturer
+    ref: stafford-beer
 
 subjects:
   - cybernetics
   - dynamical-systems
   - technology
+
+related:
+  - {ref: project-cybersyn, relation: discusses}
 
 images:
   - file: "stafford-beer.jpg"

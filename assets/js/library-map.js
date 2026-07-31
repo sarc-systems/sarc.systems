@@ -314,14 +314,9 @@
     function union(a, b) { var ra = find(a), rb = find(b); if (ra !== rb) parent[ra] = rb; }
     nodeList.forEach(function (n) { parent[n.id] = n.id; });
     edgeList.forEach(function (e) { if (parent[e.source] !== undefined && parent[e.target] !== undefined) union(e.source, e.target); });
-    var groups = {};
-    nodeList.forEach(function (n) {
-      var root = find(n.id);
-      (groups[root] || (groups[root] = [])).push(n);
-    });
     var comp = {};
     nodeList.forEach(function (n) { comp[n.id] = find(n.id); });
-    return { comp: comp, groups: Object.keys(groups).map(function (k) { return groups[k]; }) };
+    return comp;
   }
 
   // --- Stage 2: layout ------------------------------------------------------
@@ -594,7 +589,7 @@
     var visibleEdges = edges.filter(function (e) { return visible[e.source] && visible[e.target]; });
     if (visibleNodes.length < 2) return; // nothing to simulate
     var sim = { nodes: visibleNodes, edges: visibleEdges, alpha: minAlpha, ticks: 0, done: false };
-    runContinuousSettle(sim, gen, function () { finishRelayout(gen, visibleNodes, visible, {}); });
+    runContinuousSettle(sim, gen, function () { finishRelayout(gen, visibleNodes, visible); });
   }
 
   // Called once the drag threshold is crossed (see initPointerHandling()) —
@@ -701,8 +696,7 @@
       currentVB = fitTargetFor(visibleNodes);
     }
 
-    var built = computeComponents(visibleNodes, visibleEdges);
-    nodeComponent = built.comp;
+    nodeComponent = computeComponents(visibleNodes, visibleEdges);
 
     function done() { finishRelayout(gen, visibleNodes, idSet); }
     if (visibleNodes.length >= 2) {

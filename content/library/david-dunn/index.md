@@ -24,7 +24,11 @@ access:
     kind: website
     url: "https://www.davidddunn.com/~david/HOME.htm"
 
+related:
+  - {ref: harry-partch, relation: collaborator-of}
+  - {ref: kenneth-gaburo, relation: collaborator-of}
+
 draft: false
 ---
 
-David Dunn is an American composer and bioacoustician whose work moves between experimental music, environmental sound, and the study of animal acoustic communication, informed by cybernetic and systems thinking.
+David Dunn is an American composer and bioacoustician whose work moves between experimental music, environmental sound, and the study of animal acoustic communication, informed by cybernetic and systems thinking. He studied with Harry Partch from 1970 until Partch's death in 1974, performed for over a decade in the Harry Partch Ensemble — including recordings of *The Bewitched* and *The Letter* — and later edited *Harry Partch: An Anthology of Critical Perspectives* (2000). At UC San Diego he was also mentored by composer Kenneth Gaburo, with whom he later co-authored the essay "Publishing As Eco-System" (1983).

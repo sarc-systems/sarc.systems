@@ -19,3 +19,7 @@ deploy.env
 .DS_Store
 *.swp
 Thumbs.db
+
+# Claude Code local/personal settings (machine-specific tool permissions) —
+# .claude/agents/ (shared project subagent definitions) IS committed.
+.claude/settings.local.json

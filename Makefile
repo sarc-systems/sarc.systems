@@ -3,7 +3,7 @@
 
 HUGO ?= hugo
 
-.PHONY: dev build check new-post deploy clean colorplan mark library-image-audit
+.PHONY: dev build check new-post deploy clean colorplan mark library-image-audit library-structural-report
 
 ## dev — local server with drafts and future-dated posts
 dev:
@@ -55,6 +55,13 @@ mark:
 ## already fails on) — pass --strict to also fail on warnings.
 library-image-audit:
 	python3 scripts/audit-library-images.py
+
+## library-structural-report — regenerate the Library relationship-graph
+## report (scripts/library-structural-report.py -> research/library-audit/
+## structural-report.md): counts, connected components, isolated entries,
+## data-integrity checks. Read-only, no network calls.
+library-structural-report:
+	python3 scripts/library-structural-report.py
 
 ## clean — remove build artifacts
 clean:
