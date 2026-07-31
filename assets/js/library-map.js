@@ -176,7 +176,15 @@
     // a visible haze across most of the graph, not the "visible only after
     // looking for it" restraint the spec calls for — confirmed visually
     // (real browser screenshot) before tuning down, not guessed.
-    communityFields: { enabled: true, minNodes: 6, padding: 36, fillOpacity: 0.02, strokeOpacity: 0.025, updateEveryFrames: 4 },
+    // selected*/hovered* are the opacities used for the ONE hull matching
+    // the current selection/hover's own community — see drawCommunityFields()
+    // and the fx-layer hover overlay in drawInteraction(). Every other hull
+    // stays at the plain fillOpacity/strokeOpacity above.
+    communityFields: {
+      enabled: true, minNodes: 6, padding: 36, fillOpacity: 0.02, strokeOpacity: 0.025, updateEveryFrames: 4,
+      selectedFillOpacity: 0.045, selectedStrokeOpacity: 0.06,
+      hoveredFillOpacity: 0.03, hoveredStrokeOpacity: 0.04
+    },
     crossCommunityEdges: { opacityMultiplier: 0.72, curvatureMin: 8, curvatureMax: 42 },
     // opacitySteps[0] = 1st-degree (direct) neighbors, [1] = 2nd degree,
     // [2] = 3rd degree, ... — a node/edge farther than the array's length
@@ -1038,7 +1046,11 @@
       if (members.length < cfg.minNodes) return;
       var hull = convexHull(members.map(function (n) { return { x: n.x, y: n.y }; }));
       if (hull.length < 3) return;
-      hulls.push(expandHull(hull, cfg.padding));
+      // Tagged with its own community id — see drawCommunityFields()'s
+      // `emphasizeCommunity` param and the fx-layer hover overlay in
+      // drawInteraction(), both of which need to find "the one hull
+      // matching the current selection/hover" without recomputing hulls.
+      hulls.push({ points: expandHull(hull, cfg.padding), community: c });
     });
     communityHulls = hulls;
   }
@@ -1047,30 +1059,50 @@
   // into a soft shape without a real spline library. Drawn in SCREEN space
   // (after world->local conversion) purely for simplicity; this is an
   // aesthetic smoothing pass, not something that needs to survive the
-  // camera transform exactly.
-  function drawCommunityFields(ctx, w, h) {
+  // camera transform exactly. Shared by drawCommunityFields() and the
+  // single-hull hover overlay below so the two never draw the shape
+  // differently.
+  function traceHullPath(ctx, hull, w, h) {
+    var pts = hull.points.map(function (p) { return worldToLocal(p.x, p.y, w, h); });
+    ctx.beginPath();
+    var start = { x: (pts[0].x + pts[pts.length - 1].x) / 2, y: (pts[0].y + pts[pts.length - 1].y) / 2 };
+    ctx.moveTo(start.x, start.y);
+    for (var i = 0; i < pts.length; i++) {
+      var cur = pts[i], next = pts[(i + 1) % pts.length];
+      ctx.quadraticCurveTo(cur.x, cur.y, (cur.x + next.x) / 2, (cur.y + next.y) / 2);
+    }
+    ctx.closePath();
+  }
+  function fillStrokeHull(ctx, hull, w, h, fillOpacity, strokeOpacity, tone) {
+    traceHullPath(ctx, hull, w, h);
+    ctx.globalAlpha = fillOpacity;
+    ctx.fillStyle = tone;
+    ctx.fill();
+    if (strokeOpacity > 0) {
+      ctx.globalAlpha = strokeOpacity;
+      ctx.strokeStyle = tone;
+      ctx.lineWidth = 1;
+      ctx.stroke();
+    }
+  }
+  // Draws every hull at the plain base opacity, EXCEPT `emphasizeCommunity`
+  // (when given — the current selection's own community, from drawBackground())
+  // which draws at the stronger selected* opacities instead. This is the
+  // background layer's own call; hover's separate, smaller boost is drawn
+  // as an additional overlay on the fx layer (see drawInteraction()) rather
+  // than folded in here, since hover must never invalidate/redraw this
+  // (potentially large, whole-graph) background layer — see the module
+  // comment on invalidate()/invalidateHover().
+  function drawCommunityFields(ctx, w, h, emphasizeCommunity) {
     var cfg = MAP_VISUALS.communityFields;
     if (!cfg.enabled || !communityHulls.length) return;
     var tone = cssVar("--ink"); // neutral — never a bright per-community color, see module comment
     communityHulls.forEach(function (hull) {
-      var pts = hull.map(function (p) { return worldToLocal(p.x, p.y, w, h); });
-      ctx.beginPath();
-      var start = { x: (pts[0].x + pts[pts.length - 1].x) / 2, y: (pts[0].y + pts[pts.length - 1].y) / 2 };
-      ctx.moveTo(start.x, start.y);
-      for (var i = 0; i < pts.length; i++) {
-        var cur = pts[i], next = pts[(i + 1) % pts.length];
-        ctx.quadraticCurveTo(cur.x, cur.y, (cur.x + next.x) / 2, (cur.y + next.y) / 2);
-      }
-      ctx.closePath();
-      ctx.globalAlpha = cfg.fillOpacity;
-      ctx.fillStyle = tone;
-      ctx.fill();
-      if (cfg.strokeOpacity > 0) {
-        ctx.globalAlpha = cfg.strokeOpacity;
-        ctx.strokeStyle = tone;
-        ctx.lineWidth = 1;
-        ctx.stroke();
-      }
+      var emphasized = emphasizeCommunity !== undefined && hull.community === emphasizeCommunity;
+      fillStrokeHull(ctx, hull, w, h,
+        emphasized ? cfg.selectedFillOpacity : cfg.fillOpacity,
+        emphasized ? cfg.selectedStrokeOpacity : cfg.strokeOpacity,
+        tone);
     });
     ctx.globalAlpha = 1;
   }
@@ -1412,9 +1444,9 @@
     if (!nodes.length) return;
     var t = fitTransform(w, h);
 
-    drawCommunityFields(bgCtx, w, h);
-
     var hasSel = !!(selectedId && nodeById[selectedId] && visible[selectedId]);
+    drawCommunityFields(bgCtx, w, h, hasSel ? nodeCommunity[selectedId] : undefined);
+
     var steps = MAP_VISUALS.selection.opacitySteps;
     // Distance-1 (direct neighbors) reads at step index 0, distance-2 at
     // index 1, and so on; anything past the array's length — or never
@@ -1527,6 +1559,21 @@
     if (!hoveredId || hoveredId === selectedId) return;
     var n = nodeById[hoveredId];
     if (!n || !visible[hoveredId]) return;
+
+    // A small, additive boost for the HOVERED node's own community field —
+    // drawn here, on the fx layer, as a second fill/stroke pass over the
+    // one matching hull already drawn (at plain or selected-emphasis
+    // opacity) on the background layer below. Never touches the background
+    // layer itself — hover must stay fx-only (see module comment on
+    // invalidate()/invalidateHover()) — so this can only ever ADD emphasis,
+    // never replace or reduce whatever the selected community's own
+    // stronger opacity already drew underneath it.
+    var hoverCommunity = nodeCommunity[hoveredId];
+    if (hoverCommunity !== undefined) {
+      var hCfg = MAP_VISUALS.communityFields;
+      var hoverHull = communityHulls.filter(function (hull) { return hull.community === hoverCommunity; })[0];
+      if (hoverHull) fillStrokeHull(fxCtx, hoverHull, w, h, hCfg.hoveredFillOpacity, hCfg.hoveredStrokeOpacity, cssVar("--ink"));
+    }
 
     edges.forEach(function (e) {
       if (e.source !== hoveredId && e.target !== hoveredId) return;
