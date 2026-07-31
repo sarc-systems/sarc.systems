@@ -30,4 +30,4 @@ related:
 draft: false
 ---
 
-Pauline Oliveros (1932-2016) was an American composer and improviser.
+Pauline Oliveros (1932–2016) began playing accordion at age nine in Houston and resolved at sixteen to become a composer. In the summer of 1962 she co-founded the [San Francisco Tape Music Center](/library/san-francisco-tape-music-center/) with Ramon Sender and Morton Subotnick, later serving as founding director when it moved to Mills College in 1966. She taught at UC San Diego from 1967 to 1981, directing its Center for Music Experiment from 1976 to 1979, before leaving her tenured position to work independently. In 1988, descending into the Dan Harpole underground cistern in Port Townsend, Washington, she coined the term Deep Listening for a practice of radically expanded attention to sound, and formed the Deep Listening Band with Stuart Dempster and Panaiotis. She founded the Pauline Oliveros Foundation in 1985, renamed the Deep Listening Institute in 2005.
