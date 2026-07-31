@@ -27,7 +27,11 @@ images: []
 
 access: []
 
+related:
+  - {ref: organum, relation: collaborator-of}
+  - {ref: nurse-with-wound, relation: collaborator-of}
+
 draft: false
 ---
 
-Formed in London in 1985 — first performing that July at the West Square Festival — Morphogenesis explores improvised noise music through unconventional instruments and self-built sound-making devices. Its founding lineup of Roger Sutherland (a former member of the Scratch Orchestra), Adam Bohman, Ron Briefel, Clive Hall, Fred Sansom, and Michael Prime shifted over the following decade: Clive Graham replaced Sansom in 1989, and Andy Cordery joined for two years in the early 1990s.
+Formed in London in 1985 — first performing that July at the West Square Festival — Morphogenesis explores improvised noise music through unconventional instruments and self-built sound-making devices. Its founding lineup of Roger Sutherland (a former member of the Scratch Orchestra), Adam Bohman, Ron Briefel, Clive Hall, Fred Sansom, and Michael Prime, who developed techniques for using the bioelectrical fields of plants as a sound source and occasionally performed with [Organum](/library/organum/), shifted over the following decade: Clive Graham, an occasional collaborator with [Nurse With Wound](/library/nurse-with-wound/), replaced Sansom in 1989, and Andy Cordery joined for two years in the early 1990s.

@@ -22,7 +22,11 @@ images:
 
 access: []
 
+related:
+  - {ref: dave-smith, relation: collaborator-of}
+  - {ref: tom-oberheim, relation: collaborator-of}
+
 draft: false
 ---
 
-A working session guitarist frustrated with the sound of existing analog drum machines, Roger Linn (b. 1955) built the LM-1 Drum Computer, released in 1980 through his company Linn Electronics — the first drum machine built from digitized samples of real acoustic drums rather than synthesized approximations of them. Its cheaper, more commercially successful successor, the LinnDrum (1982), helped define the sound of early-1980s pop and R&B before Linn Electronics went bankrupt in 1986. Linn went on to design the Akai MPC60 (1988) for Akai, combining a sampler, drum machine, and real-time MIDI sequencer into the MPC line that became foundational to hip-hop production, and later founded Roger Linn Design, whose instruments include the AdrenaLinn, the Tempest (co-designed with Dave Smith Instruments), and the MPE-capable LinnStrument.
+A working session guitarist frustrated with the sound of existing analog drum machines, Roger Linn (b. 1955) built the LM-1 Drum Computer, released in 1980 through his company Linn Electronics — the first drum machine built from digitized samples of real acoustic drums rather than synthesized approximations of them. Its cheaper, more commercially successful successor, the LinnDrum (1982), helped define the sound of early-1980s pop and R&B before Linn Electronics went bankrupt in 1986. Linn went on to design the [Akai MPC60](/library/akai-mpc60/) (1988) in collaboration with Akai — "a good fit," Linn said, "because Akai needed a creative designer with ideas and I didn't want to do sales, marketing, finance or manufacturing" — combining a sampler, drum machine, and real-time MIDI sequencer into the MPC line that became foundational to hip-hop production. He later founded Roger Linn Design, whose instruments include the [AdrenaLinn](/library/adrenalinn/) (designed with [Dave Smith](/library/dave-smith/) and [Tom Oberheim](/library/tom-oberheim/)), the Tempest (co-designed with Dave Smith Instruments), and the MPE-capable LinnStrument.

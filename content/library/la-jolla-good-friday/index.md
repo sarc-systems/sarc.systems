@@ -11,6 +11,7 @@ library:
 creators:
   - name: "Thorkell Sigurbjörnsson"
     role: composer
+    ref: thorkell-sigurbjornsson
 
 subjects: [sound, tuning]
 

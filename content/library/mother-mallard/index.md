@@ -1,11 +1,16 @@
 ---
 title: "Mother Mallard's Portable Masterpiece Company"
-summary: "Early synthesizer ensemble from America."
+summary: "David Borden's early synthesizer ensemble, founded in Ithaca in 1969 with the support of Robert Moog."
 
 library:
   id: mother-mallard
   type: group
   sarc_work: false
+
+creators:
+  - {name: "David Borden", role: founder, ref: david-borden}
+  - {name: "Steve Drews", role: founder}
+  - {name: "Linda Fisher", role: founder}
 
 subjects: [sound, instruments]
 
@@ -27,4 +32,4 @@ access:
 draft: false
 ---
 
-Mother Mallard's Portable Masterpiece Company was one of the first music ensembles performing live on electronic instruments.
+Founded in Ithaca, New York in 1969 by [David Borden](/library/david-borden/), with Steve Drews and Linda Fisher operating additional synthesizers, Mother Mallard's Portable Masterpiece Company was one of the first ensembles to perform live on electronic instruments, predating groups like Tonto's Expanding Head Band and Tangerine Dream. Borden was in direct contact with [Robert Moog](/library/robert-moog/) and among the first musicians to play the Minimoog. The group's early concerts featured minimalist repertoire by Terry Riley, Steve Reich, and Philip Glass before their self-titled debut album, recorded in 1970, was released by Earthquack Records in 1973.
