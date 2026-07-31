@@ -12,7 +12,7 @@ creators:
     role: manufacturer
     ref: ems
 
-subjects: [instruments, technology]
+subjects: [instruments]
 
 images: []
 

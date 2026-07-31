@@ -9,7 +9,15 @@ library:
 
 subjects: [computation, sound]
 
-images: []
+images:
+  - file: "logo.png"
+    alt: "CCRMA logo"
+    source: "https://ccrma.stanford.edu/about"
+    rights:
+      status: unknown
+    use:
+      basis: identification
+      note: "Official site logo used for identification."
 
 access: []
 

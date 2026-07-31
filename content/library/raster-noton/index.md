@@ -16,9 +16,15 @@ creators:
     role: founder
     ref: carsten-nicolai
 
-subjects: [sound, technology]
+subjects: [sound]
 
-images: []
+images:
+  - file: "logo.png"
+    alt: "Raster-Noton logo"
+    source: "https://commons.wikimedia.org/wiki/File:Raster-Noton_logo.png"
+    rights:
+      status: public-domain
+      note: "Marked public domain (logo/trademark), via Wikimedia Commons."
 
 access: []
 

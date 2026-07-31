@@ -15,7 +15,7 @@ creators:
   - name: "RCA"
     role: manufacturer
 
-subjects: [sound, technology, number]
+subjects: [sound, number]
 
 images:
   - file: "rca-mark-ii.jpg"

@@ -7,7 +7,7 @@ library:
   type: person
   sarc_work: false
 
-subjects: [sound, technology, tuning]
+subjects: [sound, tuning]
 
 images:
   - file: "studio86.jpg"

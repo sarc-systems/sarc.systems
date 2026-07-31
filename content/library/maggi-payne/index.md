@@ -7,7 +7,7 @@ library:
   type: person
   sarc_work: false
 
-subjects: [sound, instruments, technology]
+subjects: [sound, instruments]
 
 images: []
 

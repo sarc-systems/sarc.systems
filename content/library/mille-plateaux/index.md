@@ -11,9 +11,17 @@ creators:
   - name: "Achim Szepanski"
     role: founder
 
-subjects: [sound, technology]
+subjects: [sound]
 
-images: []
+images:
+  - file: "logo.jpg"
+    alt: "Mille Plateaux logo"
+    source: "https://www.discogs.com/label/270-Mille-Plateaux"
+    rights:
+      status: unknown
+    use:
+      basis: identification
+      note: "Label logo used for identification."
 
 access: []
 

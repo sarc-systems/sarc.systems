@@ -7,9 +7,17 @@ library:
   type: person
   sarc_work: false
 
-subjects: [instruments, technology]
+subjects: [instruments]
 
-images: []
+images:
+  - file: "portrait.jpg"
+    alt: "Dave Smith at the Sequential booth, 2015 NAMM Show"
+    role: portrait
+    credit: "Pete Brown"
+    source: "https://commons.wikimedia.org/wiki/File:Dave_Smith_at_Sequential_booth_-_2_-_2015_NAMM_Show_(cropped).jpg"
+    rights:
+      status: licensed
+      note: "CC BY 2.0, via Wikimedia Commons."
 
 access: []
 

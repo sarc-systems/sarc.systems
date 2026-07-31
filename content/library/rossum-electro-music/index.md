@@ -12,9 +12,17 @@ creators:
     role: founder
     ref: dave-rossum
 
-subjects: [instruments, technology]
+subjects: [instruments]
 
-images: []
+images:
+  - file: "logo.png"
+    alt: "Rossum Electro-Music logo"
+    source: "https://www.rossum-electro.com/pages/about"
+    rights:
+      status: unknown
+    use:
+      basis: identification
+      note: "Official site logo used for identification."
 
 access:
   - label: "Official site"

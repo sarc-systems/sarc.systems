@@ -17,7 +17,15 @@ creators:
 
 subjects: [sound, computation]
 
-images: []
+images:
+  - file: "logo.png"
+    alt: "Elektronmusikstudion (EMS) logo"
+    source: "https://elektronmusikstudion.se/en/"
+    rights:
+      status: unknown
+    use:
+      basis: identification
+      note: "Official site logo used for identification."
 
 access:
   - label: "Official site"

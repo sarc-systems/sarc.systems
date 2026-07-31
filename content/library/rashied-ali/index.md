@@ -9,7 +9,16 @@ library:
 
 subjects: [sound, time]
 
-images: []
+images:
+  - file: "portrait.jpg"
+    alt: "Rashied Ali"
+    role: portrait
+    caption: "At Koncepts Cultural Gallery, Oakland, California, 1991, performing in duo with Billy Bang."
+    source: "https://commons.wikimedia.org/wiki/File:Rashied_Ali_1991.jpg"
+    credit: "Brian McMillen"
+    rights:
+      status: licensed
+      note: "CC BY-SA 3.0, via Wikimedia Commons."
 
 access: []
 

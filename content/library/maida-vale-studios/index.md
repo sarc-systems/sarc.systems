@@ -7,7 +7,7 @@ library:
   type: place
   sarc_work: false
 
-subjects: [sound, technology]
+subjects: [sound]
 
 images:
   - file: "maida-vale-studios.jpg"

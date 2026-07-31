@@ -7,7 +7,7 @@ library:
   type: person
   sarc_work: false
 
-subjects: [dynamical-systems, form, language]
+subjects: [dynamics, form, language]
 
 images:
   - file: "deleuze.jpg"

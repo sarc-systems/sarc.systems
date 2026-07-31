@@ -9,7 +9,13 @@ library:
 
 subjects: [sound, space]
 
-images: []
+images:
+  - file: "photo.jpg"
+    alt: "A 1912 postcard of the oast house at Millers Farm, Meopham, later renamed Tower Folly by Daphne Oram"
+    source: "https://en.wikipedia.org/wiki/File:Oast10.jpg"
+    rights:
+      status: public-domain
+      note: "Postcard published and postally used in 1912; photographer undetermined; public domain by age, via Wikimedia Commons. Converted to grayscale."
 
 access: []
 

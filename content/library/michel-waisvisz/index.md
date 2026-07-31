@@ -7,9 +7,17 @@ library:
   type: person
   sarc_work: false
 
-subjects: [instruments, technology]
+subjects: [instruments]
 
-images: []
+images:
+  - file: "portrait.jpg"
+    alt: "Michel Waisvisz, 1981"
+    role: portrait
+    credit: "Rob Bogaerts / Anefo"
+    source: "https://commons.wikimedia.org/wiki/File:Opdracht_GPD,_componist_Michel_Waisviz_,_kop,_Bestanddeelnr_931-5325.jpg"
+    rights:
+      status: public-domain
+      note: "CC0 1.0 Universal, via Wikimedia Commons (Dutch National Archives / Anefo)."
 
 access: []
 

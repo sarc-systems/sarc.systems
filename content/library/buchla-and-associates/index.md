@@ -10,9 +10,17 @@ library:
 creators:
   - {name: "Don Buchla", role: founder, ref: don-buchla}
 
-subjects: [instruments, technology]
+subjects: [instruments]
 
-images: []
+images:
+  - file: "logo.png"
+    alt: "Buchla logo"
+    source: "https://buchla.com/history/"
+    rights:
+      status: unknown
+    use:
+      basis: identification
+      note: "Official site logo used for identification."
 
 access: []
 

@@ -13,7 +13,7 @@ creators:
     role: artist
     ref: throbbing-gristle
 
-subjects: [sound, technology]
+subjects: [sound]
 
 images:
   - file: "cover.jpg"

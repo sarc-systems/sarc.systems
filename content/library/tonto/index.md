@@ -11,7 +11,7 @@ creators:
   - {name: "Malcolm Cecil", role: designer}
   - {name: "Robert Margouleff", role: designer}
 
-subjects: [sound, instruments, technology]
+subjects: [sound, instruments]
 
 images: []
 

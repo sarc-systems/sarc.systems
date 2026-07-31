@@ -16,7 +16,7 @@ creators:
     role: artist
     ref: pete-namlook
 
-subjects: [sound, technology]
+subjects: [sound]
 
 images:
   - file: "cover.jpg"

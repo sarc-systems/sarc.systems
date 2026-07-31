@@ -13,7 +13,7 @@ creators:
     role: composer
     ref: pierre-schaeffer
 
-subjects: [sound, technology]
+subjects: [sound]
 
 images:
   - file: "cover.jpg"

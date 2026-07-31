@@ -13,7 +13,17 @@ creators:
 
 subjects: [sound, perception, space]
 
-images: []
+images:
+  - file: "photo.jpg"
+    alt: "The World Soundscape Project group at Simon Fraser University, 1973"
+    role: installation
+    caption: "The WSP group at SFU, 1973: R. Murray Schafer, Bruce Davis, Peter Huse, Barry Truax, Howard Broomfield, and Hildegard Westerkamp."
+    source: "https://www.sfu.ca/~truax/wsp.html"
+    rights:
+      status: unknown
+    use:
+      basis: identification
+      note: "Archival photo from Barry Truax's World Soundscape Project page used for identification."
 
 access:
   - label: "World Soundscape Project (SFU archive)"

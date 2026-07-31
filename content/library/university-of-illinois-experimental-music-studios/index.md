@@ -14,7 +14,17 @@ creators:
 
 subjects: [sound, computation, number]
 
-images: []
+images:
+  - file: "photo.jpg"
+    alt: "Charles Hamm, Lejaren Hiller, Salvatore Martirano, Herbert Brün, and Kenneth Gaburo in the Experimental Music Studios, University of Illinois, 1960s"
+    role: installation
+    caption: "Charles Hamm, Lejaren Hiller, Salvatore Martirano, Herbert Brün, and Kenneth Gaburo (left to right) in the Experimental Music Studios."
+    source: "https://www.library.illinois.edu/sousa/2013/11/16/illinois-experimental-music-studio-photograph-rediscovered/"
+    rights:
+      status: unknown
+    use:
+      basis: identification
+      note: "University of Illinois Sousa Archive photo used for identification."
 
 access: []
 

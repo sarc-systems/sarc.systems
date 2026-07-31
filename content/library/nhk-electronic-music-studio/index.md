@@ -13,9 +13,16 @@ creators:
   - name: "Makoto Moroi"
     role: founder
 
-subjects: [sound, technology]
+subjects: [sound]
 
-images: []
+images:
+  - file: "logo.png"
+    alt: "NHK logo"
+    caption: "The logo of NHK, the Tokyo broadcaster that operated the studio."
+    source: "https://commons.wikimedia.org/wiki/File:NHK_logo_2020.svg"
+    rights:
+      status: public-domain
+      note: "Text/simple-shape logo, ineligible for copyright, via Wikimedia Commons; trademark rights may still apply."
 
 access: []
 

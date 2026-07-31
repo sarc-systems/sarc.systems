@@ -9,7 +9,15 @@ library:
 
 subjects: [number, form, computation]
 
-images: []
+images:
+  - file: "portrait.jpg"
+    alt: "Douglas Hofstadter, Stanford, 2006"
+    role: portrait
+    credit: "Roland Dobbins"
+    source: "https://commons.wikimedia.org/wiki/File:Douglas_Hofstadter,_Stanford_2006_(crop).jpg"
+    rights:
+      status: licensed
+      note: "CC BY-SA 2.0, via Wikimedia Commons."
 
 access: []
 

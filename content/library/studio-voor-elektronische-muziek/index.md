@@ -15,7 +15,7 @@ creators:
   - name: "Gottfried Michael Koenig"
     role: director
 
-subjects: [sound, technology]
+subjects: [sound]
 
 images: []
 

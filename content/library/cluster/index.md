@@ -7,7 +7,7 @@ library:
   type: group
   sarc_work: false
 
-subjects: [sound, technology]
+subjects: [sound]
 
 images:
   - file: "cluster.jpg"

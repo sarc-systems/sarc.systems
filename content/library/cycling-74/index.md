@@ -9,7 +9,13 @@ library:
 
 subjects: [computation, sound]
 
-images: []
+images:
+  - file: "logo.png"
+    alt: "Cycling '74 logo"
+    source: "https://commons.wikimedia.org/wiki/File:Cycling_74_logo.svg"
+    rights:
+      status: public-domain
+      note: "Logo consists only of simple shapes/text, below the threshold of originality for copyright; via Wikimedia Commons."
 
 access: []
 

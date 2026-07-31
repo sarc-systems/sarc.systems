@@ -12,7 +12,7 @@ creators:
   - name: "Shinya Tsukamoto"
     role: director
 
-subjects: [technology, form]
+subjects: [form]
 
 images:
   - file: "tetsuo.jpg"

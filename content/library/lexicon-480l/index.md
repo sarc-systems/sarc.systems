@@ -14,7 +14,7 @@ creators:
     role: manufacturer
     ref: lexicon
 
-subjects: [instruments, technology]
+subjects: [instruments]
 
 images: []
 

@@ -11,7 +11,7 @@ creators:
   - {name: "John Chowning", role: researcher, ref: john-chowning}
   - {name: "Yamaha", role: manufacturer, ref: yamaha}
 
-subjects: [computation, sound, instruments, technology]
+subjects: [computation, sound, instruments]
 
 images: []
 

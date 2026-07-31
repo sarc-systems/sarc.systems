@@ -9,7 +9,15 @@ library:
 
 subjects: [sound]
 
-images: []
+images:
+  - file: "portrait.jpg"
+    alt: "Louis Andriessen"
+    role: portrait
+    credit: "Rob Croes / Anefo"
+    source: "https://commons.wikimedia.org/wiki/File:Louis_Andriessen,_Bestanddeelnr_932-5716.jpg"
+    rights:
+      status: public-domain
+      note: "CC0 1.0 Universal, via Wikimedia Commons (Dutch National Archives / Anefo)."
 
 access: []
 

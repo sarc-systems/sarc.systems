@@ -9,7 +9,15 @@ library:
 
 subjects: [cybernetics, perception, feedback]
 
-images: []
+images:
+  - file: "portrait.jpg"
+    alt: "Francisco Varela, Dharamsala, India, 1994"
+    role: portrait
+    credit: "Joan Halifax"
+    source: "https://commons.wikimedia.org/wiki/File:Francisco_Varela_(cropped).jpg"
+    rights:
+      status: licensed
+      note: "CC BY 2.0 Generic, via Wikimedia Commons."
 
 access: []
 

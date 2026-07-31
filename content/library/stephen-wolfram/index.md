@@ -7,7 +7,7 @@ library:
   type: person
   sarc_work: false
 
-subjects: [computation, dynamical-systems, form]
+subjects: [computation, dynamics, form]
 
 images:
   - file: "wolfram.jpg"

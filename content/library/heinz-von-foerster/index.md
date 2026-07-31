@@ -9,7 +9,15 @@ library:
 
 subjects: [cybernetics, feedback, perception]
 
-images: []
+images:
+  - file: "portrait.jpg"
+    alt: "Heinz von Foerster"
+    role: portrait
+    credit: "University of Illinois"
+    source: "https://commons.wikimedia.org/wiki/File:HvF_01.jpg"
+    rights:
+      status: licensed
+      note: "CC BY-SA 4.0 International (multi-licensed), via Wikimedia Commons."
 
 access: []
 

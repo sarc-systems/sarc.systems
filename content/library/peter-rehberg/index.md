@@ -7,9 +7,18 @@ library:
   type: person
   sarc_work: false
 
-subjects: [sound, technology]
+subjects: [sound]
 
-images: []
+images:
+  - file: "portrait.jpg"
+    alt: "Peter Rehberg performing, 2009"
+    role: portrait
+    credit: "Andy Newcombe"
+    caption: "Performing, 7 November 2009."
+    source: "https://commons.wikimedia.org/wiki/File:Peter_Rehberg.jpg"
+    rights:
+      status: licensed
+      note: "CC BY 2.0 Generic, via Wikimedia Commons."
 
 access: []
 

@@ -9,7 +9,16 @@ library:
 
 subjects: [sound, perception]
 
-images: []
+images:
+  - file: "portrait.jpg"
+    alt: "Richard Chartier"
+    role: portrait
+    source: "https://richardchartier.bandcamp.com/music"
+    rights:
+      status: unknown
+    use:
+      basis: identification
+      note: "Photo from the artist's own Bandcamp page, used for identification."
 
 access: []
 

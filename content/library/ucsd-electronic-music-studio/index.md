@@ -12,9 +12,16 @@ creators:
     role: founder
     ref: pauline-oliveros
 
-subjects: [sound, technology]
+subjects: [sound]
 
-images: []
+images:
+  - file: "photo.jpg"
+    alt: "Entrance to UCSD's Conrad Prebys Music Center, current home of the UCSD Department of Music"
+    source: "https://commons.wikimedia.org/wiki/File:Conrad_Prebys_Music_Center,_UCSD.JPG"
+    credit: "Tktktk"
+    rights:
+      status: licensed
+      note: "CC BY 3.0 / GFDL, via Wikimedia Commons. Shows the department's current building, not its original studio location."
 
 access: []
 

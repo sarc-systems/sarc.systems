@@ -9,7 +9,16 @@ library:
 
 subjects: [sound, time, form]
 
-images: []
+images:
+  - file: "portrait.jpg"
+    alt: "Karlheinz Stockhausen"
+    role: portrait
+    caption: "Stockhausen in his garden in Kürten, 20 April 2005."
+    source: "https://commons.wikimedia.org/wiki/File:St._im_Garten_Mai_2005_RGB.jpg"
+    credit: "Kathinka Pasveer"
+    rights:
+      status: licensed
+      note: "CC BY-SA 3.0, via Wikimedia Commons."
 
 access: []
 

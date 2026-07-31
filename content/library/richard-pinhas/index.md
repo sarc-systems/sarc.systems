@@ -7,7 +7,7 @@ library:
   type: person
   sarc_work: false
 
-subjects: [sound, technology, cybernetics]
+subjects: [sound, cybernetics]
 
 images:
   - file: "richard-pinhas.jpg"

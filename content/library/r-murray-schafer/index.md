@@ -9,7 +9,15 @@ library:
 
 subjects: [sound, perception, space]
 
-images: []
+images:
+  - file: "portrait.jpg"
+    alt: "R. Murray Schafer"
+    role: portrait
+    caption: "Photographed in 2007 at the University of Arizona."
+    source: "https://commons.wikimedia.org/wiki/File:R._Murray_Schafer_(cropped).jpg"
+    rights:
+      status: licensed
+      note: "CC BY-SA 3.0, via Wikimedia Commons."
 
 access:
   - label: "The Canadian Encyclopedia"

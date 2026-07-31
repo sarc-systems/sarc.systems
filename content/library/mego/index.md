@@ -18,9 +18,18 @@ creators:
     role: label
     ref: peter-rehberg
 
-subjects: [sound, technology]
+subjects: [sound]
 
-images: []
+images:
+  - file: "logo.png"
+    alt: "Editions Mego logo"
+    caption: "Editions Mego, the label's continuing identity since Rehberg's 2006 relaunch."
+    source: "https://editionsmego.com/about-us/"
+    rights:
+      status: unknown
+    use:
+      basis: identification
+      note: "Official label site logo used for identification."
 
 access: []
 

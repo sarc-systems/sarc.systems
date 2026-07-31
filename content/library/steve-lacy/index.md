@@ -9,7 +9,15 @@ library:
 
 subjects: [sound, feedback]
 
-images: []
+images:
+  - file: "portrait.jpg"
+    alt: "Steve Lacy"
+    role: portrait
+    source: "https://commons.wikimedia.org/wiki/File:Steve_Lacy.jpg"
+    credit: "Lionel Decoster"
+    rights:
+      status: licensed
+      note: "CC BY-SA 3.0 / GFDL, via Wikimedia Commons. Converted to grayscale."
 
 access: []
 

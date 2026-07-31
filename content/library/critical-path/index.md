@@ -13,7 +13,7 @@ creators:
     role: author
     ref: buckminster-fuller
 
-subjects: [technology, form]
+subjects: [form]
 
 images:
   - file: "cover.jpg"

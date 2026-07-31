@@ -14,7 +14,7 @@ creators:
   - name: "Jacques Copeau"
     role: founder
 
-subjects: [sound, technology]
+subjects: [sound]
 
 images: []
 

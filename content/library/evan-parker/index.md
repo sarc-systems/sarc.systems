@@ -9,7 +9,15 @@ library:
 
 subjects: [sound, instruments]
 
-images: []
+images:
+  - file: "portrait.jpg"
+    alt: "Evan Parker"
+    role: portrait
+    credit: "Richard Kaby"
+    source: "https://commons.wikimedia.org/wiki/File:Evan_Parker.jpg"
+    rights:
+      status: licensed
+      note: "CC BY-SA 2.0 Generic, via Wikimedia Commons."
 
 access: []
 

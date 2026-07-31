@@ -16,7 +16,7 @@ creators:
     role: lecturer
     ref: gilles-deleuze
 
-subjects: [sound, technology, cybernetics]
+subjects: [sound, cybernetics]
 
 images:
   - file: "cover.jpg"

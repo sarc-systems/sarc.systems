@@ -11,7 +11,7 @@ creators:
   - {name: "Yoshiki Kuramoto", role: researcher}
   - {name: "Dorjsuren Battogtokh", role: researcher}
 
-subjects: [dynamical-systems]
+subjects: [dynamics]
 
 images: []
 

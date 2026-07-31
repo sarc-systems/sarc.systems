@@ -17,8 +17,7 @@ creators:
 
 subjects:
   - cybernetics
-  - dynamical-systems
-  - technology
+  - dynamics
 
 related:
   - {ref: project-cybersyn, relation: discusses}

@@ -9,7 +9,14 @@ library:
 
 subjects: [computation, sound, instruments]
 
-images: []
+images:
+  - file: "logo.png"
+    alt: "Bell Laboratories logo, 1969–1983"
+    source: "https://commons.wikimedia.org/wiki/File:Bell_Laboratories_logo.svg"
+    credit: "Saul Bass"
+    rights:
+      status: public-domain
+      note: "Vector tracing of the 1969–1983 Bell Laboratories logo, via Wikimedia Commons."
 
 access: []
 

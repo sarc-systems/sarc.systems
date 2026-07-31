@@ -11,9 +11,17 @@ creators:
   - name: "Daphne Oram"
     role: founder
 
-subjects: [sound, technology]
+subjects: [sound]
 
-images: []
+images:
+  - file: "photo.jpg"
+    alt: "Tower Folly, Fairseat, Kent"
+    credit: "Oast House Archive"
+    caption: "Tower Folly, the converted oast house near Wrotham, Kent, that housed Oramics Studios."
+    source: "https://commons.wikimedia.org/wiki/File:Tower_Folly,_Gravesend_Road,_Wrotham,_Kent_-_geograph.org.uk_-_778149.jpg"
+    rights:
+      status: licensed
+      note: "CC BY-SA 2.0 Generic, via Wikimedia Commons / geograph.org.uk."
 
 access: []
 

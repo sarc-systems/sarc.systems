@@ -7,9 +7,17 @@ library:
   type: organization
   sarc_work: false
 
-subjects: [instruments, technology]
+subjects: [instruments]
 
-images: []
+images:
+  - file: "logo.png"
+    alt: "Nonlinear Labs logo"
+    source: "https://nonlinear-labs.de/org/company.html"
+    rights:
+      status: unknown
+    use:
+      basis: identification
+      note: "Official site logo used for identification."
 
 access: []
 

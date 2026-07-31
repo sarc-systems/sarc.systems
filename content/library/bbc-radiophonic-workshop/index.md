@@ -15,7 +15,7 @@ creators:
   - name: "Desmond Briscoe"
     role: director
 
-subjects: [sound, technology]
+subjects: [sound]
 
 images:
   - file: "radiophonic-workshop-equipment.jpg"

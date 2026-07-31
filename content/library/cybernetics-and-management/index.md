@@ -13,7 +13,7 @@ creators:
     role: author
     ref: stafford-beer
 
-subjects: [cybernetics, technology]
+subjects: [cybernetics]
 
 images: []
 

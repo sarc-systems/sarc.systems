@@ -13,7 +13,7 @@ creators:
     role: composer
     ref: pauline-oliveros
 
-subjects: [sound, technology, feedback]
+subjects: [sound, feedback]
 
 images: []
 

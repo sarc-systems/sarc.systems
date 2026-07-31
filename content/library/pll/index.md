@@ -10,7 +10,7 @@ library:
 creators:
   - {name: "Henri de Bellescize", role: researcher}
 
-subjects: [feedback, technology]
+subjects: [feedback]
 
 images: []
 

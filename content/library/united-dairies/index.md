@@ -15,7 +15,15 @@ creators:
 
 subjects: [sound, feedback]
 
-images: []
+images:
+  - file: "logo.jpg"
+    alt: "United Dairies label logo"
+    source: "https://www.discogs.com/label/8625-United-Dairies"
+    rights:
+      status: unknown
+    use:
+      basis: identification
+      note: "Label logo from Discogs used for identification."
 
 access: []
 

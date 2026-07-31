@@ -9,7 +9,15 @@ library:
 
 subjects: [sound, feedback, computation]
 
-images: []
+images:
+  - file: "portrait.jpg"
+    alt: "David Behrman, 2012"
+    role: portrait
+    credit: "IntangibleArts"
+    source: "https://commons.wikimedia.org/wiki/File:David_Behrman,_2012.jpg"
+    rights:
+      status: licensed
+      note: "CC BY 2.0, via Wikimedia Commons."
 
 access: []
 

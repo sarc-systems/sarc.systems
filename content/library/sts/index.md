@@ -15,7 +15,7 @@ creators:
     role: designer
     ref: kevin-fortune
 
-subjects: [instruments, technology]
+subjects: [instruments]
 
 images: []
 

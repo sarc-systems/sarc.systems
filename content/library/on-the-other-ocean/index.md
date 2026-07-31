@@ -15,7 +15,16 @@ creators:
 
 subjects: [sound, computation, feedback]
 
-images: []
+images:
+  - file: "cover.jpg"
+    alt: "Cover of On the Other Ocean by David Behrman"
+    role: cover
+    source: "https://davidbehrmanlovely.bandcamp.com/album/on-the-other-ocean"
+    rights:
+      status: unknown
+    use:
+      basis: identification
+      note: "Lovely Music cover art used for identification."
 
 access:
   - label: "Bandcamp"

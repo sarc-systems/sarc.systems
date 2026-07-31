@@ -7,9 +7,15 @@ library:
   type: organization
   sarc_work: false
 
-subjects: [sound, technology]
+subjects: [sound]
 
-images: []
+images:
+  - file: "logo.png"
+    alt: "Institut national de l'audiovisuel (INA) logo"
+    source: "https://commons.wikimedia.org/wiki/File:Logo_INA.svg"
+    rights:
+      status: public-domain
+      note: "Below the threshold of originality for copyright protection (simple logo), via Wikimedia Commons; INA holds trademark rights."
 
 access:
   - label: "Official site"

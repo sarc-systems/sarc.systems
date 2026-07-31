@@ -18,7 +18,7 @@ creators:
     role: manufacturer
     ref: synton
 
-subjects: [instruments, technology]
+subjects: [instruments]
 
 images: []
 

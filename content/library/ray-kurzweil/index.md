@@ -7,9 +7,18 @@ library:
   type: person
   sarc_work: false
 
-subjects: [computation, sound, technology]
+subjects: [computation, sound]
 
-images: []
+images:
+  - file: "portrait.jpg"
+    alt: "Ray Kurzweil"
+    role: portrait
+    caption: "At the Nobel Week Dialogue, 2015."
+    source: "https://commons.wikimedia.org/wiki/File:Ray_Kurzwell_01.JPG"
+    credit: "Bengt Oberger"
+    rights:
+      status: licensed
+      note: "CC BY-SA 4.0, via Wikimedia Commons."
 
 access: []
 

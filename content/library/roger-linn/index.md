@@ -7,9 +7,18 @@ library:
   type: person
   sarc_work: false
 
-subjects: [computation, sound, memory, instruments, technology]
+subjects: [computation, sound, memory, instruments]
 
-images: []
+images:
+  - file: "portrait.jpg"
+    alt: "Roger Linn"
+    role: portrait
+    source: "https://www.rogerlinndesign.com/about/about-roger-linn-design"
+    rights:
+      status: unknown
+    use:
+      basis: identification
+      note: "Official Roger Linn Design site photo used for identification."
 
 access: []
 

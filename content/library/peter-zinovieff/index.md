@@ -7,9 +7,18 @@ library:
   type: person
   sarc_work: false
 
-subjects: [instruments, technology]
+subjects: [instruments]
 
-images: []
+images:
+  - file: "portrait.jpg"
+    alt: "Peter Zinovieff"
+    role: portrait
+    source: "https://britishmusiccollection.org.uk/composer/peter-zinovieff"
+    rights:
+      status: unknown
+    use:
+      basis: identification
+      note: "British Music Collection composer-page photo used for identification."
 
 access: []
 

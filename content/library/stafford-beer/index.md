@@ -7,7 +7,7 @@ library:
   type: person
   sarc_work: false
 
-subjects: [cybernetics, feedback, technology]
+subjects: [cybernetics, feedback]
 
 images:
   - file: "stafford-beer.jpg"

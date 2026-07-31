@@ -15,7 +15,7 @@ creators:
     role: manufacturer
     ref: ppg
 
-subjects: [instruments, technology]
+subjects: [instruments]
 
 images: []
 

@@ -9,7 +9,15 @@ library:
 
 subjects: [computation, sound]
 
-images: []
+images:
+  - file: "logo.jpg"
+    alt: "Symbolic Sound Corporation logo"
+    source: "https://entrepreneurship.illinois.edu/node/10527"
+    rights:
+      status: unknown
+    use:
+      basis: identification
+      note: "Company logo hosted by University of Illinois's Entrepreneurship program (Symbolic Sound's founders' alma mater), used for identification."
 
 access: []
 

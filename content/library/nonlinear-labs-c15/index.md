@@ -14,7 +14,7 @@ creators:
     role: manufacturer
     ref: nonlinear-labs
 
-subjects: [instruments, technology]
+subjects: [instruments]
 
 images: []
 

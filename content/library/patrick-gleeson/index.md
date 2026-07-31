@@ -7,9 +7,18 @@ library:
   type: person
   sarc_work: false
 
-subjects: [sound, computation, instruments, technology]
+subjects: [sound, computation, instruments]
 
-images: []
+images:
+  - file: "portrait.jpg"
+    alt: "Patrick Gleeson at a Moog modular synthesizer"
+    role: portrait
+    source: "https://echoes.org/2026/07/27/electronic-artist-patrick-gleeson-r-i-p/"
+    rights:
+      status: unknown
+    use:
+      basis: identification
+      note: "Photo from Echoes' obituary tribute, used for identification."
 
 access: []
 

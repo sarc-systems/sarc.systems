@@ -9,7 +9,17 @@ library:
 
 subjects: [sound, computation, feedback]
 
-images: []
+images:
+  - file: "portrait.jpg"
+    alt: "Nicolas Collins performing, somewhere in Europe, mid-1980s"
+    role: portrait
+    caption: "Somewhere in Europe, mid-1980s."
+    source: "https://nicolascollins.com/nicattable.htm"
+    rights:
+      status: unknown
+    use:
+      basis: identification
+      note: "Photo from Collins's own site, used for identification."
 
 access: []
 

@@ -13,7 +13,7 @@ creators:
     role: artist
     ref: kraftwerk
 
-subjects: [sound, technology, computation]
+subjects: [sound, computation]
 
 images:
   - file: "cover.jpg"

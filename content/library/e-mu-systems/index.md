@@ -10,9 +10,15 @@ library:
 creators:
   - {name: "Dave Rossum", role: founder, ref: dave-rossum}
 
-subjects: [instruments, technology]
+subjects: [instruments]
 
-images: []
+images:
+  - file: "logo.png"
+    alt: "E-mu Systems logo"
+    source: "https://commons.wikimedia.org/wiki/File:E-MU_Systems_logo.svg"
+    rights:
+      status: public-domain
+      note: "Logo consists only of simple shapes/text, below the threshold of originality for copyright; via Wikimedia Commons."
 
 access: []
 

@@ -10,7 +10,7 @@ library:
 creators:
   - {name: "Yevgeny Murzin", role: designer}
 
-subjects: [sound, computation, technology]
+subjects: [sound, computation]
 
 images: []
 

@@ -12,7 +12,7 @@ creators:
     role: founder
     ref: erkki-kurenniemi
 
-subjects: [sound, technology]
+subjects: [sound]
 
 images: []
 

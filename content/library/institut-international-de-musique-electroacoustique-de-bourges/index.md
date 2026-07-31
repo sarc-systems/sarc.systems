@@ -7,9 +7,16 @@ library:
   type: organization
   sarc_work: false
 
-subjects: [sound, technology]
+subjects: [sound]
 
-images: []
+images:
+  - file: "photo.jpg"
+    alt: "The Maison de la Culture de Bourges, home of IMEB"
+    source: "https://commons.wikimedia.org/wiki/File:Maison_de_la_Culture_Bourges.JPG"
+    credit: "Guillaume70"
+    rights:
+      status: licensed
+      note: "CC BY-SA 3.0, via Wikimedia Commons."
 
 access: []
 

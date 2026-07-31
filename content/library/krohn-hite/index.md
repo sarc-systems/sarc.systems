@@ -7,7 +7,7 @@ library:
   type: organization
   sarc_work: false
 
-subjects: [instruments, technology]
+subjects: [instruments]
 
 images:
   - file: "krohn-hite-catalog-c.png"

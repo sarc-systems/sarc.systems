@@ -15,7 +15,7 @@ creators:
     role: manufacturer
     ref: buchla-and-associates
 
-subjects: [instruments, technology]
+subjects: [instruments]
 
 images:
   - file: "buchla-100-nyu.jpg"

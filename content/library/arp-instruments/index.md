@@ -10,9 +10,17 @@ library:
 creators:
   - {name: "Alan R. Pearlman", role: founder, ref: alan-pearlman}
 
-subjects: [instruments, technology]
+subjects: [instruments]
 
-images: []
+images:
+  - file: "logo.gif"
+    alt: "ARP Instruments logo"
+    source: "https://en.wikipedia.org/wiki/File:ARP_Instruments_logo.gif"
+    rights:
+      status: unknown
+    use:
+      basis: identification
+      note: "Company logo used for identification."
 
 access: []
 

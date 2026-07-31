@@ -7,9 +7,18 @@ library:
   type: person
   sarc_work: false
 
-subjects: [sound, technology]
+subjects: [sound]
 
-images: []
+images:
+  - file: "portrait.png"
+    alt: "Józef Patkowski (center) at the 1970 Warsaw Symposium of Asian, African and Polish Composers"
+    role: portrait
+    caption: "Patkowski (center) at the 1970 Warsaw Symposium of Asian, African and Polish Composers Discussions."
+    source: "https://commons.wikimedia.org/wiki/File:1970_Warsaw_-_Symposium_of_Asian,_African_and_Polish_Composers_Discussions._Farid_Allawerdi_first_on_the_left_and_composer_J%C3%B3zef_Patkowski_in_the_middle.png"
+    credit: "Farid Allawerdi Music Archives"
+    rights:
+      status: public-domain
+      note: "CC0 1.0 Universal, via Wikimedia Commons."
 
 access: []
 

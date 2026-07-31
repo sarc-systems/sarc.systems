@@ -7,7 +7,7 @@ library:
   type: person
   sarc_work: false
 
-subjects: [sound, perception, technology]
+subjects: [sound, perception]
 
 images:
   - file: "pierre-schaeffer.jpg"

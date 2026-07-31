@@ -18,7 +18,7 @@ creators:
     role: manufacturer
     ref: fairlight-instruments
 
-subjects: [instruments, technology]
+subjects: [instruments]
 
 images: []
 

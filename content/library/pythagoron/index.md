@@ -12,7 +12,7 @@ creators:
   - name: "Pythagoron"
     role: artist
 
-subjects: [sound, perception, technology]
+subjects: [sound, perception]
 
 images:
   - file: "cover.jpg"

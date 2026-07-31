@@ -15,7 +15,7 @@ creators:
   - name: "Paul DeMarinis"
     role: performer
 
-subjects: [sound, language, technology]
+subjects: [sound, language]
 
 images:
   - file: "cover.jpg"

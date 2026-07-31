@@ -7,9 +7,15 @@ library:
   type: organization
   sarc_work: false
 
-subjects: [instruments, technology]
+subjects: [instruments]
 
-images: []
+images:
+  - file: "logo.png"
+    alt: "Yamaha logo"
+    source: "https://commons.wikimedia.org/wiki/File:Yamaha_logo.svg"
+    rights:
+      status: public-domain
+      note: "Simple text/geometric mark, public domain in Japan and the US; the Yamaha trademark itself may still be protected."
 
 access: []
 

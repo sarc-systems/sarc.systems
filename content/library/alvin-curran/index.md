@@ -9,7 +9,15 @@ library:
 
 subjects: [sound, feedback]
 
-images: []
+images:
+  - file: "portrait.jpg"
+    alt: "Alvin Curran performing his composition Shofar 3, combining shofar and live electronics"
+    role: portrait
+    source: "https://commons.wikimedia.org/wiki/File:Curranwithshofar.jpg"
+    credit: "Badagnani"
+    rights:
+      status: licensed
+      note: "CC BY-SA 3.0, via Wikimedia Commons."
 
 access: []
 

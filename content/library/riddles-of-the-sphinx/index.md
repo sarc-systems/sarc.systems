@@ -14,7 +14,7 @@ creators:
   - name: "Denys Irving"
     role: developer
 
-subjects: [sound, technology]
+subjects: [sound]
 
 images:
   - file: "cover.jpg"

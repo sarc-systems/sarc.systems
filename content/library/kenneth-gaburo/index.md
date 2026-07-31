@@ -9,7 +9,16 @@ library:
 
 subjects: [sound, language]
 
-images: []
+images:
+  - file: "portrait.jpg"
+    alt: "Kenneth Gaburo"
+    role: portrait
+    source: "https://music-cms.ucsd.edu/people/faculty/memoriam/kenneth-gaburo.html"
+    rights:
+      status: unknown
+    use:
+      basis: identification
+      note: "UC San Diego Department of Music memoriam photo used for identification."
 
 access: []
 

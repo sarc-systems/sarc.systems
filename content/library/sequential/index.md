@@ -12,9 +12,15 @@ creators:
     role: founder
     ref: dave-smith
 
-subjects: [instruments, technology]
+subjects: [instruments]
 
-images: []
+images:
+  - file: "logo.png"
+    alt: "Sequential logo"
+    source: "https://commons.wikimedia.org/wiki/File:Sequential-Logo-Black.png"
+    rights:
+      status: public-domain
+      note: "Simple text/geometric logo below the threshold of originality; uploaded by Sequential, LLC to Wikimedia Commons. May still be protected as a trademark."
 
 access:
   - label: "Official site"

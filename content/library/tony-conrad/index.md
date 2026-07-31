@@ -9,7 +9,15 @@ library:
 
 subjects: [sound, time, tuning]
 
-images: []
+images:
+  - file: "portrait.jpg"
+    alt: "Tony Conrad"
+    role: portrait
+    source: "https://commons.wikimedia.org/wiki/File:TonyConrad_October2003.jpg"
+    credit: "Seth Tisue"
+    rights:
+      status: licensed
+      note: "CC BY-SA 2.0, via Wikimedia Commons. Converted to grayscale."
 
 access: []
 

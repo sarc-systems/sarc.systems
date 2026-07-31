@@ -13,7 +13,7 @@ creators:
     role: author
     ref: william-s-burroughs
 
-subjects: [language, technology, sound]
+subjects: [language, sound]
 
 images:
   - file: "cover.jpg"

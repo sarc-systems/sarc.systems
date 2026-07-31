@@ -13,9 +13,19 @@ creators:
     role: composer
     ref: morton-subotnick
 
-subjects: [sound, instruments, technology]
+subjects: [sound, instruments]
 
-images: []
+images:
+  - file: "cover.jpg"
+    alt: "Cover of Silver Apples of the Moon by Morton Subotnick"
+    role: cover
+    caption: "Karl Records digital edition artwork."
+    source: "https://karlrecords.bandcamp.com/album/silver-apples-of-the-moon"
+    rights:
+      status: unknown
+    use:
+      basis: identification
+      note: "Label edition cover art used for identification."
 
 access:
   - label: "Bandcamp"

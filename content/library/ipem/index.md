@@ -13,7 +13,7 @@ creators:
   - name: "Hubert Vuylsteke"
     role: designer
 
-subjects: [sound, perception, technology]
+subjects: [sound, perception]
 
 images: []
 

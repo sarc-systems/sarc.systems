@@ -7,9 +7,15 @@ library:
   type: organization
   sarc_work: false
 
-subjects: [instruments, technology]
+subjects: [instruments]
 
-images: []
+images:
+  - file: "logo.png"
+    alt: "Ensoniq logo"
+    source: "https://commons.wikimedia.org/wiki/File:Ensoniq_logo.svg"
+    rights:
+      status: public-domain
+      note: "Logo consists only of simple shapes/text, below the threshold of originality for copyright; via Wikimedia Commons."
 
 access: []
 

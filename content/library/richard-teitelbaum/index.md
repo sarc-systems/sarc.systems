@@ -9,7 +9,16 @@ library:
 
 subjects: [sound, feedback, instruments]
 
-images: []
+images:
+  - file: "portrait.jpg"
+    alt: "Richard Teitelbaum"
+    role: portrait
+    caption: "From the documentary series \"music is\" (Speaking Portraits, Vol. I)."
+    source: "https://commons.wikimedia.org/wiki/File:Richard_Teitelbaum_in_music_is_(Speaking_Portraits)_(Vol._I).jpg"
+    credit: "George Quasha"
+    rights:
+      status: licensed
+      note: "CC BY 3.0, via Wikimedia Commons."
 
 access: []
 

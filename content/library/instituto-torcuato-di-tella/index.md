@@ -7,9 +7,16 @@ library:
   type: organization
   sarc_work: false
 
-subjects: [sound, technology]
+subjects: [sound]
 
-images: []
+images:
+  - file: "photo.jpg"
+    alt: "The Instituto Di Tella building at Calle Florida 936, Buenos Aires"
+    source: "https://commons.wikimedia.org/wiki/File:Instituto_Di_Tella.jpg"
+    credit: "Humberto Rivas"
+    rights:
+      status: public-domain
+      note: "Photograph dated 1964; public domain in Argentina (photographs protected 20 years after publication)."
 
 access: []
 

@@ -11,9 +11,15 @@ creators:
   - {name: "Cameron Jones", role: founder, ref: cameron-jones}
   - {name: "Sydney Alonso", role: founder, ref: sydney-alonso}
 
-subjects: [instruments, technology]
+subjects: [instruments]
 
-images: []
+images:
+  - file: "logo.jpg"
+    alt: "New England Digital logo"
+    source: "https://commons.wikimedia.org/wiki/File:New_England_Digital_logo.jpg"
+    rights:
+      status: licensed
+      note: "Logo text is public domain (ineligible for copyright); photographed rendering CC BY-SA 2.0 Generic, via Wikimedia Commons."
 
 access: []
 

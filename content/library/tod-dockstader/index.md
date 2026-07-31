@@ -7,7 +7,7 @@ library:
   type: person
   sarc_work: false
 
-subjects: [sound, technology]
+subjects: [sound]
 
 images:
   - file: "tod-dockstader.jpg"

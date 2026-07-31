@@ -10,9 +10,16 @@ library:
 creators:
   - {name: "Tom Oberheim", role: founder, ref: tom-oberheim}
 
-subjects: [instruments, technology]
+subjects: [instruments]
 
-images: []
+images:
+  - file: "logo.jpg"
+    alt: "Oberheim logo"
+    credit: "John R. Southern"
+    source: "https://commons.wikimedia.org/wiki/File:Oberheim_logo.jpg"
+    rights:
+      status: licensed
+      note: "CC BY-SA 2.0 Generic, via Wikimedia Commons."
 
 access: []
 

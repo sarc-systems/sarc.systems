@@ -7,9 +7,17 @@ library:
   type: person
   sarc_work: false
 
-subjects: [sound, technology]
+subjects: [sound]
 
-images: []
+images:
+  - file: "portrait.jpg"
+    alt: "Mika Vainio"
+    role: portrait
+    credit: "Randy Yau"
+    source: "https://commons.wikimedia.org/wiki/File:Mika_Vainio_(Pan_Sonic).jpg"
+    rights:
+      status: licensed
+      note: "CC BY-SA 2.0 Generic, via Wikimedia Commons."
 
 access: []
 

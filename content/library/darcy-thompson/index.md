@@ -9,7 +9,14 @@ library:
 
 subjects: [morphogenesis, form, number]
 
-images: []
+images:
+  - file: "portrait.jpg"
+    alt: "D'Arcy Wentworth Thompson"
+    role: portrait
+    source: "https://commons.wikimedia.org/wiki/File:D%27Arcy_Wenthworth_Thompson.jpg"
+    rights:
+      status: public-domain
+      note: "Published before 1931; public domain in the United States, via Wikimedia Commons. Original held by University of St Andrews Library."
 
 access: []
 

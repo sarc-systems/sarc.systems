@@ -12,7 +12,7 @@ creators:
     role: manufacturer
     ref: roland-corporation
 
-subjects: [instruments, technology]
+subjects: [instruments]
 
 images: []
 

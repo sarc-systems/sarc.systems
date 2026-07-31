@@ -11,9 +11,17 @@ creators:
   - name: "Flo Menezes"
     role: founder
 
-subjects: [sound, technology]
+subjects: [sound]
 
-images: []
+images:
+  - file: "logo.gif"
+    alt: "Studio PANaroma logo"
+    source: "https://flomenezes.mus.br/panaroma/index_panaroma.html"
+    rights:
+      status: unknown
+    use:
+      basis: identification
+      note: "Official studio logo, hosted on founder Flo Menezes's site, used for identification."
 
 access: []
 

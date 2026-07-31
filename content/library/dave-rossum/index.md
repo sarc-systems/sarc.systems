@@ -7,7 +7,7 @@ library:
   type: person
   sarc_work: false
 
-subjects: [instruments, technology]
+subjects: [instruments]
 
 images:
   - file: "dave-rossum.jpg"

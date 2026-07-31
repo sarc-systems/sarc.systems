@@ -15,7 +15,7 @@ creators:
     role: manufacturer
     ref: serge-modular-music-systems
 
-subjects: [instruments, technology]
+subjects: [instruments]
 
 images: []
 

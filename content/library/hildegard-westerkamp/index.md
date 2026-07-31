@@ -9,7 +9,16 @@ library:
 
 subjects: [sound, perception, space]
 
-images: []
+images:
+  - file: "portrait.jpg"
+    alt: "Hildegard Westerkamp"
+    role: portrait
+    source: "https://www.heroines-of-sound.com/artists/hildegard-westerkamp/"
+    rights:
+      status: unknown
+    use:
+      basis: identification
+      note: "Photo from the Heroines of Sound archive, used for identification."
 
 access:
   - label: "Official website"

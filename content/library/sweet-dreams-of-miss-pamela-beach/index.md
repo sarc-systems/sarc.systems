@@ -12,7 +12,7 @@ creators:
     role: composer
     ref: jon-appleton
 
-subjects: [sound, technology]
+subjects: [sound]
 
 images:
   - file: "jon-appleton.jpg"

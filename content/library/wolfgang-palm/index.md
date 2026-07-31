@@ -7,9 +7,19 @@ library:
   type: person
   sarc_work: false
 
-subjects: [instruments, technology]
+subjects: [instruments]
 
-images: []
+images:
+  - file: "portrait.jpg"
+    alt: "Wolfgang Palm seated among PPG synthesizers"
+    role: portrait
+    caption: "Wolfgang Palm with PPG synthesizer equipment."
+    source: "https://www.matrixsynth.com/2011/11/photos-of-wolfgang-palm.html"
+    rights:
+      status: unknown
+    use:
+      basis: identification
+      note: "Photo watermarked © Wolfgang Palm, via a synthesizer-history blog repost credited to Cornel Hecht; used for identification."
 
 access: []
 

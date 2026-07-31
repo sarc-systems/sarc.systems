@@ -7,9 +7,17 @@ library:
   type: place
   sarc_work: false
 
-subjects: [sound, technology]
+subjects: [sound]
 
-images: []
+images:
+  - file: "photo.jpg"
+    alt: "The former Philips NatLab building in Eindhoven"
+    caption: "The surviving Philips Natuurkundig Laboratorium (NatLab) building on Strijp-S in Eindhoven, since adaptively reused; the specific room used for the 1957–58 studio is not documented."
+    source: "https://commons.wikimedia.org/wiki/File:0772GM0277_Natlab_Eindhoven.jpg"
+    credit: "Johan Bakker"
+    rights:
+      status: licensed
+      note: "CC BY-SA 4.0, via Wikimedia Commons."
 
 access: []
 

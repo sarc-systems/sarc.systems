@@ -12,7 +12,7 @@ creators:
     role: manufacturer
     ref: augmented-instruments
 
-subjects: [instruments, technology]
+subjects: [instruments]
 
 images: []
 

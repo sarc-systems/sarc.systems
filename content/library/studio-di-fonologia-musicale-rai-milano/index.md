@@ -15,9 +15,16 @@ creators:
   - name: "Alfredo Lietti"
     role: designer
 
-subjects: [sound, technology]
+subjects: [sound]
 
-images: []
+images:
+  - file: "photo.jpg"
+    alt: "The Studio di Fonologia's original 1955 audio console, now preserved at the Museo degli Strumenti Musicali, Castello Sforzesco, Milan"
+    source: "https://commons.wikimedia.org/wiki/File:Audio_console_at_Studio_di_Fonologia_Musicale_RAI_di_Milano.jpg"
+    credit: "Mikhail (Vokabre) Shcherbakov"
+    rights:
+      status: licensed
+      note: "CC BY-SA 2.0, via Wikimedia Commons."
 
 access: []
 

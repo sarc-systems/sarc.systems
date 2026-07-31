@@ -16,7 +16,7 @@ creators:
     role: director
     ref: karlheinz-stockhausen
 
-subjects: [sound, technology]
+subjects: [sound]
 
 images:
   - file: "wdr-funkhaus.jpg"

@@ -15,7 +15,7 @@ creators:
     role: manufacturer
     ref: e-mu-systems
 
-subjects: [instruments, technology]
+subjects: [instruments]
 
 images: []
 

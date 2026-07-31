@@ -15,7 +15,16 @@ creators:
 
 subjects: [sound, instruments, space]
 
-images: []
+images:
+  - file: "cover.jpg"
+    alt: "Cover of Lullaby for the Hearts of Space by Kevin Braheny"
+    role: cover
+    source: "https://heartsofspacerecords.bandcamp.com/album/lullaby-for-the-hearts-of-space"
+    rights:
+      status: unknown
+    use:
+      basis: identification
+      note: "Hearts of Space Records cover art used for identification."
 
 access:
   - label: "Bandcamp"

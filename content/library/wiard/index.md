@@ -7,9 +7,17 @@ library:
   type: organization
   sarc_work: false
 
-subjects: [instruments, technology]
+subjects: [instruments]
 
-images: []
+images:
+  - file: "logo.png"
+    alt: "Wiard logo"
+    source: "https://www.wiard.com/modular/300series/index.htm"
+    rights:
+      status: unknown
+    use:
+      basis: identification
+      note: "Official company logo, from wiard.com, used for identification."
 
 access: []
 

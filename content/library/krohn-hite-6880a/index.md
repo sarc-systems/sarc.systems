@@ -13,7 +13,6 @@ creators:
     ref: krohn-hite
 
 subjects:
-  - technology
   - sound
   - instruments
 

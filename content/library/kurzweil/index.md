@@ -12,9 +12,15 @@ creators:
   - {name: "Stevie Wonder", role: founder, ref: stevie-wonder}
   - {name: "Bruce Cichowlas", role: founder}
 
-subjects: [computation, sound, technology]
+subjects: [computation, sound]
 
-images: []
+images:
+  - file: "logo.png"
+    alt: "Kurzweil Music Systems logo"
+    source: "https://commons.wikimedia.org/wiki/File:Kurzweil_Music_Systems_logo.png"
+    rights:
+      status: public-domain
+      note: "PD-textlogo (simple shapes/text, below the threshold of originality) per Wikimedia Commons; may still be protected as a trademark."
 
 access: []
 

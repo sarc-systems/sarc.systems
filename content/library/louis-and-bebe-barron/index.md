@@ -7,7 +7,7 @@ library:
   type: group
   sarc_work: false
 
-subjects: [sound, technology, feedback]
+subjects: [sound, feedback]
 
 images:
   - file: "barrons.jpg"

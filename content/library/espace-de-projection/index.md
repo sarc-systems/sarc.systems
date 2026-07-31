@@ -9,7 +9,13 @@ library:
 
 subjects: [sound, space]
 
-images: []
+images:
+  - file: "photo.jpg"
+    alt: "The Espace de Projection at IRCAM with its Wave Field Synthesis sound system, installed 2012"
+    source: "https://commons.wikimedia.org/wiki/File:L%27Espace_de_projection_avec_le_syst%C3%A8me_WFS.jpg"
+    rights:
+      status: licensed
+      note: "CC BY-SA 4.0 International, via Wikimedia Commons."
 
 access: []
 

@@ -9,7 +9,16 @@ library:
 
 subjects: [sound, computation, space]
 
-images: []
+images:
+  - file: "portrait.jpg"
+    alt: "Barry Truax"
+    role: portrait
+    source: "https://www.sfu.ca/~truax/bios.html"
+    rights:
+      status: unknown
+    use:
+      basis: identification
+      note: "Faculty page headshot used for identification."
 
 access:
   - label: "Faculty page (Simon Fraser University)"

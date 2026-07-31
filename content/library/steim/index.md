@@ -22,7 +22,7 @@ creators:
     role: director
     ref: michel-waisvisz
 
-subjects: [sound, instruments, technology]
+subjects: [sound, instruments]
 
 images:
   - file: "crackle-box.jpg"

@@ -12,7 +12,15 @@ creators:
 
 subjects: [sound, perception]
 
-images: []
+images:
+  - file: "logo.png"
+    alt: "Line logo"
+    source: "https://www.lineimprint.com/about/"
+    rights:
+      status: unknown
+    use:
+      basis: identification
+      note: "Official label site logo used for identification."
 
 access: []
 

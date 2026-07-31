@@ -7,9 +7,15 @@ library:
   type: organization
   sarc_work: false
 
-subjects: [instruments, technology]
+subjects: [instruments]
 
-images: []
+images:
+  - file: "logo.png"
+    alt: "Moog Music logo"
+    source: "https://commons.wikimedia.org/wiki/File:Moog_Music_Logo.svg"
+    rights:
+      status: public-domain
+      note: "Text/simple-shape logo, ineligible for copyright, via Wikimedia Commons; trademark rights may still apply."
 
 access: []
 

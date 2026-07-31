@@ -9,7 +9,14 @@ library:
 
 subjects: [sound, instruments]
 
-images: []
+images:
+  - file: "portrait.jpg"
+    alt: "Han Bennink performing, 2005"
+    role: portrait
+    source: "https://commons.wikimedia.org/wiki/File:Han_Bennink.jpg"
+    rights:
+      status: licensed
+      note: "CC BY-SA 3.0 Unported (multi-licensed), via Wikimedia Commons."
 
 access: []
 

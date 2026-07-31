@@ -11,7 +11,7 @@ creators:
   - name: "Emerald Web"
     role: artist
 
-subjects: [sound, instruments, technology]
+subjects: [sound, instruments]
 
 images:
   - file: "emerald-web-portrait.jpg"

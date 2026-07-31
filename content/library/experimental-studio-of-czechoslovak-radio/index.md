@@ -13,7 +13,7 @@ creators:
   - name: "Peter Kolman"
     role: director
 
-subjects: [sound, technology]
+subjects: [sound]
 
 images: []
 

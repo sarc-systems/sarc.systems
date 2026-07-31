@@ -16,7 +16,7 @@ creators:
     role: artist
     ref: merzbow
 
-subjects: [sound, technology, feedback]
+subjects: [sound, feedback]
 
 images:
   - file: "cover.jpg"

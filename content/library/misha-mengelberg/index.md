@@ -9,7 +9,15 @@ library:
 
 subjects: [sound]
 
-images: []
+images:
+  - file: "portrait.jpg"
+    alt: "Misha Mengelberg, 1968"
+    role: portrait
+    credit: "Ron Kroon / Anefo"
+    source: "https://commons.wikimedia.org/wiki/File:Misja_Mengelberg_(1968).jpg"
+    rights:
+      status: public-domain
+      note: "CC0 1.0 Universal, via Wikimedia Commons (Dutch National Archives / Anefo)."
 
 access: []
 

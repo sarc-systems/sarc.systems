@@ -7,9 +7,15 @@ library:
   type: organization
   sarc_work: false
 
-subjects: [instruments, technology]
+subjects: [instruments]
 
-images: []
+images:
+  - file: "logo.png"
+    alt: "Lexicon logo"
+    source: "https://commons.wikimedia.org/wiki/File:Lexicon_logo.svg"
+    rights:
+      status: public-domain
+      note: "PD-textlogo (simple shapes/text, below the threshold of originality) per Wikimedia Commons; may still be protected as a trademark."
 
 access: []
 

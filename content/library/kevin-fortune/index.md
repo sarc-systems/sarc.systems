@@ -7,14 +7,14 @@ library:
   type: person
   sarc_work: false
 
-subjects: [sound, instruments, technology]
+subjects: [sound, instruments]
 
 images: []
 
 access:
   - label: "Bandcamp"
     kind: bandcamp
-    url: "https://krohn-hite.com"
+    url: "https://kevinfortune.bandcamp.com"
 
 related:
   - {ref: steve-roach, relation: collaborator-of}

@@ -18,7 +18,7 @@ creators:
     role: manufacturer
     ref: oberheim-electronics
 
-subjects: [instruments, technology]
+subjects: [instruments]
 
 images: []
 

@@ -12,7 +12,7 @@ creators:
     role: manufacturer
     ref: waldorf-music
 
-subjects: [instruments, technology]
+subjects: [instruments]
 
 images: []
 

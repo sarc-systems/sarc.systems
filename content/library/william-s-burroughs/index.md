@@ -7,7 +7,7 @@ library:
   type: person
   sarc_work: false
 
-subjects: [language, sound, technology]
+subjects: [language, sound]
 
 images:
   - file: "william-s-burroughs.jpg"

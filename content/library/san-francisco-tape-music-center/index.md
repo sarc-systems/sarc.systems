@@ -14,7 +14,7 @@ creators:
     role: founder
     ref: morton-subotnick
 
-subjects: [sound, instruments, technology]
+subjects: [sound, instruments]
 
 images:
   - file: "morton-subotnick-buchla.jpg"

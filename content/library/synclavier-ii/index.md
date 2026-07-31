@@ -21,7 +21,7 @@ creators:
     role: manufacturer
     ref: new-england-digital
 
-subjects: [instruments, technology]
+subjects: [instruments]
 
 images: []
 

@@ -10,7 +10,7 @@ library:
 creators:
   - {name: "Korg", role: manufacturer, ref: korg}
 
-subjects: [sound, instruments, technology]
+subjects: [sound, instruments]
 
 images: []
 

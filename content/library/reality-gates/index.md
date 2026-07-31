@@ -12,7 +12,7 @@ creators:
   - name: "Steve Birchall"
     role: artist
 
-subjects: [sound, technology]
+subjects: [sound]
 
 images:
   - file: "cover.jpg"

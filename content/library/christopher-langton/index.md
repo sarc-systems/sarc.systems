@@ -7,7 +7,7 @@ library:
   type: person
   sarc_work: false
 
-subjects: [computation, dynamical-systems, morphogenesis]
+subjects: [computation, dynamics, morphogenesis]
 
 images:
   - file: "langton.jpg"

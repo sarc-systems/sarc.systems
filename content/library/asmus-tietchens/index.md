@@ -9,7 +9,15 @@ library:
 
 subjects: [sound, form]
 
-images: []
+images:
+  - file: "portrait.jpg"
+    alt: "Asmus Tietchens at Liquid Architecture 10, Sydney, 2009"
+    role: portrait
+    source: "https://commons.wikimedia.org/wiki/File:Asmus_Tietchens,_2009_(cropped).jpg"
+    credit: "Somaya Langley"
+    rights:
+      status: licensed
+      note: "CC BY-SA 2.0, via Wikimedia Commons."
 
 access: []
 

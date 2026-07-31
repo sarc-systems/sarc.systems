@@ -10,9 +10,17 @@ library:
 creators:
   - {name: "Wolfgang Palm", role: founder, ref: wolfgang-palm}
 
-subjects: [instruments, technology]
+subjects: [instruments]
 
-images: []
+images:
+  - file: "logo.jpg"
+    alt: "PPG logo"
+    caption: "The PPG wordmark as it appears on the nameplate of a PPG Wave 2.2, cropped from a photograph of the instrument."
+    source: "https://commons.wikimedia.org/wiki/File:PPG_WAVE_2.2_(front).jpg"
+    credit: "John R. Southern"
+    rights:
+      status: licensed
+      note: "CC BY-SA 2.0, via Wikimedia Commons."
 
 access: []
 

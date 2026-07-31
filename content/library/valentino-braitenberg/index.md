@@ -9,7 +9,16 @@ library:
 
 subjects: [cybernetics, perception, computation]
 
-images: []
+images:
+  - file: "portrait.jpg"
+    alt: "Valentino Braitenberg"
+    role: portrait
+    caption: "Valentino Braitenberg in conversation, April 2014."
+    credit: "Alfred Wegener"
+    source: "https://commons.wikimedia.org/wiki/File:Valentin_Braitenberg_Portrait.jpg"
+    rights:
+      status: licensed
+      note: "CC BY-SA 4.0 International, via Wikimedia Commons."
 
 access: []
 

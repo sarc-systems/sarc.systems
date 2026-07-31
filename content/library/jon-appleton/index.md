@@ -7,9 +7,17 @@ library:
   type: person
   sarc_work: false
 
-subjects: [sound, technology]
+subjects: [sound]
 
-images: []
+images:
+  - file: "portrait.jpg"
+    alt: "Jon Appleton"
+    role: portrait
+    caption: "Appleton in 2013."
+    source: "https://commons.wikimedia.org/wiki/File:JonAppleton_(cropped).jpg"
+    rights:
+      status: licensed
+      note: "CC BY-SA 4.0, via Wikimedia Commons."
 
 access: []
 

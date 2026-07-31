@@ -10,9 +10,15 @@ library:
 creators:
   - {name: "Ikutaro Kakehashi", role: founder, ref: ikutaro-kakehashi}
 
-subjects: [instruments, technology]
+subjects: [instruments]
 
-images: []
+images:
+  - file: "logo.png"
+    alt: "Roland logo"
+    source: "https://commons.wikimedia.org/wiki/File:Roland_logo.svg"
+    rights:
+      status: public-domain
+      note: "Trademarked logo, ineligible for copyright (simple text/geometry); marked public domain via Wikimedia Commons."
 
 access: []
 

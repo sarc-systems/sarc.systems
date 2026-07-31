@@ -9,7 +9,14 @@ library:
 
 subjects: [tuning, number, instruments]
 
-images: []
+images:
+  - file: "portrait.jpg"
+    alt: "Harry Partch, 1952"
+    role: portrait
+    source: "https://commons.wikimedia.org/wiki/File:Harry_Partch_portrait_1952.jpg"
+    rights:
+      status: public-domain
+      note: "Published in the San Francisco Examiner, March 9, 1952; copyright not renewed, public domain in the U.S., via Wikimedia Commons."
 
 access: []
 

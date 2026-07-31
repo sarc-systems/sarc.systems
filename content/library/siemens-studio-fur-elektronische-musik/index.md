@@ -15,7 +15,7 @@ creators:
   - name: "Siemens & Halske"
     role: manufacturer
 
-subjects: [sound, technology]
+subjects: [sound]
 
 images:
   - file: "siemens-tonstudio.jpg"

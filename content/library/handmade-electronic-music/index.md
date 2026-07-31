@@ -12,7 +12,7 @@ creators:
   - name: "Nicolas Collins"
     role: author
 
-subjects: [instruments, sound, technology]
+subjects: [instruments, sound]
 
 images:
   - file: "cover.jpg"

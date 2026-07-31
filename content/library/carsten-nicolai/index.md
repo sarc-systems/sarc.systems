@@ -7,9 +7,16 @@ library:
   type: person
   sarc_work: false
 
-subjects: [sound, technology]
+subjects: [sound]
 
-images: []
+images:
+  - file: "portrait.jpg"
+    alt: "Carsten Nicolai (Alva Noto) performing at la Bâtie festival, Geneva, 2004"
+    role: portrait
+    source: "https://commons.wikimedia.org/wiki/File:AlvaNotoGeneva2004.jpg"
+    rights:
+      status: licensed
+      note: "CC BY-SA 2.0, via Wikimedia Commons."
 
 access: []
 

@@ -7,9 +7,16 @@ library:
   type: place
   sarc_work: false
 
-subjects: [sound, technology]
+subjects: [sound]
 
-images: []
+images:
+  - file: "photo.jpg"
+    alt: "Prentis Hall, Columbia University, on West 125th Street"
+    source: "https://commons.wikimedia.org/wiki/File:632_W125_Prentis_Hall_jeh.jpg"
+    credit: "Jim Henderson"
+    rights:
+      status: licensed
+      note: "CC BY-SA 4.0, via Wikimedia Commons."
 
 access: []
 

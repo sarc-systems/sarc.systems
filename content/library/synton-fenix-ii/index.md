@@ -11,7 +11,7 @@ creators:
   - name: "Bert Vermeulen"
     role: designer
 
-subjects: [instruments, technology]
+subjects: [instruments]
 
 images: []
 

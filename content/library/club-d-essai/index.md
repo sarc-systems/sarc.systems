@@ -12,7 +12,7 @@ creators:
     role: director
     ref: pierre-schaeffer
 
-subjects: [sound, technology]
+subjects: [sound]
 
 images: []
 

@@ -12,9 +12,18 @@ creators:
     role: composer
     ref: pauline-oliveros
 
-subjects: [sound, technology, feedback]
+subjects: [sound, feedback]
 
-images: []
+images:
+  - file: "cover.jpg"
+    alt: "Cover of A Little Noise in the System (Important Records reissue) by Pauline Oliveros"
+    role: cover
+    source: "https://imprec.bandcamp.com/track/a-little-noise-in-the-system-university-of-california-san-diego-electronic-music-studio-1967-1970"
+    rights:
+      status: unknown
+    use:
+      basis: identification
+      note: "Important Records (imprec) cover art used for identification."
 
 access:
   - label: "Bandcamp"

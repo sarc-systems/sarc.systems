@@ -16,7 +16,7 @@ creators:
     role: artist
     ref: don-cherry
 
-subjects: [sound, technology]
+subjects: [sound]
 
 images: []
 

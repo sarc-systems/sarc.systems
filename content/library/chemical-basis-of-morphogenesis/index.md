@@ -13,7 +13,7 @@ creators:
     role: author
     ref: alan-turing
 
-subjects: [morphogenesis, form, dynamical-systems]
+subjects: [morphogenesis, form, dynamics]
 
 images:
   - file: "figure.png"

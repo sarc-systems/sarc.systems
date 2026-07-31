@@ -13,9 +13,14 @@ creators:
   - name: "Alberto Ginastera"
     role: director
 
-subjects: [sound, technology]
+subjects: [sound]
 
-images: []
+images:
+  - file: "photo.jpg"
+    alt: "Musicologist Lauro Ayestarán with composers Alberto Ginastera (center) and Alfonso Letelier (right), members of CLAEM's first scholarship jury, Buenos Aires, 1962"
+    source: "https://es.wikipedia.org/wiki/Centro_Latinoamericano_de_Altos_Estudios_Musicales"
+    rights:
+      status: public-domain
 
 access: []
 

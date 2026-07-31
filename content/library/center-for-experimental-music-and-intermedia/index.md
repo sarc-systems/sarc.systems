@@ -11,7 +11,7 @@ creators:
   - name: "Merrill Ellis"
     role: founder
 
-subjects: [sound, technology]
+subjects: [sound]
 
 images: []
 

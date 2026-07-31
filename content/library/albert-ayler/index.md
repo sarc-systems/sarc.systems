@@ -9,7 +9,14 @@ library:
 
 subjects: [sound, perception]
 
-images: []
+images:
+  - file: "portrait.jpg"
+    alt: "Albert Ayler"
+    role: portrait
+    source: "https://commons.wikimedia.org/wiki/File:Albert_Ayler_(1967%E2%80%9368_photo_portrait_for_ABC_Impulse!).jpg"
+    rights:
+      status: public-domain
+      note: "Published in the US 1931–1977 without a copyright notice, via Wikimedia Commons. Photographer uncredited on the original release, likely Chuck Stewart."
 
 access: []
 

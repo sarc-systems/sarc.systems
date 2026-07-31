@@ -12,9 +12,17 @@ creators:
     role: founder
     ref: cameron-jones
 
-subjects: [instruments, technology]
+subjects: [instruments]
 
-images: []
+images:
+  - file: "logo.png"
+    alt: "Synclavier Music logo"
+    source: "https://www.synclavier.com/about/"
+    rights:
+      status: unknown
+    use:
+      basis: identification
+      note: "Official site logo, used for identification."
 
 access: []
 

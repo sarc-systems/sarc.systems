@@ -15,7 +15,7 @@ creators:
     role: director
     ref: jozef-patkowski
 
-subjects: [sound, technology]
+subjects: [sound]
 
 images: []
 

@@ -9,7 +9,15 @@ library:
 
 subjects: [computation, sound]
 
-images: []
+images:
+  - file: "portrait.jpg"
+    alt: "Barry Vercoe at TEDxChristchurch, 2016"
+    role: portrait
+    source: "https://commons.wikimedia.org/wiki/File:Barry_Vercoe_2016_(cropped).jpg"
+    credit: "Schwede66"
+    rights:
+      status: licensed
+      note: "CC BY-SA 4.0, via Wikimedia Commons."
 
 access: []
 

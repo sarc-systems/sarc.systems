@@ -9,7 +9,15 @@ library:
 
 subjects: [cybernetics, perception, feedback]
 
-images: []
+images:
+  - file: "portrait.jpg"
+    alt: "Humberto Maturana"
+    role: portrait
+    credit: "Fundación PROhumana"
+    source: "https://commons.wikimedia.org/wiki/File:Humberto_Maturana.jpg"
+    rights:
+      status: licensed
+      note: "CC BY-SA 2.0 Generic, via Wikimedia Commons."
 
 access: []
 

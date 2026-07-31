@@ -13,9 +13,16 @@ creators:
   - name: "Christian Clozier"
     role: founder
 
-subjects: [sound, technology]
+subjects: [sound]
 
-images: []
+images:
+  - file: "photo.jpg"
+    alt: "The Maison de la Culture de Bourges, where GMEB was founded in 1970"
+    role: installation
+    source: "https://commons.wikimedia.org/wiki/File:Maison_de_la_Culture_Bourges.JPG"
+    rights:
+      status: licensed
+      note: "CC BY-SA 3.0 Unported (multi-licensed), via Wikimedia Commons."
 
 access: []
 

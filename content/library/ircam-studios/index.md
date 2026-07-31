@@ -9,7 +9,14 @@ library:
 
 subjects: [sound, computation]
 
-images: []
+images:
+  - file: "photo.jpg"
+    alt: "An IRCAM studio, 1989"
+    source: "https://commons.wikimedia.org/wiki/File:An_IRCAM_studio_in_1989.jpg"
+    credit: "Martin Guy"
+    rights:
+      status: licensed
+      note: "CC BY-SA 3.0, via Wikimedia Commons."
 
 access: []
 

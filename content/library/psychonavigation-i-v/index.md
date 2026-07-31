@@ -15,7 +15,7 @@ creators:
     role: artist
     ref: bill-laswell
 
-subjects: [sound, technology]
+subjects: [sound]
 
 images:
   - file: "cover.jpg"

@@ -7,9 +7,17 @@ library:
   type: organization
   sarc_work: false
 
-subjects: [instruments, technology]
+subjects: [instruments]
 
-images: []
+images:
+  - file: "logo.png"
+    alt: "Bela logo"
+    source: "https://bela.io/about/"
+    rights:
+      status: unknown
+    use:
+      basis: identification
+      note: "Logo of Bela, the company's primary product and public brand, used for identification."
 
 access: []
 

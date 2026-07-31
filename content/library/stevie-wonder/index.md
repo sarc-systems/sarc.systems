@@ -7,9 +7,17 @@ library:
   type: person
   sarc_work: false
 
-subjects: [sound, computation, instruments, technology]
+subjects: [sound, computation, instruments]
 
-images: []
+images:
+  - file: "portrait.jpg"
+    alt: "Stevie Wonder"
+    role: portrait
+    source: "https://commons.wikimedia.org/wiki/File:SWonderBSTHyde060719-72_(cropped).jpg"
+    credit: "Raph_PH"
+    rights:
+      status: licensed
+      note: "CC BY 2.0, via Wikimedia Commons."
 
 access: []
 

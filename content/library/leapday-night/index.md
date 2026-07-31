@@ -15,7 +15,16 @@ creators:
 
 subjects: [sound, computation, feedback, instruments]
 
-images: []
+images:
+  - file: "cover.jpg"
+    alt: "Cover of Leapday Night by David Behrman"
+    role: cover
+    source: "https://davidbehrmanlovely.bandcamp.com/album/leapday-night"
+    rights:
+      status: unknown
+    use:
+      basis: identification
+      note: "Lovely Music cover art used for identification."
 
 access:
   - label: "Bandcamp"

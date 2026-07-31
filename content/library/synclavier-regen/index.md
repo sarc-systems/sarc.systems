@@ -12,7 +12,7 @@ creators:
     role: manufacturer
     ref: synclavier-digital
 
-subjects: [instruments, technology]
+subjects: [instruments]
 
 images: []
 

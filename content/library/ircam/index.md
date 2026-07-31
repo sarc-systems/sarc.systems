@@ -9,7 +9,15 @@ library:
 
 subjects: [computation, sound]
 
-images: []
+images:
+  - file: "logo.png"
+    alt: "IRCAM logo"
+    source: "https://www.ircam.fr/lircam/"
+    rights:
+      status: unknown
+    use:
+      basis: identification
+      note: "Official institute logo used for identification."
 
 access: []
 

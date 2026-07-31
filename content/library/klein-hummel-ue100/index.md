@@ -12,7 +12,6 @@ creators:
     role: manufacturer
 
 subjects:
-  - technology
   - sound
   - instruments
 

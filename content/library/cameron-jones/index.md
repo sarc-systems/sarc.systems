@@ -7,9 +7,18 @@ library:
   type: person
   sarc_work: false
 
-subjects: [instruments, technology]
+subjects: [instruments]
 
-images: []
+images:
+  - file: "portrait.jpg"
+    alt: "Sydney Alonso (left) and Cameron Jones (right) working on early Synclavier development at Dartmouth College"
+    role: portrait
+    source: "https://mustudio.fr/new-england-digital-2/"
+    rights:
+      status: unknown
+    use:
+      basis: identification
+      note: "Historical photo of the Synclavier's co-creators used for identification."
 
 access: []
 

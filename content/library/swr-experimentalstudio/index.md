@@ -11,7 +11,7 @@ creators:
   - name: "Heinrich Strobel"
     role: founder
 
-subjects: [sound, technology]
+subjects: [sound]
 
 images: []
 

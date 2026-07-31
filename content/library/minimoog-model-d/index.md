@@ -15,7 +15,7 @@ creators:
     role: manufacturer
     ref: moog-music
 
-subjects: [instruments, technology]
+subjects: [instruments]
 
 images: []
 

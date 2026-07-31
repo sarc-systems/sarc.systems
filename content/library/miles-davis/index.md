@@ -9,7 +9,16 @@ library:
 
 subjects: [sound, time]
 
-images: []
+images:
+  - file: "portrait.jpg"
+    alt: "Miles Davis, Three Deuces, New York, 1947"
+    role: portrait
+    credit: "William P. Gottlieb"
+    caption: "Three Deuces, New York, 1947."
+    source: "https://commons.wikimedia.org/wiki/File:Miles_Davis,_(Gottlieb_06851)_(cropped).jpg"
+    rights:
+      status: public-domain
+      note: "Gottlieb dedicated his collection to the public domain; Library of Congress, no known restrictions."
 
 access: []
 

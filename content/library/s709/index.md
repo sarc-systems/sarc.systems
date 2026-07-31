@@ -15,6 +15,18 @@ creators:
 
 subjects: [number, sound]
 
+images:
+  - file: "cover.jpg"
+    alt: "Cover of Iannis Xenakis: Electroacoustic Works (Karl Records), the anthology featuring S.709"
+    role: cover
+    caption: "Karl Records anthology cover — S.709 has no separate single artwork."
+    source: "https://karlrecords.bandcamp.com/track/s-709-1992"
+    rights:
+      status: unknown
+    use:
+      basis: identification
+      note: "Label anthology cover art used for identification."
+
 access:
   - label: "Bandcamp"
     kind: bandcamp

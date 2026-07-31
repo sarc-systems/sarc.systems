@@ -13,7 +13,7 @@ creators:
     role: artist
     ref: markus-popp
 
-subjects: [sound, technology]
+subjects: [sound]
 
 images:
   - file: "cover.jpg"

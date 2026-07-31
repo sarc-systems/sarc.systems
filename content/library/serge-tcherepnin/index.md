@@ -7,7 +7,7 @@ library:
   type: person
   sarc_work: false
 
-subjects: [instruments, technology, sound]
+subjects: [instruments, sound]
 
 images:
   - file: "serge-tcherepnin.jpg"

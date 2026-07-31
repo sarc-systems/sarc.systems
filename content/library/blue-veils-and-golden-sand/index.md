@@ -13,7 +13,7 @@ creators:
     role: composer
     ref: delia-derbyshire
 
-subjects: [sound, technology]
+subjects: [sound]
 
 images: []
 

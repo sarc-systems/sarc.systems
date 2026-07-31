@@ -9,7 +9,15 @@ library:
 
 subjects: [sound, instruments]
 
-images: []
+images:
+  - file: "portrait.jpg"
+    alt: "Tony Oxley"
+    role: portrait
+    source: "https://commons.wikimedia.org/wiki/File:Oxley_Tony_moersfestival_120508.jpg"
+    credit: "Hans Peter Schaefer"
+    rights:
+      status: licensed
+      note: "CC BY-SA 3.0, via Wikimedia Commons. Converted to grayscale."
 
 access: []
 

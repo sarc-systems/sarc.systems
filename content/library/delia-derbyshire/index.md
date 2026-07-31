@@ -7,7 +7,7 @@ library:
   type: person
   sarc_work: false
 
-subjects: [sound, technology, time]
+subjects: [sound, time]
 
 images:
   - file: "delia-derbyshire.jpg"

@@ -7,9 +7,18 @@ library:
   type: person
   sarc_work: false
 
-subjects: [instruments, technology]
+subjects: [instruments]
 
-images: []
+images:
+  - file: "portrait.jpg"
+    alt: "Peter Vogel"
+    role: portrait
+    source: "http://www.anerd.com/fairlight/gallery.htm"
+    rights:
+      status: unknown
+    use:
+      basis: identification
+      note: "Cropped from a promotional photo of Kim Ryrie and Peter Vogel (Vogel at right), hosted on the Fairlight history site anerd.com."
 
 access: []
 

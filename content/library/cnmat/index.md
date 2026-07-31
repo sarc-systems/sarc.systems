@@ -15,7 +15,15 @@ creators:
 
 subjects: [sound, computation, perception]
 
-images: []
+images:
+  - file: "logo.png"
+    alt: "CNMAT logo"
+    source: "https://cnmat.berkeley.edu/about"
+    rights:
+      status: unknown
+    use:
+      basis: identification
+      note: "Official CNMAT site logo used for identification."
 
 access:
   - label: "Official site"

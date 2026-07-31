@@ -15,9 +15,17 @@ creators:
     role: director
     ref: maggi-payne
 
-subjects: [sound, instruments, technology]
+subjects: [sound, instruments]
 
-images: []
+images:
+  - file: "logo.jpg"
+    alt: "Mills wordmark, as used on Center for Contemporary Music release labels"
+    source: "https://www.discogs.com/label/288875-Center-for-Contemporary-Music-Mills-College"
+    rights:
+      status: unknown
+    use:
+      basis: identification
+      note: "Label wordmark used on CCM record releases, used for identification."
 
 access: []
 

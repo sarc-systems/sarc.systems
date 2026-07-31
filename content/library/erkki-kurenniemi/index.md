@@ -7,9 +7,17 @@ library:
   type: person
   sarc_work: false
 
-subjects: [instruments, technology]
+subjects: [instruments]
 
-images: []
+images:
+  - file: "portrait.jpg"
+    alt: "Erkki Kurenniemi, 1965"
+    role: portrait
+    credit: "Holger Eklund / Lehtikuva"
+    source: "https://commons.wikimedia.org/wiki/File:Erkki-Kurenniemi-1965.jpg"
+    rights:
+      status: public-domain
+      note: "Public domain in Finland (50 years elapsed since creation), via Wikimedia Commons."
 
 access: []
 

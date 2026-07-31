@@ -16,7 +16,7 @@ creators:
     role: designer
     ref: gordon-pask
 
-subjects: [cybernetics, computation, technology]
+subjects: [cybernetics, computation]
 
 images: []
 

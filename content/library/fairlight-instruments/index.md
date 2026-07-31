@@ -7,9 +7,15 @@ library:
   type: organization
   sarc_work: false
 
-subjects: [instruments, technology]
+subjects: [instruments]
 
-images: []
+images:
+  - file: "logo.png"
+    alt: "Fairlight logo"
+    source: "https://commons.wikimedia.org/wiki/File:Fairlight_logo.png"
+    rights:
+      status: public-domain
+      note: "Below the threshold of originality for copyright protection, via Wikimedia Commons; the logo may still be a protected trademark."
 
 access: []
 

@@ -9,7 +9,15 @@ library:
 
 subjects: [sound, feedback]
 
-images: []
+images:
+  - file: "portrait.jpg"
+    alt: "Ennio Morricone, Cannes, 2012"
+    role: portrait
+    credit: "Georges Biard"
+    source: "https://commons.wikimedia.org/wiki/File:Ennio_Morricone_Cannes_2012.jpg"
+    rights:
+      status: licensed
+      note: "CC BY-SA 3.0, via Wikimedia Commons."
 
 access: []
 

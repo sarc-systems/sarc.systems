@@ -11,7 +11,7 @@ creators:
   - name: "BeagleBoard.org Foundation"
     role: manufacturer
 
-subjects: [instruments, technology]
+subjects: [instruments]
 
 images: []
 

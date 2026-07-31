@@ -9,7 +9,16 @@ library:
 
 subjects: [sound, feedback]
 
-images: []
+images:
+  - file: "portrait.jpg"
+    alt: "Gordon Mumma"
+    role: portrait
+    source: "https://www.foundationforcontemporaryarts.org/recipients/gordon-mumma/"
+    rights:
+      status: unknown
+    use:
+      basis: identification
+      note: "Foundation for Contemporary Arts grant-recipient photo used for identification."
 
 access: []
 

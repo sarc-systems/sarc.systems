@@ -7,9 +7,17 @@ library:
   type: person
   sarc_work: false
 
-subjects: [sound, computation, instruments, technology]
+subjects: [sound, computation, instruments]
 
-images: []
+images:
+  - file: "portrait.jpg"
+    alt: "Herbie Hancock at the Library of Congress 2023 Gershwin Prize reception"
+    role: portrait
+    credit: "Shawn Miller / Library of Congress"
+    source: "https://commons.wikimedia.org/wiki/File:Herbie_Hancock_2023.jpg"
+    rights:
+      status: public-domain
+      note: "CC0 1.0 Universal, via Wikimedia Commons."
 
 access: []
 

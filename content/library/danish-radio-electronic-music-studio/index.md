@@ -12,7 +12,7 @@ creators:
     role: founder
     ref: else-marie-pade
 
-subjects: [sound, technology]
+subjects: [sound]
 
 images: []
 

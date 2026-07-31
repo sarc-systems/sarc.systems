@@ -15,7 +15,7 @@ creators:
     role: manufacturer
     ref: arp-instruments
 
-subjects: [instruments, technology]
+subjects: [instruments]
 
 images: []
 

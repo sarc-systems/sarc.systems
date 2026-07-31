@@ -19,9 +19,16 @@ creators:
   - name: "Vladimir Ussachevsky"
     role: director
 
-subjects: [sound, technology]
+subjects: [sound]
 
-images: []
+images:
+  - file: "photo.jpg"
+    alt: "The RCA Mark II Sound Synthesizer, the Center's flagship instrument, at Columbia University"
+    credit: "Somaya Langley"
+    source: "https://commons.wikimedia.org/wiki/File:RCA_Mark_II_Sound_Synthesizer,_Computer_Music_Center_at_Columbia_University,_NIME2007.jpg"
+    rights:
+      status: licensed
+      note: "CC BY-SA 2.0, via Wikimedia Commons."
 
 access: []
 

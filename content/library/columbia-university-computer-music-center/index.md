@@ -13,7 +13,14 @@ creators:
 
 subjects: [sound, computation]
 
-images: []
+images:
+  - file: "photo.jpg"
+    alt: "Computer Music Center sign, Columbia University"
+    credit: "kafka4prez"
+    source: "https://commons.wikimedia.org/wiki/File:Computer_Music_Center_sign.jpg"
+    rights:
+      status: licensed
+      note: "CC BY-SA 2.0, via Wikimedia Commons."
 
 access:
   - label: "Official site"

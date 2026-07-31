@@ -7,6 +7,9 @@ library:
   type: concept
   sarc_work: false
 
+creators:
+  - {name: "Curtis Roads", role: researcher, ref: curtis-roads}
+
 subjects: [computation, sound, time]
 
 images: []
