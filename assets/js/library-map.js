@@ -90,11 +90,12 @@
 // `library:filter-change` / the URL) — specific type stays purely
 // descriptive, shown as `type_label` on preview cards.
 //
-// Image nodes: selection-dependent. Only the SELECTED node and its direct
-// neighbors render using their primary_image (already processed/cropped by
-// Hugo for index.json elsewhere — no separate map-specific derivative);
-// every other entry — even one with an image — shows the abstract type
-// shape until it becomes selected or adjacent. This keeps a dense map
+// Image nodes: selection-dependent. Only the SELECTED node and its
+// neighbors up to 2nd order (direct neighbors, plus their own neighbors)
+// render using their primary_image (already processed/cropped by Hugo for
+// index.json elsewhere — no separate map-specific derivative); every other
+// entry — even one with an image — shows the abstract type shape until it
+// becomes selected or falls within that radius. This keeps a dense map
 // legible at rest (no images-for-everyone-at-once) while still using images
 // to disambiguate same-titled entries exactly where it matters: around the
 // current focus. isImageActive(n) below is the single source of truth for
@@ -1185,16 +1186,18 @@
     if (schemeQuery.addEventListener) schemeQuery.addEventListener("change", onSchemeChange);
   }
 
-  // Only the SELECTED node and its direct neighbors ever show their image —
-  // see the module comment on Image nodes. Both drawBackground() and
+  // Only the SELECTED node and its neighbors up to 2nd order (direct
+  // neighbors, plus their own neighbors) ever show their image — see the
+  // module comment on Image nodes. Both drawBackground() and
   // drawInteraction() call this so they can never disagree about which
-  // nodes are currently image-active.
+  // nodes are currently image-active. selectionDistance is the BFS hop
+  // count from selectedId, already computed for the opacity ladder above.
   function isImageActive(n) {
     if (!n.hasImage) return false;
     if (n.id === selectedId) return true;
     if (selectedId) {
-      var neighbors = neighborsOf(selectedId);
-      if (neighbors.indexOf(n.id) !== -1) return true;
+      var dist = selectionDistance[n.id];
+      if (dist !== undefined && dist <= 2) return true;
     }
     return false;
   }
@@ -1501,15 +1504,6 @@
       });
     }
     return dist;
-  }
-
-  function neighborsOf(id) {
-    var out = [];
-    edges.forEach(function (e) {
-      if (e.source === id) out.push(e.target);
-      else if (e.target === id) out.push(e.source);
-    });
-    return out;
   }
 
   // --- Preview cards: two independent catalog-style cards (image + title +
