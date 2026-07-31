@@ -11,6 +11,7 @@ library:
 creators:
   - name: "Gilbert Rouget"
     role: author
+    ref: gilbert-rouget
 
 subjects: [sound, perception]
 
@@ -31,5 +32,5 @@ rights:
 draft: false
 ---
 
-Gilbert Rouget's cross-cultural study of how music relates to trance and
+[Gilbert Rouget](/library/gilbert-rouget/)'s cross-cultural study of how music relates to trance and
 possession.

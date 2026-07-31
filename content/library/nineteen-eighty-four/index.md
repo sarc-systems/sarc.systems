@@ -11,6 +11,7 @@ library:
 creators:
   - name: "George Orwell"
     role: author
+    ref: george-orwell
 
 subjects: [memory, language]
 
@@ -27,4 +28,4 @@ images:
 draft: false
 ---
 
-Orwell's dystopia — included for its treatment of language as an instrument of control.
+[Orwell](/library/george-orwell/)'s dystopia — included for its treatment of language as an instrument of control.

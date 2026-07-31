@@ -11,6 +11,7 @@ library:
 creators:
   - name: "Julian Jaynes"
     role: author
+    ref: julian-jaynes
 
 subjects: [language, perception, memory]
 
@@ -30,5 +31,5 @@ rights:
 draft: false
 ---
 
-Julian Jaynes's theory that consciousness is a learned, language-based
+[Julian Jaynes](/library/julian-jaynes/)'s theory that consciousness is a learned, language-based
 construction of recent historical origin.

@@ -11,6 +11,7 @@ library:
 creators:
   - name: "Jacob Klein"
     role: author
+    ref: jacob-klein
 
 subjects: [number, form]
 
@@ -23,4 +24,4 @@ images:
 draft: false
 ---
 
-Jacob Klein on the conceptual origins of algebra in and after Greek mathematics.
+[Jacob Klein](/library/jacob-klein/) on the conceptual origins of algebra in and after Greek mathematics.

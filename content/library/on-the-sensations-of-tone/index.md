@@ -11,6 +11,7 @@ library:
 creators:
   - name: "Hermann von Helmholtz"
     role: author
+    ref: hermann-von-helmholtz
 
 subjects: [sound, perception, tuning]
 
@@ -30,6 +31,6 @@ rights:
 draft: false
 ---
 
-Helmholtz's foundational treatise on acoustics, timbre, resonance, and the
+[Helmholtz](/library/hermann-von-helmholtz/)'s foundational treatise on acoustics, timbre, resonance, and the
 physiological perception of tone. Year given is the original German publication;
-the linked copy is a later English edition.
+the linked copy is a later English edition. [Harry Partch](/library/harry-partch/) discovered a translation in 1923, an encounter he credited as the turn that led him to just intonation.

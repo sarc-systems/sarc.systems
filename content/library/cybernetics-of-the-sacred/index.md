@@ -11,6 +11,7 @@ library:
 creators:
   - name: "Paul Ryan"
     role: author
+    ref: paul-ryan
 
 subjects: [cybernetics]
 

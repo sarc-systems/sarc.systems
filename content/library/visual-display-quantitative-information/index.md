@@ -11,6 +11,7 @@ library:
 creators:
   - name: "Edward Tufte"
     role: author
+    ref: edward-tufte
 
 subjects: [form, number, perception]
 
@@ -34,4 +35,4 @@ rights:
 draft: false
 ---
 
-Tufte on the principled graphical display of data.
+[Tufte](/library/edward-tufte/) on the principled graphical display of data.

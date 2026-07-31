@@ -11,6 +11,7 @@ library:
 creators:
   - name: "Karl J. Niklas"
     role: author
+    ref: karl-niklas
 
 subjects: [morphogenesis, form]
 
@@ -31,4 +32,4 @@ rights:
 draft: false
 ---
 
-Karl Niklas on plant form, biomechanics, and the evolution of morphology.
+[Karl Niklas](/library/karl-niklas/) on plant form, biomechanics, and the evolution of morphology.

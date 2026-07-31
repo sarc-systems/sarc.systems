@@ -11,6 +11,7 @@ library:
 creators:
   - name: "Stanisław Lem"
     role: author
+    ref: stanislaw-lem
 
 subjects: [computation, language]
 
@@ -31,5 +32,5 @@ rights:
 draft: false
 ---
 
-Lem's fictional account of "personoids" — conscious beings created inside a
+[Lem](/library/stanislaw-lem/)'s fictional account of "personoids" — conscious beings created inside a
 computer, who reason their way to theology and confront their creator.
