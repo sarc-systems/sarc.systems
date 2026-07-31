@@ -11,8 +11,10 @@ library:
 creators:
   - name: "Rashied Ali"
     role: artist
+    ref: rashied-ali
   - name: "Frank Lowe"
     role: artist
+    ref: frank-lowe
 
 subjects: [sound, time]
 

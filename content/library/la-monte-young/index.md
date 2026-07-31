@@ -15,7 +15,10 @@ images:
     role: portrait
     anchor: Top
 
+related:
+  - {ref: harry-partch, relation: influenced-by}
+
 draft: false
 ---
 
-American composer, pioneer of minimalism, sustained drone, and just intonation.
+American composer, pioneer of minimalism, sustained drone, and just intonation — and an admirer of Harry Partch's foundational work in the field, whose book he recommended to novices seeking to understand just intonation.

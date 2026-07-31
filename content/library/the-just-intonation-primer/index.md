@@ -11,6 +11,7 @@ library:
 creators:
   - name: "David B. Doty"
     role: author
+    ref: david-b-doty
 
 subjects: [tuning, number, sound]
 
@@ -24,6 +25,9 @@ access:
   - label: "Purchase"
     kind: purchase
     url: "https://shop.ingramspark.com/b/084?params=iisFE1pGpAE68I1cdPeDAmL1gjKjByII2qDPUiuY05G"
+
+related:
+  - {ref: harry-partch, relation: discusses}
 
 draft: false
 ---

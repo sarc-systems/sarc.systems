@@ -11,6 +11,7 @@ library:
 creators:
   - name: "Miles Davis"
     role: artist
+    ref: miles-davis
 
 subjects: [sound, time]
 

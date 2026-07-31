@@ -11,6 +11,7 @@ library:
 creators:
   - name: "Albert Ayler"
     role: artist
+    ref: albert-ayler
 
 subjects: [sound, perception]
 
