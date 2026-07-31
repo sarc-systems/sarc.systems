@@ -19,6 +19,7 @@ creators:
     ref: bill-laswell
   - name: "Ronald Shannon Jackson"
     role: artist
+    ref: ronald-shannon-jackson
 
 subjects: [sound, time]
 
