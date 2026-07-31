@@ -6,29 +6,40 @@
        CLAUDE.md § Library map view for the data flow and what this
        deliberately does not do (no inferred/similarity edges, no semantic
        search, no clustering — every edge is something SARC actually declared).
+
+       Rendered via two stacked <canvas> elements rather than SVG (see
+       library-map.js's module comment): a background layer for the full
+       graph, and a small interaction layer on top for hover-only
+       decoration, redrawn independently so a hover never forces a
+       full-graph repaint. Canvas has no per-node accessibility
+       subtree, so unlike the previous SVG version, individual nodes are not
+       Tab-focusable here — Catalog remains the complete keyboard/screen-
+       reader-navigable listing of the same entries (see CLAUDE.md §
+       Library Accessibility). The container's own aria-label says as much.
        Call: {{ partial "library-map-view.html" . }} */ -}}
 <div class="library-map" id="library-map" hidden>
-  {{- /* role="group" (not "img") deliberately: role="img" on an SVG tells
-         assistive tech to treat it as one flat static image, which can
-         suppress the accessibility tree of the individually focusable/
-         labeled node <g> elements rendered inside it by library-map.js. */}}
-  <svg class="library-map-svg" id="library-map-svg" viewBox="0 0 1000 700" preserveAspectRatio="xMidYMid meet"
-       role="group" aria-label="Diagram of explicit editorial relationships between Library entries">
-    <g id="library-map-edges"></g>
-    <g id="library-map-nodes"></g>
-  </svg>
+  <div class="library-map-canvases" role="img"
+       aria-label="Diagram of explicit editorial relationships between Library entries. Individual entries are not keyboard-navigable here — use Catalog view for a complete, accessible listing.">
+    <canvas class="library-map-bg-canvas" id="library-map-bg-canvas"></canvas>
+    <canvas class="library-map-fx-canvas" id="library-map-fx-canvas"></canvas>
+  </div>
   {{- /* Two lightweight catalog-style preview cards, not popup dialogs —
          Selection-Centered Navigation: #library-map-card is the persistent
          card for whichever node is *selected* ("where I am" — stays up
          until another node is selected, click navigates); #library-map-
          hover-card is a transient second card for whichever OTHER node is
-         currently hovered ("what I'm considering next") — both render at
-         once. Node shape/color (and, when available, the entry's own image
-         — see createNodeVisual() in library-map.js) is what tells two
-         same-titled entries (e.g. a person and a work of that name) apart at
-         rest; these cards add the rest of the disambiguating context on
-         demand. Both hidden by default; each is one instance, repositioned/
-         repopulated as its own focus changes rather than one per node. */}}
+         currently hovered ("what I'm considering next") — both can render
+         at once. Position is fixed via CSS, not node-relative: the selected
+         card always sits upper-right, the hover card always upper-left
+         (see library.css), each with its own outline style (solid selected,
+         dashed hover) as the visual cue distinguishing them, since they no
+         longer sit next to the node they describe. Node shape/color (and,
+         when available, the entry's own image — see isImageActive()/
+         drawImageNode() in library-map.js) is what tells two same-titled
+         entries (e.g. a person and a work of that name) apart at rest;
+         these cards add the rest of the disambiguating context on demand.
+         Both hidden by default; each is one instance, repopulated as its
+         own focus changes rather than one per node. */}}
   <div class="library-map-card" id="library-map-card" hidden>
     <div class="library-map-card-media"></div>
     <div class="library-map-card-body">
@@ -45,9 +56,10 @@
       <p class="library-map-card-summary"></p>
     </div>
   </div>
-  {{- /* A caption strip below the canvas, not an overlay on top of it — see
-         library.css: the instructions must never sit over the diagram
-         itself, where they'd compete with nodes/edges underneath. */}}
-  <p class="library-map-hint">Drag to pan, scroll to zoom, hover or click a point to focus it, click its card to open it.</p>
 </div>
+{{- /* Instructions live OUTSIDE the bordered render window, as ordinary
+       page text — not sharing a box with the canvas, which previously read
+       as if the map were rendering "into" the same section as its own
+       caption. */}}
+<p class="library-map-hint">Drag to pan, scroll to zoom, hover or click a point to focus it, click its card to open it.</p>
 <p class="library-map-empty" id="library-map-empty" hidden>No relationships among the matching entries.</p>

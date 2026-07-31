@@ -13,7 +13,7 @@ creators:
     role: artist
     ref: league-of-automatic-music-composers
 
-subjects: [computation, sound, feedback]
+subjects: [computation, sound, feedback, instruments]
 
 images:
   - file: "cover.jpg"

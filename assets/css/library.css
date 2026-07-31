@@ -207,7 +207,7 @@
   color: var(--gray-2); margin: 0.4rem 0 0;
 }
 
-.library-all-head { font-size: var(--t-md); margin: 2rem 0 0.4rem; }
+.library-all-head { font-size: var(--t-sm); margin: 2rem 0 0.4rem; }
 
 /* --- Images view: same entries, thumbnails only -------------------------- */
 /* Fixed-size grid, packed left — never masonry, never scaled. Each item reuses
@@ -254,136 +254,69 @@
   margin: 1rem 0 0;
   border: 1px solid var(--rule);
   background: var(--paper-2);
-  height: 32rem;
-  display: flex;
-  flex-direction: column;
-  position: relative; /* offset parent for .library-map-card below */
+  height: 44rem;
+  position: relative; /* offset parent for .library-map-canvases and the cards below */
 }
-.library-map-svg {
-  width: 100%;
-  flex: 1 1 auto;
-  min-height: 0;
+/* Two stacked canvases (see library-map.js's module comment): the
+   background layer draws the full graph, the interaction layer draws
+   hover-only decoration on top and is the one that actually receives
+   pointer events — the background layer sits underneath, purely visual.
+   The render window is now purely the canvas — no caption strip sharing
+   the box with it (see .library-map-hint below, moved outside). */
+.library-map-canvases {
+  position: absolute;
+  inset: 0;
+}
+.library-map-bg-canvas, .library-map-fx-canvas {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
   display: block;
+}
+.library-map-bg-canvas { pointer-events: none; }
+.library-map-fx-canvas {
   cursor: grab;
   touch-action: none;
 }
-.library-map-svg:active { cursor: grabbing; }
-/* A caption strip below the canvas — never an overlay on top of it, where it
-   would compete with nodes/edges underneath. */
+.library-map-fx-canvas:active { cursor: grabbing; }
+/* Plain page text below the render window, not sharing its border/box —
+   see library-map-view.html: this used to sit inside #library-map as a
+   caption strip, which read as if the map were rendering into the same
+   section as its own instructions. */
 .library-map-hint {
-  flex: 0 0 auto;
-  margin: 0;
-  padding: 0.4rem 0.7rem;
-  border-top: 1px solid var(--rule);
+  margin: 0.5rem 0 0;
   font-family: var(--font-mono);
   font-size: var(--t-xs);
   letter-spacing: 0.04em;
   color: var(--gray-2);
 }
-/* Node Type Encoding — one shared color+shape per PUBLIC type (see
-   data/library.yaml's public_types; the same tokens back the Type filter
-   chip swatches above — see CLAUDE.md § Library "Public Type vs Specific
-   Type"). `.map-shape` is whichever SVG element library-map.js used for this
-   node's public type (circle/rect/polygon) — its *fill color* is set inline
-   per node (it varies by public type, CSS can't know it); shape is the
-   primary type cue, color reinforces it, and together they're what tells a
-   same-titled person and work apart at rest — never permanent on-graph text
-   (see the hover card further down).
-   CSS controls the emphasis (opacity) tiers only — the Selection Hierarchy,
-   driven entirely by the *selected* (clicked) node, never by hover:
-     - resting (nothing selected): full opacity — every node reads clearly.
-     - is-selected (the selected node itself): full color.
-     - is-neighbor (directly connected to it): medium emphasis.
-     - is-connected (same connected component, but not directly adjacent —
-       "connected background"): a little above resting.
-     - anything else while a node is selected ("unrelated" — a different
-       component entirely): recedes the most.
-   Order matters here — later rules win at equal specificity, so the tiers
-   are written from least to most emphasized. Edges stay neutral throughout —
-   no colour-by-relationship-type yet. Hover is a separate, independent
-   overlay (.is-hovered, below) — it never touches this opacity ladder, so a
-   hover preview can never replace or dim the standing selection. */
-.map-shape {
-  opacity: 1;
-  transition: opacity 120ms ease;
-}
-#library-map-nodes.has-selection .map-node .map-shape { opacity: 0.12; }
-#library-map-nodes.has-selection .map-node.is-connected .map-shape { opacity: 0.4; }
-#library-map-nodes.has-selection .map-node.is-neighbor .map-shape { opacity: 0.85; }
-#library-map-nodes.has-selection .map-node.is-selected .map-shape { opacity: 1; }
-.map-node { cursor: pointer; }
-/* Outline the node's whole visual (whichever it is — a plain shape, or the
-   two-element image-node group below) rather than each piece separately;
-   :first-child is always the right target either way. Selected/keyboard-
-   focused get the stronger solid ring; a plain hover gets a lighter dashed
-   one — "selection should always dominate hover" — and :not(.is-selected)
-   keeps the dashed ring from fighting the solid one when a hover lands on
-   the already-selected node. */
-.map-node:focus-visible > :first-child,
-.map-node.is-selected > :first-child { outline: 2px solid var(--signal); outline-offset: 2px; }
-.map-node.is-hovered:not(.is-selected) > :first-child { outline: 1px dashed var(--signal); outline-offset: 2px; }
-/* Image nodes — an entry's own primary image (already processed for
-   index.json elsewhere; no separate map derivative) stands in for the
-   abstract shape, "approximately node-sized," per data/library.yaml/
-   list.json's shared image pipeline. The bordered background rect keeps a
-   small image reading as "a node" rather than a loose floating picture, AND
-   carries the node's public-type color as its stroke (set inline per node
-   in library-map.js, like the fill on a plain shape) — an image node still
-   reads as its broad type at a glance without ever recoloring the artwork
-   itself. Both the background and the image carry .map-shape so they fade
-   through the same emphasis tiers as everything else, in step. stroke here
-   is a fallback only; every node sets its own inline stroke color. */
-.map-image-node-bg { fill: var(--paper-2); stroke: var(--rule); stroke-width: 1.5; }
-.map-image-node-img { image-rendering: auto; }
-.map-edge {
-  /* A couple of shades darker than the hairline --rule token — at --rule
-     itself the unhighlighted lines were too faint to read as a diagram.
-     Neutral regardless of the connected nodes' type colors — edges are
-     never colored by relationship type, only by interaction state (below).
-     Line STYLE (solid/dashed/dotted) is the one restrained exception: three
-     relationship categories — structural, historical, contextual — resolved
-     once per edge in library-map.js from data/library.yaml's relation_types
-     (a creator credit is always structural; every related[] relation type is
-     looked up in a small table there). Kept deliberately subtle: dash
-     patterns only, never a second color. */
-  stroke: var(--gray-2);
-  stroke-width: 1;
-  transition: stroke 120ms ease, stroke-width 120ms ease;
-}
-.map-edge--historical { stroke-dasharray: 4 3; }
-.map-edge--contextual { stroke-dasharray: 1 3; }
-.map-edge.is-active { stroke: var(--signal); stroke-width: 1.5; }
-/* The strongest edge tier: touching the currently HOVERED node (not the
-   selection — see the JS module comment). Transient, gone the instant the
-   hover ends, same as the hover card. */
-.map-edge.is-hovered { stroke: var(--signal); stroke-width: 2; }
-.map-edge-label {
-  font-family: var(--font-mono);
-  font-size: 8px;
-  fill: var(--ink);
-  paint-order: stroke;
-  stroke: var(--paper);
-  stroke-width: 3px;
-  stroke-linejoin: round;
-  text-anchor: middle;
-  pointer-events: none;
-}
-@media (prefers-reduced-motion: reduce) {
-  .map-shape, .map-edge { transition: none; }
-}
+/* Node Type Encoding, the Selection Hierarchy's opacity tiers, edge line
+   styles/colors, and the hover relationship label are all drawn directly by
+   library-map.js's Canvas renderer (drawBackground()/drawInteraction()) —
+   see that file's own module comment for the full rationale (unchanged from
+   the previous SVG implementation, just no longer expressed as CSS rules
+   against DOM elements that no longer exist). Canvas colors are resolved
+   from the same custom properties this file defines (--colorplan-*,
+   --signal, --gray-2, --ink, --paper, --paper-2, --font-mono) via
+   library-map.js's own cssVar() helper, so this is still the single source
+   of truth for those values — the renderer never hard-codes a color. */
 .library-map-empty { color: var(--gray-1); font-style: italic; margin: 1rem 0 0; }
 
 /* Preview cards — two independent instances (Selection-Centered Navigation):
    #library-map-card is the persistent card for the *selected* node ("where I
    am" — stays up until another node is selected), #library-map-hover-card is
    a transient second card for whichever OTHER node is currently hovered
-   ("what I'm considering next") — both can be visible at once. Same markup/
-   behavior; the .library-map-card--hover modifier below is the only visual
-   difference, keeping the hierarchy legible without a second design. Plain
-   HTML, entirely outside the SVG's coordinate system (positioned in pixels
-   by library-map.js from the node's current screen position), so neither is
-   affected by pan/zoom sizing — panning/zooming only repositions them.
-   Sized deliberately wide so the image can read at real size, but still "a
+   ("what I'm considering next") — both can be visible at once. FIXED
+   position, not node-relative: the selected card always sits in the
+   render window's upper-right corner, the hover card always upper-left —
+   an earlier design anchored each card near its own node and repositioned
+   on every pan/zoom/settle tick; per direct user feedback that a card
+   chasing its node around read as disconcerting, position is now constant
+   and only the CONTENT changes. Outline style is the distinguishing cue in
+   this fixed layout: solid for the standing selection, dashed for the
+   transient hover (.library-map-card--hover below) — same idea the
+   node-level selected/hovered outlines on the canvas already use. Sized
+   deliberately wide so the image can read at real size, but still "a
    catalog preview, not a popup dialog": same ruled/paper language as the
    rest of the Library, no shadow, no rounded corners. Clickable (unlike a
    plain tooltip) — see the JS module comment on why a click on a card,
@@ -395,12 +328,14 @@
 .library-map-card[hidden] { display: none !important; }
 .library-map-card {
   position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
   z-index: 1;
   display: flex;
   gap: 1rem;
   align-items: center;
   width: 26rem;
-  max-width: calc(100% - 1rem);
+  max-width: calc(100% - 1.5rem);
   padding: 0.9rem 1rem;
   border: 1px solid var(--rule);
   background: var(--paper);
@@ -409,10 +344,14 @@
 }
 /* The hover card sits visually in front (it's the more immediate, transient
    piece of information) but reads as secondary to the standing selection —
-   slightly lower opacity is the only departure from the shared style. */
+   dashed outline and slightly lower opacity are the only departures from
+   the shared style. */
 .library-map-card--hover {
+  right: auto;
+  left: 0.75rem;
   z-index: 2;
   opacity: 0.86;
+  border-style: dashed;
 }
 .library-map-card-media {
   flex: 0 0 auto;

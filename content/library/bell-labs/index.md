@@ -7,7 +7,7 @@ library:
   type: organization
   sarc_work: false
 
-subjects: [computation, sound]
+subjects: [computation, sound, instruments]
 
 images: []
 

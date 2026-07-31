@@ -7,41 +7,76 @@
 // data/library.yaml's controlled vocabulary). No inferred edges, no shared-
 // subject/tag edges, no clustering.
 //
-// Architecture: Library data (/library/index.json) -> buildGraph() (nodes +
-// edges, seeded initial positions, precomputed radii, edge categories) ->
-// relayout() (the force-directed layout orchestrator, used for both initial
-// load and every filter change) -> renderInitial()/updatePositions() (SVG) ->
-// interaction (pan/zoom/hover/click/selection). This file owns all of it and
-// runs independently of library-filter.js — the two communicate only via one
-// event, `library:filter-change` (fired by library-filter.js on every
-// filter/view change) plus this file reading location.search once at startup
-// for the same information, since script load order means the very first
-// firing of that event predates its own listener existing. Visibility of the
-// whole view (#library-map hidden or not) is still owned by
-// library-filter.js, same as Images.
+// Architecture (Canvas — a from-scratch rewrite of the previous SVG
+// implementation): Library data (/library/index.json) -> buildGraph()
+// (nodes + edges, seeded initial positions, precomputed radii, edge
+// categories) -> relayout() (the layout orchestrator, used for both initial
+// load and every filter change, driving a continuous whole-graph force
+// simulation — see runContinuousSettle()) -> a spatial grid index
+// (buildSpatialIndex()) for pointer hit-testing -> two stacked <canvas>
+// layers, redrawn via invalidate()/requestAnimationFrame only while
+// something is actually changing (an active settle/drag/pan/zoom), coming
+// to a full stop once things are genuinely at rest -> interaction (pan,
+// zoom, hover, click-to-select, and node dragging — startDrag()/
+// updateDrag()/endDrag() — all via hit-testing, since Canvas has no
+// per-node DOM elements). This file owns all of it and runs independently
+// of library-filter.js — the two communicate only via one event,
+// `library:filter-change` (fired by library-filter.js on every filter/view
+// change) plus this file reading location.search once at startup for the
+// same information, since script load order means the very first firing of
+// that event predates its own listener existing. Visibility of the whole
+// view (#library-map hidden or not) is still owned by library-filter.js,
+// same as Images.
+//
+// The force simulation itself is completely renderer-agnostic: buildGraph(),
+// computeComponents(), forceIterationWithCentering(), runContinuousSettle(),
+// resolveOverlapsOnly(), relayout() all operate on plain
+// {id,x,y,vx,vy,radius,fx,fy} node objects and a plain edge array — none of
+// them touch a canvas, an SVG element, or the DOM. Only
+// the renderer (drawBackground()/drawInteraction()), the spatial index, and
+// the interaction layer below know a Canvas exists. This separation was
+// already true of the previous SVG implementation's physics code; migrating
+// the render layer only required rewriting renderInitial()/updatePositions()/
+// createShape() and everything hover/click/pan/zoom-related, not the layout
+// engine itself.
 //
 // Layout model (see CLAUDE.md § Library "Map view" for the full rationale):
 //   - Deterministic seeded initialization: every node's initial position is a
 //     pure function of its stable library_id (a small hash -> seeded PRNG),
 //     never Math.random() — the same graph produces substantially the same
 //     layout on every reload.
-//   - Connected components are treated as layout units: each component gets
-//     its own small local force simulation (warm-started from current
-//     positions so filter changes preserve survivors' spatial continuity),
-//     then components are deterministically packed into a shared coordinate
-//     space (sorted by size then id, multi-row shelf packing) so islands stay
-//     visually separate without scattering across arbitrary empty space.
+//   - The WHOLE visible graph settles as one continuous simulation (warm-
+//     started from current positions so filter changes preserve survivors'
+//     spatial continuity) — full pairwise repulsion between every visible
+//     node, not scoped to a connected component, is what keeps disconnected
+//     clusters and singletons visually separate from each other. An earlier
+//     design ran each component's own small local simulation in isolation
+//     and then deterministically packed the results into shelf rows
+//     afterward; that separate packing step read as an ugly, physics-less
+//     jump no matter how it was eased (direct user feedback), so it's gone
+//     — inter-component spacing is now an emergent property of the same
+//     repulsion that untangles each component's own internal edges, the way
+//     mainstream interactive force graphs (Obsidian, Gephi, d3-force) work.
 //   - relayout(visibleIds) is the one orchestrator for both the initial full
 //     load and every filter change — it never partially applies only some of
-//     its steps. Selection deliberately does NOT go through it: selecting a
-//     node runs a separate, much lighter reheatNeighborhood() (a bounded
-//     local relax giving the selected node's neighborhood breathing room,
-//     with the rest of the graph nudged only a small capped amount so the
-//     neighborhood has room to expand into) plus the existing pan-only
-//     recenter — selection must never regenerate the whole graph or destroy
-//     the user's mental map of it.
-//   - The simulation always runs to convergence synchronously and then stops
-//     — this is a settled map, not a continuously drifting physics demo.
+//     its steps. Selection deliberately does NOT go through it, and does not
+//     move anything at all, camera included — selecting only recomputes the
+//     Selection Hierarchy's tiers and shows the selected card (see
+//     selectNode()). An earlier design also nudged the selected node's
+//     neighbors apart for breathing room and animated the camera to recenter
+//     on every selection; per direct user feedback both read as disconcerting
+//     motion breaking visual continuity, so a click now only ever changes
+//     which tiers/card are showing — the graph and the camera stay exactly
+//     where they were.
+//   - The settle runs continuously, one animation frame at a time, with a
+//     decaying alpha (1 -> ~0, the standard force-simulation convergence
+//     model — see runContinuousSettle()) rather than a fixed batch of
+//     iterations: a large, densely-connected graph genuinely needs more time
+//     to untangle than a small one, and a fixed iteration cap was freezing
+//     it mid-tangle rather than at an actual rest state. It still comes to a
+//     genuine stop once alpha decays low enough — this is a settled map
+//     that takes as long as it needs to settle, not a perpetually drifting
+//     physics demo.
 //
 // Node Type Encoding: color + shape are keyed by PUBLIC type (person/group/
 // organization/work/event/place/concept — index.json's `public_type` per
@@ -62,56 +97,65 @@
 // shape until it becomes selected or adjacent. This keeps a dense map
 // legible at rest (no images-for-everyone-at-once) while still using images
 // to disambiguate same-titled entries exactly where it matters: around the
-// current focus. Both representations exist in the DOM for any entry that
-// has an image (a cheap className toggle switches between them — no
-// destroy/recreate on every selection change); the image `href` itself is
-// only set the first time a node actually becomes image-active, so hovering
-// or selecting around the graph doesn't eagerly fetch hundreds of images.
-// Collision uses a STATIC radius per node regardless of which
-// representation is currently showing — the larger, image-node footprint
-// for any entry that HAS an image, even while it's rendering as the smaller
-// abstract shape — so selecting a node never needs to re-run collision or
-// repack the graph, only re-render that one node's own visual.
+// current focus. isImageActive(n) below is the single source of truth for
+// this (both the background and interaction layers call it, so they can
+// never disagree on which nodes currently show an image). The actual <img>
+// object backing an image-node is created lazily, the first time a node
+// becomes image-active (getNodeImage() below) — hovering or selecting around
+// the graph doesn't eagerly fetch hundreds of images up front.
 //
 // Selection-Centered Navigation: clicking a node makes it the *selection* —
 // a stable point of focus that persists until another node is selected, a
 // filter change removes it, or it's explicitly cleared (click away /
-// Escape). Selecting recenters the graph on it (an animated pan, current
-// zoom preserved — see animateViewBox()) and shows a persistent card ("where
-// I am"). The Selection Hierarchy (is-selected/is-neighbor/is-connected,
-// plus the unstyled "unrelated" default) is driven ENTIRELY by the
-// selection, never by hover — hovering a different node never replaces or
-// dims it. Hover is a separate, secondary layer: it shows its own transient
-// card ("what I'm considering next"), a light .is-hovered outline on that
-// one node, AND marks its touching edges as the strongest emphasis tier with
-// a relationship label near the midpoint — all gone the instant the hover
-// ends, while the selection's card and tiers stay exactly as they were.
+// Escape). Selecting neither moves the node nor pans the camera — per
+// direct user feedback the camera move read as unwanted motion — it only
+// shows a persistent card ("where I am"). The Selection Hierarchy
+// (selected/neighbor/connected, plus the unstyled "unrelated" default) is
+// driven ENTIRELY by the selection, never by hover — hovering a different
+// node never replaces or dims it. Hover is a
+// separate, secondary layer: it shows its own transient card ("what I'm
+// considering next"), a light dashed outline on that one node, AND marks its
+// touching edges as the strongest emphasis tier with a relationship label
+// near the midpoint — all gone the instant the hover ends, while the
+// selection's card and tiers stay exactly as they were. This is also why
+// hover changes only ever invalidate the *interaction* canvas layer, never
+// the background one — see the module comment on invalidate()/
+// invalidateHover() below.
+//
 // Clicking a card (either one) is the only mouse gesture that navigates away
 // to the entry's real page — clicking a node only selects it. Keyboard
-// access takes the simpler, fully-reliable path instead: Enter/Space on a
-// focused node always navigates directly, since neither card is
-// independently reachable by Tab.
+// access to individual nodes is intentionally NOT reproduced in Canvas mode:
+// unlike the previous SVG implementation (one focusable <g> per node), a
+// <canvas> has no per-shape accessibility subtree for a screen reader or Tab
+// order to hook into, and building a synthetic one (a hidden list of every
+// node, kept in sync with the visible/filtered set) would be real,
+// maintenance-heavy machinery for a view whose own accessibility story
+// already rests elsewhere: Catalog is the complete, semantic, fully
+// keyboard-navigable listing of the same entries (see CLAUDE.md § Library
+// Accessibility — "Catalog remains the full semantic fallback"). What Map
+// still keeps keyboard-accessible: Escape clears the selection; the
+// pan/zoom/filter controls around the map are ordinary HTML; and once a
+// selection exists (via a pointer click), its persistent card's title is a
+// real link, reachable by Tab like any other page content.
 (function () {
   "use strict";
 
   var container = document.getElementById("library-map");
-  var svg = document.getElementById("library-map-svg");
-  if (!container || !svg) return;
-  var edgesG = document.getElementById("library-map-edges");
-  var nodesG = document.getElementById("library-map-nodes");
-  var labelsG = null; // created lazily on first hover label — see setHovered()
+  var bgCanvas = document.getElementById("library-map-bg-canvas");
+  var fxCanvas = document.getElementById("library-map-fx-canvas");
+  if (!container || !bgCanvas || !fxCanvas) return;
+  var bgCtx = bgCanvas.getContext("2d");
+  var fxCtx = fxCanvas.getContext("2d");
   var emptyEl = document.getElementById("library-map-empty");
-  var SVGNS = "http://www.w3.org/2000/svg";
   var HUB_TYPES = { person: true, group: true, organization: true };
   var FALLBACK_STYLE = { color: "dark-grey", shape: "circle", label: "Other" };
   var SUMMARY_MAX = 110;
-  var VIEW_ANIM_MS = 320;
 
-  // Abstract-shape / image-node sizes — kept in sync with createShape()/
-  // createNodeVisual() below, which is also where these numbers are used to
-  // actually draw each node. Collision uses nodeRadius() (further down),
-  // derived from these same constants, so the two can never silently drift
-  // apart from each other.
+  // Abstract-shape / image-node sizes, in WORLD units — kept in sync with
+  // drawShapeNode()/drawImageNode() below, which turn these into on-screen
+  // pixel sizes by multiplying by the current camera scale (see
+  // fitTransform()). Collision uses nodeRadius() (further down), derived
+  // from these same constants, so the two can never silently drift apart.
   var SHAPE_SIZE = { hub: 6, leaf: 4 };
   var IMAGE_SIZE = { hub: 11, leaf: 9 };
 
@@ -138,11 +182,13 @@
     return RELATION_CATEGORY[label] || "contextual";
   }
 
-  var W = 1000, H = 700; // reference canvas — only used as the initial pre-layout
-                          // viewBox and the packing pass's target aspect ratio;
-                          // the real extent always comes from fitViewportTo().
+  var W = 1000, H = 700; // reference WORLD size — only used as the initial
+                          // seed-spread extent and a minimum-size floor for
+                          // the first-load viewport fit. Not a pixel size:
+                          // actual on-screen sizing comes entirely from the
+                          // container's real CSS box (see resizeCanvases()).
   var nodes = [], edges = [];
-  var nodeById = {}, entryById = {}, nodeEls = {}, nodeShapeEls = {}, nodeImageEls = {}, edgeEls = {};
+  var nodeById = {}, entryById = {};
   var nodeComponent = {}; // recomputed per visible set on every relayout — see computeComponents()
   var typeStyles = {};
   var sel = { type: [], subject: [] };
@@ -150,8 +196,10 @@
   var currentVB = { x: 0, y: 0, w: W, h: H };
   var selectedId = null; // the persistent selection — see module comment
   var hoveredId = null; // the transient hover preview, independent of selectedId
-  var didPan = false; // true when the current gesture moved the map — see initPanZoom
-  var viewAnim = null; // in-flight viewBox animation handle, if any — see animateViewBox()
+  var didPan = false; // true when the current gesture moved the map — see initPointerHandling()
+  var draggedNode = null; // the node currently pinned to the pointer, if any — see startDrag()
+  var dragTarget = null; // {x,y} world coords the dragged node is pinned to, updated each pointermove
+  var didDrag = false; // true once a press-on-a-node gesture has crossed the drag threshold — see initPointerHandling()
 
   function matchesEntry(e) {
     var typeOk = sel.type.length === 0 || sel.type.indexOf(e.public_type) !== -1;
@@ -199,13 +247,13 @@
   // half-width radius would pass a naive center-distance collision check
   // while two image nodes still visibly overlapped at the corners. The
   // abstract shapes (circle/diamond/triangle) get a small multiplier over
-  // their base size for the same reason — see createShape()'s own
+  // their base size for the same reason — see drawShapeNode()'s own
   // diamond/triangle point math, which reaches slightly past `size` itself.
   // This is a STATIC radius: any entry that has an image gets the LARGER
   // image-node radius regardless of whether it's currently rendering as the
   // smaller abstract shape (see the module comment on why) — collision and
-  // packing never need to change when a selection changes, only that one
-  // node's own visual.
+  // packing never need to change when a selection changes, only what that
+  // one node's own draw call looks like.
   function nodeRadius(hub, hasImage) {
     if (hasImage) {
       var s = hub ? IMAGE_SIZE.hub : IMAGE_SIZE.leaf;
@@ -231,7 +279,6 @@
         hub: hub,
         hasImage: hasImage,
         radius: nodeRadius(hub, hasImage),
-        imageShown: false, // has this node's image href ever been set? see showNodeImage()
         x: W / 2 + (rng() - 0.5) * W * 0.8,
         y: H / 2 + (rng() - 0.5) * H * 0.8,
         vx: 0, vy: 0
@@ -278,117 +325,41 @@
   }
 
   // --- Stage 2: layout ------------------------------------------------------
-  // One shared pairwise force+collision iteration, used by both
-  // layoutComponent() (a component's own internal nodes, uniform damping)
-  // and reheatNeighborhood() (the whole visible graph, variable damping so
-  // the selected neighborhood gets full movement while everything else gets
-  // only a small capped nudge). Kept as one function so the two callers can
-  // never silently drift out of sync on the actual force math.
-  var BASE_K = 34; // ideal inter-node spacing — a tuned constant, not derived
-                    // from total node count: each component gets its own
-                    // small local simulation now, so "how crowded is the
-                    // WHOLE graph" no longer needs to factor into this.
+  // forceIterationWithCentering() below is the graph's one force+collision
+  // iteration — repulsion, edge springs (rate now varying modestly by
+  // relation category — see SPRING_CATEGORY_MULT), collision, and a weak
+  // centering pull — used by both the continuous settle scheduler and a
+  // drag's reheated sim, for the whole visible graph together. Entirely
+  // renderer-agnostic — see module comment.
+  var BASE_K = 34; // ideal inter-node spacing — a tuned constant. Since the
+                    // whole visible graph now settles as one simulation
+                    // (not split per component), this is the one spacing
+                    // constant governing every visible node's repulsion —
+                    // if the graph grows much larger than today's ~550
+                    // nodes, this is the first constant to revisit.
   var COLLISION_PAD = 4;
-  function forceIteration(nodeList, edgeList, dampingFor, maxSpeedFor) {
-    var repulsionK = BASE_K * BASE_K;
-    var minDistSq = Math.max(1, repulsionK * 0.001);
-    var springK = 0.02;
-    var i, j, n;
-    for (i = 0; i < nodeList.length; i++) { nodeList[i].fx = 0; nodeList[i].fy = 0; }
-    for (i = 0; i < nodeList.length; i++) {
-      for (j = i + 1; j < nodeList.length; j++) {
-        var a = nodeList[i], b = nodeList[j];
-        var dx = a.x - b.x, dy = a.y - b.y;
-        var distSq = dx * dx + dy * dy;
-        if (distSq < minDistSq) distSq = minDistSq;
-        var dist = Math.sqrt(distSq);
-        var force = repulsionK / distSq;
-        // Collision: an additional strong corrective push once the two
-        // nodes' actual rendered footprints (radius, precomputed once in
-        // buildGraph — see nodeRadius()) would overlap, on top of the
-        // generic inverse-square repulsion above. Without this, two large
-        // image nodes could still settle overlapping if the generic
-        // repulsion alone happened to reach equilibrium too close in.
-        var minSep = a.radius + b.radius + COLLISION_PAD;
-        if (dist < minSep) force += (minSep - dist) * 0.5;
-        var fx = (dx / dist) * force, fy = (dy / dist) * force;
-        a.fx += fx; a.fy += fy;
-        b.fx -= fx; b.fy -= fy;
-      }
-    }
-    edgeList.forEach(function (e) {
-      var a = nodeById[e.source], b = nodeById[e.target];
-      var dx = a.x - b.x, dy = a.y - b.y;
-      var dist = Math.sqrt(dx * dx + dy * dy) || 0.01;
-      var force = springK * (dist - BASE_K);
-      var fx = (dx / dist) * force, fy = (dy / dist) * force;
-      a.fx -= fx; a.fy -= fy;
-      b.fx += fx; b.fy += fy;
-    });
-    var totalMove = 0;
-    for (i = 0; i < nodeList.length; i++) {
-      n = nodeList[i];
-      var damping = dampingFor ? dampingFor(n) : 0.85;
-      n.vx = (n.vx + n.fx) * damping;
-      n.vy = (n.vy + n.fy) * damping;
-      var maxSpeed = maxSpeedFor ? maxSpeedFor(n) : BASE_K * 2;
-      var speed = Math.sqrt(n.vx * n.vx + n.vy * n.vy);
-      if (speed > maxSpeed) { n.vx = n.vx / speed * maxSpeed; n.vy = n.vy / speed * maxSpeed; }
-      n.x += n.vx; n.y += n.vy;
-      totalMove += Math.abs(n.vx) + Math.abs(n.vy);
-    }
-    return totalMove / (nodeList.length || 1);
-  }
-
-  // A component's internal layout. n<=2 is a fast path (65% of a typical
-  // Library-sized graph's components are singletons or pairs — running a
-  // general iterative sim on a system with nothing to converge toward is
-  // pure overhead): a singleton keeps whatever position it already has
-  // (seeded or warm-started); a pair is placed directly at rest-length
-  // apart, preserving their existing relative direction if they already
-  // have one so warm-starting stays meaningful across filter changes. n>=3
-  // warm-starts from current x/y (only genuinely new nodes use their seeded
-  // initial placement) and runs the shared force+collision iteration to
-  // convergence, with a fixed uniform damping — this is a component's own
-  // small simulation, not a slice of one huge global one.
-  function layoutComponent(compNodes, compEdges) {
-    if (compNodes.length <= 1) return;
-    if (compNodes.length === 2) {
-      var a = compNodes[0], b = compNodes[1];
-      var dx = a.x - b.x, dy = a.y - b.y;
-      var dist = Math.sqrt(dx * dx + dy * dy);
-      var target = a.radius + b.radius + COLLISION_PAD + BASE_K * 0.5;
-      if (dist < 0.01) { dx = 1; dy = 0; dist = 1; }
-      var scale = (target - dist) / 2 / dist;
-      a.x += dx * scale; a.y += dy * scale;
-      b.x -= dx * scale; b.y -= dy * scale;
-      return;
-    }
-    var maxIterations = 200;
-    for (var iter = 0; iter < maxIterations; iter++) {
-      // A weak centering force keeps THIS component's own nodes from
-      // drifting away from their own local center while they settle,
-      // independent of where the component will later be packed.
-      var cx = 0, cy = 0, i;
-      for (i = 0; i < compNodes.length; i++) { cx += compNodes[i].x; cy += compNodes[i].y; }
-      cx /= compNodes.length; cy /= compNodes.length;
-      compNodes.forEach(function (n) { n.fx = (n.fx || 0); n.fy = (n.fy || 0); });
-      var avg = forceIterationWithCentering(compNodes, compEdges, cx, cy);
-      if (avg < 0.05) break;
-    }
-    resolveOverlapsOnly(compNodes);
-  }
+  // How firmly an edge's spring pulls its two nodes toward BASE_K apart,
+  // relative to the base springK — modest, deliberately not "wildly
+  // different" per direct user feedback: a structural edge (a creator
+  // credit, part-of, made-with, …) is the firmest claim this graph makes
+  // about a relationship, so it keeps the full baseline pull; a contextual
+  // edge (affiliated-with, discusses, related-reading, …) is the loosest,
+  // so it's allowed to stretch further before its spring resists; historical
+  // (influenced-by, successor-to, …) sits between the two. This is the same
+  // three-way category already used for line style (solid/dashed/dotted —
+  // see edgeCategory()), now also expressed physically, not just visually.
+  var SPRING_CATEGORY_MULT = { structural: 1, historical: 0.7, contextual: 0.5 };
 
   // A dedicated cleanup pass, direct positional correction rather than
   // force integration: in a densely triangulated cluster, competing spring
-  // attraction can reach a converged equilibrium (forceIterationWithCentering's
-  // avg-movement threshold triggers) that still leaves a couple of nodes
-  // closer than their combined collision radius — the generic collision
-  // FORCE nudges them apart but has to share the tug-of-war with every other
-  // force in the same iteration, and isn't guaranteed to fully win. This
-  // runs after a component (or the reheat moving-set) has already settled
-  // into its overall shape, so it only has small residual overlaps left to
-  // resolve and converges in a handful of iterations.
+  // attraction can reach a converged equilibrium (alpha decayed below
+  // SIM_ALPHA_MIN) that still leaves a couple of nodes closer than their
+  // combined collision radius — the generic collision FORCE nudges them
+  // apart but has to share the tug-of-war with every other force in the
+  // same iteration, and isn't guaranteed to fully win. This runs after the
+  // whole visible graph has already settled into its overall shape, so it
+  // only has small residual overlaps left to resolve and converges in a
+  // handful of iterations.
   function resolveOverlapsOnly(nodeList) {
     var maxIter = 40;
     for (var iter = 0; iter < maxIter; iter++) {
@@ -411,10 +382,20 @@
       if (!anyOverlap) break;
     }
   }
-  // Same as forceIteration but adds a weak pull toward a given center —
-  // split out so the shared reheat path (which centers on nothing, the
-  // whole visible graph stays where it is) doesn't pay for it.
-  function forceIterationWithCentering(nodeList, edgeList, cx, cy) {
+  // The graph's one force+collision iteration: pairwise repulsion (with a
+  // collision correction once two nodes' actual rendered footprints —
+  // radius, precomputed once in buildGraph, see nodeRadius() — would
+  // overlap, on top of the generic inverse-square repulsion, since two
+  // large image nodes could otherwise settle overlapping), edge springs
+  // (rate scaled per edge by SPRING_CATEGORY_MULT — see its own comment),
+  // and a weak pull toward a given center. `alpha` (0..1) scales the net
+  // force applied each tick — the continuous settle scheduler decays it
+  // from 1 toward ~0 over the course of a settle, tapering movement
+  // smoothly to rest rather than cutting off at an arbitrary fixed
+  // iteration count. Defaults to 1 (no taper) so other callers are
+  // unaffected.
+  function forceIterationWithCentering(nodeList, edgeList, cx, cy, alpha) {
+    if (alpha === undefined) alpha = 1;
     var repulsionK = BASE_K * BASE_K;
     var minDistSq = Math.max(1, repulsionK * 0.001);
     var springK = 0.02, damping = 0.85, maxSpeed = BASE_K * 2;
@@ -439,7 +420,8 @@
       var a = nodeById[e.source], b = nodeById[e.target];
       var dx = a.x - b.x, dy = a.y - b.y;
       var dist = Math.sqrt(dx * dx + dy * dy) || 0.01;
-      var force = springK * (dist - BASE_K);
+      var mult = SPRING_CATEGORY_MULT[e.category] !== undefined ? SPRING_CATEGORY_MULT[e.category] : 1;
+      var force = springK * mult * (dist - BASE_K);
       var fx = (dx / dist) * force, fy = (dy / dist) * force;
       a.fx -= fx; a.fy -= fy;
       b.fx += fx; b.fy += fy;
@@ -449,6 +431,7 @@
       var n = nodeList[i];
       n.fx += (cx - n.x) * 0.01;
       n.fy += (cy - n.y) * 0.01;
+      n.fx *= alpha; n.fy *= alpha;
       n.vx = (n.vx + n.fx) * damping;
       n.vy = (n.vy + n.fy) * damping;
       var speed = Math.sqrt(n.vx * n.vx + n.vy * n.vy);
@@ -457,79 +440,6 @@
       totalMove += Math.abs(n.vx) + Math.abs(n.vy);
     }
     return totalMove / nodeList.length;
-  }
-
-  // Component bounding box — the union of every node's own radius-inflated
-  // footprint. This IS the box packComponents() packs, with only a small
-  // constant gutter added between boxes (not another full radius on top —
-  // that would double-count the same margin and waste viewport space across
-  // what's typically dozens of small islands).
-  function componentBounds(compNodes) {
-    var minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
-    compNodes.forEach(function (n) {
-      minX = Math.min(minX, n.x - n.radius);
-      minY = Math.min(minY, n.y - n.radius);
-      maxX = Math.max(maxX, n.x + n.radius);
-      maxY = Math.max(maxY, n.y + n.radius);
-    });
-    return { minX: minX, minY: minY, maxX: maxX, maxY: maxY, w: maxX - minX, h: maxY - minY };
-  }
-
-  var PACK_GUTTER = 24;
-  // Deterministic multi-row shelf packing (next-fit-decreasing-height):
-  // components are placed left-to-right into rows up to a target row width,
-  // wrapping when a component would exceed it, using whichever sort order
-  // the caller provides. A typical Library-sized graph is heavily fragmented
-  // (a large majority of components are singletons or pairs, not "one giant
-  // component plus a few stragglers") — a naive single-row strip would
-  // either produce one very long ribbon of tiny islands or need a
-  // pre-chosen wrap width; this instead derives a target width from the
-  // total packed area and the reference canvas's own aspect ratio, so the
-  // result stays roughly as wide as it is tall regardless of how fragmented
-  // the visible set happens to be. Two sort strategies, see relayout():
-  // sortBySizeId (cold start — no prior arrangement to respect, so pack for
-  // density) and sortByPosition (every relayout after that — see its own
-  // comment on why "already sorted by size/id" is wrong there).
-  function sortBySizeId(ga, gb) {
-    if (gb.length !== ga.length) return gb.length - ga.length;
-    var ida = ga.reduce(function (m, n) { return n.id < m ? n.id : m; }, ga[0].id);
-    var idb = gb.reduce(function (m, n) { return n.id < m ? n.id : m; }, gb[0].id);
-    return ida < idb ? -1 : ida > idb ? 1 : 0;
-  }
-  // Reading-order (top-to-bottom, then left-to-right) by each component's
-  // CURRENT centroid — used for every relayout after the first so a filter
-  // change's repack preserves roughly "what was near what," rather than
-  // reshuffling into an unrelated size/id order every time.
-  var POSITION_ROW = 120; // bucket height for the "top-to-bottom" pass, in canvas units
-  function sortByPosition(ga, gb) {
-    var ba = componentBounds(ga), bb = componentBounds(gb);
-    var acx = (ba.minX + ba.maxX) / 2, acy = (ba.minY + ba.maxY) / 2;
-    var bcx = (bb.minX + bb.maxX) / 2, bcy = (bb.minY + bb.maxY) / 2;
-    var rowA = Math.round(acy / POSITION_ROW), rowB = Math.round(bcy / POSITION_ROW);
-    if (rowA !== rowB) return rowA - rowB;
-    return acx - bcx;
-  }
-  function packComponents(groups, sortFn) {
-    if (!groups.length) return;
-    var sorted = groups.slice().sort(sortFn || sortBySizeId);
-    var boxes = sorted.map(function (g) { return { nodes: g, bounds: componentBounds(g) }; });
-    var totalArea = boxes.reduce(function (sum, b) { return sum + (b.bounds.w + PACK_GUTTER) * (b.bounds.h + PACK_GUTTER); }, 0);
-    var targetW = Math.max(BASE_K * 4, Math.sqrt(totalArea * (W / H)));
-
-    var cursorX = 0, cursorY = 0, rowH = 0;
-    boxes.forEach(function (box) {
-      var bw = box.bounds.w + PACK_GUTTER, bh = box.bounds.h + PACK_GUTTER;
-      if (cursorX > 0 && cursorX + bw > targetW) {
-        cursorX = 0;
-        cursorY += rowH;
-        rowH = 0;
-      }
-      var offsetX = cursorX - box.bounds.minX;
-      var offsetY = cursorY - box.bounds.minY;
-      box.nodes.forEach(function (n) { n.x += offsetX; n.y += offsetY; });
-      cursorX += bw;
-      rowH = Math.max(rowH, bh);
-    });
   }
 
   var VIEWPORT_PAD = 40;
@@ -553,57 +463,197 @@
   }
 
   var hasLaidOutOnce = false;
-  // --- relayout(): the one orchestrator for a full load or a filter change.
-  // Never applies only some of its steps — recompute components -> lay out
-  // each one (warm-started) -> pack -> fit viewport -> render positions.
-  // Deliberately NOT used by selection — see reheatNeighborhood(). The very
-  // first call (cold start, nothing on screen yet) packs by size/id
-  // (packComponents/sortBySizeId) — there's no prior arrangement to
-  // respect, so pack purely for density. Every call after that instead
-  // packs by each component's CURRENT reading-order position
-  // (sortByPosition): components keep their internal layout warm-started
-  // from before (so a node whose only connections just got hidden doesn't
-  // reset to a random spot) AND get fully repacked into a tight arrangement
-  // every time — critical for a filter that shrinks the visible set a lot
-  // (say, to one public type): the survivors' OLD positions were spread out
-  // to accommodate hundreds of now-hidden nodes, so simply leaving them in
-  // place (or only nudging apart actual overlaps) would strand a small
-  // filtered set across a huge, mostly-empty viewport. Repacking by current
-  // position instead of by size/id keeps "what was near what" roughly
-  // intact while still closing every gap the hidden nodes left behind. ----
-  function relayout(visibleIds, opts) {
-    opts = opts || {};
-    var idSet = {};
-    visibleIds.forEach(function (id) { idSet[id] = true; });
-    visible = idSet;
 
-    var visibleNodes = nodes.filter(function (n) { return idSet[n.id]; });
-    var visibleEdges = edges.filter(function (e) { return idSet[e.source] && idSet[e.target]; });
+  // --- Continuous settle scheduler: ONE simulation spans the WHOLE visible
+  // graph together — full pairwise repulsion between every visible node
+  // (not just within a connected component), springs/collision only for
+  // actual edges, and a weak pull toward the visible set's own live
+  // centroid (forceIterationWithCentering, unchanged). This replaces an
+  // earlier two-phase design (each component settled in isolation, then a
+  // separate deterministic packComponents() step translated whole
+  // components into tidy shelf rows) — per direct user feedback, that
+  // second step read as an ugly, disconnected jump no matter how it was
+  // eased, because it wasn't physics at all, just a geometric sort bolted
+  // on afterward. Removing it entirely and letting inter-component spacing
+  // emerge from the SAME repulsion that untangles each component's own
+  // edges is both simpler (one code path, not two) and closer to how every
+  // mainstream interactive force graph actually works (Obsidian, Gephi,
+  // d3-force default behavior) — disconnected nodes/clusters naturally
+  // settle apart from each other because they repel each other, not
+  // because something re-sorted them into a grid.
+  //
+  // Alpha (1 -> ~0) is the standard force-simulation convergence model
+  // (these constants are d3-force's own long-tuned defaults — alphaMin=
+  // 0.001, decay derived so alpha crosses it in ~300 ticks — reimplemented
+  // here in plain vanilla JS, not imported). Per the user's own explicit
+  // choice: this runs every frame for as long as the graph actually needs
+  // to settle, rather than a fixed iteration cap — but it still comes to a
+  // genuine rest and stops (not perpetual motion): once alpha decays below
+  // ALPHA_MIN, positions have essentially stopped moving on their own, so
+  // continuing to tick costs CPU for no visible benefit. SIM_SAFETY_TICKS
+  // is a generous cap so a pathological configuration can't tick forever —
+  // a normal settle finishes via alpha decay well before it.
+  //
+  // SIM_SPEED is a pure playback-speed control, separate from all of the
+  // above: 1.0 ticks the simulation at the rate this file was originally
+  // tuned at (3 ticks per rendered frame); 0.3 (the current setting, per
+  // direct user feedback that the original pace read as too fast/abrupt)
+  // advances the simulation at 30% of that rate — nodes visibly move more
+  // slowly and the whole settle takes proportionally longer in wall-clock
+  // time, but reaches the exact same final positions and convergence
+  // criteria, since neither the force math nor alpha decay themselves
+  // change. Implemented as a fractional tick-budget accumulator (rather
+  // than rounding SIM_SPEED*3 to a whole number of ticks per frame) so the
+  // speed control stays precise at any value, not just ones that divide
+  // evenly into whole ticks-per-frame. ------------------------------------
+  var SIM_TICKS_PER_FRAME_BASE = 3;
+  var SIM_SPEED = 0.3;
+  var SIM_ALPHA_MIN = 0.001;
+  var SIM_ALPHA_DECAY = 1 - Math.pow(SIM_ALPHA_MIN, 1 / 300);
+  var SIM_SAFETY_TICKS = 3000;
+  var simFrameHandle = null;
+  var currentSim = null; // the whole-graph sim currently ticking, if any — see
+                          // ensureSimRunning(), which drag reheats/reuses directly.
+  var relayoutGen = 0; // bumped on every relayout() call; guards a superseded
+                        // settle's completion callback from firing after a
+                        // newer filter change has already started its own.
 
-    var built = computeComponents(visibleNodes, visibleEdges);
-    nodeComponent = built.comp;
-    built.groups.forEach(function (g) {
-      var gEdges = visibleEdges.filter(function (e) {
-        var compOf = nodeComponent[e.source];
-        return compOf === nodeComponent[g[0].id];
-      });
-      layoutComponent(g, gEdges);
-    });
-    packComponents(built.groups, hasLaidOutOnce ? sortByPosition : sortBySizeId);
-    hasLaidOutOnce = true;
+  function settleTick(sim) {
+    var cx = 0, cy = 0, i;
+    for (i = 0; i < sim.nodes.length; i++) { cx += sim.nodes[i].x; cy += sim.nodes[i].y; }
+    cx /= sim.nodes.length; cy /= sim.nodes.length;
+    forceIterationWithCentering(sim.nodes, sim.edges, cx, cy, sim.alpha);
+    // Pin the dragged node (if any) back to the pointer's current world
+    // position AFTER the physics step, overriding whatever force/velocity
+    // integration just computed for it — every OTHER node still feels
+    // repulsion/spring pull from wherever the dragged node currently is
+    // (computed just above, before the override), so the rest of the graph
+    // genuinely responds to the drag in real time; only the dragged node
+    // itself is exempt from the physics that would otherwise move it.
+    if (draggedNode) { draggedNode.x = dragTarget.x; draggedNode.y = dragTarget.y; draggedNode.vx = 0; draggedNode.vy = 0; }
+    sim.alpha += (0 - sim.alpha) * SIM_ALPHA_DECAY;
+    sim.ticks++;
+    if (sim.alpha < SIM_ALPHA_MIN || sim.ticks > SIM_SAFETY_TICKS) sim.done = true;
+  }
 
-    var target = fitTargetFor(visibleNodes);
-    if (opts.animateFit && !reduceMotion()) {
-      animateViewBox(target, { tweenExtent: true });
-    } else {
-      currentVB = target;
-      applyViewBox();
+  function runContinuousSettle(sim, gen, onDone) {
+    if (simFrameHandle) cancelAnimationFrame(simFrameHandle);
+    currentSim = sim;
+    // prefers-reduced-motion: same alpha-decay convergence, same final
+    // quality — just run to completion synchronously in one pass instead of
+    // animating it across frames.
+    if (reduceMotion()) {
+      while (!sim.done) settleTick(sim);
+      currentSim = null;
+      onDone();
+      return;
     }
+    var tickBudget = 0; // fractional accumulator — see SIM_SPEED comment above
+    function frame() {
+      if (gen !== relayoutGen) return; // superseded — a newer relayout() owns the map now
+      tickBudget += SIM_TICKS_PER_FRAME_BASE * SIM_SPEED;
+      var ticksThisFrame = Math.floor(tickBudget);
+      tickBudget -= ticksThisFrame;
+      for (var t = 0; t < ticksThisFrame && !sim.done; t++) settleTick(sim);
+      // Approximate hit-testing and a visible "watch it relax" repaint
+      // while the settle is still in progress — see the module comment.
+      buildSpatialIndex(sim.nodes);
+      invalidate();
+      if (!sim.done) {
+        simFrameHandle = requestAnimationFrame(frame);
+      } else {
+        simFrameHandle = null;
+        currentSim = null;
+        onDone();
+      }
+    }
+    simFrameHandle = requestAnimationFrame(frame);
+  }
 
-    applyVisibility(idSet);
-    updatePositions(visibleNodes, visibleEdges);
-    applySelectionTiers();
-    repositionVisibleCards();
+  // --- Node dragging: pins one node to the pointer while everything else
+  // keeps responding to it in real time via the SAME continuous simulation
+  // used for every other settle — see settleTick()'s pin-override above.
+  // DRAG_ALPHA is a moderate reheat, not a full alpha=1 reset: grabbing one
+  // node shouldn't cause the whole graph to violently re-settle from
+  // scratch the way a fresh relayout() does, just wake up enough that
+  // nearby nodes visibly yield as the dragged node moves through them.
+  var DRAG_ALPHA = 0.4;
+  // Starts a fresh whole-graph sim if the graph is currently at rest, or
+  // simply boosts the alpha of whichever sim is already ticking — either
+  // way, called on every drag movement so a long, slow drag (during which
+  // alpha may have already decayed back down) keeps reheating rather than
+  // freezing mid-drag.
+  function ensureSimRunning(minAlpha) {
+    if (currentSim && !currentSim.done) {
+      if (currentSim.alpha < minAlpha) currentSim.alpha = minAlpha;
+      return;
+    }
+    relayoutGen++;
+    var gen = relayoutGen;
+    var visibleNodes = nodes.filter(function (n) { return visible[n.id]; });
+    var visibleEdges = edges.filter(function (e) { return visible[e.source] && visible[e.target]; });
+    if (visibleNodes.length < 2) return; // nothing to simulate
+    var sim = { nodes: visibleNodes, edges: visibleEdges, alpha: minAlpha, ticks: 0, done: false };
+    runContinuousSettle(sim, gen, function () { finishRelayout(gen, visibleNodes, visible, {}); });
+  }
+
+  // Called once the drag threshold is crossed (see initPointerHandling()) —
+  // not on the initial pointerdown itself, so a plain click on a node still
+  // reaches the click handler as a selection rather than a zero-distance drag.
+  function startDrag(n) {
+    draggedNode = n;
+    dragTarget = { x: n.x, y: n.y };
+    didDrag = true;
+    setHovered(null); // suppress hover switching to neighboring nodes while dragging — see module comment
+    ensureSimRunning(DRAG_ALPHA);
+    invalidateHover();
+  }
+  function updateDrag(worldX, worldY) {
+    if (!draggedNode) return;
+    dragTarget.x = worldX; dragTarget.y = worldY;
+    // Move the dragged node itself immediately, not just at the next
+    // physics tick — it should track the pointer with zero latency; only
+    // the REST of the graph's reaction is paced by the simulation's own
+    // frame rate (see settleTick()'s pin-override, which keeps re-asserting
+    // this same position every tick so physics never fights the pin).
+    draggedNode.x = worldX; draggedNode.y = worldY;
+    draggedNode.vx = 0; draggedNode.vy = 0;
+    ensureSimRunning(DRAG_ALPHA);
+    invalidate();
+  }
+  // Unpins the node — the already-running simulation (if any) simply keeps
+  // decaying and converging exactly like any other settle from here, per
+  // the module comment's "cool the simulation; freeze after convergence."
+  function endDrag() {
+    draggedNode = null;
+    dragTarget = null;
+    invalidate();
+  }
+
+  // The deterministic tail that used to end relayout() synchronously — now
+  // runs once the whole-graph continuous settle has actually converged (or
+  // hit its safety cap), never mid-settle.
+  //
+  // Per direct user feedback, the camera is NOT automatically re-fit/
+  // recentered after every settle any more. The one-time first-load fit
+  // that used to live here has moved to relayout() itself, applied
+  // synchronously against the freshly-seeded positions before the settle
+  // even starts (see that function's own comment) — waiting for THIS
+  // deferred completion to fit the viewport meant that fit could land
+  // however long the initial settle actually took (a real second or more
+  // at SIM_SPEED), which if the user had already clicked something by then
+  // showed up as an unexplained little zoom seemingly caused by their
+  // selection. Every relayout after the very first (a filter change, most
+  // commonly) leaves the current pan/zoom exactly where the user left it:
+  // the graph still settles underneath, but the camera itself is the
+  // user's to control from then on, never snapped or re-centered out from
+  // under them.
+  function finishRelayout(gen, visibleNodes, idSet) {
+    if (gen !== relayoutGen) return; // superseded
+    resolveOverlapsOnly(visibleNodes);
+
+    buildSpatialIndex(visibleNodes);
+    invalidate();
 
     var anyVisible = visibleNodes.length > 0;
     if (emptyEl) emptyEl.hidden = anyVisible || nodes.length === 0;
@@ -611,160 +661,431 @@
     if (hoveredId && !idSet[hoveredId]) clearHovered();
   }
 
-  function applyVisibility(idSet) {
-    nodes.forEach(function (n) {
-      var g = nodeEls[n.id];
-      if (g) g.style.display = idSet[n.id] ? "" : "none";
-    });
-    edges.forEach(function (e, i) {
-      var line = edgeEls[i];
-      if (!line) return;
-      var show = idSet[e.source] && idSet[e.target];
-      line.style.display = show ? "" : "none";
-    });
+  // --- relayout(): the one orchestrator for a full load or a filter change.
+  // Never applies only some of its steps — recompute components (still
+  // needed for the Selection Hierarchy's "connected" tier — see
+  // drawBackground() — even though layout itself is no longer split by
+  // component) -> on the true first call only, fit the viewport to the
+  // freshly-seeded positions immediately, synchronously, before anything
+  // else — see the comment on that block below for why it happens HERE and
+  // not after the settle completes -> settle the whole visible graph
+  // continuously (runContinuousSettle(), above) -> once it's genuinely
+  // converged, resolve any residual overlap and rebuild the spatial index
+  // (finishRelayout(), above). Deliberately NOT used by selection —
+  // selectNode() never repositions anything or touches the camera, only
+  // recomputes the Selection Hierarchy's tiers. -----------------------------
+  function relayout(visibleIds) {
+    relayoutGen++;
+    var gen = relayoutGen;
+    if (simFrameHandle) { cancelAnimationFrame(simFrameHandle); simFrameHandle = null; }
+
+    var idSet = {};
+    visibleIds.forEach(function (id) { idSet[id] = true; });
+    visible = idSet;
+
+    var visibleNodes = nodes.filter(function (n) { return idSet[n.id]; });
+    var visibleEdges = edges.filter(function (e) { return idSet[e.source] && idSet[e.target]; });
+
+    // The one-time initial fit — applied here, synchronously, against the
+    // just-seeded (not yet settled) positions, before the browser has
+    // painted anything from this call at all, rather than deferred until
+    // the settle finishes converging (which can take a real second or more
+    // at SIM_SPEED). Waiting meant this fit could land at whatever moment
+    // the settle happened to finish — if the user had already clicked
+    // something by then, the fit's arrival showed up as an unexplained
+    // little zoom seemingly caused by their selection. Doing it immediately
+    // means the very first frame ever painted is already reasonably framed,
+    // and nothing later ever re-fits the viewport on its own again.
+    if (!hasLaidOutOnce) {
+      hasLaidOutOnce = true;
+      currentVB = fitTargetFor(visibleNodes);
+    }
+
+    var built = computeComponents(visibleNodes, visibleEdges);
+    nodeComponent = built.comp;
+
+    function done() { finishRelayout(gen, visibleNodes, idSet); }
+    if (visibleNodes.length >= 2) {
+      runContinuousSettle({ nodes: visibleNodes, edges: visibleEdges, alpha: 1, ticks: 0, done: false }, gen, done);
+    } else {
+      done();
+    }
   }
 
-  // --- Stage 3: render -------------------------------------------------------
-  function el(name, attrs) {
-    var e = document.createElementNS(SVGNS, name);
-    for (var k in attrs) e.setAttribute(k, attrs[k]);
-    return e;
+  // --- Stage 3: spatial index -----------------------------------------------
+  // A uniform grid, not a quadtree: simpler to write correctly, and plenty
+  // fast at this graph's scale (a few hundred to ~1,000 nodes). Rebuilt
+  // whenever positions settle (after relayout/reheat/pan-triggered nothing —
+  // pan/zoom don't move WORLD positions, only the camera, so the index only
+  // needs rebuilding when node x/y actually change). Bucket size matches
+  // BASE_K (the same "ideal spacing" constant the force simulation already
+  // uses), so a hit test only ever needs to check the current cell plus its
+  // 8 neighbors.
+  var spatialGrid = {};
+  function gridKey(cx, cy) { return cx + "," + cy; }
+  function buildSpatialIndex(nodeList) {
+    spatialGrid = {};
+    nodeList.forEach(function (n) {
+      var cx = Math.floor(n.x / BASE_K), cy = Math.floor(n.y / BASE_K);
+      var k = gridKey(cx, cy);
+      (spatialGrid[k] || (spatialGrid[k] = [])).push(n);
+    });
+  }
+  // Nearest visible node to a world point, within `radius` world units —
+  // the caller (hover/click handlers) is responsible for converting a
+  // screen-space hit radius into world units first, via hitRadiusWorld(),
+  // so targets stay easy to hit at any zoom level.
+  function hitTestWorld(wx, wy, radius) {
+    var cx = Math.floor(wx / BASE_K), cy = Math.floor(wy / BASE_K);
+    var best = null, bestDist = Infinity;
+    for (var dx = -1; dx <= 1; dx++) {
+      for (var dy = -1; dy <= 1; dy++) {
+        var cell = spatialGrid[gridKey(cx + dx, cy + dy)];
+        if (!cell) continue;
+        for (var i = 0; i < cell.length; i++) {
+          var n = cell[i];
+          if (!visible[n.id]) continue;
+          var ddx = n.x - wx, ddy = n.y - wy;
+          var d = Math.sqrt(ddx * ddx + ddy * ddy);
+          var r = Math.max(n.radius, radius);
+          if (d <= r && d < bestDist) { bestDist = d; best = n; }
+        }
+      }
+    }
+    return best;
   }
 
-  // The abstract-type shape — always present for every node (the base
-  // graph), shown whenever the node isn't currently image-active. See
-  // createNodeGroup() for how this and the image visual coexist.
-  function createShape(style, size) {
-    var fill = "var(--colorplan-" + style.color + ")";
-    var shapeEl;
+  // --- Stage 4: camera transform + Canvas rendering -------------------------
+  // The ONE shared transform — used for drawing nodes, drawing edges, hit
+  // testing, and card anchoring alike (per the migration's own design goal:
+  // one source of truth for world<->screen conversion, never duplicated
+  // math that could drift out of sync). fitTransform(w, h) returns a
+  // uniform scale (never stretching x/y independently) plus an offset that
+  // centers `currentVB`'s world-space rect within a `w`x`h` CSS-pixel box —
+  // this reproduces the previous SVG's `viewBox`+`preserveAspectRatio=
+  // "xMidYMid meet"` letterboxing behavior exactly, rather than the
+  // non-uniform stretch a naive width-independent/height-independent mapping
+  // would produce.
+  function fitTransform(w, h) {
+    var scale = Math.min(w / currentVB.w, h / currentVB.h);
+    var contentW = currentVB.w * scale, contentH = currentVB.h * scale;
+    return {
+      scale: scale,
+      offsetX: (w - contentW) / 2 - currentVB.x * scale,
+      offsetY: (h - contentH) / 2 - currentVB.y * scale
+    };
+  }
+  // Canvas-local (0,0-origin) screen position — what drawing and hit-test
+  // conversion both use.
+  function worldToLocal(x, y, w, h) {
+    var t = fitTransform(w, h);
+    return { x: x * t.scale + t.offsetX, y: y * t.scale + t.offsetY };
+  }
+  // Pointer event (clientX/clientY) -> world coordinates, for hit-testing
+  // and panning.
+  function screenToWorld(clientX, clientY) {
+    var rect = fxCanvas.getBoundingClientRect();
+    var t = fitTransform(rect.width, rect.height);
+    return { x: (clientX - rect.left - t.offsetX) / t.scale, y: (clientY - rect.top - t.offsetY) / t.scale };
+  }
+  // A fixed ~13 CSS-px hit radius (within the spec's suggested 10-16px
+  // range), converted to world units for the current zoom level so targets
+  // stay comfortably clickable whether zoomed in or out — always somewhat
+  // larger than a node's own drawn radius, never smaller.
+  var HIT_RADIUS_PX = 13;
+  function hitRadiusWorld() {
+    var rect = fxCanvas.getBoundingClientRect();
+    var t = fitTransform(rect.width, rect.height);
+    return HIT_RADIUS_PX / t.scale;
+  }
+
+  // CSS custom properties resolved to concrete color/font values once and
+  // cached — a canvas 2D context has no idea what `var(--signal)` means, so
+  // every color/font this file draws with is resolved through here instead
+  // of being hard-coded, keeping this file as the single non-duplicating
+  // consumer of the site's existing Colorplan/type-scale custom properties
+  // (see CLAUDE.md § Colorplan palette). The cache is cleared and a repaint
+  // requested on a live prefers-color-scheme change, since (unlike an
+  // inline SVG `style="fill:var(--x)"`, which the browser re-resolves for
+  // free) a Canvas draw call bakes in a literal color string at call time.
+  var colorCache = {};
+  function cssVar(name) {
+    if (!(name in colorCache)) {
+      colorCache[name] = getComputedStyle(document.documentElement).getPropertyValue(name).trim() || "#000";
+    }
+    return colorCache[name];
+  }
+  if (window.matchMedia) {
+    var schemeQuery = window.matchMedia("(prefers-color-scheme: dark)");
+    var onSchemeChange = function () { colorCache = {}; invalidate(); };
+    if (schemeQuery.addEventListener) schemeQuery.addEventListener("change", onSchemeChange);
+  }
+
+  // Only the SELECTED node and its direct neighbors ever show their image —
+  // see the module comment on Image nodes. Both drawBackground() and
+  // drawInteraction() call this so they can never disagree about which
+  // nodes are currently image-active.
+  function isImageActive(n) {
+    if (!n.hasImage) return false;
+    if (n.id === selectedId) return true;
+    if (selectedId) {
+      var neighbors = neighborsOf(selectedId);
+      if (neighbors.indexOf(n.id) !== -1) return true;
+    }
+    return false;
+  }
+
+  // Lazily creates (once) the <img> backing an image-active node, and
+  // requests a repaint when it finishes loading — mirrors the previous
+  // implementation's "only set the href the first time a node actually
+  // becomes image-active" behavior; nodeImageCache[id] existing is now
+  // itself the "already requested" gate.
+  var nodeImageCache = {};
+  function getNodeImage(n) {
+    if (!n.hasImage) return null;
+    if (nodeImageCache[n.id]) return nodeImageCache[n.id];
+    var entry = entryById[n.id];
+    var url = entry && entry.primary_image && entry.primary_image.url;
+    if (!url) return null;
+    var img = new Image();
+    img.onload = function () { invalidate(); };
+    img.src = url;
+    nodeImageCache[n.id] = img;
+    return img;
+  }
+
+  function setEdgeDash(ctx, category) {
+    if (category === "historical") ctx.setLineDash([4, 3]);
+    else if (category === "contextual") ctx.setLineDash([1, 3]);
+    else ctx.setLineDash([]);
+  }
+
+  function drawShapeNode(ctx, n, p, style, scale) {
+    var size = (n.hub ? SHAPE_SIZE.hub : SHAPE_SIZE.leaf) * scale;
+    ctx.fillStyle = cssVar("--colorplan-" + style.color);
+    ctx.beginPath();
     if (style.shape === "square") {
-      shapeEl = el("rect", { x: -size, y: -size, width: size * 2, height: size * 2 });
+      ctx.rect(p.x - size, p.y - size, size * 2, size * 2);
     } else if (style.shape === "diamond") {
       var d = size * 1.15;
-      shapeEl = el("polygon", { points: "0,-" + d + " " + d + ",0 0," + d + " -" + d + ",0" });
+      ctx.moveTo(p.x, p.y - d);
+      ctx.lineTo(p.x + d, p.y);
+      ctx.lineTo(p.x, p.y + d);
+      ctx.lineTo(p.x - d, p.y);
+      ctx.closePath();
     } else if (style.shape === "triangle") {
       var t = size * 1.3;
-      shapeEl = el("polygon", { points: "0,-" + t + " " + t + "," + (t * 0.75) + " -" + t + "," + (t * 0.75) });
+      ctx.moveTo(p.x, p.y - t);
+      ctx.lineTo(p.x + t, p.y + t * 0.75);
+      ctx.lineTo(p.x - t, p.y + t * 0.75);
+      ctx.closePath();
     } else {
-      shapeEl = el("circle", { r: size });
+      ctx.arc(p.x, p.y, size, 0, Math.PI * 2);
     }
-    shapeEl.setAttribute("class", "map-shape map-node-shape");
-    shapeEl.style.fill = fill;
-    return shapeEl;
+    ctx.fill();
   }
 
-  // The image-node visual — built (but left without an href, and hidden) for
-  // every node that HAS a primary_image, regardless of whether it starts out
-  // image-active. See showNodeImage() for when the href actually gets set.
-  function createImageVisual(n, style) {
-    var s = n.hub ? IMAGE_SIZE.hub : IMAGE_SIZE.leaf;
-    var group = el("g", { "class": "map-shape map-node-image", "display": "none" });
-    var bg = el("rect", {
-      "class": "map-image-node-bg",
-      x: -s, y: -s, width: s * 2, height: s * 2
-    });
-    bg.style.stroke = "var(--colorplan-" + style.color + ")";
-    group.appendChild(bg);
-    var imageEl = el("image", {
-      "class": "map-image-node-img",
-      x: -s, y: -s, width: s * 2, height: s * 2,
-      preserveAspectRatio: "xMidYMid slice"
-    });
-    group.appendChild(imageEl);
-    return { group: group, imageEl: imageEl };
+  // preserveAspectRatio="xMidYMid slice" equivalent: scale the source image
+  // up to COVER the square (not fit within it), centered, then clip to the
+  // square — matches the previous SVG <image>'s crop behavior exactly.
+  function drawImageNode(ctx, n, p, style, scale) {
+    var s = (n.hub ? IMAGE_SIZE.hub : IMAGE_SIZE.leaf) * scale;
+    ctx.fillStyle = cssVar("--paper-2");
+    ctx.fillRect(p.x - s, p.y - s, s * 2, s * 2);
+    var img = getNodeImage(n);
+    if (img && img.complete && img.naturalWidth) {
+      var side = s * 2;
+      var fit = Math.max(side / img.naturalWidth, side / img.naturalHeight);
+      var dw = img.naturalWidth * fit, dh = img.naturalHeight * fit;
+      ctx.save();
+      ctx.beginPath();
+      ctx.rect(p.x - s, p.y - s, side, side);
+      ctx.clip();
+      ctx.drawImage(img, p.x - dw / 2, p.y - dh / 2, dw, dh);
+      ctx.restore();
+    }
+    ctx.strokeStyle = cssVar("--colorplan-" + style.color);
+    ctx.lineWidth = 1.5;
+    ctx.strokeRect(p.x - s, p.y - s, s * 2, s * 2);
   }
 
-  // Sets the image href the first time a node becomes image-active — see the
-  // module comment on why this is lazy rather than set for every hasImage
-  // node up front.
-  function showNodeImage(n) {
-    if (!n.hasImage || n.imageShown) return;
-    var entry = entryById[n.id];
-    var img = entry && entry.primary_image;
-    var imgEls = nodeImageEls[n.id];
-    if (!img || !img.url || !imgEls) return;
-    imgEls.imageEl.setAttributeNS("http://www.w3.org/1999/xlink", "href", img.url);
-    imgEls.imageEl.setAttribute("href", img.url);
-    n.imageShown = true;
+  function nodeVisualHalfSize(n, scale, showImage) {
+    return showImage ? (n.hub ? IMAGE_SIZE.hub : IMAGE_SIZE.leaf) * scale : (n.hub ? SHAPE_SIZE.hub : SHAPE_SIZE.leaf) * scale;
   }
 
-  function setNodeImageActive(n, active) {
-    var shapeEl = nodeShapeEls[n.id];
-    var imgEls = nodeImageEls[n.id];
-    if (!n.hasImage || !imgEls) return;
-    if (active) showNodeImage(n);
-    imgEls.group.style.display = active ? "" : "none";
-    if (shapeEl) shapeEl.style.display = active ? "none" : "";
-  }
+  // --- Background layer: the full graph at rest, plus the Selection
+  // Hierarchy's four opacity tiers (see module comment — driven ENTIRELY by
+  // selectedId, never by hover). Redrawn whenever anything that could change
+  // WHAT's drawn or WHERE happens: layout (relayout/reheat), a filter
+  // change, a resize, a pan/zoom step, or a selection change (since that
+  // changes every node's opacity tier, not just the selected node's own
+  // appearance) — see invalidate() below. Edges are NOT dimmed by
+  // selection (matching the previous SVG/CSS behavior exactly: only
+  // `.is-active`, touching the selected node, and `.is-hovered`, drawn on
+  // the interaction layer, ever change edge styling) — only node opacity
+  // participates in the four-tier ladder. --------------------------------
+  function drawBackground() {
+    var rect = bgCanvas.getBoundingClientRect();
+    var w = rect.width, h = rect.height;
+    bgCtx.clearRect(0, 0, w, h);
+    if (!nodes.length) return;
+    var t = fitTransform(w, h);
 
-  function renderInitial() {
-    edgesG.innerHTML = "";
-    nodesG.innerHTML = "";
-    edgeEls = {};
-    nodeEls = {}; nodeShapeEls = {}; nodeImageEls = {};
+    var hasSel = !!(selectedId && nodeById[selectedId] && visible[selectedId]);
+    var direct = {};
+    if (hasSel) neighborsOf(selectedId).forEach(function (id) { direct[id] = true; });
+    var selComp = hasSel ? nodeComponent[selectedId] : null;
 
-    edges.forEach(function (e, i) {
+    function tierAlpha(n) {
+      if (!hasSel) return 1;
+      if (n.id === selectedId) return 1;
+      if (direct[n.id]) return 0.85;
+      if (nodeComponent[n.id] === selComp) return 0.4;
+      return 0.12;
+    }
+
+    // Edges first — drawn under nodes, matching the previous SVG paint
+    // order (edges group before nodes group).
+    edges.forEach(function (e) {
+      if (!visible[e.source] || !visible[e.target]) return;
       var a = nodeById[e.source], b = nodeById[e.target];
-      var line = el("line", {
-        "class": "map-edge map-edge--" + e.category,
-        x1: a.x, y1: a.y, x2: b.x, y2: b.y
-      });
-      line.dataset.source = e.source;
-      line.dataset.target = e.target;
-      line.dataset.index = i;
-      edgesG.appendChild(line);
-      edgeEls[i] = line;
+      var pa = worldToLocal(a.x, a.y, w, h), pb = worldToLocal(b.x, b.y, w, h);
+      var active = hasSel && (e.source === selectedId || e.target === selectedId);
+      bgCtx.beginPath();
+      bgCtx.moveTo(pa.x, pa.y);
+      bgCtx.lineTo(pb.x, pb.y);
+      setEdgeDash(bgCtx, e.category);
+      bgCtx.strokeStyle = active ? cssVar("--signal") : cssVar("--gray-2");
+      bgCtx.lineWidth = active ? 1.5 : 1;
+      bgCtx.stroke();
     });
+    bgCtx.setLineDash([]);
 
     nodes.forEach(function (n) {
+      if (!visible[n.id]) return;
+      var p = worldToLocal(n.x, n.y, w, h);
       var style = typeStyles[n.publicType] || FALLBACK_STYLE;
-      var g = el("g", { "class": "map-node", transform: "translate(" + n.x + "," + n.y + ")" });
-      var shapeEl = createShape(style, n.hub ? SHAPE_SIZE.hub : SHAPE_SIZE.leaf);
-      g.appendChild(shapeEl);
-      nodeShapeEls[n.id] = shapeEl;
-      if (n.hasImage) {
-        var imgVis = createImageVisual(n, style);
-        g.appendChild(imgVis.group);
-        nodeImageEls[n.id] = imgVis;
+      var showImage = isImageActive(n);
+      bgCtx.globalAlpha = tierAlpha(n);
+      if (showImage) drawImageNode(bgCtx, n, p, style, t.scale);
+      else drawShapeNode(bgCtx, n, p, style, t.scale);
+      if (n.id === selectedId) {
+        var half = nodeVisualHalfSize(n, t.scale, showImage);
+        bgCtx.globalAlpha = 1;
+        bgCtx.beginPath();
+        bgCtx.setLineDash([]);
+        bgCtx.strokeStyle = cssVar("--signal");
+        bgCtx.lineWidth = 2;
+        bgCtx.arc(p.x, p.y, half + 3, 0, Math.PI * 2);
+        bgCtx.stroke();
       }
-
-      g.tabIndex = 0;
-      g.setAttribute("role", "link");
-      g.setAttribute("aria-label", n.title + " (" + (style.label || "Other") + ")");
-      g.addEventListener("pointerenter", function () { setHovered(n.id); });
-      g.addEventListener("pointerleave", function () { clearHovered(); });
-      g.addEventListener("focus", function () { setHovered(n.id); });
-      g.addEventListener("blur", function () { clearHovered(); });
-      // A click selects this node (see module comment) — it does not
-      // navigate. Keyboard activation is the simpler, always-reliable path:
-      // it navigates directly, since neither card is independently
-      // reachable by Tab.
-      g.addEventListener("click", function () { selectNode(n.id); });
-      g.addEventListener("keydown", function (ev) {
-        if (ev.key === "Enter" || ev.key === " ") { ev.preventDefault(); if (n.url) location.href = n.url; }
-      });
-
-      nodesG.appendChild(g);
-      nodeEls[n.id] = g;
     });
+    bgCtx.globalAlpha = 1;
   }
 
-  // Updates on-screen positions for a given (usually "currently visible")
-  // subset only — called after relayout() and after reheatNeighborhood(),
-  // never rebuilds DOM structure (that only happens once, in
-  // renderInitial()).
-  function updatePositions(nodeList, edgeList) {
-    nodeList.forEach(function (n) {
-      var g = nodeEls[n.id];
-      if (g) g.setAttribute("transform", "translate(" + n.x + "," + n.y + ")");
-    });
-    edgeList.forEach(function (e) {
+  // --- Interaction layer: hover and/or an in-progress drag (see module
+  // comment — neither touches the selection's tiers, so this never needs
+  // the background layer's tierAlpha() logic). A hovered node's touching
+  // edges are drawn here at the strongest emphasis, each with its
+  // relationship label near the midpoint if it has one — both gone the
+  // instant the hover ends. Cheap enough to redraw on every hover/pan/zoom/
+  // drag tick without touching the (potentially much larger) background
+  // layer. Hover is suppressed for the duration of a drag (startDrag()
+  // calls setHovered(null)), so in practice these two blocks are mutually
+  // exclusive, but each is written to stand alone regardless. -------------
+  function drawInteraction() {
+    var rect = fxCanvas.getBoundingClientRect();
+    var w = rect.width, h = rect.height;
+    fxCtx.clearRect(0, 0, w, h);
+    var t = fitTransform(w, h);
+
+    if (draggedNode && visible[draggedNode.id]) {
+      var dp = worldToLocal(draggedNode.x, draggedNode.y, w, h);
+      var dhalf = nodeVisualHalfSize(draggedNode, t.scale, isImageActive(draggedNode));
+      fxCtx.beginPath();
+      fxCtx.setLineDash([]);
+      fxCtx.strokeStyle = cssVar("--signal");
+      fxCtx.lineWidth = 2;
+      fxCtx.arc(dp.x, dp.y, dhalf + 3, 0, Math.PI * 2);
+      fxCtx.stroke();
+    }
+
+    if (!hoveredId || hoveredId === selectedId) return;
+    var n = nodeById[hoveredId];
+    if (!n || !visible[hoveredId]) return;
+
+    edges.forEach(function (e) {
+      if (e.source !== hoveredId && e.target !== hoveredId) return;
+      if (!visible[e.source] || !visible[e.target]) return;
       var a = nodeById[e.source], b = nodeById[e.target];
-      var idx = edges.indexOf(e);
-      var line = edgeEls[idx];
-      if (line) { line.setAttribute("x1", a.x); line.setAttribute("y1", a.y); line.setAttribute("x2", b.x); line.setAttribute("y2", b.y); }
+      var pa = worldToLocal(a.x, a.y, w, h), pb = worldToLocal(b.x, b.y, w, h);
+      fxCtx.beginPath();
+      fxCtx.setLineDash([]);
+      fxCtx.moveTo(pa.x, pa.y);
+      fxCtx.lineTo(pb.x, pb.y);
+      fxCtx.strokeStyle = cssVar("--signal");
+      fxCtx.lineWidth = 2;
+      fxCtx.stroke();
+      if (e.label) {
+        var mx = (pa.x + pb.x) / 2, my = (pa.y + pb.y) / 2;
+        fxCtx.font = "8px " + cssVar("--font-mono");
+        fxCtx.textAlign = "center";
+        fxCtx.textBaseline = "middle";
+        fxCtx.lineJoin = "round";
+        fxCtx.lineWidth = 3;
+        fxCtx.strokeStyle = cssVar("--paper");
+        fxCtx.strokeText(e.label, mx, my);
+        fxCtx.fillStyle = cssVar("--ink");
+        fxCtx.fillText(e.label, mx, my);
+      }
     });
-    repositionEdgeLabel();
+
+    var p = worldToLocal(n.x, n.y, w, h);
+    var half = nodeVisualHalfSize(n, t.scale, isImageActive(n));
+    fxCtx.beginPath();
+    fxCtx.setLineDash([2, 2]);
+    fxCtx.strokeStyle = cssVar("--signal");
+    fxCtx.lineWidth = 1;
+    fxCtx.arc(p.x, p.y, half + 3, 0, Math.PI * 2);
+    fxCtx.stroke();
+    fxCtx.setLineDash([]);
+  }
+
+  // Event-driven repaint scheduling — the map does not run a continuous
+  // animation loop. invalidate() marks BOTH layers dirty (used for anything
+  // that can change node/edge appearance or position: layout, filtering,
+  // selection, pan/zoom, resize); invalidateHover() marks only the
+  // interaction layer (used for hover changes, which per the module comment
+  // never affect the background's own appearance). Either way, at most one
+  // requestAnimationFrame is ever pending at a time.
+  var rafHandle = null, bgDirty = true, fxDirty = true;
+  function scheduleFrame() {
+    if (rafHandle) return;
+    rafHandle = requestAnimationFrame(function () {
+      rafHandle = null;
+      if (bgDirty) { drawBackground(); bgDirty = false; }
+      if (fxDirty) { drawInteraction(); fxDirty = false; }
+    });
+  }
+  function invalidate() { bgDirty = true; fxDirty = true; scheduleFrame(); }
+  function invalidateHover() { fxDirty = true; scheduleFrame(); }
+
+  // HiDPI-aware sizing: the canvas BUFFER is CSS size * devicePixelRatio,
+  // scaled back down via ctx.setTransform so every draw call above can stay
+  // in ordinary CSS-pixel coordinates. Re-run whenever the container's box
+  // actually changes size (ResizeObserver), not on every frame.
+  function resizeCanvases() {
+    var rect = container.getBoundingClientRect();
+    var dpr = window.devicePixelRatio || 1;
+    [bgCanvas, fxCanvas].forEach(function (cv) {
+      cv.width = Math.max(1, Math.round(rect.width * dpr));
+      cv.height = Math.max(1, Math.round(rect.height * dpr));
+      cv.style.width = rect.width + "px";
+      cv.style.height = rect.height + "px";
+    });
+    bgCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    fxCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    invalidate();
   }
 
   function neighborsOf(id) {
@@ -778,8 +1099,16 @@
 
   // --- Preview cards: two independent catalog-style cards (image + title +
   // creator/year + short summary) — see module comment. Each is its own
-  // small controller over one DOM subtree so the same population/position/
-  // show/hide logic can run against either without duplication. -----------
+  // small controller over one DOM subtree so the same population/show/hide
+  // logic can run against either without duplication. Position is FIXED, not
+  // node-relative — see the CSS (.library-map-card / .library-map-card--hover):
+  // the selected card always sits in the canvas's upper-right corner, the
+  // hover card always in the upper-left, regardless of where the node
+  // itself is on screen. An earlier design anchored each card near its own
+  // node (probing several directions/distances to dodge covering it or
+  // other nodes) and had to reposition on every pan/zoom/settle tick; fixed
+  // corners are simpler, predictable, and per direct user feedback read
+  // better than a card that chases the node around. -------------------------
   function makeCardController(rootEl) {
     if (!rootEl) return null;
     return {
@@ -793,14 +1122,6 @@
 
   var selectedCard = makeCardController(document.getElementById("library-map-card"));
   var hoverCard = makeCardController(document.getElementById("library-map-hover-card"));
-
-  function nodeScreenPosition(n) {
-    var rect = svg.getBoundingClientRect();
-    return {
-      x: rect.left + (n.x - currentVB.x) / currentVB.w * rect.width,
-      y: rect.top + (n.y - currentVB.y) / currentVB.h * rect.height
-    };
-  }
 
   function populateCard(ctrl, entry) {
     if (ctrl.media) {
@@ -839,100 +1160,6 @@
     }
   }
 
-  // Candidate directions/distances positionCardFor() probes when the default
-  // corner placement would cover another node — see that function's comment.
-  // The minimum distance (24px) is deliberately larger than a typical node's
-  // own on-screen radius: a hover card positioned right at a node's edge
-  // caused a flicker loop in practice — the card (an ordinary HTML element,
-  // on top of the SVG) intercepts the pointer the instant it appears under
-  // the cursor that's still resting on the node, firing that node's
-  // `pointerleave` and hiding the card again, which puts the cursor back
-  // over the node and re-triggers `pointerenter`. Keeping real clearance
-  // from the anchor node itself (not just OTHER nodes, see below) is what
-  // actually prevents that, not just a visual nicety.
-  var CARD_DIRS = [
-    { dx: 1, dy: 1 }, { dx: 1, dy: -1 }, { dx: -1, dy: 1 }, { dx: -1, dy: -1 },
-    { dx: 1, dy: 0 }, { dx: -1, dy: 0 }, { dx: 0, dy: 1 }, { dx: 0, dy: -1 }
-  ];
-  var CARD_DISTANCES = [24, 50, 90, 140];
-
-  // Split out from showCardFor() so panning/zooming can re-run just the
-  // positioning math (a node's on-screen point moves with the viewBox even
-  // though its own SVG-space x/y never changes) without re-populating a
-  // card's content on every pointermove tick.
-  //
-  // A selected node's own direct neighbors are, by construction, usually the
-  // CLOSEST nodes to it (spring attraction pulls connected nodes together) —
-  // so always offsetting the card the same fixed +14/+14 from the node
-  // frequently parks it directly on top of exactly the neighbors it's meant
-  // to help the user see. Instead, try the default corner first, and if that
-  // would cover another currently-visible node, probe a handful of other
-  // directions/distances and use whichever leaves the fewest nodes hidden
-  // underneath (ties favor the smallest distance, then the default corner).
-  // A direction's dx/dy sign picks which edge of the card anchors near the
-  // node — a naive "shift the top-left corner by dx*dist" only actually
-  // moves the card's BULK away from the node for the (+1,+1) quadrant; for
-  // every other direction the card's top-left corner moves while the card
-  // still extends across the node in the direction it grows (right/down by
-  // width/height), so e.g. "leftward" candidates kept re-covering the node
-  // instead of clearing it. Extend AWAY from the origin on whichever side
-  // dx/dy points to instead (0 centers the card on that axis).
-  function cardEdge(origin, dist, dir, size) {
-    if (dir > 0) return origin + dist;
-    if (dir < 0) return origin - dist - size;
-    return origin - size / 2;
-  }
-  function positionCardFor(ctrl, n) {
-    if (!ctrl || ctrl.root.hidden) return;
-    var containerRect = container.getBoundingClientRect();
-    var basePos = nodeScreenPosition(n);
-    var originX = basePos.x - containerRect.left, originY = basePos.y - containerRect.top;
-    var cardRect = ctrl.root.getBoundingClientRect();
-    var maxLeft = Math.max(4, containerRect.width - cardRect.width - 4);
-    var maxTop = Math.max(4, containerRect.height - cardRect.height - 4);
-
-    // The anchor node's OWN position is included here too (not excluded) —
-    // see the module comment on CARD_DISTANCES on why covering it specifically
-    // causes a hover flicker loop, not just visual overlap like any other node.
-    var otherPts = [];
-    nodes.forEach(function (nd) {
-      if (!visible[nd.id]) return;
-      var p = nodeScreenPosition(nd);
-      otherPts.push({ x: p.x - containerRect.left, y: p.y - containerRect.top, self: nd.id === n.id });
-    });
-    function coverage(left, top) {
-      var count = 0, selfCovered = false;
-      for (var i = 0; i < otherPts.length; i++) {
-        var p = otherPts[i];
-        if (p.x >= left && p.x <= left + cardRect.width && p.y >= top && p.y <= top + cardRect.height) {
-          count++;
-          if (p.self) selfCovered = true;
-        }
-      }
-      return { count: count, selfCovered: selfCovered };
-    }
-
-    // Ranking hard-prioritizes NOT covering the anchor node itself (that's
-    // what actually causes the flicker loop) over minimizing how many other
-    // nodes get covered, which is a best-effort secondary goal.
-    var best = null;
-    for (var d = 0; d < CARD_DISTANCES.length; d++) {
-      var dist = CARD_DISTANCES[d];
-      for (var i = 0; i < CARD_DIRS.length; i++) {
-        var dir = CARD_DIRS[i];
-        var left = Math.max(4, Math.min(cardEdge(originX, dist, dir.dx, cardRect.width), maxLeft));
-        var top = Math.max(4, Math.min(cardEdge(originY, dist, dir.dy, cardRect.height), maxTop));
-        var cov = coverage(left, top);
-        var rank = (cov.selfCovered ? 1000 : 0) + cov.count;
-        if (!best || rank < best.rank) best = { left: left, top: top, rank: rank };
-        if (rank === 0) break;
-      }
-      if (best && best.rank === 0) break;
-    }
-    ctrl.root.style.left = best.left + "px";
-    ctrl.root.style.top = best.top + "px";
-  }
-
   function showCardFor(ctrl, id) {
     if (!ctrl) return;
     var n = nodeById[id], entry = entryById[id];
@@ -940,23 +1167,10 @@
     ctrl.root.dataset.entryId = id;
     populateCard(ctrl, entry);
     ctrl.root.hidden = false;
-    positionCardFor(ctrl, n);
   }
 
   function hideCardFor(ctrl) {
     if (ctrl) { ctrl.root.hidden = true; delete ctrl.root.dataset.entryId; }
-  }
-
-  // Called on every pan/zoom step so any visible card tracks its node
-  // instead of staying pinned to its old screen position while the graph
-  // moves underneath it.
-  function repositionVisibleCards() {
-    [selectedCard, hoverCard].forEach(function (ctrl) {
-      if (!ctrl || ctrl.root.hidden) return;
-      var id = ctrl.root.dataset.entryId;
-      var n = id && nodeById[id];
-      if (n) positionCardFor(ctrl, n);
-    });
   }
 
   [selectedCard, hoverCard].forEach(function (ctrl) {
@@ -968,130 +1182,24 @@
     });
   });
 
-  // --- Selection hierarchy: four visual tiers, driven only by selectedId —
-  // hover never touches this (see module comment):
-  //   1. is-selected  — the selected node itself
-  //   2. is-neighbor  — directly connected to it
-  //   3. is-connected — same connected component, but not directly adjacent
-  //      ("connected background")
-  //   4. (default under .has-selection, no extra class) — a different
-  //      component entirely ("unrelated"), recedes the most
-  // Recomputed fresh on every selection change and on every relayout. Also
-  // owns which nodes are currently image-active (selected + direct
-  // neighbors only — see module comment). --------------------------------
-  function applySelectionTiers() {
-    nodes.forEach(function (n) {
-      var g = nodeEls[n.id];
-      if (g) g.classList.remove("is-selected", "is-neighbor", "is-connected");
-      setNodeImageActive(n, false);
-    });
-    Object.keys(edgeEls).forEach(function (i) { edgeEls[i].classList.remove("is-active"); });
-
-    if (!selectedId || !nodeEls[selectedId]) {
-      nodesG.classList.remove("has-selection");
-      return;
-    }
-    nodesG.classList.add("has-selection");
-    nodeEls[selectedId].classList.add("is-selected");
-    setNodeImageActive(nodeById[selectedId], true);
-
-    var direct = {};
-    neighborsOf(selectedId).forEach(function (nid) {
-      direct[nid] = true;
-      var g = nodeEls[nid];
-      if (g) g.classList.add("is-neighbor");
-      if (nodeById[nid]) setNodeImageActive(nodeById[nid], true);
-    });
-
-    var comp = nodeComponent[selectedId];
-    nodes.forEach(function (n) {
-      if (n.id === selectedId || direct[n.id]) return;
-      var g = nodeEls[n.id];
-      if (g && nodeComponent[n.id] === comp) g.classList.add("is-connected");
-    });
-
-    edges.forEach(function (e, i) {
-      if (e.source === selectedId || e.target === selectedId) {
-        var line = edgeEls[i];
-        if (line) line.classList.add("is-active");
-      }
-    });
-  }
-
-  // The neighborhood used by reheatNeighborhood() below — selected node,
-  // its direct neighbors, and their neighbors in turn, restricted to the
-  // currently visible set.
-  function localNeighborhood(id) {
-    var out = {}; out[id] = true;
-    var ring1 = neighborsOf(id).filter(function (nid) { return visible[nid]; });
-    ring1.forEach(function (nid) { out[nid] = true; });
-    ring1.forEach(function (nid) {
-      neighborsOf(nid).forEach(function (nid2) { if (visible[nid2]) out[nid2] = true; });
-    });
-    return Object.keys(out);
-  }
-
-  // A short, bounded local relax giving the selected node's neighborhood
-  // additional space — deliberately NOT relayout(): the full visible graph
-  // is retained exactly where it is, nothing is repacked or refit. The
-  // moving set (selection + its neighborhood, see localNeighborhood()) gets
-  // full-strength movement; every OTHER currently-visible node gets a small
-  // capped nudge rather than being held perfectly immovable — a fully rigid
-  // "wall" of frozen neighbors can trap a hub node's neighborhood with
-  // nowhere to expand into, especially for an entry embedded deep inside a
-  // densely-linked component. Capping the rest-of-graph's total displacement
-  // (a few pixels) keeps the mental map intact while still giving the
-  // neighborhood something to push against that can yield a little. Skipped
-  // entirely under reduced motion — the point is legibility, not motion.
-  var REHEAT_ITER = 40;
-  var REHEAT_REST_DAMPING = 0.12;
-  var REHEAT_REST_CAP = 6;
-  function reheatNeighborhood(id) {
-    var movingIds = {};
-    localNeighborhood(id).forEach(function (nid) { movingIds[nid] = true; });
-    var visibleNodes = nodes.filter(function (n) { return visible[n.id]; });
-    var visibleEdges = edges.filter(function (e) { return visible[e.source] && visible[e.target]; });
-    if (visibleNodes.length < 3) return;
-
-    visibleNodes.forEach(function (n) { n._reheatX0 = n.x; n._reheatY0 = n.y; });
-    for (var iter = 0; iter < REHEAT_ITER; iter++) {
-      forceIteration(
-        visibleNodes, visibleEdges,
-        function (n) { return movingIds[n.id] ? 0.85 : REHEAT_REST_DAMPING; },
-        function (n) { return movingIds[n.id] ? BASE_K * 2 : BASE_K * 0.3; }
-      );
-      visibleNodes.forEach(function (n) {
-        if (movingIds[n.id]) return;
-        var ddx = n.x - n._reheatX0, ddy = n.y - n._reheatY0;
-        var d = Math.sqrt(ddx * ddx + ddy * ddy);
-        if (d > REHEAT_REST_CAP) {
-          var s = REHEAT_REST_CAP / d;
-          n.x = n._reheatX0 + ddx * s;
-          n.y = n._reheatY0 + ddy * s;
-          n.vx = 0; n.vy = 0;
-        }
-      });
-    }
-    resolveOverlapsOnly(visibleNodes.filter(function (n) { return movingIds[n.id]; }));
-    updatePositions(visibleNodes, visibleEdges);
-  }
-
-  // Clicking a node makes it the new selection: recompute the tiers, show
-  // its persistent card, give its neighborhood room to breathe, and animate
-  // the graph to recenter on it. Selecting the node that's already selected
-  // is a no-op — there's nothing to redo.
+  // Clicking a node makes it the new selection: show its persistent card —
+  // that's it. Selection no longer moves anything OR pans the camera: an
+  // earlier design both nudged the neighborhood apart for breathing room
+  // AND animated the view to recenter on the selection; per direct user
+  // feedback both read as disconcerting motion breaking visual continuity,
+  // so a click now only ever updates which tiers/card are showing, leaving
+  // the graph and the camera exactly where they were. Selecting the node
+  // that's already selected is a no-op — there's nothing to redo.
   function selectNode(id) {
     if (id === selectedId) return;
     selectedId = id;
-    if (!reduceMotion()) reheatNeighborhood(id);
-    applySelectionTiers();
+    invalidate();
     showCardFor(selectedCard, id);
     // The hover card only ever shows something OTHER than the selection —
     // now that this node IS the selection, its hover card (if it happened
     // to be the thing just hovered) would be redundant with the new
     // selected card.
     if (hoveredId === id) hideCardFor(hoverCard);
-    recenterOn(nodeById[id]);
   }
 
   // A selection has no other way to clear once made (otherwise it would be
@@ -1100,137 +1208,165 @@
   function deselectNode() {
     if (!selectedId) return;
     selectedId = null;
-    applySelectionTiers();
+    invalidate();
     hideCardFor(selectedCard);
   }
 
   // --- Hover: a secondary, transient layer that never touches the
-  // selection's tiers, card, or the simulation — see module comment. Also
-  // marks the hovered node's touching edges as the strongest emphasis tier
-  // and shows each one's relationship label near its midpoint (only while
-  // that specific hover lasts). Hovering the already-selected node is a
-  // no-op (its card is already the persistent one on screen). ------------
-  function ensureLabelsLayer() {
-    if (labelsG) return labelsG;
-    labelsG = el("g", { id: "library-map-edge-labels" });
-    svg.appendChild(labelsG);
-    return labelsG;
-  }
-  var hoveredEdgeIdx = [];
-  var edgeLabelEls = [];
-  function showHoveredEdges(id) {
-    hoveredEdgeIdx = [];
-    edges.forEach(function (e, i) {
-      if (e.source !== id && e.target !== id) return;
-      if (!visible[e.source] || !visible[e.target]) return;
-      hoveredEdgeIdx.push(i);
-      var line = edgeEls[i];
-      if (line) line.classList.add("is-hovered");
-      if (!e.label) return;
-      var a = nodeById[e.source], b = nodeById[e.target];
-      var mx = (a.x + b.x) / 2, my = (a.y + b.y) / 2;
-      var label = el("text", { "class": "map-edge-label", x: mx, y: my });
-      label.textContent = e.label;
-      ensureLabelsLayer().appendChild(label);
-      edgeLabelEls.push(label);
-    });
-  }
-  function clearHoveredEdges() {
-    hoveredEdgeIdx.forEach(function (i) { var line = edgeEls[i]; if (line) line.classList.remove("is-hovered"); });
-    hoveredEdgeIdx = [];
-    edgeLabelEls.forEach(function (l) { l.remove(); });
-    edgeLabelEls = [];
-  }
-  function repositionEdgeLabel() {
-    if (!edgeLabelEls.length || !hoveredEdgeIdx.length) return;
-    hoveredEdgeIdx.forEach(function (i, idx) {
-      var e = edges[i], label = edgeLabelEls[idx];
-      if (!e || !label) return;
-      var a = nodeById[e.source], b = nodeById[e.target];
-      label.setAttribute("x", (a.x + b.x) / 2);
-      label.setAttribute("y", (a.y + b.y) / 2);
-    });
-  }
-
+  // selection's tiers, card, or the simulation — see module comment. Hovering
+  // the already-selected node is a no-op (its card is already the
+  // persistent one on screen). ------------------------------------------
   function setHovered(id) {
     if (id === hoveredId) return;
-    if (hoveredId && nodeEls[hoveredId]) nodeEls[hoveredId].classList.remove("is-hovered");
-    clearHoveredEdges();
     hoveredId = id;
+    invalidateHover();
     if (!id || id === selectedId) {
       hideCardFor(hoverCard);
       return;
     }
-    if (nodeEls[id]) nodeEls[id].classList.add("is-hovered");
-    showHoveredEdges(id);
     showCardFor(hoverCard, id);
   }
 
   function clearHovered() { setHovered(null); }
 
+  // --- Pointer handling: pan, zoom, hover, and click/select-or-deselect all
+  // live on the interaction (top) canvas, since it's the one receiving
+  // pointer events (see CSS: the background canvas has pointer-events:
+  // none). Hover hit-testing, panning, and dragging all share one
+  // pointermove listener since they all need the same screen->world
+  // conversion on every move anyway.
+  //
+  // Pressing down ON A NODE doesn't immediately start a drag — it becomes a
+  // dragCandidate first, promoted to an actual drag (startDrag()) only once
+  // the pointer crosses the same movement threshold panning already uses.
+  // Below that threshold, releasing is a plain click-to-select; a candidate
+  // that IS promoted sets didDrag so the trailing click event (which still
+  // fires after a completed drag) doesn't ALSO select/deselect the node —
+  // matching didPan's existing role for the panning gesture. Pressing down
+  // on empty canvas is unambiguous (there's nothing to drag) and starts a
+  // pan immediately, same as before. ---------------------------------------
+  function initPointerHandling() {
+    var panning = false, start = null, dragCandidate = null;
+    fxCanvas.addEventListener("pointerdown", function (ev) {
+      didPan = false;
+      start = { x: ev.clientX, y: ev.clientY, vx: currentVB.x, vy: currentVB.y };
+      var world = screenToWorld(ev.clientX, ev.clientY);
+      var hit = hitTestWorld(world.x, world.y, hitRadiusWorld());
+      if (hit) {
+        dragCandidate = hit;
+        panning = false;
+      } else {
+        dragCandidate = null;
+        panning = true;
+      }
+      fxCanvas.setPointerCapture(ev.pointerId);
+    });
+    fxCanvas.addEventListener("pointermove", function (ev) {
+      if (draggedNode) {
+        var w = screenToWorld(ev.clientX, ev.clientY);
+        updateDrag(w.x, w.y);
+        return;
+      }
+      if (dragCandidate) {
+        var ddx = ev.clientX - start.x, ddy = ev.clientY - start.y;
+        if (Math.abs(ddx) > 3 || Math.abs(ddy) > 3) {
+          var promoted = dragCandidate;
+          dragCandidate = null;
+          startDrag(promoted);
+          var w2 = screenToWorld(ev.clientX, ev.clientY);
+          updateDrag(w2.x, w2.y);
+        }
+        return; // suppress hover while a node is pressed, threshold crossed or not
+      }
+      if (panning) {
+        var rect = fxCanvas.getBoundingClientRect();
+        var dx = ev.clientX - start.x, dy = ev.clientY - start.y;
+        // A few pixels of jitter shouldn't count as "the user dragged the
+        // map" — only past this threshold do we treat the gesture as a pan
+        // rather than a click, so the click handlers below can tell them
+        // apart.
+        if (Math.abs(dx) > 3 || Math.abs(dy) > 3) didPan = true;
+        var t = fitTransform(rect.width, rect.height);
+        currentVB.x = start.vx - dx / t.scale;
+        currentVB.y = start.vy - dy / t.scale;
+        invalidate();
+        return;
+      }
+      var world = screenToWorld(ev.clientX, ev.clientY);
+      var hit = hitTestWorld(world.x, world.y, hitRadiusWorld());
+      setHovered(hit ? hit.id : null);
+    });
+    ["pointerup", "pointercancel"].forEach(function (evt) {
+      fxCanvas.addEventListener(evt, function () {
+        panning = false;
+        dragCandidate = null;
+        if (draggedNode) endDrag();
+      });
+    });
+    // Cards now sit at FIXED screen corners (see CSS), which can put one of
+    // them directly under the cursor when a node near that corner is
+    // hovered/selected — the browser then routes the pointer to the
+    // (opaque) card element instead of the canvas, firing pointerleave
+    // here. Clearing hover in response would hide the card, re-exposing the
+    // canvas underneath and re-triggering hover on the very next move —
+    // the classic flicker loop this exact pattern caused once already, in
+    // the previous anchor-near-the-node card design. relatedTarget is the
+    // element the pointer is now over; if that's one of our own cards, the
+    // pointer hasn't actually left the widget, so the hover stays exactly
+    // as it was — the card the user is now pointing at keeps showing.
+    fxCanvas.addEventListener("pointerleave", function (ev) {
+      if (panning || draggedNode || dragCandidate) return;
+      var to = ev.relatedTarget;
+      if (to && to.closest && to.closest(".library-map-card")) return;
+      setHovered(null);
+    });
+    fxCanvas.addEventListener("wheel", function (ev) {
+      ev.preventDefault();
+      // Zoom-to-cursor: capture the world point under the pointer, resize
+      // the extent, then shift x/y so that same world point is still under
+      // the pointer afterward. Deliberately not solved algebraically in one
+      // step — fitTransform's scale is min(w/vb.w, h/vb.h), a coupled
+      // function of BOTH extent dimensions, so recomputing "before" and
+      // "after" via the one shared transform and diffing is simpler and
+      // can't drift out of sync with fitTransform's own definition.
+      var before = screenToWorld(ev.clientX, ev.clientY);
+      var scale = ev.deltaY > 0 ? 1.1 : 0.9;
+      currentVB.w = Math.max(150, Math.min(W * 4, currentVB.w * scale));
+      currentVB.h = Math.max(105, Math.min(H * 4, currentVB.h * scale));
+      var after = screenToWorld(ev.clientX, ev.clientY);
+      currentVB.x += before.x - after.x;
+      currentVB.y += before.y - after.y;
+      invalidate();
+    }, { passive: false });
+    fxCanvas.addEventListener("click", function (ev) {
+      if (didPan) { didPan = false; return; }
+      if (didDrag) { didDrag = false; return; } // a completed drag isn't also a click-select
+      var world = screenToWorld(ev.clientX, ev.clientY);
+      var hit = hitTestWorld(world.x, world.y, hitRadiusWorld());
+      if (hit) selectNode(hit.id);
+      else deselectNode();
+    });
+  }
+
+  // Clicks outside the map entirely (the hint bar, or elsewhere on the
+  // page) also clear the selection; clicks ON the canvas are handled by its
+  // own click listener above (which needs the didPan guard first), clicks
+  // on a card navigate via their own listener, and clicks within
+  // .library-controls (the Type/Subject filter chips, Clear button, and
+  // Catalog/Images/Map view switch — see layouts/library/list.html) are
+  // excluded too: adjusting what the map itself is showing is not
+  // "navigating away" from it, so a selection survives a filter change as
+  // long as the selected entry is still in the new visible set — the SAME
+  // rule relayout()'s own `if (selectedId && !idSet[selectedId])
+  // deselectNode()` guard already applies for the case where it genuinely
+  // isn't (e.g. filtering to a type the selection doesn't belong to).
   document.addEventListener("click", function (ev) {
-    // A drag-to-pan gesture that started and ended over the empty canvas
-    // still fires a trailing "click" — without this check that click would
-    // read as "clicked away" and wipe out the selection the user was just
-    // panning around to look at.
-    if (didPan) { didPan = false; return; }
-    if (ev.target.closest && (ev.target.closest(".map-node") || ev.target.closest(".library-map-card"))) return;
+    if (ev.target.closest && (ev.target.closest("#library-map-fx-canvas") || ev.target.closest(".library-map-card") || ev.target.closest(".library-controls"))) return;
     deselectNode();
   });
   document.addEventListener("keydown", function (ev) {
     if (ev.key === "Escape") deselectNode();
   });
-
-  // --- One shared viewBox animation owner — both the pan-only "recenter on
-  // selection" (extent unchanged, current zoom preserved) and the "fit to
-  // viewport" transition after a filter change (extent tweened too) go
-  // through this single helper, so a filter change and a selection in quick
-  // succession can never leave two independent rAF loops fighting over
-  // currentVB — the newer call always cancels whatever's in flight first.
-  // Respects prefers-reduced-motion by jumping instantly instead. ---------
-  function animateViewBox(target, opts) {
-    opts = opts || {};
-    if (viewAnim) { cancelAnimationFrame(viewAnim); viewAnim = null; }
-    if (reduceMotion()) {
-      currentVB = target;
-      applyViewBox();
-      repositionVisibleCards();
-      return;
-    }
-    var startX = currentVB.x, startY = currentVB.y, startW = currentVB.w, startH = currentVB.h;
-    var tweenExtent = !!opts.tweenExtent;
-    var duration = opts.duration || VIEW_ANIM_MS;
-    var startTime = null;
-    function step(ts) {
-      if (startTime === null) startTime = ts;
-      var t = Math.min(1, (ts - startTime) / duration);
-      var eased = t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2; // ease-in-out-quad
-      currentVB.x = startX + (target.x - startX) * eased;
-      currentVB.y = startY + (target.y - startY) * eased;
-      if (tweenExtent) {
-        currentVB.w = startW + (target.w - startW) * eased;
-        currentVB.h = startH + (target.h - startH) * eased;
-      }
-      applyViewBox();
-      repositionVisibleCards();
-      viewAnim = t < 1 ? requestAnimationFrame(step) : null;
-    }
-    viewAnim = requestAnimationFrame(step);
-  }
-
-  // Recenter: pans so the selected node lands at the current viewBox's
-  // center — "a consistent focal position" — WITHOUT changing the current
-  // zoom/extent, and without refitting to content (selection must not
-  // regenerate or reframe the whole graph, only draw attention to a point
-  // within it).
-  function recenterOn(n) {
-    if (!n) return;
-    animateViewBox({ x: n.x - currentVB.w / 2, y: n.y - currentVB.h / 2, w: currentVB.w, h: currentVB.h }, { tweenExtent: false });
-  }
-
-  function applyViewBox() {
-    svg.setAttribute("viewBox", currentVB.x + " " + currentVB.y + " " + currentVB.w + " " + currentVB.h);
-  }
 
   // --- Filtering: same field as Catalog/Images. Rebuilds the visible
   // subgraph's layout via relayout() rather than just toggling display —
@@ -1238,57 +1374,18 @@
   function applyFilter() {
     if (!nodes.length) return;
     var visibleIds = entries().filter(matchesEntry).map(function (e) { return e.library_id; });
-    relayout(visibleIds, { animateFit: true });
+    relayout(visibleIds);
   }
   function entries() { return nodes.map(function (n) { return entryById[n.id]; }).filter(Boolean); }
 
-  // --- Pan + zoom via viewBox — no dependency, minimal interaction only ---
-  function initPanZoom() {
-    var panning = false, start = null;
-    svg.addEventListener("pointerdown", function (ev) {
-      if (ev.target.closest(".map-node")) return;
-      if (viewAnim) { cancelAnimationFrame(viewAnim); viewAnim = null; }
-      panning = true;
-      didPan = false;
-      start = { x: ev.clientX, y: ev.clientY, vx: currentVB.x, vy: currentVB.y };
-      svg.setPointerCapture(ev.pointerId);
-    });
-    svg.addEventListener("pointermove", function (ev) {
-      if (!panning) return;
-      var rect = svg.getBoundingClientRect();
-      var dx = ev.clientX - start.x, dy = ev.clientY - start.y;
-      // A few pixels of jitter shouldn't count as "the user dragged the map"
-      // — only past this threshold do we treat the gesture as a pan rather
-      // than a click, so the click-away deselect handler above can tell them
-      // apart (see its own comment).
-      if (Math.abs(dx) > 3 || Math.abs(dy) > 3) didPan = true;
-      currentVB.x = start.vx - dx * (currentVB.w / rect.width);
-      currentVB.y = start.vy - dy * (currentVB.h / rect.height);
-      applyViewBox();
-      repositionVisibleCards();
-    });
-    ["pointerup", "pointercancel"].forEach(function (evt) {
-      svg.addEventListener(evt, function () { panning = false; });
-    });
-    svg.addEventListener("wheel", function (ev) {
-      ev.preventDefault();
-      if (viewAnim) { cancelAnimationFrame(viewAnim); viewAnim = null; }
-      var rect = svg.getBoundingClientRect();
-      var mx = currentVB.x + (ev.clientX - rect.left) / rect.width * currentVB.w;
-      var my = currentVB.y + (ev.clientY - rect.top) / rect.height * currentVB.h;
-      var scale = ev.deltaY > 0 ? 1.1 : 0.9;
-      var newW = Math.max(150, Math.min(W * 4, currentVB.w * scale));
-      var newH = Math.max(105, Math.min(H * 4, currentVB.h * scale));
-      currentVB.x = mx - (ev.clientX - rect.left) / rect.width * newW;
-      currentVB.y = my - (ev.clientY - rect.top) / rect.height * newH;
-      currentVB.w = newW; currentVB.h = newH;
-      applyViewBox();
-      repositionVisibleCards();
-    }, { passive: false });
-  }
-
   readSelFromURL();
-  initPanZoom();
+  resizeCanvases();
+  initPointerHandling();
+  if (window.ResizeObserver) {
+    new ResizeObserver(function () { resizeCanvases(); }).observe(container);
+  } else {
+    window.addEventListener("resize", resizeCanvases);
+  }
 
   fetch(new URL("index.json", location.href).href, { credentials: "same-origin" })
     .then(function (r) { return r.ok ? r.json() : null; })
@@ -1296,9 +1393,8 @@
       if (!data || !data.entries || !data.entries.length) return;
       typeStyles = data.public_type_styles || {};
       buildGraph(data.entries);
-      renderInitial();
       var visibleIds = data.entries.filter(matchesEntry).map(function (e) { return e.library_id; });
-      relayout(visibleIds, { animateFit: false });
+      relayout(visibleIds);
     })
     .catch(function () { /* Map view stays empty; Catalog/Images are unaffected */ });
 

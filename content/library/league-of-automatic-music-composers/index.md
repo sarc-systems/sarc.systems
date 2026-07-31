@@ -7,7 +7,7 @@ library:
   type: group
   sarc_work: false
 
-subjects: [computation, sound, feedback]
+subjects: [computation, sound, feedback, instruments]
 
 images:
   - file: "league.jpg"

@@ -7,7 +7,7 @@ library:
   type: person
   sarc_work: false
 
-subjects: [sound, time]
+subjects: [sound, time, instruments]
 
 images:
   - file: "laurie-spiegel.jpg"
