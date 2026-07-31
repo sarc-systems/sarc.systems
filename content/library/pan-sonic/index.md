@@ -7,6 +7,10 @@ library:
   type: group
   sarc_work: false
 
+creators:
+  - {name: "Mika Vainio", role: founder, ref: mika-vainio}
+  - {name: "Ilpo Väisänen", role: founder}
+
 subjects: [sound, technology]
 
 images:

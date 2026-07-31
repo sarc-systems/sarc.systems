@@ -15,7 +15,10 @@ images:
     role: portrait
     source: "https://i.scdn.co/image/d4ba3aa805730abb08f5c7fbff44911f3f3b1c99"
 
+related:
+  - {ref: richard-chartier, relation: collaborator-of}
+
 draft: false
 ---
 
-Steve Roden (1964-2023) was an American visual artist and musician who coined the term "lowercase" for a practice of quiet, closely-mic'd, often object- and field-recording-based sound, working at the intersection of visual art and experimental music.
+Steve Roden (1964-2023) was an American visual artist and musician who coined the term "lowercase" for a practice of quiet, closely-mic'd, often object- and field-recording-based sound, working at the intersection of visual art and experimental music. His 2001 album *Forms of Paper*, released on Richard Chartier's Line label, is credited as the first lowercase record; the two later collaborated directly, with Bernhard Günter, on *(For Morton Feldman)* (2002).

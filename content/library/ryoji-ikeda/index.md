@@ -19,6 +19,9 @@ access:
     kind: website
     url: "https://www.ryojiikeda.com"
 
+related:
+  - {ref: carsten-nicolai, relation: collaborator-of}
+
 draft: false
 ---
 

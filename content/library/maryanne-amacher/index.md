@@ -20,8 +20,10 @@ access:
     kind: website
     url: "https://www.blankforms.org/the-maryanne-amacher-foundation"
 
+related:
+  - {ref: john-cage, relation: collaborator-of}
+
 draft: false
 ---
 
-Composer of structure-borne sound and otoacoustic-emission works; large-scale
-architectural and perceptual sound.
+Maryanne Amacher (1938–2009) composed structure-borne sound and otoacoustic-emission works exploring large-scale architectural and perceptual sound. John Cage commissioned her to compose the sonic environments for *Lecture on the Weather* and for his solo-voice piece *Empty Words*, and she performed both works alongside him from 1976 to 1984.

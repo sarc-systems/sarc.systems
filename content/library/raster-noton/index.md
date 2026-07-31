@@ -14,6 +14,7 @@ creators:
     role: founder
   - name: "Carsten Nicolai"
     role: founder
+    ref: carsten-nicolai
 
 subjects: [sound, technology]
 
