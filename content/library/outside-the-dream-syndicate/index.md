@@ -14,6 +14,7 @@ creators:
     ref: tony-conrad
   - name: "Faust"
     role: artist
+    ref: faust
 
 subjects: [sound, time, tuning]
 
