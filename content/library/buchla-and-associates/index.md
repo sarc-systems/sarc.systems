@@ -7,6 +7,9 @@ library:
   type: organization
   sarc_work: false
 
+creators:
+  - {name: "Don Buchla", role: founder, ref: don-buchla}
+
 subjects: [instruments, technology]
 
 images: []

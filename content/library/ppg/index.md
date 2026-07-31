@@ -7,6 +7,9 @@ library:
   type: organization
   sarc_work: false
 
+creators:
+  - {name: "Wolfgang Palm", role: founder, ref: wolfgang-palm}
+
 subjects: [instruments, technology]
 
 images: []

@@ -7,6 +7,9 @@ library:
   type: organization
   sarc_work: false
 
+creators:
+  - {name: "Dave Rossum", role: founder, ref: dave-rossum}
+
 subjects: [instruments, technology]
 
 images: []

@@ -7,6 +7,10 @@ library:
   type: organization
   sarc_work: false
 
+creators:
+  - {name: "Cameron Jones", role: founder, ref: cameron-jones}
+  - {name: "Sydney Alonso", role: founder, ref: sydney-alonso}
+
 subjects: [instruments, technology]
 
 images: []

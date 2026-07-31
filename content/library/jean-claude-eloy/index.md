@@ -21,7 +21,10 @@ access:
     kind: website
     url: "https://www.eloyjeanclaude.com"
 
+related:
+  - {ref: karlheinz-stockhausen, relation: collaborator-of}
+
 draft: false
 ---
 
-Jean-Claude Éloy (1938-2025) was a French electroacoustic composer.
+Jean-Claude Éloy (1938-2025) was a French electroacoustic composer who realized *Shânti* (1972-73) at the WDR studio in Cologne under Karlheinz Stockhausen's direction, dedicating the work to him.

@@ -7,6 +7,9 @@ library:
   type: organization
   sarc_work: false
 
+creators:
+  - {name: "Tom Oberheim", role: founder, ref: tom-oberheim}
+
 subjects: [instruments, technology]
 
 images: []

@@ -11,6 +11,9 @@ creators:
   - name: "Pauline Oliveros"
     role: director
     ref: pauline-oliveros
+  - name: "Maggi Payne"
+    role: director
+    ref: maggi-payne
 
 subjects: [sound, instruments, technology]
 

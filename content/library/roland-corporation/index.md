@@ -7,6 +7,9 @@ library:
   type: organization
   sarc_work: false
 
+creators:
+  - {name: "Ikutaro Kakehashi", role: founder, ref: ikutaro-kakehashi}
+
 subjects: [instruments, technology]
 
 images: []

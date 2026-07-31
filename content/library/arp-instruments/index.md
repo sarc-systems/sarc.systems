@@ -7,6 +7,9 @@ library:
   type: organization
   sarc_work: false
 
+creators:
+  - {name: "Alan R. Pearlman", role: founder, ref: alan-pearlman}
+
 subjects: [instruments, technology]
 
 images: []
