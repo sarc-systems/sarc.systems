@@ -184,7 +184,26 @@
     // can't reach at all (different component). A flat single "everyone
     // else" tier read as too subtle in practice (direct user feedback) —
     // this is deliberately a much steeper falloff than that first attempt.
-    selection: { opacitySteps: [1, 0.5, 0.25, 0.1], selectedScale: 1.12, hoveredScale: 1.08 }
+    selection: { opacitySteps: [1, 0.5, 0.25, 0.1], selectedScale: 1.12, hoveredScale: 1.08 },
+    // Second-order image nodes (see isImageActive()) are capped, not
+    // unlimited — a high-degree hub's two-hop neighborhood can be large
+    // enough to cover the map in photos otherwise. The selected node and
+    // its DIRECT neighbors are never capped, only the second hop.
+    // zoomTiers is optional and ordered widest-extent-first: the first
+    // entry whose `minExtent` the current viewBox width is still above
+    // wins, so zooming further out can only ever REDUCE the budget, never
+    // increase it past secondOrderLimit. hysteresis (world units) — the
+    // viewBox has to cross a tier boundary by more than this before the
+    // budget actually changes, so a couple of stray wheel ticks right at a
+    // boundary don't flicker the image population back and forth.
+    selectionImages: {
+      secondOrderLimit: 16,
+      zoomTiers: [
+        { minExtent: 2200, limit: 6 },
+        { minExtent: 900, limit: 12 }
+      ],
+      hysteresis: 80
+    }
   };
 
   // Every relation_type in data/library.yaml's controlled vocabulary maps to
@@ -938,7 +957,7 @@
     // its hop-distance ladder recomputed against the NEW reachable set — a
     // node's neighbors, and thus its degree of separation from the
     // selection, can genuinely change under a different filter.
-    if (selectedId && idSet[selectedId]) selectionDistance = computeSelectionDistances(selectedId);
+    if (selectedId && idSet[selectedId]) { selectionDistance = computeSelectionDistances(selectedId); refreshSecondOrderImageSet(); }
     // First-paint hulls, computed against the just-seeded (pre-settle)
     // positions so the field isn't simply absent for however long the
     // settle takes — recomputeCommunityHulls() runs again periodically as
@@ -1222,18 +1241,79 @@
     if (schemeQuery.addEventListener) schemeQuery.addEventListener("change", onSchemeChange);
   }
 
+  // --- Second-order image budget (see MAP_VISUALS.selectionImages). The
+  // selected node and its DIRECT (1st-order) neighbors always show their
+  // image when they have one — only the 2nd hop is capped, since that's the
+  // set that can blow up around a high-degree hub. imageBudgetState.limit
+  // is the zoom-derived cap currently in effect; recomputeImageBudget()
+  // applies the hysteresis gate (see its own comment) and returns whether
+  // the effective limit actually changed, so callers only need to redo the
+  // (cheap but not free) candidate sort when it did.
+  var imageBudgetState = { limit: MAP_VISUALS.selectionImages.secondOrderLimit, lastCheckedExtent: null };
+  function recomputeImageBudget() {
+    var cfg = MAP_VISUALS.selectionImages;
+    var tiers = cfg.zoomTiers || [];
+    var extent = currentVB.w;
+    if (imageBudgetState.lastCheckedExtent !== null &&
+        Math.abs(extent - imageBudgetState.lastCheckedExtent) < cfg.hysteresis) {
+      return false; // within the hysteresis band of the last check — no re-evaluation
+    }
+    imageBudgetState.lastCheckedExtent = extent;
+    var natural = cfg.secondOrderLimit;
+    for (var i = 0; i < tiers.length; i++) {
+      if (extent >= tiers[i].minExtent) { natural = tiers[i].limit; break; }
+    }
+    if (natural === imageBudgetState.limit) return false;
+    imageBudgetState.limit = natural;
+    return true;
+  }
+  // The current 2nd-order image-active set, as a plain id -> true map —
+  // recomputed by refreshSecondOrderImageSet() below whenever the selection,
+  // the reachable set (a filter change), or the zoom-derived budget changes.
+  // Deliberately NOT recomputed inside isImageActive() itself (called once
+  // per node per frame) — sorting/capping the candidate list is cheap for a
+  // single hub's neighborhood but there is no reason to repeat it per node.
+  var activeSecondOrderImageIds = {};
+  // Deterministic candidate ordering — see CLAUDE.md § Library "Map view"
+  // Priority 4: visible degree (this node's degree within the CURRENTLY
+  // VISIBLE/filtered graph — graphAdjacency is already scoped to exactly
+  // that set, see buildAdjacency()) first, then total graph degree
+  // (n.degree, structural connectivity across the whole fetched graph —
+  // see buildGraph()), then stable library_id as the final tiebreak. No
+  // cultural-importance or popularity signal of any kind.
+  function secondOrderCandidateSort(a, b) {
+    var va = (graphAdjacency[a.id] || []).length, vb = (graphAdjacency[b.id] || []).length;
+    if (va !== vb) return vb - va;
+    if (a.degree !== b.degree) return b.degree - a.degree;
+    return a.id < b.id ? -1 : (a.id > b.id ? 1 : 0);
+  }
+  function refreshSecondOrderImageSet() {
+    activeSecondOrderImageIds = {};
+    if (!selectedId) return;
+    var candidates = [];
+    for (var i = 0; i < nodes.length; i++) {
+      var n = nodes[i];
+      if (n.hasImage && selectionDistance[n.id] === 2) candidates.push(n);
+    }
+    candidates.sort(secondOrderCandidateSort);
+    var limit = imageBudgetState.limit;
+    for (i = 0; i < candidates.length && i < limit; i++) activeSecondOrderImageIds[candidates[i].id] = true;
+  }
+
   // Only the SELECTED node and its neighbors up to 2nd order (direct
-  // neighbors, plus their own neighbors) ever show their image — see the
-  // module comment on Image nodes. Both drawBackground() and
-  // drawInteraction() call this so they can never disagree about which
-  // nodes are currently image-active. selectionDistance is the BFS hop
-  // count from selectedId, already computed for the opacity ladder above.
+  // neighbors, plus their own neighbors, the latter subject to the budget
+  // above) ever show their image — see the module comment on Image nodes.
+  // Both drawBackground() and drawInteraction() call this so they can never
+  // disagree about which nodes are currently image-active. selectionDistance
+  // is the BFS hop count from selectedId, already computed for the opacity
+  // ladder above.
   function isImageActive(n) {
     if (!n.hasImage) return false;
     if (n.id === selectedId) return true;
     if (selectedId) {
       var dist = selectionDistance[n.id];
-      if (dist !== undefined && dist <= 2) return true;
+      if (dist === 1) return true;
+      if (dist === 2) return !!activeSecondOrderImageIds[n.id];
     }
     return false;
   }
@@ -1393,13 +1473,24 @@
       if (showImage) drawImageNode(bgCtx, n, p, style, t.scale, extraScale);
       else drawShapeNode(bgCtx, n, p, style, t.scale, extraScale);
       if (n.id === selectedId) {
+        // A double ring, not the single ring used elsewhere (hover's dashed
+        // outline, a drag's own ring) — with 2nd-order image neighbors
+        // active, the selected node can otherwise get lost among several
+        // same-sized image squares. Two concentric solid strokes with a
+        // visible gap between them read as a distinct "this one" marker at
+        // a glance without a permanent label, a glow, or resizing the node
+        // itself beyond the existing modest selectedScale bump.
         var half = nodeVisualHalfSize(n, t.scale, showImage, extraScale);
         bgCtx.globalAlpha = 1;
-        bgCtx.beginPath();
         bgCtx.setLineDash([]);
         bgCtx.strokeStyle = cssVar("--signal");
         bgCtx.lineWidth = 2;
+        bgCtx.beginPath();
         bgCtx.arc(p.x, p.y, half + 3, 0, Math.PI * 2);
+        bgCtx.stroke();
+        bgCtx.lineWidth = 1.5;
+        bgCtx.beginPath();
+        bgCtx.arc(p.x, p.y, half + 7, 0, Math.PI * 2);
         bgCtx.stroke();
       }
     });
@@ -1639,6 +1730,8 @@
     if (id === selectedId) return;
     selectedId = id;
     selectionDistance = computeSelectionDistances(id);
+    recomputeImageBudget(); // pick up the zoom-appropriate budget even if this is the first selection since the last zoom
+    refreshSecondOrderImageSet();
     invalidate();
     showCardFor(selectedCard, id);
     // The hover card only ever shows something OTHER than the selection —
@@ -1655,6 +1748,7 @@
     if (!selectedId) return;
     selectedId = null;
     selectionDistance = {};
+    activeSecondOrderImageIds = {};
     invalidate();
     hideCardFor(selectedCard);
   }
@@ -1783,6 +1877,10 @@
       var after = screenToWorld(ev.clientX, ev.clientY);
       currentVB.x += before.x - after.x;
       currentVB.y += before.y - after.y;
+      // Zoom can change the 2nd-order image budget tier (see
+      // MAP_VISUALS.selectionImages) — recomputeImageBudget() itself is the
+      // hysteresis gate, so most wheel ticks are a cheap no-op here.
+      if (selectedId && recomputeImageBudget()) refreshSecondOrderImageSet();
       invalidate();
     }, { passive: false });
     fxCanvas.addEventListener("click", function (ev) {
