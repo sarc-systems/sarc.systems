@@ -18,8 +18,7 @@ images: []
 
 access: []
 
-related:
-  - {ref: beaglebone-black, relation: compatible-with}
+related: []
 
 draft: false
 ---

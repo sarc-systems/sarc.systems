@@ -21,6 +21,7 @@ subjects: [sound]
 images:
   - file: "logo.png"
     alt: "Raster-Noton logo"
+    anchor: Top
     source: "https://commons.wikimedia.org/wiki/File:Raster-Noton_logo.png"
     rights:
       status: public-domain

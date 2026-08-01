@@ -12,6 +12,7 @@ subjects: [cybernetics, feedback, perception]
 images:
   - file: "portrait.jpg"
     alt: "Heinz von Foerster"
+    anchor: Top
     role: portrait
     credit: "University of Illinois"
     source: "https://commons.wikimedia.org/wiki/File:HvF_01.jpg"

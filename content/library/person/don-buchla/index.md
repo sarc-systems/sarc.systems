@@ -13,6 +13,7 @@ images:
   - file: "don-buchla-200e.jpg"
     alt: "Don Buchla with a 200e synthesizer at the 2006 NAMM Show"
     role: portrait
+    anchor: Top
     source: "https://commons.wikimedia.org/wiki/File:Don_Buchla_and_200e.jpg"
     rights:
       status: licensed
