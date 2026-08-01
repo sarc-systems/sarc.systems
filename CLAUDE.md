@@ -1009,52 +1009,63 @@ card is the one gesture that actually navigates to the entry's real page —
 a plain click on a node only selects it.
 
 **Relationship bridge panel.** When a node is selected AND a different node
-is hovered at the same time (both preview cards visible), a small,
-independent, informational-only overlay appears between them explaining how
-the two are connected — "why these two entries belong in the same map,"
-alongside the cards' own "where I am"/"what I'm considering next"
-(`assets/js/library-map.js`'s "Relationship bridge panel" section;
-`#library-map-bridge` in `library-map-view.html`). It never navigates,
-changes selection or hover, moves a node, reheats the simulation, or pans/
-zooms/fits the viewport — purely derived, purely additive, recomputed from
-scratch on every selection/hover/filter change (`updateBridge()`) rather
-than patched incrementally. Two cases, direct always taking priority over
-second-order: a **direct** relationship (one or more explicit edges between
-the two, from `edgesByPair` — an "idA|idB" -> edges index built once
-alongside the graph, giving an O(1)-average lookup) shows up to
-`maxDirectRelations` (default 3, "+N more" beyond that) compact relation
-labels, mechanically title-cased the same way `library-related.html`
-already renders these (`displayLabelFor()`), plus — only when there's
-exactly one — a small disambiguating sentence built from an authored verb-
-phrase vocabulary (`CREATOR_VERB_PHRASE`/`RELATION_VERB_PHRASE`, e.g.
-`founder` → "founded", `part-of` → "is part of"; deliberately hand-authored
-per relation/role rather than generated from the hyphenated vocabulary
-string, and always built from the edge's own stored source/target, never
-from which of selected/hovered happens to be which). A **second-order**
-relationship (no direct edge, but `neighbors(selected) ∩ neighbors(hovered)`
-is non-empty within the currently *visible* graph — `graphAdjacency`, so a
-filtered-out intermediary is structurally never a candidate, not filtered
-after the fact) shows up to `maxIntermediaries` (default 3) shared
-intermediary entries, each with the clearest label from each of its two
-path legs, ordered by strongest relationship-category pair, then visible
-degree, then total graph degree, then stable `library_id` — no cultural-
-importance or popularity signal, same discipline as the second-order IMAGE
-budget above. A leg's label is resolved from the INTERMEDIARY's own point
-of view (`legLabel()`), reusing the exact same forward/inverse distinction
-and `relation_inverse` vocabulary (now also exported into `/library/
-index.json`, once, rather than duplicated client-side) `library-related.html`
-already applies when rendering a relation on the entry that didn't declare
-it — including `part-of`'s contextual Contains/Member split — while a
-creator-kind edge is never inverted on either side, matching how a role
-word is shown identically everywhere else on the site regardless of which
-end you're looking from. Placement (`positionBridge()`) never resizes
-either card: it measures the two cards' own current bounding boxes and, when
-at least `minGapWidth` (144px) of screen space already exists between them,
-centers itself in that gap, top-aligned with the cards; otherwise it drops
-below both cards instead (screen-space positioning, `fallbackOffset` below
-the taller card, clamped to the viewport with `viewportPadding`) — never
-overlapping either one. `pointer-events: none` throughout (a click "through"
-the panel reaches the canvas underneath it, same as empty space would).
+is hovered at the same time (both preview cards visible), a minimal edge
+label — never a third card — occupies whatever horizontal gap already
+exists between them (`assets/js/library-map.js`'s "Relationship bridge
+panel" section; `#library-map-bridge` in `library-map-view.html`). It never
+navigates, changes selection or hover, moves a node, reheats the
+simulation, or pans/zooms/fits the viewport — purely derived, purely
+additive, recomputed from scratch on every selection/hover/filter change
+(`updateBridge()`) rather than patched incrementally. The real gap here is
+often only ~54-70px (two fixed-width preview cards on this site's own
+capped content width — see `--wrap`), too narrow for most words on one
+line, so this is built around wrapping rather than truncation: **never an
+ellipsis, never a mid-word break** — a label that doesn't fit is either
+shortened (direct case) or replaced with a bare count (second-order case)
+before it's ever cut off. Two cases, direct always taking priority over
+second-order: a **direct** relationship (one or more explicit edges
+between the two, from `edgesByPair` — an "idA|idB" -> edges index built
+once alongside the graph, giving an O(1)-average lookup) shows exactly
+**one** compact relation label — the strongest by category, then
+vocabulary order (`directRelationships()`) — resolved through a
+centralized, bridge-specific short-label map (`BRIDGE_SHORT_LABELS`,
+covering every creator role and relation type in `data/library.yaml`;
+e.g. `collaborator-of` → "Collab", `affiliated-with` → "Affiliated" — a
+deliberately shortened form, never the mechanically truncated raw string)
+and rendered one WORD per line (`"Part Of"` → `PART` / `OF`). A
+**second-order** relationship (no direct edge, but `neighbors(selected) ∩
+neighbors(hovered)` is non-empty within the currently *visible* graph —
+`graphAdjacency`, so a filtered-out intermediary is structurally never a
+candidate, not filtered after the fact) shows "Via" plus the single
+*strongest* shared intermediary's title, also one word per line — never a
+path, never either edge's own label — chosen by `sharedIntermediaries()`'s
+deterministic ordering (strongest relationship-category pair, then visible
+degree, then total graph degree, then stable `library_id` — no
+cultural-importance or popularity signal, same discipline as the
+second-order IMAGE budget above), plus a bare "+N" line when more than
+`maxIntermediaries` (1) shared intermediary exists. Before anything is
+ever rendered, every candidate word is measured against the real available
+width (`measureToken()`/`wordsFit()` — an offscreen clone of the actual
+line style, never a hardcoded font-metrics guess): a direct label whose
+short form still doesn't fit simply hides the panel rather than show it
+corrupted; a second-order intermediary *title* (an arbitrary entity name,
+the one case genuinely capable of containing an unbreakably long single
+word) falls back to a bare node count instead — "Via" / "3 Nodes" — with
+the real title still fully preserved, never lost, as the panel's `title`
+attribute and its body's `aria-label`. No sentence, no endpoint titles
+(the cards already identify both entries), no heading of any kind — every
+line shares one small (~9px, below the site's own `--t-xs` scale)
+mono-uppercase treatment. Placement (`layoutBridge()`) never resizes or
+moves either card: it measures their own current bounding boxes, decides
+content against that real gap (`BRIDGE_CFG.minimumWidth` — deliberately
+low, since one-word-per-line wrapping needs far less width than a
+single-line label would — through `maximumWidth`, a hard ceiling), then
+centers the actual rendered box in that gap, vertically centered relative
+to the two cards — when the gap is narrower than `minimumWidth`, or even
+the fallback content doesn't fit, the panel is simply hidden, never
+relocated below the cards or over the graph. `pointer-events: none`
+throughout (a click "through" the panel reaches the canvas underneath it,
+same as empty space would).
 
 **Images.** Resolved through Hugo page resources (never hotlink Bandcamp/Discogs/
 publishers; never auto-download third-party artwork). List = square thumbnail

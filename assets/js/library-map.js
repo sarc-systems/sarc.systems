@@ -287,11 +287,6 @@
   // reachable set (a filter change).
   var graphAdjacency = {}, selectionDistance = {};
   var typeStyles = {};
-  // The canonical relation_inverse mapping from data/library.yaml, exported
-  // once into index.json (layouts/library/list.json) rather than duplicated
-  // here by hand — see "Relationship bridge panel" below, which is the only
-  // consumer. Populated from the fetched data alongside typeStyles.
-  var relationInverse = {};
   var sel = { type: [], subject: [] };
   var visible = {}; // id -> bool, the current filtered set
   var currentVB = { x: 0, y: 0, w: W, h: H };
@@ -1883,44 +1878,62 @@
     });
   });
 
-  // --- Relationship bridge panel: a small, independent, informational-only
-  // overlay that appears between the two preview cards when a node is
-  // SELECTED and a DIFFERENT node is HOVERED at the same time, explaining
-  // how the two are connected — "why these two entries belong in the same
-  // map," alongside the cards' own "where I am" / "what I'm considering
-  // next." Purely derived, purely additive: it never navigates, selects,
-  // reheats the simulation, or moves the camera (pointer-events: none — see
-  // CSS), and it never resizes either card to make room for itself (see
-  // positionBridge() below, which only ever uses the leftover space between
-  // their own measured bounding boxes). Two independent relationships:
+  // --- Relationship bridge panel: a minimal edge label, not a third card —
+  // appears in the horizontal gap between the two preview cards when a node
+  // is SELECTED and a DIFFERENT node is HOVERED at the same time, showing
+  // only the bare relationship, never a sentence explaining it (the cards
+  // already identify the two entries by name). Purely derived, purely
+  // additive: never navigates, selects, reheats the simulation, or moves
+  // the camera (pointer-events: none — see CSS), and never resizes or moves
+  // either card — layoutBridge() only ever uses the leftover space between
+  // their own measured bounding boxes, and hides the whole panel rather
+  // than placing it below the cards or over the graph when that gap is too
+  // narrow. Two independent relationships, direct always taking priority
+  // over second-order (see updateBridge()):
   //   - DIRECT: selected and hovered share one or more explicit edges
-  //     (creators[].ref or related[].ref) — shown as the compact relation
-  //     label(s) (e.g. "Founder"), plus a small disambiguating sentence
-  //     ("Misha Mengelberg founded STEIM") when there's exactly one, built
-  //     straight from that edge's own stored source/target — never assuming
-  //     the selected or hovered card is the "source" side.
+  //     (creators[].ref or related[].ref) — shown as exactly ONE compact
+  //     relation label (the strongest by category, then vocabulary order —
+  //     see directRelationships()), one WORD per line (never a mid-word
+  //     break, never an ellipsis — see BRIDGE_SHORT_LABELS below).
   //   - SECOND-ORDER: no direct edge, but selected and hovered share one or
   //     more intermediary nodes (neighbors(selected) ∩ neighbors(hovered),
   //     restricted to the currently VISIBLE graph via graphAdjacency, which
   //     relayout() already rebuilds from only the filtered/visible set — a
   //     filtered-out intermediary is never used, since it simply isn't in
-  //     that adjacency at all). A direct relationship always takes priority
-  //     over second-order paths (see updateBridge()).
-  // A direct edge's compact label is its own forward vocabulary word,
-  // mechanically title-cased (mechanicalLabel/displayLabelFor) — matching
-  // the plain "replace hyphens, title-case" convention library-related.html
-  // already uses for the very same vocabulary. A second-order leg's label,
-  // though, needs to read correctly from the INTERMEDIARY's own point of
-  // view (legLabel()) — the same forward-vs-inverse distinction
-  // library-related.html applies when rendering a relation on the entry
-  // that DIDN'T declare it (including part-of's contextual Contains/Member
-  // split — see CLAUDE.md § Library "Systems Ontology"), reusing that exact
-  // canonical relation_inverse vocabulary (exported once into index.json,
-  // see the fetch handler below) rather than re-deriving a second
-  // independent interpretation of direction. A creator-kind edge is never
-  // inverted at all, on either side — same as everywhere else on the site,
-  // a role word (e.g. "Founder") is shown as-is regardless of which end
-  // you're looking from.
+  //     that adjacency at all) — shown as "VIA" plus the single strongest
+  //     intermediary's title (sharedIntermediaries()' own deterministic
+  //     ordering below), one word per line, plus a bare "+N" line when more
+  //     than one shared intermediary exists. No leg labels, no path — just
+  //     which entry bridges them.
+  //
+  // The real available width here is small (a fixed-corner, fixed-width
+  // preview card on each side of this render window typically leaves only
+  // ~54-70px of gap between them on this site's actual capped content
+  // width — see CLAUDE.md) — too narrow for most vocabulary words to fit
+  // on one line, let alone a full sentence. Rather than truncate with an
+  // ellipsis (illegible: "Tangerine Dream" -> "TA…"), this panel:
+  //   1. Uses a CENTRALIZED, bridge-specific SHORT label map
+  //      (BRIDGE_SHORT_LABELS) for direct relations — deliberately
+  //      shortened vocabulary forms (e.g. "collaborator-of" -> "Collab"),
+  //      never the mechanically truncated raw string.
+  //   2. Renders each already-short word as its OWN line (one <p> per
+  //      token) — multi-word labels ("Part Of") simply stack ("PART" /
+  //      "OF"), never wrap mid-word, never need CSS ellipsis at all.
+  //   3. MEASURES every candidate word against the real available width
+  //      (measureToken(), using an offscreen clone of the actual line
+  //      style — never a hardcoded font-metrics guess) before ever
+  //      rendering it. A direct label whose word still doesn't fit is
+  //      simply not shown (hideBridge()) rather than corrupted with an
+  //      ellipsis. A second-order intermediary TITLE (an arbitrary entity
+  //      name, not controlled vocabulary — the one case genuinely capable
+  //      of containing an unbreakably long single word) falls back to a
+  //      bare node COUNT ("VIA" / "3 NODES") instead, per the spec this
+  //      implements.
+  //   4. Always preserves the complete, untruncated relationship as the
+  //      panel's `title` attribute and the body's `aria-label` (setFull())
+  //      — the short/abbreviated form is a VISUAL space constraint only,
+  //      never a loss of information for assistive tech or a native
+  //      tooltip.
   // Performance: edgesByPair (built once in buildGraph(), see its own
   // comment above) makes a direct lookup an O(1)-average dict read, and a
   // second-order lookup an O(degree) adjacency-set intersection — never a
@@ -1929,17 +1942,23 @@
   // movement).
   var BRIDGE_CFG = {
     enabled: true,
-    maxDirectRelations: 3,
-    maxIntermediaries: 3,
-    preferredWidth: 224,
-    minUsableWidth: 128,
-    maxWidth: 288,
-    minGapWidth: 144,
-    viewportPadding: 16,
-    fallbackOffset: 12
+    maxIntermediaries: 1,
+    // The smallest gap worth even attempting to render into — deliberately
+    // low (not the ~70-110px a fixed-pixel target would need): since
+    // content now wraps one word per line instead of needing to fit on a
+    // single line, a much narrower box is still legible. This is a hard
+    // floor below which there's no realistic room for even a single short
+    // word, not a target width.
+    minimumWidth: 28,
+    // Breathing room subtracted from the raw measured gap before content
+    // is ever considered — keeps the panel from ever touching either
+    // card's own edge.
+    gapMargin: 12,
+    // Hard ceiling regardless of how much gap is actually available —
+    // this is an edge label, not a growing panel.
+    maximumWidth: 128
   };
   var bridgeEl = document.getElementById("library-map-bridge");
-  var bridgeHeadingEl = bridgeEl && bridgeEl.querySelector(".library-map-bridge-heading");
   var bridgeBodyEl = bridgeEl && bridgeEl.querySelector(".library-map-bridge-body");
 
   var CATEGORY_RANK = { structural: 0, historical: 1, contextual: 2 };
@@ -1948,103 +1967,94 @@
   // Mechanical display form — replicates library-related.html's own
   // `.relation | replaceRE "-" " " | title` convention exactly, so a
   // vocabulary word reads the same way here as it does on an entry's own
-  // page. Works unmodified for creator roles too (single words). This is
-  // also the spec's own required fallback for any unmapped-but-valid
-  // vocabulary value — it never fails or hides a relationship for lacking
-  // authored phrasing (see verbPhraseFor()/legLabel() below).
+  // page. Works unmodified for creator roles too (single words). Used ONLY
+  // for the panel's full/accessible text (setFull() below) now — the
+  // VISIBLE direct-relation label always goes through BRIDGE_SHORT_LABELS
+  // instead, since the mechanical form is routinely too wide for the real
+  // available gap (see module comment above).
   function mechanicalLabel(raw) {
     if (!raw) return "";
     return raw.replace(/-/g, " ").replace(/\b\w/g, function (c) { return c.toUpperCase(); });
   }
-  function displayLabelFor(edge) {
-    var raw = edge.label || (edge.kind === "creator" ? "credited" : "related-work");
-    return mechanicalLabel(raw);
+  function rawLabelFor(edge) {
+    return edge.label || (edge.kind === "creator" ? "credited" : "related-work");
   }
 
-  // Authored sentence-form verb phrases — deliberately NOT generated by
-  // string manipulation (see CLAUDE.md-style reasoning: "some relationships
-  // need authored phrasing"). Centralized here, the only place this file
-  // builds a full sentence. A raw value with no entry here simply produces
-  // no sentence (edgeSentence() returns "") — the compact label always
-  // still shows regardless, so an unmapped value never hides anything.
-  var CREATOR_VERB_PHRASE = {
-    author: "authored", artist: "was the artist for", composer: "composed",
-    performer: "performed", director: "directed", founder: "founded",
-    lecturer: "delivered", editor: "edited", researcher: "researched",
-    designer: "designed", developer: "developed", manufacturer: "manufactured",
-    organization: "produced", label: "released", publisher: "published"
+  // Centralized, bridge-specific short-label vocabulary — covers every
+  // creator role and relation type in data/library.yaml (plus the same two
+  // no-label fallbacks displayLabelFor's raw form uses elsewhere:
+  // "credited" for an unlabeled creator edge, "related-work" for an
+  // unlabeled relation). Deliberately shortened, not mechanically
+  // truncated — e.g. "collaborator-of" -> "Collab", "affiliated-with" ->
+  // "Affiliated" (the trailing "with" dropped outright, not clipped mid-
+  // word) — every value here is chosen to still read as a complete word or
+  // short phrase on its own, never a fragment. A raw vocabulary value with
+  // no entry here (future additions to data/library.yaml) falls back to
+  // the full mechanicalLabel() form in shortLabelFor() below — the panel
+  // simply hides itself if that turns out too wide for the real gap (see
+  // renderBridge()) rather than ever showing a corrupted label.
+  var BRIDGE_SHORT_LABELS = {
+    // creator roles
+    author: "Author", artist: "Artist", composer: "Composer",
+    performer: "Perform", director: "Director", founder: "Founder",
+    lecturer: "Lecturer", editor: "Editor", researcher: "Research",
+    designer: "Designer", developer: "Dev", manufacturer: "Maker",
+    organization: "Org", label: "Label", publisher: "Publish",
+    credited: "Credited",
+    // relation types
+    "related-work": "Related", "version-of": "Version Of",
+    "edition-of": "Edition Of", "release-of": "Release Of",
+    "recording-of": "Record Of", "performance-of": "Perform Of",
+    "discusses": "Discuss", "influenced-by": "Influenced By",
+    "related-reading": "Reading", "documents": "Documents",
+    "used-by": "Used By", "part-of": "Part Of",
+    "successor-to": "Successor", "predecessor-to": "Predecessor",
+    "implements": "Implements", "programmed-in": "Written In",
+    "compatible-with": "Compatible", "made-with": "Made With",
+    "based-at": "Based At", "commissioned-by": "Commission",
+    "affiliated-with": "Affiliated", "created-at": "Created At",
+    "collaborator-of": "Collab",
+    // the inverse-resolved forms library-related.html can render on the
+    // TARGET side of a relation (see relation_inverse in data/library.yaml)
+    // — this file's direct-relation label is forward-only today (see
+    // directRelationships()) so these are unreachable in practice, but
+    // kept here so the map stays complete against the full vocabulary
+    // rather than silently gapped.
+    member: "Member", "has-version": "Has Version",
+    "has-edition": "Has Edition", "released-as": "Released As",
+    "recorded-as": "Recorded As", "performed-as": "Performed As",
+    uses: "Uses", "compatible-with-inverse": "Compatible",
+    "used-in": "Used In", hosts: "Hosts", commissioned: "Commissioned",
+    "implemented-by": "Made By", "implementation-language-of": "Language Of",
+    influenced: "Influenced", "documented-by": "Documented",
+    "discussed-by": "Discussed", contains: "Contains"
   };
-  var RELATION_VERB_PHRASE = {
-    "related-work": "is related to", "version-of": "is a version of",
-    "edition-of": "is an edition of", "release-of": "is a release of",
-    "recording-of": "is a recording of", "performance-of": "is a performance of",
-    "discusses": "discusses", "influenced-by": "was influenced by",
-    "related-reading": "is related reading for", "documents": "documents",
-    "used-by": "is used by", "part-of": "is part of",
-    "successor-to": "is the successor to", "predecessor-to": "is the predecessor to",
-    "implements": "implements", "programmed-in": "is programmed in",
-    "compatible-with": "is compatible with", "made-with": "was made with",
-    "based-at": "is based at", "commissioned-by": "was commissioned by",
-    "affiliated-with": "is affiliated with", "created-at": "was created at",
-    "collaborator-of": "is a collaborator of"
-  };
-  function verbPhraseFor(edge) {
-    var map = edge.kind === "creator" ? CREATOR_VERB_PHRASE : RELATION_VERB_PHRASE;
-    return map[edge.label] || "";
-  }
-  // Always built from the edge's OWN stored source/target — never from
-  // which of selected/hovered happens to be which, so this reads correctly
-  // no matter which card the user hovered first.
-  function edgeSentence(edge) {
-    var verb = verbPhraseFor(edge);
-    if (!verb) return "";
-    var a = nodeById[edge.source], b = nodeById[edge.target];
-    if (!a || !b) return "";
-    return a.title + " " + verb + " " + b.title + ".";
+  function shortLabelFor(raw) {
+    return BRIDGE_SHORT_LABELS[raw] || mechanicalLabel(raw);
   }
 
-  // The label for ONE edge as seen from `viewerId`'s side (one of that
-  // edge's own source/target) — mirrors library-related.html's forward-vs-
-  // inverse split exactly, including part-of's contextual Contains/Member
-  // resolution (based on the DECLARING side's — the edge's source — own
-  // public type, read straight off the already-built node, never re-parsed
-  // from anything). A creator-kind edge is never inverted, matching how
-  // creator roles are shown identically on both the work's and the
-  // creator's own page everywhere else on the site.
-  function legLabel(edge, viewerId) {
-    if (edge.kind === "creator") return displayLabelFor(edge);
-    if (viewerId === edge.source) return displayLabelFor(edge);
-    var raw = edge.label;
-    var inv = (raw && relationInverse[raw]) || raw;
-    if (raw === "part-of") {
-      var srcNode = nodeById[edge.source];
-      inv = (srcNode && srcNode.publicType === "system") ? "contains" : "member";
-    }
-    return mechanicalLabel(inv || "related-work");
-  }
-
-  // Every edge directly connecting aId/bId, deduplicated by DISPLAYED label
-  // (two differently-stored edges that happen to read identically shouldn't
-  // show as two lines), sorted deterministically (category strength, then
-  // label text) — never an arbitrary/insertion-order pick.
+  // Every edge directly connecting aId/bId, deduplicated by RAW label (two
+  // differently-stored edges that resolve to the same short form shouldn't
+  // count twice), sorted deterministically (category strength, then
+  // vocabulary order) — never an arbitrary/insertion-order pick. The panel
+  // only ever shows direct[0] (see renderBridge() — "at most one direct
+  // relationship" in this narrow treatment) — this function itself still
+  // returns every match so updateBridge() can tell direct from
+  // second-order, and so the choice of which one to show is deterministic
+  // rather than "whichever fits."
   function directRelationships(aId, bId) {
     var list = edgesByPair[pairKey(aId, bId)] || [];
     var seen = {}, out = [];
     list.forEach(function (e) {
-      var label = displayLabelFor(e);
-      if (seen[label]) return;
-      seen[label] = true;
-      out.push({
-        edge: e, source: e.source, target: e.target, kind: e.kind,
-        rawLabel: e.label, forwardLabel: label,
-        inverseLabel: legLabel(e, e.target),
-        category: e.category
-      });
+      var raw = rawLabelFor(e);
+      if (seen[raw]) return;
+      seen[raw] = true;
+      out.push({ raw: raw, category: e.category });
     });
     out.sort(function (x, y) {
       var r = categoryRank(x.category) - categoryRank(y.category);
       if (r !== 0) return r;
-      return x.forwardLabel < y.forwardLabel ? -1 : (x.forwardLabel > y.forwardLabel ? 1 : 0);
+      return x.raw < y.raw ? -1 : (x.raw > y.raw ? 1 : 0);
     });
     return out;
   }
@@ -2099,149 +2109,127 @@
     });
     return candidates;
   }
-  // "The display may choose the clearest label from each leg" — the
-  // strongest-category, then alphabetically-first label among a leg's own
-  // (possibly several) edges, as seen from the intermediary's own side.
-  function clearestLegLabel(legEdges, viewerId) {
-    if (!legEdges.length) return "";
-    var labeled = legEdges.map(function (e) { return { rank: categoryRank(e.category), label: legLabel(e, viewerId) }; });
-    labeled.sort(function (x, y) {
-      if (x.rank !== y.rank) return x.rank - y.rank;
-      return x.label < y.label ? -1 : (x.label > y.label ? 1 : 0);
-    });
-    return labeled[0].label;
-  }
-
   function clearEl(el) { while (el && el.firstChild) el.removeChild(el.firstChild); }
 
   function hideBridge() {
     if (bridgeEl) bridgeEl.hidden = true;
   }
 
+  // A single reusable offscreen clone of the real line style — the only
+  // reliable way to know whether a given word actually fits at the real
+  // rendered font/letter-spacing/uppercase-transform, without duplicating
+  // (and risking drifting out of sync with) those CSS values as hardcoded
+  // JS font-metrics constants. Created once, lazily, and reused for every
+  // measurement — never rebuilt per call.
+  var bridgeMeasureEl = null;
+  function measureToken(text) {
+    if (!bridgeMeasureEl) {
+      bridgeMeasureEl = document.createElement("span");
+      bridgeMeasureEl.className = "library-map-bridge-line";
+      bridgeMeasureEl.style.position = "fixed";
+      bridgeMeasureEl.style.visibility = "hidden";
+      bridgeMeasureEl.style.left = "-9999px";
+      bridgeMeasureEl.style.whiteSpace = "nowrap";
+      document.body.appendChild(bridgeMeasureEl);
+    }
+    bridgeMeasureEl.textContent = text;
+    return bridgeMeasureEl.offsetWidth;
+  }
+  // A label only ever renders one WORD per line (see renderBridge()), so
+  // "fits" means every individual word's own measured width clears the
+  // real available content width — never the label's combined/unwrapped
+  // width, which is irrelevant once it's already split across lines.
+  function wordsFit(text, maxWidth) {
+    return text.split(" ").every(function (w) { return measureToken(w) <= maxWidth; });
+  }
+
   // Builds the panel's content via plain DOM calls (textContent, not
   // innerHTML) — matching this file's existing card-population convention
   // (populateCard() above) and avoiding any need for a separate HTML-escape
   // helper, since every string here already comes from our own index.json,
-  // not user input.
-  function renderBridge(direct, intermediaries) {
-    bridgeEl.classList.toggle("library-map-bridge--direct", direct.length > 0);
-    bridgeEl.classList.toggle("library-map-bridge--indirect", direct.length === 0);
+  // not user input. Returns false when nothing legible fits within
+  // maxWidth — the caller hides the panel rather than show it corrupted.
+  // A minimal edge label, not a third card: exactly one short direct
+  // relation (one word per line), or "VIA" + one intermediary's title (one
+  // word per line, plus a bare "+N" line when more shared intermediaries
+  // exist) — never both, never a sentence, never the endpoint titles (the
+  // cards already show those).
+  function renderBridge(direct, intermediaries, maxWidth) {
     clearEl(bridgeBodyEl);
-    if (direct.length) {
-      bridgeHeadingEl.textContent = "Relationship";
-      var shown = direct.slice(0, BRIDGE_CFG.maxDirectRelations);
-      var extra = direct.length - shown.length;
-      var ul = document.createElement("ul");
-      ul.className = "library-map-bridge-labels";
-      shown.forEach(function (d) {
-        var li = document.createElement("li");
-        li.textContent = d.forwardLabel;
-        ul.appendChild(li);
-      });
-      if (extra > 0) {
-        var moreLi = document.createElement("li");
-        moreLi.className = "library-map-bridge-more";
-        moreLi.textContent = "+" + extra + " more";
-        ul.appendChild(moreLi);
-      }
-      bridgeBodyEl.appendChild(ul);
-      // Only when there's exactly one direct relation — three separate
-      // sentences alongside three compact labels would be clutter; the
-      // compact label list alone stays legible at any count.
-      if (shown.length === 1) {
-        var sentence = edgeSentence(shown[0].edge);
-        if (sentence) {
-          var p = document.createElement("p");
-          p.className = "library-map-bridge-detail";
-          p.textContent = sentence;
-          bridgeBodyEl.appendChild(p);
-        }
-      }
-      // "Direct relationships take priority... optionally, a small
-      // secondary line" — never a full second-order listing alongside a
-      // direct one, just the count.
-      if (intermediaries.length) {
-        var also = document.createElement("p");
-        also.className = "library-map-bridge-also";
-        also.textContent = "Also connected through " + intermediaries.length +
-          (intermediaries.length === 1 ? " entry" : " entries");
-        bridgeBodyEl.appendChild(also);
-      }
-    } else {
-      bridgeHeadingEl.textContent = "Connected through";
-      var shownI = intermediaries.slice(0, BRIDGE_CFG.maxIntermediaries);
-      var extraI = intermediaries.length - shownI.length;
-      var ulI = document.createElement("ul");
-      ulI.className = "library-map-bridge-intermediaries";
-      shownI.forEach(function (cand) {
-        var n = nodeById[cand.id];
-        var li = document.createElement("li");
-        var titleSpan = document.createElement("span");
-        titleSpan.className = "library-map-bridge-intermediary-title";
-        titleSpan.textContent = n.title;
-        li.appendChild(titleSpan);
-        var la = clearestLegLabel(cand.legA, cand.id);
-        var lb = clearestLegLabel(cand.legB, cand.id);
-        var legLabels = [];
-        if (la) legLabels.push(la);
-        if (lb && lb !== la) legLabels.push(lb);
-        if (legLabels.length) {
-          var pathSpan = document.createElement("span");
-          pathSpan.className = "library-map-bridge-intermediary-path";
-          pathSpan.textContent = legLabels.join(" · ");
-          li.appendChild(pathSpan);
-        }
-        ulI.appendChild(li);
-      });
-      if (extraI > 0) {
-        var moreLiI = document.createElement("li");
-        moreLiI.className = "library-map-bridge-more";
-        moreLiI.textContent = "+" + extraI + " more";
-        ulI.appendChild(moreLiI);
-      }
-      bridgeBodyEl.appendChild(ulI);
+    function line(text, extraClass) {
+      var p = document.createElement("p");
+      p.className = "library-map-bridge-line" + (extraClass ? " " + extraClass : "");
+      p.textContent = text;
+      bridgeBodyEl.appendChild(p);
     }
+    function setFull(text) {
+      bridgeEl.title = text;
+      bridgeBodyEl.setAttribute("aria-label", text);
+    }
+    if (direct.length) {
+      var d = direct[0]; // "at most one direct relationship" — deterministic (category, then vocabulary order)
+      var short = shortLabelFor(d.raw);
+      if (!wordsFit(short, maxWidth)) return false; // no ellipsis fallback for direct — hide rather than corrupt
+      short.split(" ").forEach(function (w) { line(w); });
+      setFull(mechanicalLabel(d.raw));
+      return true;
+    }
+    var top = intermediaries[0];
+    var n = nodeById[top.id];
+    var shownCount = Math.min(BRIDGE_CFG.maxIntermediaries, intermediaries.length);
+    var extra = intermediaries.length - shownCount;
+    line("Via", "library-map-bridge-via");
+    if (wordsFit(n.title, maxWidth)) {
+      n.title.split(" ").forEach(function (w) { line(w); });
+      if (extra > 0) line("+" + extra, "library-map-bridge-more");
+    } else {
+      // The intermediary's own TITLE is an arbitrary entity name, not
+      // controlled vocabulary — the one case genuinely capable of
+      // containing a single word too long to ever fit. Fall back to a
+      // bare count rather than an ellipsis; the real title is still fully
+      // preserved in title/aria-label below.
+      line(intermediaries.length + (intermediaries.length === 1 ? " Node" : " Nodes"));
+    }
+    setFull("Via " + n.title);
+    return true;
   }
 
-  // Placement (§3 of the spec this implements): read the two cards' OWN
-  // current measured bounding boxes — never the cards' widths, never
-  // node/camera coordinates — and use only whatever screen space already
-  // exists between them. Neither card is ever resized. When that gap is at
-  // least minGapWidth, center the panel within it, top-aligned with the
-  // cards; otherwise (a narrow window, or both cards near-filling it) drop
-  // the panel below both cards instead, still never overlapping either one.
-  // Pure DOM read/write — no relation to currentVB, no repaint of either
-  // canvas layer, so pan/zoom never needs to call this.
-  function positionBridge() {
-    if (!bridgeEl || bridgeEl.hidden || !hoverCard || !selectedCard) return;
+  // Placement: read the two cards' OWN current measured bounding boxes —
+  // never the cards' widths, never node/camera coordinates — and use only
+  // whatever screen space already exists between them. Neither card is
+  // ever resized or moved. Content and placement are decided in one pass
+  // against the REAL measured gap (never a fixed pixel target): compute
+  // the gap -> hide outright if it's below BRIDGE_CFG.minimumWidth -> ask
+  // renderBridge() to fit content within it (which may itself decide to
+  // hide, if even the short/fallback form doesn't fit) -> only then center
+  // the actual rendered box in that gap, vertically centered relative to
+  // the two cards. Never below them, never over the graph. Pure DOM
+  // read/write — no relation to currentVB, no repaint of either canvas
+  // layer, so pan/zoom never needs to call this.
+  function layoutBridge(direct, intermediaries) {
+    if (!bridgeEl || !hoverCard || !selectedCard) return;
     var containerRect = container.getBoundingClientRect();
     var hoverRect = hoverCard.root.getBoundingClientRect();
     var selRect = selectedCard.root.getBoundingClientRect();
     var leftEdge = hoverRect.right - containerRect.left;
     var rightEdge = selRect.left - containerRect.left;
     var gap = rightEdge - leftEdge;
-    bridgeEl.style.transform = "";
-    if (gap >= BRIDGE_CFG.minGapWidth) {
-      var width = Math.max(BRIDGE_CFG.minUsableWidth,
-        Math.min(BRIDGE_CFG.preferredWidth, gap - 16, BRIDGE_CFG.maxWidth));
-      var left = leftEdge + (gap - width) / 2;
-      var top = Math.max(hoverRect.top, selRect.top) - containerRect.top;
-      bridgeEl.classList.remove("library-map-bridge--below");
-      bridgeEl.classList.add("library-map-bridge--between");
-      bridgeEl.style.left = left + "px";
-      bridgeEl.style.top = top + "px";
-      bridgeEl.style.width = width + "px";
-    } else {
-      var below = Math.max(hoverRect.bottom, selRect.bottom) - containerRect.top + BRIDGE_CFG.fallbackOffset;
-      var fallbackWidth = Math.max(BRIDGE_CFG.minUsableWidth,
-        Math.min(BRIDGE_CFG.preferredWidth, containerRect.width - BRIDGE_CFG.viewportPadding * 2));
-      bridgeEl.classList.remove("library-map-bridge--between");
-      bridgeEl.classList.add("library-map-bridge--below");
-      bridgeEl.style.left = "50%";
-      bridgeEl.style.top = below + "px";
-      bridgeEl.style.width = fallbackWidth + "px";
-      bridgeEl.style.transform = "translateX(-50%)";
+    if (gap < BRIDGE_CFG.minimumWidth) {
+      hideBridge();
+      return;
     }
+    var maxWidth = Math.min(gap - BRIDGE_CFG.gapMargin, BRIDGE_CFG.maximumWidth);
+    if (!renderBridge(direct, intermediaries, maxWidth)) {
+      hideBridge();
+      return;
+    }
+    bridgeEl.style.width = maxWidth + "px";
+    bridgeEl.hidden = false;
+    var centerY = (((hoverRect.top + hoverRect.bottom) / 2) +
+      ((selRect.top + selRect.bottom) / 2)) / 2 - containerRect.top;
+    var height = bridgeEl.offsetHeight;
+    bridgeEl.style.left = (leftEdge + (gap - maxWidth) / 2) + "px";
+    bridgeEl.style.top = (centerY - height / 2) + "px";
   }
 
   // The one entry point every hook below calls — recomputes from scratch
@@ -2264,9 +2252,7 @@
       hideBridge();
       return;
     }
-    renderBridge(direct, intermediaries);
-    bridgeEl.hidden = false;
-    positionBridge();
+    layoutBridge(direct, intermediaries);
   }
 
   // Clicking a node makes it the new selection: show its persistent card —
@@ -2497,7 +2483,6 @@
     .then(function (data) {
       if (!data || !data.entries || !data.entries.length) return;
       typeStyles = data.public_type_styles || {};
-      relationInverse = data.relation_inverse || {};
       buildGraph(data.entries);
       var visibleIds = data.entries.filter(matchesEntry).map(function (e) { return e.library_id; });
       relayout(visibleIds);

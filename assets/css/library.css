@@ -393,95 +393,97 @@
   color: var(--gray-1);
 }
 
-/* Relationship bridge panel — an independent overlay, positioned entirely
-   by library-map.js's positionBridge() (inline left/top/width), describing
-   how the selected and hovered cards above relate. Clearly subordinate to
-   both cards: smaller, no image, no shadow beyond the cards' own flat
-   style. pointer-events: none — informational only, never clickable, never
-   blocking a click on the canvas underneath it (see the JS module comment
-   on the bridge panel for the full non-goals list: it must not navigate,
-   select, hover, reheat, or move the camera). Direct vs second-order is
-   distinguished by more than color/border alone — the heading text and
-   internal structure differ too (see library-map.js's renderBridge()), so
-   the distinction still reads without relying on border style alone. */
+/* Relationship bridge panel — a minimal edge label, not a third card:
+   positioned entirely by library-map.js's layoutBridge() (inline
+   left/top/width) in whatever horizontal gap already exists between the
+   selected and hovered cards, never below them or over the graph (see that
+   function's own comment — a too-narrow gap hides the panel outright
+   rather than relocating it). pointer-events: none — informational only,
+   never clickable, never blocking a click on the canvas underneath it (see
+   the JS module comment on the bridge panel for the full non-goals list:
+   it must not navigate, select, hover, reheat, or move the camera).
+   Deliberately no border/shadow of its own — a translucent paper fill plus
+   the flanking rules below (::before/::after) are the only framing, so it
+   reads as an edge label pointing at the two cards it sits between, not a
+   third bordered card competing with them. The real available gap here is
+   often only ~54-70px (two fixed-width preview cards on this site's capped
+   content width) — too narrow for most words on one line — so content
+   wraps one WORD per line (see library-map.js's renderBridge()) rather
+   than truncating with an ellipsis; this file only needs to keep that text
+   small and tightly spaced, never to clip it. */
 .library-map-bridge[hidden] { display: none !important; }
 .library-map-bridge {
   position: absolute;
   z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
   pointer-events: none;
-  padding: 0.6rem 0.7rem;
+  padding: 0.2rem 0.3rem;
   background: var(--paper);
-  border: 1px solid var(--rule);
-  opacity: 0.94;
+  opacity: 0.88;
   transition: opacity 0.15s ease;
 }
 @media (prefers-reduced-motion: reduce) {
   .library-map-bridge { transition: none; }
 }
-/* Second-order ("Connected through") reads as the looser, less certain of
-   the two claims — a dashed border, same idea as the hover card's own
-   dashed-vs-solid distinction from the selected card. */
-.library-map-bridge--indirect { border-style: dashed; }
-.library-map-bridge-heading {
-  margin: 0 0 0.35rem;
-  font-family: var(--font-mono);
-  font-size: var(--t-xs);
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: var(--gray-2);
+/* Thin rules extending toward the two cards on either side — the hover
+   card sits fixed upper-left, the selected card upper-right (see
+   .library-map-card below), so left literally points toward "what I'm
+   considering" and right toward "where I am." flex: 1 1 auto lets each
+   rule fill whatever space remains once the (content-sized, never wider
+   than necessary — see .library-map-bridge-body below) text block in
+   between has laid out; a short one-word label leaves long flanking
+   rules, a wrapped multi-line one leaves short rules either side. */
+.library-map-bridge::before,
+.library-map-bridge::after {
+  content: "";
+  flex: 1 1 auto;
+  height: 1px;
+  background: var(--rule);
 }
-.library-map-bridge-body { min-width: 0; }
-.library-map-bridge-labels {
-  list-style: none;
+/* flex: 0 0 auto (content-sized, not stretched to fill the panel's own
+   width) is what lets the ::before/::after rules above actually claim any
+   leftover space at all — see their own comment. Safe to size to content
+   here: library-map.js's renderBridge()/wordsFit() already measures every
+   word against the real available width BEFORE ever rendering it, and
+   falls back (a bare node count, or hiding the panel outright) rather
+   than hand this a word it can't fit — see that file's module comment.
+   overflow: hidden stays as a last-resort backstop only, never the actual
+   containment mechanism. */
+.library-map-bridge-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.05rem;
+  min-width: 0;
+  overflow: hidden;
+  flex: 0 0 auto;
+}
+/* Every line is exactly one already-measured WORD (see renderBridge()) —
+   a direct relation word, "Via", one word of an intermediary's title, or a
+   bare "+N"/node-count fallback — sharing one plain mono-uppercase
+   treatment; nothing here is ever a large serif title or explanatory
+   prose (see CLAUDE.md § Library "Relationship bridge panel"). A
+   dedicated font-size smaller than the site's own --t-xs scale — ~9px, per
+   the narrow-gap design this implements — plus tight line-height/letter-
+   spacing keeps even a several-line stack of words comfortably within a
+   preview card's own height. */
+.library-map-bridge-line {
   margin: 0;
-  padding: 0;
-}
-.library-map-bridge-labels li {
+  white-space: nowrap;
   font-family: var(--font-mono);
-  font-size: var(--t-xs);
-  letter-spacing: 0.03em;
-  text-transform: uppercase;
-  color: var(--ink);
-  line-height: 1.5;
-}
-.library-map-bridge-detail {
-  margin: 0.35rem 0 0;
-  font-size: var(--t-xs);
-  line-height: 1.4;
-  color: var(--gray-1);
-}
-.library-map-bridge-also {
-  margin: 0.35rem 0 0;
-  font-size: var(--t-xs);
-  font-style: italic;
-  color: var(--gray-2);
-}
-.library-map-bridge-intermediaries {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-.library-map-bridge-intermediaries li + li { margin-top: 0.5rem; }
-.library-map-bridge-intermediary-title {
-  display: block;
-  font-size: var(--t-sm);
-  color: var(--ink);
-}
-/* Lowercase, monospace, and smaller than the title — "path labels
-   secondary" (the intermediary's own name is the primary content here). */
-.library-map-bridge-intermediary-path {
-  display: block;
-  margin-top: 0.1rem;
-  font-family: var(--font-mono);
-  font-size: var(--t-xs);
+  font-size: 9px;
   letter-spacing: 0.02em;
-  text-transform: lowercase;
-  color: var(--gray-2);
+  text-transform: uppercase;
+  line-height: 1.2;
+  color: var(--ink);
 }
+/* "Via" and the "+N"/node-count fallback read as the panel's own
+   connective tissue, not content — dimmer than the relation word /
+   intermediary title they sit alongside. */
+.library-map-bridge-via,
 .library-map-bridge-more {
-  margin-top: 0.35rem;
-  font-family: var(--font-mono);
-  font-size: var(--t-xs);
   color: var(--gray-2);
 }
 

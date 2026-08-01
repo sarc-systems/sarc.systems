@@ -56,19 +56,21 @@
       <p class="library-map-card-summary"></p>
     </div>
   </div>
-  {{- /* Relationship bridge panel — informational only, never a third
+  {{- /* Relationship bridge panel — a minimal edge label (not a third card,
+         no heading of its own), informational only, never a third
          interactive control (pointer-events: none, see library.css): shown
-         only when both cards above are visible at once and library-map.js's
-         updateBridge() finds a direct or two-edge path between them.
-         Position is computed entirely in JS from the two cards' own
-         measured bounding boxes (positionBridge()) — this markup starts
-         with no inline position and is simply hidden until then. aria-live
-         is safe here without extra debouncing: hover only actually changes
-         on a genuine hovered-NODE change (setHovered()'s own dedupe), never
-         per pointer-pixel. */}}
+         only when both cards above are visible at once, the entries are
+         direct or second-order neighbors, AND the measured gap between the
+         two cards is wide enough (see library-map.js's updateBridge()/
+         positionBridge() — otherwise hidden entirely, never relocated below
+         the cards or over the graph). Position is computed entirely in JS
+         from the two cards' own measured bounding boxes — this markup
+         starts with no inline position and is simply hidden until then.
+         aria-live is safe here without extra debouncing: hover only
+         actually changes on a genuine hovered-NODE change (setHovered()'s
+         own dedupe), never per pointer-pixel. */}}
   <aside class="library-map-bridge" id="library-map-bridge"
          aria-live="polite" aria-label="Relationship between selected and hovered entries" hidden>
-    <p class="library-map-bridge-heading"></p>
     <div class="library-map-bridge-body"></div>
   </aside>
 </div>
