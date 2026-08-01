@@ -10,7 +10,6 @@ library:
 
 creators:
   - {name: "Incapacitants", role: artist, ref: incapacitants}
-  - {name: "Urashima", role: label, ref: urashima}
 
 subjects: [sound, feedback]
 
@@ -25,4 +24,4 @@ related: []
 draft: false
 ---
 
-Originally released in 1999 on Alchemy Records, *Default Standard* is a landmark [Incapacitants](/library/incapacitants/) recording built from five extended tracks of feedback, distortion, and electronic manipulation. [Urashima](/library/urashima/)'s 2024 vinyl reissue was mastered by Lasse Marhaug and includes previously unpublished performance photography by Yuichi Jibiki.
+Originally released in 1999 on Alchemy Records, *Default Standard* is a landmark [Incapacitants](/library/incapacitants/) recording built from five extended tracks of feedback, distortion, and electronic manipulation. Urashima's 2024 vinyl reissue was mastered by Lasse Marhaug and includes previously unpublished performance photography by Yuichi Jibiki.

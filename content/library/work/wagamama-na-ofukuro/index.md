@@ -10,7 +10,6 @@ library:
 
 creators:
   - {name: "Violent Onsen Geisha", role: artist, ref: violent-onsen-geisha}
-  - {name: "Urashima", role: label, ref: urashima}
 
 subjects: [sound]
 
@@ -25,4 +24,4 @@ related: []
 draft: false
 ---
 
-Released in 1993 on My Fiance's Lifework, *Wagamama na Ofukuro* ("Selfish Mother") is a characteristically confrontational [Violent Onsen Geisha](/library/violent-onsen-geisha/) cassette, cutting harsh noise and distorted vocals against samples of children's songs, nursery rhymes, and recordings of Masaya Nakahara's own family arguing. [Urashima](/library/urashima/)'s 2023 vinyl reissue was limited to 299 copies.
+Released in 1993 on My Fiance's Lifework, *Wagamama na Ofukuro* ("Selfish Mother") is a characteristically confrontational [Violent Onsen Geisha](/library/violent-onsen-geisha/) cassette, cutting harsh noise and distorted vocals against samples of children's songs, nursery rhymes, and recordings of Masaya Nakahara's own family arguing. Urashima's 2023 vinyl reissue was limited to 299 copies.

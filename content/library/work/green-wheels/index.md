@@ -10,7 +10,6 @@ library:
 
 creators:
   - {name: "Merzbow", role: artist, ref: merzbow}
-  - {name: "Urashima", role: label, ref: urashima}
 
 subjects: [sound]
 
@@ -25,4 +24,4 @@ related: []
 draft: false
 ---
 
-Recorded and mixed at [Merzbow](/library/merzbow/)'s home ZSF Produkt Studio in March–May 1995 and originally released that year by Self Abuse Records, *Green Wheels* is an uncompromising cascade of synthesizer and handmade-instrument noise — nails raining on metal plates, synthetic bombing, industrial percussion, and its title's rolling, scraping "green wheels." [Urashima](/library/urashima/)'s 2021 double-LP reissue, limited to 299 copies, adds two previously unreleased bonus tracks from the same sessions.
+Recorded and mixed at [Merzbow](/library/merzbow/)'s home ZSF Produkt Studio in March–May 1995 and originally released that year by Self Abuse Records, *Green Wheels* is an uncompromising cascade of synthesizer and handmade-instrument noise — nails raining on metal plates, synthetic bombing, industrial percussion, and its title's rolling, scraping "green wheels." Urashima's 2021 double-LP reissue, limited to 299 copies, adds two previously unreleased bonus tracks from the same sessions.

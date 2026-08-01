@@ -10,7 +10,6 @@ library:
 
 creators:
   - {name: "Merzbow", role: artist, ref: merzbow}
-  - {name: "Urashima", role: label, ref: urashima}
 
 subjects: [sound, instruments]
 
@@ -25,4 +24,4 @@ related: []
 draft: false
 ---
 
-Recorded at ZSF Produkt Studio in January–February 1997 and originally issued on CD that year by Vinyl Communications, *Hybrid Noisebloom* is among [Merzbow](/library/merzbow/)'s more accessible 1990s records: five pieces built from EMS and Moog synthesizers, theremin, metal devices, and sparse, heavily processed vocals, moving between airy restraint and dense noise interplay. [Urashima](/library/urashima/)'s 2022 vinyl reissue, remastered by Masami Akita himself, was the album's first vinyl pressing.
+Recorded at ZSF Produkt Studio in January–February 1997 and originally issued on CD that year by Vinyl Communications, *Hybrid Noisebloom* is among [Merzbow](/library/merzbow/)'s more accessible 1990s records: five pieces built from EMS and Moog synthesizers, theremin, metal devices, and sparse, heavily processed vocals, moving between airy restraint and dense noise interplay. Urashima's 2022 vinyl reissue, remastered by Masami Akita himself, was the album's first vinyl pressing.

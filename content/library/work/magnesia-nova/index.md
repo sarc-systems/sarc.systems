@@ -10,7 +10,6 @@ library:
 
 creators:
   - {name: "Merzbow", role: artist, ref: merzbow}
-  - {name: "Urashima", role: label, ref: urashima}
 
 subjects: [sound]
 
@@ -25,4 +24,4 @@ related: []
 draft: false
 ---
 
-Recorded and mixed between February and May 1995 at [Merzbow](/library/merzbow/)'s ZSF Produkt Studio, *Magnesia Nova* layers overloaded, pulsating synthesizers and feedback into dense noise collages, its track titles all drawn from the writings of 17th-century polymath Athanasius Kircher — part of the album's wider interest in intersections between Greek and Japanese civilization. [Urashima](/library/urashima/)'s 2022 release was the album's first-ever vinyl pressing, a limited double LP with a 20-minute previously unreleased bonus track from the original sessions.
+Recorded and mixed between February and May 1995 at [Merzbow](/library/merzbow/)'s ZSF Produkt Studio, *Magnesia Nova* layers overloaded, pulsating synthesizers and feedback into dense noise collages, its track titles all drawn from the writings of 17th-century polymath Athanasius Kircher — part of the album's wider interest in intersections between Greek and Japanese civilization. Urashima's 2022 release was the album's first-ever vinyl pressing, a limited double LP with a 20-minute previously unreleased bonus track from the original sessions.

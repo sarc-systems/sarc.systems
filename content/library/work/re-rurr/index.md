@@ -10,7 +10,6 @@ library:
 
 creators:
   - {name: "Solmania", role: artist, ref: solmania}
-  - {name: "Urashima", role: label, ref: urashima}
 
 subjects: [sound, instruments]
 
@@ -25,4 +24,4 @@ related: []
 draft: false
 ---
 
-Released in 1985 on Fatagaga Tapes, the year after Masahiko Ohno founded [Solmania](/library/solmania/), *Re-Rurr* is two extended pieces of guitar drone built from Ohno's own modified multi-neck and harp guitars — unconventional body shapes and pickup placements generating dense harmonics and overtones, drawing on progressive, punk, metal, and noise alike, alongside tape, radio, metal, turntable, and voice. Reissued on vinyl by [Urashima](/library/urashima/) in 2024.
+Released in 1985 on Fatagaga Tapes, the year after Masahiko Ohno founded [Solmania](/library/solmania/), *Re-Rurr* is two extended pieces of guitar drone built from Ohno's own modified multi-neck and harp guitars — unconventional body shapes and pickup placements generating dense harmonics and overtones, drawing on progressive, punk, metal, and noise alike, alongside tape, radio, metal, turntable, and voice. Reissued on vinyl by Urashima in 2024.

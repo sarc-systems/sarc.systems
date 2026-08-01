@@ -10,7 +10,6 @@ library:
 
 creators:
   - {name: "Merzbow", role: artist, ref: merzbow}
-  - {name: "Urashima", role: label, ref: urashima}
 
 subjects: [sound]
 
@@ -25,4 +24,4 @@ related: []
 draft: false
 ---
 
-Originally released in 1990 on Alchemy Records, *Rainbow Electronics* condenses roughly 21 hours of material [Merzbow](/library/merzbow/) recorded between 1987 and 1990 into four parts spanning about 74 minutes, moving from slower, eerie passages of reverbed metal scrapes through sudden dynamic shifts toward a violent close. [Urashima](/library/urashima/)'s 2020 double-LP reissue, limited to 299 copies, reproduces the original gatefold artwork with a 12" insert.
+Originally released in 1990 on Alchemy Records, *Rainbow Electronics* condenses roughly 21 hours of material [Merzbow](/library/merzbow/) recorded between 1987 and 1990 into four parts spanning about 74 minutes, moving from slower, eerie passages of reverbed metal scrapes through sudden dynamic shifts toward a violent close. Urashima's 2020 double-LP reissue, limited to 299 copies, reproduces the original gatefold artwork with a 12" insert.
