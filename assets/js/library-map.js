@@ -2393,24 +2393,113 @@
   // fires after a completed drag) doesn't ALSO select/deselect the node —
   // matching didPan's existing role for the panning gesture. Pressing down
   // on empty canvas is unambiguous (there's nothing to drag) and starts a
-  // pan immediately, same as before. ---------------------------------------
+  // pan immediately, same as before.
+  //
+  // Touch (multi-pointer): `touchPoints` tracks every currently-down
+  // pointer by id (Pointer Events give each simultaneous touch its own
+  // pointerId — mouse/pen gestures never have more than one). A single
+  // shared `start`/`panning` pair (the pre-multitouch design) silently
+  // assumed only one pointer could ever be down at once: a second finger's
+  // own pointerdown overwrote `start` out from under the first finger's
+  // still-active pan, and after that every pointermove — from EITHER
+  // finger — kept re-deriving a pan delta against whatever `start` a
+  // moment ago happened to be, which reads exactly as "the map jumps
+  // around erratically" on a pinch. The moment a second pointer goes down,
+  // any single-pointer pan/drag-candidate/drag in progress is aborted and
+  // the gesture becomes a pinch instead (pinchState()/updatePinch() below,
+  // the same zoom-to-anchor math the wheel handler uses, just anchored to
+  // the pinch's own midpoint every tick rather than a static cursor point,
+  // and scaled from an ABSOLUTE start-of-gesture reference — never
+  // multiplied incrementally — so it can't drift). Lifting one finger
+  // back down to one active pointer resumes an ordinary single-finger pan,
+  // reseeded from wherever that finger currently is so it doesn't jump
+  // either. A third finger is tracked (for correct up/down bookkeeping)
+  // but never affects the pinch math, which always uses the first two. ---
   function initPointerHandling() {
     var panning = false, start = null, dragCandidate = null;
+    var touchPoints = []; // [{id, x, y}, ...] — insertion order, oldest first
+    var pinching = false, pinchStart = null, pinchStartVB = null;
+
+    function pointIndex(id) {
+      for (var i = 0; i < touchPoints.length; i++) if (touchPoints[i].id === id) return i;
+      return -1;
+    }
+    function pinchState() {
+      if (touchPoints.length < 2) return null;
+      var a = touchPoints[0], b = touchPoints[1];
+      var dx = b.x - a.x, dy = b.y - a.y;
+      return { dist: Math.max(1, Math.sqrt(dx * dx + dy * dy)), midX: (a.x + b.x) / 2, midY: (a.y + b.y) / 2 };
+    }
+    function beginPinch() {
+      panning = false;
+      dragCandidate = null;
+      if (draggedNode) endDrag();
+      pinching = true;
+      didPan = true;
+      pinchStart = pinchState();
+      pinchStartVB = { w: currentVB.w, h: currentVB.h };
+    }
+    // Same zoom-to-anchor trick the wheel handler uses (capture the world
+    // point under the anchor, resize, shift so that point is still under
+    // the anchor) but re-run every tick against the pinch's CURRENT
+    // midpoint, so a pinch that also drifts sideways pans right along with
+    // it. currentVB.w/h are set ABSOLUTELY from pinchStartVB * a ratio
+    // computed against the gesture's starting distance, never multiplied
+    // tick-over-tick, so repeated small floating-point steps can't
+    // accumulate drift the way an incremental *= would.
+    function updatePinch() {
+      var cur = pinchState();
+      if (!cur || !pinchStart) return;
+      var before = screenToWorld(cur.midX, cur.midY);
+      var ratio = pinchStart.dist / cur.dist;
+      currentVB.w = Math.max(150, Math.min(W * 4, pinchStartVB.w * ratio));
+      currentVB.h = Math.max(105, Math.min(H * 4, pinchStartVB.h * ratio));
+      var after = screenToWorld(cur.midX, cur.midY);
+      currentVB.x += before.x - after.x;
+      currentVB.y += before.y - after.y;
+      if (selectedId && recomputeImageBudget()) refreshSecondOrderImageSet();
+      invalidate();
+    }
+    // Reseed an ordinary single-finger pan from wherever `p` (the one
+    // pointer still down) currently is — used both by a fresh pointerdown
+    // and by a pinch dropping back to one finger, so neither jumps.
+    function resumePanFrom(p) {
+      panning = true;
+      start = { x: p.x, y: p.y, vx: currentVB.x, vy: currentVB.y };
+    }
+
     fxCanvas.addEventListener("pointerdown", function (ev) {
+      touchPoints.push({ id: ev.pointerId, x: ev.clientX, y: ev.clientY });
+      // Capture is what lets a finger keep sending pointermove here even
+      // once it's no longer physically over the canvas — without it, a
+      // fast pinch or pan can outrun the element and silently stop
+      // updating. Best-effort: a rare capture failure shouldn't take the
+      // rest of this handler (still needed to start the pinch/pan) down
+      // with it.
+      try { fxCanvas.setPointerCapture(ev.pointerId); } catch (e) {}
+      if (touchPoints.length >= 2) {
+        beginPinch();
+        return;
+      }
       didPan = false;
-      start = { x: ev.clientX, y: ev.clientY, vx: currentVB.x, vy: currentVB.y };
       var world = screenToWorld(ev.clientX, ev.clientY);
       var hit = hitTestWorld(world.x, world.y, hitRadiusWorld());
       if (hit) {
         dragCandidate = hit;
+        start = { x: ev.clientX, y: ev.clientY, vx: currentVB.x, vy: currentVB.y };
         panning = false;
       } else {
         dragCandidate = null;
-        panning = true;
+        resumePanFrom({ x: ev.clientX, y: ev.clientY });
       }
-      fxCanvas.setPointerCapture(ev.pointerId);
     });
     fxCanvas.addEventListener("pointermove", function (ev) {
+      var idx = pointIndex(ev.pointerId);
+      if (idx !== -1) { touchPoints[idx].x = ev.clientX; touchPoints[idx].y = ev.clientY; }
+      if (pinching) {
+        if (touchPoints.length >= 2) updatePinch();
+        return;
+      }
       if (draggedNode) {
         var w = screenToWorld(ev.clientX, ev.clientY);
         updateDrag(w.x, w.y);
@@ -2446,10 +2535,23 @@
       setHovered(hit ? hit.id : null);
     });
     ["pointerup", "pointercancel"].forEach(function (evt) {
-      fxCanvas.addEventListener(evt, function () {
-        panning = false;
+      fxCanvas.addEventListener(evt, function (ev) {
+        var idx = pointIndex(ev.pointerId);
+        if (idx !== -1) touchPoints.splice(idx, 1);
         dragCandidate = null;
         if (draggedNode) endDrag();
+        if (touchPoints.length >= 2) {
+          // Still a pinch (a third finger was down, or another already
+          // was) — re-anchor to the two that remain rather than end the
+          // gesture, so releasing an extra finger doesn't jump either.
+          beginPinch();
+        } else if (touchPoints.length === 1) {
+          pinching = false;
+          resumePanFrom(touchPoints[0]);
+        } else {
+          pinching = false;
+          panning = false;
+        }
       });
     });
     // Cards now sit at FIXED screen corners (see CSS), which can put one of
@@ -2464,7 +2566,7 @@
     // pointer hasn't actually left the widget, so the hover stays exactly
     // as it was — the card the user is now pointing at keeps showing.
     fxCanvas.addEventListener("pointerleave", function (ev) {
-      if (panning || draggedNode || dragCandidate) return;
+      if (panning || draggedNode || dragCandidate || pinching) return;
       var to = ev.relatedTarget;
       if (to && to.closest && to.closest(".library-map-card")) return;
       setHovered(null);

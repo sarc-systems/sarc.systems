@@ -695,7 +695,24 @@ event-driven, not a continuous render loop — `invalidate()`/
 drag on the fx canvas (translating the world-space viewBox); zoom is
 zoom-to-cursor on wheel (the world point under the pointer is captured
 before resizing the extent, then the viewBox is shifted so that same point
-is still under the pointer after). Hit-testing uses a dedicated uniform
+is still under the pointer after). Touch is a first-class second input,
+not an afterthought bolted onto the mouse path: Pointer Events give each
+simultaneous touch its own `pointerId`, tracked in `touchPoints`
+(`initPointerHandling()`), and a second finger going down always aborts
+whatever single-pointer pan/drag-candidate/drag was in progress and
+starts a pinch instead. Pinch-zoom (`updatePinch()`) reuses the exact
+zoom-to-anchor math the wheel handler uses, just re-run every tick against
+the pinch's own current midpoint (so a pinch that drifts sideways pans
+right along with it) and scaled from an absolute start-of-gesture distance
+ratio rather than multiplied incrementally tick-over-tick, so repeated
+small floating-point steps can't accumulate drift. Lifting one finger back
+to a single pointer reseeds an ordinary pan from wherever that finger
+currently is, so the transition doesn't jump either — an earlier
+single-pointer-only design (one shared `start`/`panning` pair, silently
+assuming only one pointer could ever be down) had a second finger's own
+pointerdown overwrite that shared state out from under the first finger's
+pan, which read as the whole map jumping around erratically on any pinch
+attempt. Hit-testing uses a dedicated uniform
 spatial grid (`buildSpatialIndex()`/`hitTestWorld()`, bucket size matching
 `BASE_K`), since Canvas has no per-element DOM to hit-test against directly.
 Pressing down ON a node doesn't immediately start a drag — it becomes a
