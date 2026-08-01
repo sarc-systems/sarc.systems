@@ -19,14 +19,6 @@ creators:
 subjects: [sound]
 
 images:
-  - file: "wdr-funkhaus.jpg"
-    alt: "The WDR Funkhaus at Wallrafplatz in Cologne, which housed the studio from 1952 to 1986"
-    role: installation
-    credit: "Raimond Spekking"
-    source: "https://commons.wikimedia.org/wiki/File:WDR_Funkhaus_Wallrafplatz_-_Peter_Friedrich_Schneider_(7101-03).jpg"
-    rights:
-      status: licensed
-      note: "CC BY-SA 4.0 International, via Wikimedia Commons."
   - {file: "console.jpg", alt: "The studio's custom-made 1970s mixing console and equipment racks, including an EMS Synthi 100", role: installation, caption: "The studio's custom-built 1970s console, standing-height for Stockhausen's own working method.", credit: "Photograph by Peter Beste", source: "https://daily.redbullmusicacademy.com/2017/08/stockhausen-photo-essay", rights: {status: unknown, note: "Converted to grayscale."}, use: {basis: identification, note: "Red Bull Music Academy photo essay, used for identification."}}
 
 access:

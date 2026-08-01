@@ -27,12 +27,9 @@ access:
 
 related:
   - {ref: world-soundscape-project, relation: part-of}
+  - {ref: pierre-schaeffer, relation: influenced-by}
 
 draft: false
 ---
 
-Barry Truax (b. 1947) joined R. Murray Schafer's World Soundscape Project at
-Simon Fraser University in 1973, and went on to develop the first real-time
-implementation of granular synthesis in 1986 — the technique behind his
-best-known work, *Riverrun* — carrying the WSP's concern for the acoustic
-environment into a computational compositional method.
+Barry Truax (b. 1947) studied under Gottfried Michael Koenig and Otto Laske in Europe, experimenting with FM synthesis, before joining R. Murray Schafer's [World Soundscape Project](/library/world-soundscape-project/) at Simon Fraser University in 1973, later editing its *Handbook for Acoustic Ecology*. His soundscape compositions build recognizable environmental recordings into structured, associative listening experiences extending [Pierre Schaeffer](/library/pierre-schaeffer/)'s musique concrète toward an explicitly ecological aesthetic — carrying the WSP's concern for the acoustic environment into a computational compositional method. In 1986 he developed the GSX system at SFU, the first real-time implementation of granular synthesis — manipulating thousands of extremely short sound grains (10–50 milliseconds each) — used on his best-known work, *Riverrun* (1986), and later on *Wings of Nike* (1987) and *Tongues of Angels* (1988).
