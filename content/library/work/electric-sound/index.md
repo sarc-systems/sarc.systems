@@ -13,7 +13,8 @@ creators:
 
 subjects: [sound, feedback]
 
-images: []
+images:
+  - {file: "cover.jpg", alt: "Cover of Electric Sound by Sonic Arts Union", role: cover, caption: "Original 1972 Mainstream Records LP artwork.", source: "https://www.discogs.com/master/361520-Sonic-Arts-Union-Electric-Sound", rights: {status: unknown}, use: {basis: identification, note: "Label cover art used for identification."}}
 
 access:
   - {label: "Discogs", kind: discogs, url: "https://www.discogs.com/master/361520-Sonic-Arts-Union-Electric-Sound"}

@@ -23,11 +23,13 @@ creators:
 
 subjects: [sound, feedback]
 
-images: []
+images:
+  - {file: "photo.jpg", alt: "Sonic Arts Union performing and portrait collage: Alvin Lucier, Robert Ashley, Gordon Mumma, and David Behrman", role: portrait, source: "https://daily.redbullmusicacademy.com/2018/07/sonic-arts-union-history-and-key-works/", rights: {status: unknown}, use: {basis: identification, note: "Photo used for identification."}}
 
-access: []
+access:
+  - {label: "Red Bull Music Academy: The Sonic Arts Union's Handmade Electronic Music, 1966-1976", kind: other, url: "https://daily.redbullmusicacademy.com/2018/07/sonic-arts-union-history-and-key-works/"}
 
 draft: false
 ---
 
-Founded on 22 April 1966 following a concert at Brandeis University's Rose Art Museum, the Sonic Arts Union brought together Robert Ashley, David Behrman, Alvin Lucier, and Gordon Mumma — who had already worked together in the instrumental performances of the ONCE festivals — as an ensemble built around live electronics, homemade instruments, and multimedia presentation, practices that were still uncommon in American music at the time. The group performed across North America and Europe from 1966 until 1976.
+Founded on 22 April 1966 following a concert at Brandeis University's Rose Art Museum, the Sonic Arts Union brought together Robert Ashley, David Behrman, Alvin Lucier, and Gordon Mumma — who had already worked together in the instrumental performances of the ONCE festivals — as an ensemble built around live electronics, homemade instruments, and multimedia presentation, practices that were still uncommon in American music at the time. The group performed at least 63 concerts across North America and Europe from 1966 until 1976, and released a single collaborative album, *[Electric Sound](/library/electric-sound/)* (1972).
