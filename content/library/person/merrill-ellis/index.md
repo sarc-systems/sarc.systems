@@ -9,7 +9,8 @@ library:
 
 subjects: [sound, instruments]
 
-images: []
+images:
+  - {file: "portrait.jpg", alt: "Merrill Ellis at the second Moog synthesizer ever built, North Texas", role: portrait, source: "https://blogs.library.unt.edu/unt125/2015/12/07/merrill_ellis/", rights: {status: unknown}, use: {basis: identification, note: "UNT Libraries 125 Year Archival Retrospective photo used for identification."}}
 
 access: []
 

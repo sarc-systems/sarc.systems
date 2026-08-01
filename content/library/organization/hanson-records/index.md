@@ -12,9 +12,11 @@ creators:
 
 subjects: [sound]
 
-images: []
+images:
+  - {file: "logo.jpg", alt: "Hanson Records logo, a screaming mouth in a red circle", role: logo, source: "https://www.discogs.com/label/21058-Hanson-Records", rights: {status: unknown}, use: {basis: identification, note: "Label logo used for identification."}}
 
-access: []
+access:
+  - {label: "Store", kind: website, url: "http://hansonrecords.bigcartel.com/"}
 
 draft: false
 ---
