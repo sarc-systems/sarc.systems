@@ -16,7 +16,8 @@ creators:
 
 subjects: [sound, feedback, computation]
 
-images: []
+images:
+  - {file: "cover.jpg", alt: "Cover of Chicago Slow Dance by George Lewis", role: cover, caption: "Original 1981 Lovely Music LP artwork.", source: "http://www.lovely.com/titles/lp1101.html", rights: {status: unknown}, use: {basis: identification, note: "Label cover art used for identification."}}
 
 access:
   - {label: "Discogs", kind: discogs, url: "https://www.discogs.com/release/1330689-George-Lewis-Chicago-Slow-Dance"}

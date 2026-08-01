@@ -16,7 +16,8 @@ creators:
 
 subjects: [sound, feedback]
 
-images: []
+images:
+  - {file: "photo.jpg", alt: "The Music Improvisation Company performing live", role: portrait, source: "https://www.discogs.com/master/252011-The-Music-Improvisation-Company-1968-1971", rights: {status: unknown}, use: {basis: identification, note: "Photo used for identification."}}
 
 access: []
 

@@ -19,7 +19,8 @@ creators:
 
 subjects: [sound, space]
 
-images: []
+images:
+  - {file: "cover.jpg", alt: "Cover of Prospectus by the Steve Lacy Seven", role: cover, caption: "Original 1983 hat ART double LP artwork, cover art and design concept by Brion Gysin.", source: "https://en.wikipedia.org/wiki/Prospectus_(album)", rights: {status: unknown}, use: {basis: identification, note: "Label cover art used for identification."}}
 
 access:
   - {label: "Discogs", kind: discogs, url: "https://www.discogs.com/release/1219831-Steve-Lacy-Seven-Prospectus"}
