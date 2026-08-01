@@ -25,6 +25,8 @@ access: []
 related:
   - {ref: sonic-arts-union, relation: part-of}
   - {ref: terry-riley, relation: affiliated-with}
+  - {ref: alvin-lucier, relation: co-member-of}
+  - {ref: gordon-mumma, relation: co-member-of}
 
 draft: false
 ---

@@ -191,6 +191,22 @@ relation_types:
   # never inferred from merely sharing an organization or subject. Symmetric
   # (its own inverse), like compatible-with.
   - collaborator-of
+  # Two people who were both members of the same named group/ensemble —
+  # e.g. Dieter Moebius and Hans-Joachim Roedelius, both part-of Cluster.
+  # Without this, two bandmates only ever connect through the shared
+  # group's own entry, which — on the Map view especially — means they
+  # read as unrelated the moment Groups are filtered out or the group
+  # entry itself isn't (yet) modeled (e.g. Kluster, Moebius/Roedelius/
+  # Schnitzler's trio before Schnitzler's 1971 departure, has no group
+  # entry of its own to route through), even though it's the single most
+  # direct fact connecting them. Declared once per pair, directly between
+  # the two Person entries — never inferred or auto-derived from shared
+  # `part-of`/`creators` credits (see CLAUDE.md § Library map view: "every
+  # edge here is something SARC actually declared in front matter"), and
+  # distinct from collaborator-of, which is for a documented one-to-one
+  # artistic partnership rather than membership in the same named lineup.
+  # Symmetric (its own inverse), like collaborator-of.
+  - co-member-of
 
 # Inverse labels for reverse-resolved `related` links. `related` is bidirectional:
 # a relation declared on one entry also renders on its target, labelled by the
@@ -220,6 +236,7 @@ relation_inverse:
   affiliated-with: affiliated-with
   created-at: creation-site
   collaborator-of: collaborator-of
+  co-member-of: co-member-of
 
 # Access kinds (`access[].kind`). `url` and `file` are mutually exclusive per
 # item; `hosted-file` requires a bundle-relative `file` (and is the only kind

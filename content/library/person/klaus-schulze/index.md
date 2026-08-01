@@ -21,6 +21,7 @@ access:
 related:
   - {ref: tangerine-dream, relation: part-of}
   - {ref: pete-namlook, relation: collaborator-of}
+  - {ref: conrad-schnitzler, relation: co-member-of}
 
 draft: false
 ---

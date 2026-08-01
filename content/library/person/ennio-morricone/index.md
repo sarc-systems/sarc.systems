@@ -21,6 +21,10 @@ images:
 
 access: []
 
+related:
+  - {ref: frederic-rzewski, relation: co-member-of}
+  - {ref: roland-kayn, relation: co-member-of}
+
 draft: false
 ---
 

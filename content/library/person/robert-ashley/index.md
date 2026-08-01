@@ -21,8 +21,10 @@ images:
 access: []
 
 related:
-  - {ref: alvin-lucier, relation: collaborator-of}
+  - {ref: alvin-lucier, relation: co-member-of}
   - {ref: sonic-arts-union, relation: part-of}
+  - {ref: david-behrman, relation: co-member-of}
+  - {ref: gordon-mumma, relation: co-member-of}
 
 draft: false
 ---

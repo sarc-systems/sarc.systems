@@ -240,7 +240,7 @@
   var RELATION_CATEGORY = {
     "part-of": "structural", "made-with": "structural", "implements": "structural",
     "programmed-in": "structural", "based-at": "structural", "commissioned-by": "structural",
-    "created-at": "structural", "collaborator-of": "structural", "version-of": "structural", "edition-of": "structural",
+    "created-at": "structural", "collaborator-of": "structural", "co-member-of": "structural", "version-of": "structural", "edition-of": "structural",
     "release-of": "structural", "recording-of": "structural", "performance-of": "structural",
     "influenced-by": "historical", "successor-to": "historical", "predecessor-to": "historical",
     "affiliated-with": "contextual", "used-by": "contextual", "compatible-with": "contextual",
@@ -2041,7 +2041,7 @@
     "compatible-with": "Compatible", "made-with": "Made With",
     "based-at": "Based At", "commissioned-by": "Commission",
     "affiliated-with": "Affiliated", "created-at": "Created At",
-    "collaborator-of": "Collab",
+    "collaborator-of": "Collab", "co-member-of": "Co-Member",
     // the inverse-resolved forms library-related.html can render on the
     // TARGET side of a relation (see relation_inverse in data/library.yaml)
     // — this file's direct-relation label is forward-only today (see

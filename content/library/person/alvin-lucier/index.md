@@ -17,6 +17,7 @@ images:
 
 related:
   - {ref: sonic-arts-union, relation: part-of}
+  - {ref: gordon-mumma, relation: co-member-of}
 
 draft: false
 ---

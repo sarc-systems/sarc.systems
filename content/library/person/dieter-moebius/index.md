@@ -26,6 +26,8 @@ related:
   - {ref: cluster, relation: part-of}
   - {ref: neu, relation: collaborator-of}
   - {ref: asmus-tietchens, relation: collaborator-of}
+  - {ref: hans-joachim-roedelius, relation: co-member-of}
+  - {ref: conrad-schnitzler, relation: co-member-of}
 
 draft: false
 ---

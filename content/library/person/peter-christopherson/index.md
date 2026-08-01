@@ -24,7 +24,9 @@ access: []
 related:
   - {ref: throbbing-gristle, relation: part-of}
   - {ref: coil, relation: part-of}
-  - {ref: genesis-p-orridge, relation: collaborator-of}
+  - {ref: genesis-p-orridge, relation: co-member-of}
+  - {ref: cosey-fanni-tutti, relation: co-member-of}
+  - {ref: chris-carter, relation: co-member-of}
 
 draft: false
 ---

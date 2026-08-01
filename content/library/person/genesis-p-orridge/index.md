@@ -23,6 +23,7 @@ access: []
 
 related:
   - {ref: throbbing-gristle, relation: part-of}
+  - {ref: chris-carter, relation: co-member-of}
 
 draft: false
 ---

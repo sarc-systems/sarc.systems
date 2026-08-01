@@ -24,7 +24,7 @@ images:
 access: []
 
 related:
-  - {ref: david-tudor, relation: collaborator-of}
+  - {ref: david-tudor, relation: co-member-of}
   - {ref: alvin-lucier, relation: collaborator-of}
   - {ref: david-behrman, relation: collaborator-of}
   - {ref: composers-inside-electronics, relation: part-of}

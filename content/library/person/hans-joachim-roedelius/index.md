@@ -24,6 +24,7 @@ access: []
 related:
   - {ref: cluster, relation: part-of}
   - {ref: neu, relation: collaborator-of}
+  - {ref: conrad-schnitzler, relation: co-member-of}
 
 draft: false
 ---

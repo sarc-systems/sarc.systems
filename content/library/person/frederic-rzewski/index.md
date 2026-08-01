@@ -16,6 +16,8 @@ access: []
 related:
   - {ref: mev, relation: part-of}
   - {ref: gruppo-di-improvvisazione-nuova-consonanza, relation: part-of}
+  - {ref: roland-kayn, relation: co-member-of}
+  - {ref: richard-teitelbaum, relation: co-member-of}
 
 draft: false
 ---

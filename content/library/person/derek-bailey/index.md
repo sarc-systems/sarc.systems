@@ -21,7 +21,8 @@ access:
 
 related:
   - {ref: incus-records, relation: part-of}
-  - {ref: evan-parker, relation: collaborator-of}
+  - {ref: evan-parker, relation: co-member-of}
+  - {ref: hugh-davies, relation: co-member-of}
   - {ref: tony-oxley, relation: collaborator-of}
   - {ref: han-bennink, relation: collaborator-of}
 

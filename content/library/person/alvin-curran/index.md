@@ -23,6 +23,8 @@ access: []
 
 related:
   - {ref: mev, relation: part-of}
+  - {ref: frederic-rzewski, relation: co-member-of}
+  - {ref: richard-teitelbaum, relation: co-member-of}
 
 draft: false
 ---

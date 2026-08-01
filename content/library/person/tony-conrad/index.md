@@ -23,7 +23,7 @@ access: []
 
 related:
   - {ref: theatre-of-eternal-music, relation: part-of}
-  - {ref: la-monte-young, relation: collaborator-of}
+  - {ref: la-monte-young, relation: co-member-of}
 
 draft: false
 ---
