@@ -35,7 +35,7 @@
   {{- end -}}
   {{- with (uniq $groups) -}}
   <section class="library-relations" aria-labelledby="groups-h">
-    <h2 id="groups-h" class="library-relations-head">Groups in the Library</h2>
+    <h2 id="groups-h" class="library-relations-head">Related Groups in the Library</h2>
     <ul class="library-records">
       {{- range . }}{{ partial "library-record.html" . }}{{ end }}
     </ul>
