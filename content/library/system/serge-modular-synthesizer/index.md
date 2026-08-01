@@ -18,15 +18,7 @@ creators:
 subjects: [instruments]
 
 images:
-  - file: "serge-modular-synthesizer.jpg"
-    alt: "Serge modular synthesizer"
-    role: still
-    caption: "Serge modular synthesizer, Worm, Rotterdam, 2009."
-    credit: "Photograph by Rosa Menkman"
-    source: "https://commons.wikimedia.org/wiki/File:Serge_Modular.jpg"
-    rights:
-      status: licensed
-      note: "CC BY 2.0, via Wikimedia Commons."
+  - {file: "serge-temp.jpg", alt: "Serge Tcherepnin leaning on an early Serge modular system, circa 1978", role: still, caption: "Serge Tcherepnin with an early Serge system, circa 1978. Placeholder — to be replaced with a photo of SARC's own Serge system.", source: "https://www.instagram.com/p/DUcczVwDT6H/", rights: {status: unknown}, use: {basis: identification, note: "Photo used for identification, pending replacement."}}
 
 access: []
 
