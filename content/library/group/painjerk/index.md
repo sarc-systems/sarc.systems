@@ -12,7 +12,8 @@ creators:
 
 subjects: [sound]
 
-images: []
+images:
+  - {file: "portrait.jpg", alt: "Pain Jerk (Kohei Gomi) performing live, 2009", role: portrait, credit: "Photograph by Tarje Sælen Lavik", source: "https://commons.wikimedia.org/wiki/File:Pain_Jerk_(3207834038).jpg", rights: {status: licensed, note: "CC BY-SA 2.0, via Wikimedia Commons."}}
 
 access: []
 

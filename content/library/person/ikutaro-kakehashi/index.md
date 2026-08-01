@@ -9,7 +9,8 @@ library:
 
 subjects: [instruments]
 
-images: []
+images:
+  - {file: "portrait.jpg", alt: "Ikutaro Kakehashi's handprint plaque, NAMM TEC Awards, February 7, 2000", role: other, caption: "Kakehashi's handprint plaque at the NAMM TEC Awards, not a portrait photo.", source: "https://commons.wikimedia.org/wiki/File:Kakehashi_Ikutaro_hand.jpg", rights: {status: licensed, note: "CC BY-SA 4.0, via Wikimedia Commons."}}
 
 access: []
 

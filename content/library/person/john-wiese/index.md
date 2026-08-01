@@ -9,7 +9,8 @@ library:
 
 subjects: [sound]
 
-images: []
+images:
+  - {file: "portrait.jpg", alt: "John Wiese performing live, 2008", role: portrait, credit: "Photograph by Seth Tisue", source: "https://commons.wikimedia.org/wiki/File:John_Wiese.jpg", rights: {status: licensed, note: "CC BY-SA 2.0, via Wikimedia Commons."}}
 
 access: []
 

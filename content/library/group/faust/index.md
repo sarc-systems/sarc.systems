@@ -18,7 +18,8 @@ creators:
 
 subjects: [sound]
 
-images: []
+images:
+  - {file: "photo.jpg", alt: "Faust performing live, 2007", role: portrait, credit: "Photograph by jd lennon", source: "https://commons.wikimedia.org/wiki/File:Faust_(band)_May2007.jpg", rights: {status: licensed, note: "CC BY 2.0, via Wikimedia Commons."}}
 
 access: []
 

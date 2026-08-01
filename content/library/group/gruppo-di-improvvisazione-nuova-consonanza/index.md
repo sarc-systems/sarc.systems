@@ -22,7 +22,8 @@ creators:
 
 subjects: [sound, feedback]
 
-images: []
+images:
+  - {file: "portrait.jpg", alt: "Gruppo di Improvvisazione Nuova Consonanza rehearsing in the studio, 1970s", role: portrait, credit: "Photograph by Roberto Masotti", source: "https://commons.wikimedia.org/wiki/File:Gruppoimprovvisazione.jpg", rights: {status: public-domain, note: "CC0, via Wikimedia Commons."}}
 
 access: []
 
