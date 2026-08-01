@@ -17,7 +17,15 @@ creators:
 
 subjects: [instruments]
 
-images: []
+images:
+  - file: "moog-modular-synthesizer.jpg"
+    alt: "The first commercial Moog synthesizer, 1964"
+    role: still
+    caption: "The first commercial Moog synthesizer, 1964, commissioned by the Alwin Nikolai Dance Theater — Stearns Collection, University of Michigan."
+    source: "https://commons.wikimedia.org/wiki/File:1st_commercial_Moog_synthesizer_(1964,_commissioned_by_the_Alwin_Nikolai_Dance_Theater_of_NY)_@_Stearns_Collection_(Stearns_2035),_University_of_Michigan.jpg"
+    rights:
+      status: licensed
+      note: "CC BY-SA 2.0, via Wikimedia Commons."
 
 access: []
 

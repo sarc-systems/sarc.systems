@@ -12,7 +12,16 @@ creators:
 
 subjects: [sound, computation]
 
-images: []
+images:
+  - file: "ans-synthesizer.jpg"
+    alt: "ANS synthesizer"
+    role: still
+    caption: "ANS synthesizer at the Glinka Museum, Moscow."
+    credit: "Photograph by Charles Hutchins"
+    source: "https://commons.wikimedia.org/wiki/File:ANS_Synthesiser,_Glinka_Museum.jpg"
+    rights:
+      status: licensed
+      note: "CC BY 2.0, via Wikimedia Commons."
 
 access: []
 

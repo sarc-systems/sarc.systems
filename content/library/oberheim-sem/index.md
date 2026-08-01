@@ -20,7 +20,16 @@ creators:
 
 subjects: [instruments]
 
-images: []
+images:
+  - file: "oberheim-sem.jpg"
+    alt: "Oberheim SEM (original unit)"
+    role: still
+    caption: "Oberheim SEM (original), NAMM 2014. Cropped from a photo also showing a paired Arturia BeatStep controller."
+    credit: "Photograph by Brandon Daniel"
+    source: "https://commons.wikimedia.org/wiki/File:Arturia_BeatStep_%26_Oberheim_SEM_(original)_-_2014_NAMM_Show.jpg"
+    rights:
+      status: licensed
+      note: "CC BY-SA 2.0, via Wikimedia Commons."
 
 access: []
 

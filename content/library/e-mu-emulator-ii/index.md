@@ -17,7 +17,16 @@ creators:
 
 subjects: [instruments]
 
-images: []
+images:
+  - file: "e-mu-emulator-ii.jpg"
+    alt: "E-mu Emulator II, front panel"
+    role: still
+    caption: "E-mu Emulator II, front panel."
+    credit: "Photograph by Matt Friedman"
+    source: "https://commons.wikimedia.org/wiki/File:E-mu_Emulator_II_-_front.jpg"
+    rights:
+      status: licensed
+      note: "CC BY 3.0 Unported, via Wikimedia Commons. Source image is low resolution."
 
 access: []
 

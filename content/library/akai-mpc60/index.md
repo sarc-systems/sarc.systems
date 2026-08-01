@@ -14,7 +14,16 @@ creators:
 
 subjects: [sound, instruments, computation]
 
-images: []
+images:
+  - file: "akai-mpc60.jpg"
+    alt: "Akai MPC60"
+    role: still
+    caption: "Akai MPC60, 1988."
+    credit: "Photograph by Matt Friedman"
+    source: "https://commons.wikimedia.org/wiki/File:Akai_MPC60.jpg"
+    rights:
+      status: licensed
+      note: "CC BY 3.0 Unported, via Wikimedia Commons."
 
 access: []
 

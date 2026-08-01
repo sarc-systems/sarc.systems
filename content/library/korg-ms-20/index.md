@@ -12,7 +12,15 @@ creators:
 
 subjects: [sound, instruments]
 
-images: []
+images:
+  - file: "korg-ms-20.jpg"
+    alt: "Korg MS-20"
+    role: still
+    credit: "Photograph by Zinnmann"
+    source: "https://commons.wikimedia.org/wiki/File:Korg_MS-20.jpg"
+    rights:
+      status: licensed
+      note: "CC BY-SA 3.0, via Wikimedia Commons."
 
 access: []
 

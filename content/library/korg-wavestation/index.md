@@ -13,7 +13,16 @@ creators:
 
 subjects: [computation, sound, instruments]
 
-images: []
+images:
+  - file: "korg-wavestation.png"
+    alt: "Korg Wavestation, front panel"
+    role: still
+    caption: "Korg Wavestation, front panel."
+    credit: "Photograph by Matt Perry"
+    source: "https://commons.wikimedia.org/wiki/File:Korg_Wavestation_front.png"
+    rights:
+      status: licensed
+      note: "Multi-licensed GFDL/CC BY-SA, via Wikimedia Commons."
 
 access: []
 

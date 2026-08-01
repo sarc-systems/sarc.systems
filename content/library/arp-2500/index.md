@@ -17,7 +17,16 @@ creators:
 
 subjects: [instruments]
 
-images: []
+images:
+  - file: "arp-2500.jpg"
+    alt: "ARP 2500"
+    role: still
+    caption: "ARP 2500 at the National Music Centre, Calgary."
+    credit: "Photograph by Mack Male"
+    source: "https://commons.wikimedia.org/wiki/File:ARP2500_-_National_Music_Centre_(2017-08-18_11.48.04_by_Mack_Male_@_Flickr_38265398126)_edit1.jpg"
+    rights:
+      status: licensed
+      note: "CC BY-SA 4.0, via Wikimedia Commons."
 
 access: []
 

@@ -17,7 +17,16 @@ creators:
 
 subjects: [instruments]
 
-images: []
+images:
+  - file: "ppg-wave-2.jpg"
+    alt: "PPG Wave 2.2"
+    role: still
+    caption: "PPG Wave 2.2, a later revision within the Wave 2 family."
+    credit: "Photograph by John R. Southern"
+    source: "https://commons.wikimedia.org/wiki/File:PPG_WAVE_2.2_(front).jpg"
+    rights:
+      status: licensed
+      note: "CC BY-SA 2.0, via Wikimedia Commons."
 
 access: []
 

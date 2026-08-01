@@ -13,7 +13,15 @@ creators:
 
 subjects: [computation, sound, instruments]
 
-images: []
+images:
+  - file: "yamaha-dx7.jpg"
+    alt: "Yamaha DX7"
+    role: still
+    credit: "Photograph by Leo-setä"
+    source: "https://commons.wikimedia.org/wiki/File:Yamaha_DX7_(on_stand).jpg"
+    rights:
+      status: licensed
+      note: "CC BY 2.0, via Wikimedia Commons."
 
 access: []
 

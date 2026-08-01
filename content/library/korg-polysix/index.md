@@ -12,7 +12,16 @@ creators:
 
 subjects: [sound, instruments]
 
-images: []
+images:
+  - file: "korg-polysix.jpg"
+    alt: "Korg Poly-Six"
+    role: still
+    caption: "Korg Poly-Six, photographed 1989."
+    credit: "Photograph by Ken Eckert"
+    source: "https://commons.wikimedia.org/wiki/File:Korg_Poly-Six.jpg"
+    rights:
+      status: licensed
+      note: "CC BY-SA 4.0, via Wikimedia Commons."
 
 access: []
 

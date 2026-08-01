@@ -14,7 +14,16 @@ creators:
 
 subjects: [instruments]
 
-images: []
+images:
+  - file: "roland-jupiter-8.jpg"
+    alt: "Roland Jupiter-8"
+    role: still
+    caption: "Roland Jupiter-8, photographed 1983."
+    credit: "Photograph by Ed Uthman"
+    source: "https://commons.wikimedia.org/wiki/File:Roland_Jupiter-8_(1981).jpg"
+    rights:
+      status: licensed
+      note: "CC BY-SA 2.0, via Wikimedia Commons."
 
 access: []
 

@@ -16,7 +16,15 @@ creators:
 
 subjects: [instruments]
 
-images: []
+images:
+  - file: "ems-synthi-a.jpg"
+    alt: "EMS Synthi A"
+    role: still
+    credit: "Photograph by altemark"
+    source: "https://commons.wikimedia.org/wiki/File:EMS_Synthi_A.jpg"
+    rights:
+      status: licensed
+      note: "CC BY 2.0, via Wikimedia Commons."
 
 access: []
 

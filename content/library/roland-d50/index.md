@@ -14,7 +14,14 @@ creators:
 
 subjects: [instruments]
 
-images: []
+images:
+  - file: "roland-d50.jpg"
+    alt: "Roland D-50"
+    role: still
+    source: "https://commons.wikimedia.org/wiki/File:Roland_D-50.jpg"
+    rights:
+      status: permitted
+      note: "CC BY 3.0 tag backed by a documented Wikimedia VRT permission ticket (#2009070810045301), via Wikimedia Commons."
 
 access: []
 

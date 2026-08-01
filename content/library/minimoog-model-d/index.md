@@ -17,7 +17,16 @@ creators:
 
 subjects: [instruments]
 
-images: []
+images:
+  - file: "minimoog-model-d.jpg"
+    alt: "Minimoog"
+    role: still
+    caption: "Early Minimoog by R.A. Moog, c. 1970."
+    credit: "Photograph by glacial23"
+    source: "https://commons.wikimedia.org/wiki/File:R.A.Moog_minimoog_1.jpg"
+    rights:
+      status: licensed
+      note: "CC BY-SA 2.0, via Wikimedia Commons. Depicts an early/pre-production unit, not a standard retail Model D."
 
 access: []
 

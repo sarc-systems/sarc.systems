@@ -23,7 +23,16 @@ creators:
 
 subjects: [instruments]
 
-images: []
+images:
+  - file: "synclavier-ii.jpg"
+    alt: "Synclavier II, front panel"
+    role: still
+    caption: "Synclavier II, front panel."
+    credit: "Photograph by John R. Southern"
+    source: "https://commons.wikimedia.org/wiki/File:NED_Synclavier_II_front.jpg"
+    rights:
+      status: licensed
+      note: "CC BY-SA 2.0, via Wikimedia Commons."
 
 access:
   - label: "website"

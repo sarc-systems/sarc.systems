@@ -17,7 +17,16 @@ creators:
 
 subjects: [instruments]
 
-images: []
+images:
+  - file: "serge-modular-synthesizer.jpg"
+    alt: "Serge modular synthesizer"
+    role: still
+    caption: "Serge modular synthesizer, Worm, Rotterdam, 2009."
+    credit: "Photograph by Rosa Menkman"
+    source: "https://commons.wikimedia.org/wiki/File:Serge_Modular.jpg"
+    rights:
+      status: licensed
+      note: "CC BY 2.0, via Wikimedia Commons."
 
 access: []
 

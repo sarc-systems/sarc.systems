@@ -13,7 +13,16 @@ creators:
 
 subjects: [computation]
 
-images: []
+images:
+  - file: "dec-pdp-10.jpg"
+    alt: "DEC PDP-10"
+    role: still
+    caption: "DEC PDP-10 (DECsystem-10) at the Living Computer Museum, Seattle — a surviving unit, not specifically the Stanford CCRMA machine."
+    credit: "Photograph by Joe Mabel"
+    source: "https://commons.wikimedia.org/wiki/File:LCM_-_DEC_PDP-10_-_01.jpg"
+    rights:
+      status: licensed
+      note: "CC BY-SA 3.0, via Wikimedia Commons."
 
 access: []
 

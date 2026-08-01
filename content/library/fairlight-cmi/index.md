@@ -20,7 +20,16 @@ creators:
 
 subjects: [instruments]
 
-images: []
+images:
+  - file: "fairlight-cmi.jpg"
+    alt: "Fairlight CMI Series IIx"
+    role: still
+    caption: "Fairlight CMI Series IIx (1983) — a later revision, not the original 1979 CMI."
+    credit: "Photograph by Peter Wielk"
+    source: "https://commons.wikimedia.org/wiki/File:Fairlight_CMI-IIx.jpg"
+    rights:
+      status: licensed
+      note: "CC BY-SA 4.0, photographer permission documented on the file page, via Wikimedia Commons."
 
 access: []
 

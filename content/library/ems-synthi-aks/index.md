@@ -14,7 +14,15 @@ creators:
 
 subjects: [instruments]
 
-images: []
+images:
+  - file: "ems-synthi-aks.jpg"
+    alt: "EMS Synthi AKS"
+    role: still
+    credit: "Photograph by Matt Friedman"
+    source: "https://commons.wikimedia.org/wiki/File:EMS_Synthi_AKS.jpg"
+    rights:
+      status: licensed
+      note: "CC BY 3.0 Unported, via Wikimedia Commons."
 
 access: []
 

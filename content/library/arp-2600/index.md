@@ -19,7 +19,16 @@ creators:
 
 subjects: [instruments]
 
-images: []
+images:
+  - file: "arp-2600.jpg"
+    alt: "ARP 2600"
+    role: still
+    caption: "ARP 2600 synthesizer, 2014."
+    credit: "Photograph by Charles Hutchins"
+    source: "https://commons.wikimedia.org/wiki/File:ARP_2600_-_2014-11-09_(by_Charles_Hutchins).jpg"
+    rights:
+      status: licensed
+      note: "CC BY 2.0, via Wikimedia Commons."
 
 access: []
 

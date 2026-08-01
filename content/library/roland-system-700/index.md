@@ -14,7 +14,15 @@ creators:
 
 subjects: [instruments]
 
-images: []
+images:
+  - file: "roland-system-700.jpg"
+    alt: "Roland System 700"
+    role: still
+    credit: "Photograph by Racingline81"
+    source: "https://commons.wikimedia.org/wiki/File:Roland_System_700.jpg"
+    rights:
+      status: licensed
+      note: "CC BY-SA 4.0, via Wikimedia Commons."
 
 access: []
 

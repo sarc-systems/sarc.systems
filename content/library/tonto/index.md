@@ -13,7 +13,15 @@ creators:
 
 subjects: [sound, instruments]
 
-images: []
+images:
+  - file: "tonto.png"
+    alt: "TONTO"
+    role: still
+    caption: "TONTO in its current home, the National Music Centre (Studio Bell), Calgary."
+    source: "https://commons.wikimedia.org/wiki/File:TONTO_at_NMC.png"
+    rights:
+      status: public-domain
+      note: "CC0 1.0 public domain dedication, via Wikimedia Commons."
 
 access: []
 
