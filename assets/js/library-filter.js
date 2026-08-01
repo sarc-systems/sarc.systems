@@ -1,42 +1,25 @@
-// Library catalog filter + Catalog/Images view switch + chance selection —
+// Library catalog filter + Catalog/Images/Map view switch —
 // progressive enhancement, no dependencies.
 // Facets: type (multi, OR), subject (multi, OR). Facets combine with AND:
 // (typeA OR typeB) AND (subjA OR subjB). (An Origin/SARC-work facet was
 // removed for now — sarc_work is still a valid per-entry field and still in
 // the JSON index, just not filterable here.)
-// State lives in the URL query string (?type=a,b&subject=c&view=images) so
+// State lives in the URL query string (?type=a,b&subject=c&view=catalog) so
 // views are shareable and survive back/forward. A fourth param, `select=
 // <library.id>`, coexists in the same query string but is owned and written
 // entirely by library-map.js (Map view's node selection) — this file never
 // reads it into its own state, only preserves it unmodified whenever it
 // rewrites the URL for a type/subject/view change (see toURL()) so a filter
 // or view-switch click never silently drops the current selection from the
-// address bar. Without this script the
-// whole catalog is visible (the filter form and view switch are CSS-hidden on
-// the no-JS flag), there is no Images view, and the "From the Library" panel
-// stands as its deterministic server-rendered fallback (unfiltered).
+// address bar. Without this script the whole catalog is visible (the filter
+// form and view switch are CSS-hidden on the no-JS flag), and there is no
+// Images or Map view — Catalog is the complete no-JS fallback.
 //
-// One shared model, not two: View/Type/Subject/Origin define a single field,
-// and both the "From the Library" chance panel and the complete results below
-// it are sampled/filtered from that same field — never independently. This
-// script owns all of it:
-//   - #library-list / #library-image-index (the results — server-rendered
-//     .library-record/.library-image-index__item elements; reused, not
-//     rebuilt, filtered by their data-* attributes)
-//   - #library-random (the chance panel — rebuilt from /library/index.json,
-//     since a result record's DOM doesn't carry everything a featured card
-//     needs; see cardHTML() below, kept in sync with library-featured.html)
-// Filtering the results is synchronous (the DOM is already there). The chance
-// panel depends on an async JSON fetch, so until that resolves, its
-// server-rendered fallback (first `featured: true` entry, or first in catalog
-// order — see library-random.html) stands regardless of active filters; once
-// loaded, it's revalidated against the current field on every change from
-// then on, same as everything else.
-// The chance panel has no presentation of its own in Map view — it isn't a
-// display of the matching set the way Catalog/Images are — so it inherits
-// whichever of Catalog/Images was last actually active (see chanceView()):
-// image-bearing-only pool and image-only card in Map right after Images,
-// full pool and full card in Map right after Catalog.
+// One shared model, not two: View/Type/Subject define a single field, and
+// the results below are filtered from that field. This script owns all of
+// it — #library-list / #library-image-index (the results — server-rendered
+// .library-record/.library-image-index__item elements; reused, not rebuilt,
+// filtered by their data-* attributes).
 (function () {
   "use strict";
 
@@ -48,6 +31,14 @@
 
   var imageIndex = document.getElementById("library-image-index");
   var mapView = document.getElementById("library-map");
+  // The Map view's own instructions/empty-state text live as plain page
+  // text OUTSIDE #library-map (see library-map-view.html and CLAUDE.md §
+  // Library "Map view" — deliberately not sharing a bordered box with the
+  // canvas). That also means they're outside what mapView.hidden alone
+  // controls below, so setView() has to toggle them itself or they'd stay
+  // visible under Catalog/Images too.
+  var mapHint = document.querySelector(".library-map-hint");
+  var mapEmpty = document.getElementById("library-map-empty");
   var viewSwitch = document.querySelector("[data-view-switch]");
   var viewButtons = viewSwitch ? Array.prototype.slice.call(viewSwitch.querySelectorAll("[data-library-view]")) : [];
 
@@ -103,160 +94,32 @@
     return catalogEmpty;
   }
 
-  // --- Chance panel (the "From the Library" section) ----------------------
-  var randomSection = document.getElementById("library-random");
-  var randomSlot = randomSection ? randomSection.querySelector("[data-random-slot]") : null;
-  var anotherBtn = randomSection ? randomSection.querySelector(".library-random-another") : null;
-  var announceEl = randomSection ? randomSection.querySelector("[data-chance-announce]") : null;
-  var STORE_KEY = "sarc-library-random";
-  var allEntries = null; // null until /library/index.json resolves
-  var currentId = null;
-
-  function esc(s) {
-    return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
-      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
-    });
-  }
-
-  function cardHTML(e, imagesView) {
-    var img = e.primary_image;
-    var thumb = img ? (
-      '<a class="library-featured-thumb" href="' + esc(e.url) + '" aria-label="View ' + esc(e.title) + '"' +
-      (imagesView ? "" : ' tabindex="-1" aria-hidden="true"') +
-      '><img src="' + esc(img.url) +
-      '" style="object-position: ' + esc(img.pos || "center") + '" alt="' + esc(img.alt) +
-      '" loading="lazy" decoding="async"></a>'
-    ) : "";
-    var kick = [];
-    if (e.creator_names) kick.push(esc(e.creator_names));
-    if (e.type_label) kick.push(esc(e.type_label));
-    if (e.year) kick.push(esc(e.year));
-    var subs = (e.subject_labels || []).map(esc).join(' <span class="dot" aria-hidden="true">·</span> ');
-    return '<article class="library-featured' + (imagesView ? " library-featured--image-only" : "") + '" data-library-id="' + esc(e.library_id) + '">' +
-      thumb +
-      '<div class="library-featured-body"' + (imagesView ? " hidden" : "") + '>' +
-      '<p class="library-featured-kicker">' + kick.join(' <span class="dot" aria-hidden="true">·</span> ') + '</p>' +
-      '<p class="library-featured-title"><a href="' + esc(e.url) + '">' + esc(e.title) + '</a></p>' +
-      (e.summary ? '<p class="library-featured-annotation">' + esc(e.summary) + '</p>' : '') +
-      (subs ? '<p class="library-featured-subjects">' + subs + '</p>' : '') +
-      '</div></article>';
-  }
-
-  function announce(e) {
-    if (!announceEl) return;
-    announceEl.textContent = "Selected: " + e.title + (e.creator_names ? " by " + e.creator_names : "");
-  }
-
-  function pickFrom(pool, excludeId) {
-    if (pool.length === 1) return pool[0];
-    var e;
-    do { e = pool[Math.floor(Math.random() * pool.length)]; }
-    while (excludeId && e.library_id === excludeId);
-    return e;
-  }
-
-  // Map view has no presentation of its own for the chance panel to mirror,
-  // so it inherits whichever of Catalog/Images the visitor was last actually
-  // looking at (lastRealView) rather than defaulting to either one.
-  function chanceView() { return view === "map" ? lastRealView : view; }
-
-  // The chance pool is the exact same field as the results: matches() below
-  // applied to the JSON entries, further narrowed to entries with a primary
-  // image while Images (view or last-real-view) is active (Catalog may
-  // sample image-less entries).
-  function eligiblePool() {
-    if (!allEntries) return null;
-    var pool = allEntries.filter(matchesEntry);
-    if (chanceView() === "images") pool = pool.filter(function (e) { return !!e.primary_image; });
-    return pool;
-  }
-
-  // Renders the chance panel against `pool`. `forceNew` is true only for an
-  // explicit "Select again" click — it always picks a different entry.
-  // Otherwise (every filter/view change) the current pick is kept as long as
-  // it's still in the pool, so entries don't shuffle just because a filter
-  // changed elsewhere; only view-mode presentation (text hidden/shown) is
-  // re-rendered when the entry itself stays the same.
-  function renderPool(pool, forceNew) {
-    if (!randomSlot) return;
-    if (pool.length === 0) {
-      currentId = null;
-      try { sessionStorage.removeItem(STORE_KEY); } catch (e) {}
-      var matchingAtAll = allEntries.filter(matchesEntry).length > 0;
-      var msg = (chanceView() === "images" && matchingAtAll) ? "No matching entries have images." : "No matching entries.";
-      randomSlot.innerHTML = '<p class="library-empty">' + esc(msg) + '</p>';
-      if (randomSection) randomSection.classList.remove("library-random--image-only");
-      if (anotherBtn) anotherBtn.hidden = true;
-      return;
-    }
-    var current = null;
-    if (!forceNew && currentId) {
-      current = pool.filter(function (e) { return e.library_id === currentId; })[0] || null;
-    }
-    if (!current) {
-      current = pickFrom(pool, forceNew ? currentId : null);
-      var changed = current.library_id !== currentId;
-      currentId = current.library_id;
-      try { sessionStorage.setItem(STORE_KEY, currentId); } catch (e) {}
-      if (changed) announce(current);
-    }
-    var imagesView = chanceView() === "images";
-    randomSlot.innerHTML = cardHTML(current, imagesView);
-    // The "big, centered image" panel sizing (library.css) keys off this
-    // class, not the page's own data-library-view — Map inheriting Images'
-    // presentation (see chanceView() above) needs the same sizing Images
-    // itself gets, not the plain has-text-alongside layout.
-    if (randomSection) randomSection.classList.toggle("library-random--image-only", imagesView);
-    if (anotherBtn) anotherBtn.hidden = pool.length <= 1;
-  }
-
-  function revalidateChance() {
-    var pool = eligiblePool();
-    if (pool === null) return; // index.json hasn't resolved yet — keep the SSR fallback
-    renderPool(pool, false);
-  }
-  function selectAgain() {
-    var pool = eligiblePool();
-    if (pool === null) return;
-    renderPool(pool, true);
-  }
-  if (anotherBtn) anotherBtn.addEventListener("click", selectAgain);
-
-  fetch(new URL("index.json", location.href).href, { credentials: "same-origin" })
-    .then(function (r) { return r.ok ? r.json() : null; })
-    .then(function (data) {
-      if (!data || !data.entries) return;
-      allEntries = data.entries;
-      try { currentId = sessionStorage.getItem(STORE_KEY); } catch (e) { currentId = null; }
-      revalidateChance();
-    })
-    .catch(function () { /* keep the server fallback */ });
-
   // --- Filters + view state -------------------------------------------------
   function chipsFor(facet) {
     return chips.filter(function (c) { return c.dataset.facet === facet; });
   }
 
   // Active state: multi sets for type + subject, plus the presentation view
-  // ("catalog" | "images" | "map"). Images is the default — an absent or
-  // invalid ?view= resolves to "images" (see fromURL/toURL below, which only
-  // ever add view=catalog or view=map to the URL).
+  // ("catalog" | "images" | "map"). Map is the default — an absent or
+  // invalid ?view= resolves to "map" (see fromURL/toURL below, which only
+  // ever add view=catalog or view=images to the URL).
   var sel = { type: [], subject: [] };
-  var view = "images";
-  // The chance panel has no defined behavior of its own in Map view (unlike
-  // Catalog/Images, it isn't itself a display of the matching set) — so it
-  // keeps behaving like whichever of Catalog/Images was last actually
-  // active, rather than silently defaulting to one. Only ever updated to
-  // "catalog" or "images", never "map" — see chanceView() below.
-  var lastRealView = "images";
+  var view = "map";
 
   function setView(v) {
-    view = (v === "catalog" || v === "map") ? v : "images";
-    if (view !== "map") lastRealView = view;
+    view = (v === "catalog" || v === "images") ? v : "map";
     document.documentElement.dataset.libraryView = view;
     list.hidden = view !== "catalog";
     if (imageIndex) imageIndex.hidden = view !== "images";
     if (mapView) mapView.hidden = view !== "map";
+    if (mapHint) mapHint.hidden = view !== "map";
+    // Only ever forced hidden here, on the way OUT of Map view — while
+    // actually in Map view, library-map.js's own finishRelayout() is what
+    // decides whether there's genuinely nothing to show, and keeps deciding
+    // that correctly across filter changes; setView() has no opinion on
+    // that content, only on whether Map's own elements should be visible
+    // at all under a different view.
+    if (mapEmpty && view !== "map") mapEmpty.hidden = true;
     viewButtons.forEach(function (b) {
       var on = b.dataset.libraryView === view;
       b.setAttribute("aria-pressed", on ? "true" : "false");
@@ -285,9 +148,6 @@
   }
   function matchesDataset(ds) {
     return matchesFields(ds.type || "", (ds.subjects || "").split(/\s+/).filter(Boolean));
-  }
-  function matchesEntry(e) {
-    return matchesFields(e.public_type, e.subjects || []);
   }
 
   // `fromNav` is true only when called right after fromURL() (initial load or
@@ -346,7 +206,6 @@
       }
     }
     paint();
-    revalidateChance();
     // library-map.js listens for this to know which entries currently match —
     // it owns its own rendering entirely (see that file), so this is the only
     // coupling between the two: one event, not a shared internal API.
@@ -359,7 +218,7 @@
     var params = new URLSearchParams();
     if (sel.type.length) params.set("type", sel.type.join(","));
     if (sel.subject.length) params.set("subject", sel.subject.join(","));
-    if (view === "catalog" || view === "map") params.set("view", view);
+    if (view === "catalog" || view === "images") params.set("view", view);
     // `select` (the Map view's node selection) is owned entirely by
     // library-map.js — never read into `sel` here — but this rewrite must
     // still carry it forward, or toggling a filter chip / view button would
@@ -379,7 +238,7 @@
     sel.type = (params.get("type") || "").split(",").filter(function (v) { return valid.type[v]; });
     sel.subject = (params.get("subject") || "").split(",").filter(function (v) { return valid.subject[v]; });
     var v = params.get("view") || "";
-    setView(v === "catalog" ? "catalog" : v === "map" ? "map" : "images");
+    setView(v === "catalog" ? "catalog" : v === "images" ? "images" : "map");
   }
 
   chips.forEach(function (c) {

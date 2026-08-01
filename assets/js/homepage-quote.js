@@ -8,8 +8,8 @@
 //
 // Mirrors homepage-quote-attribution.html's link_target rule exactly (full |
 // author | work | none) so the client-picked quote renders identically to
-// the SSR fallback; the two are kept in sync by hand, the same duplication
-// accepted elsewhere in this codebase (library-featured.html/cardHTML()).
+// the SSR fallback; the two are kept in sync by hand, since the client
+// can't call a Hugo partial at runtime.
 (function () {
   "use strict";
 

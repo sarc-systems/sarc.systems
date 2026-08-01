@@ -36,7 +36,6 @@ related: []
 
 weight:                               # optional manual ordering (lower first)
 sort_title:                           # optional alpha-sort override
-featured: false                       # optional: preferred no-JS "From the Library" entry
 draft: true
 ---
 

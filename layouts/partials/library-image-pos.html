@@ -1,7 +1,7 @@
 {{- /* Map an image `anchor` to a CSS object-position value, so the square
        thumbnail crop (Hugo Fill anchor) and the CSS focus agree. Context: the
        anchor string (e.g. "Top"); returns "center" for Center/unset. Single
-       source shared by library-record, library-featured, and list.json. */ -}}
+       source shared by library-record, library-thumbnail, and list.json. */ -}}
 {{- $pos := "center" -}}
 {{- if eq . "Top" }}{{ $pos = "center top" }}{{ else if eq . "Bottom" }}{{ $pos = "center bottom" }}{{ else if eq . "Left" }}{{ $pos = "left center" }}{{ else if eq . "Right" }}{{ $pos = "right center" }}{{ end -}}
 {{- return $pos -}}

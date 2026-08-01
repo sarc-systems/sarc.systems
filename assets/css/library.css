@@ -160,80 +160,9 @@
 }
 .access-link:hover { color: var(--signal); border-bottom-color: var(--signal); }
 .access-link .ext { color: var(--gray-2); }
-/* --- "From the Library" random featured entry ---------------------------- */
-/* A distinct framed panel with a faint Forest wash, clearly set apart from the
-   plain catalog list below. */
 /* Tighten the catalog landing head (no eyebrow) so the View/Filter controls
    sit close under the intro. */
 .library-head { padding-bottom: 0.6rem; }
-.library-random {
-  margin: 0.4rem 0 clamp(1.4rem, 3vw, 2rem);
-  padding: clamp(1rem, 3vw, 1.6rem) clamp(1rem, 3vw, 1.6rem) clamp(1.1rem, 3vw, 1.7rem);
-  border: 1px solid var(--signal);
-  background: color-mix(in srgb, var(--signal) 6%, var(--paper));
-}
-.library-random-head {
-  display: flex; align-items: baseline; gap: 1rem;
-  border-bottom: 1px solid color-mix(in srgb, var(--signal) 35%, var(--rule));
-  padding-bottom: 0.5rem; margin-bottom: 0.9rem;
-}
-.library-random-head .eyebrow { margin: 0; color: var(--signal-ink); }
-.library-random-another {
-  margin-left: auto;
-  font-family: var(--font-mono); font-size: var(--t-xs); letter-spacing: 0.06em;
-  text-transform: uppercase; background: transparent; border: 0;
-  border-bottom: 1px solid var(--rule); color: var(--gray-1); cursor: pointer; padding: 0.1em 0;
-}
-.library-random-another:hover { color: var(--signal); border-bottom-color: var(--signal); }
-.library-featured { display: flex; gap: 1.2rem; align-items: flex-start; margin-top: 0.8rem; }
-.library-featured-thumb { display: block; flex: 0 0 auto; }
-/* Fixed width+height (not height:100%/aspect-ratio derived from the text
-   column's height) so swapping the card on "Select again" can never change
-   the image's box size — the old design let the image's cross-axis size
-   depend on the sibling text's height via a stretched flex row, which meant a
-   shorter/taller summary on the new pick visibly resized the image and the
-   panel's border on every swap. Fixed dimensions mean the box is identical
-   before and after innerHTML is replaced, so only the image itself changes. */
-.library-featured-thumb img {
-  width: 200px; height: 200px; object-fit: cover; display: block;
-  border: 1px solid var(--rule); background: var(--paper-2);
-}
-/* Image-only presentation: the card's text is hidden (library-filter.js),
-   leaving just the thumbnail — let it read as the panel's focal image rather
-   than the small corner of a text card: centered, and considerably larger.
-   Still a fixed size (viewport-driven via clamp, never content-driven) for
-   the same no-resize-on-swap reason as above. Keyed on the JS-applied
-   .library-featured--image-only / .library-random--image-only classes, NOT
-   on [data-library-view="images"] — Map view inherits whichever of Catalog/
-   Images was last active (chanceView() in library-filter.js), so the panel
-   can be showing image-only content while the page's own view is "map"; a
-   selector tied to the page's view attribute would size it as if it had
-   text alongside, and the image would visibly shrink for no reason the
-   moment you switch to Map. */
-.library-featured--image-only { justify-content: center; }
-.library-featured--image-only .library-featured-thumb img {
-  width: clamp(260px, 40vw, 440px);
-  height: clamp(260px, 40vw, 440px);
-}
-/* Shrink the framed panel to hug the centred image (and header) rather than
-   spanning the full content width with wide empty wash on either side. */
-.library-random--image-only {
-  width: fit-content;
-  max-width: 100%;
-  margin-inline: auto;
-}
-.library-featured-kicker {
-  font-family: var(--font-mono); font-size: var(--t-xs); letter-spacing: 0.1em;
-  text-transform: uppercase; color: var(--signal-ink); margin: 0;
-}
-.library-featured-title { font-size: var(--t-md); font-weight: 600; margin: 0.15rem 0 0; }
-.library-featured-title a { text-decoration: none; color: var(--ink); }
-.library-featured-title a:hover { color: var(--signal); }
-.library-featured-annotation { max-width: var(--measure); margin: 0.4rem 0 0; }
-.library-featured-subjects {
-  font-family: var(--font-mono); font-size: var(--t-xs); letter-spacing: 0.06em;
-  color: var(--gray-2); margin: 0.4rem 0 0;
-}
 
 .library-all-head { font-size: var(--t-sm); margin: 2rem 0 0.4rem; }
 
@@ -547,23 +476,19 @@
 .library-gallery-item { margin: 0; }
 .library-gallery-item img { width: 100%; height: auto; display: block; border: 1px solid var(--rule); }
 
-@media (max-width: 30rem) {
-  .library-featured { flex-direction: column; }
-  /* flex-direction: column swaps which axis justify-content/align-items
-     control — the image-only centering rule above is a justify-content
-     (main/horizontal-axis) rule that does nothing once the axis is
-     vertical, leaving the image at align-items's default (flex-start,
-     i.e. left-aligned) instead of centered. Center on the cross axis here
-     specifically for the image-only case; the has-text-alongside case's
-     stacked image+text keeps its left alignment. */
-  .library-featured--image-only { align-items: center; }
-}
-
 /* --- References filter --------------------------------------------------- */
 /* Progressive enhancement: the filter only works with JS, so it is hidden when
    JS is unavailable (the document carries data-nojs until the head script clears
    it). No-JS visitors simply see every reference. */
 :root[data-nojs] .library-controls { display: none; }
+/* Without JS there's no view switch at all — Catalog is the whole no-JS
+   fallback (see CLAUDE.md § Library) and #library-map itself already
+   starts `hidden` in the markup — but .library-map-hint lives outside that
+   container as plain page text (see its own rule below) and has no
+   default `hidden` of its own, since library-filter.js is what normally
+   toggles it per view. Without that script ever running, the hint would
+   otherwise describe a map that's never shown. */
+:root[data-nojs] .library-map-hint { display: none; }
 /* Filter and View share one row — View is pinned top-right (align-items:
    flex-start) so opening the Filter disclosure only grows the Filter column
    taller; View's own height never changes. This is what keeps the row

@@ -84,11 +84,11 @@ content/
   library/<public-type>/<slug>/cover.jpg  # entry images live in the bundle
 layouts/          # custom theme: baseof, home, journal list/single, taxonomies, 404
 layouts/library/{list,single}.html + list.json   # unified catalog + JSON index
-layouts/partials/library-*.html      # collect, record, featured, filters, view-switch,
+layouts/partials/library-*.html      # collect, record, filters, view-switch,
                                       #   image-index, map-view, thumbnail, images,
                                       #   image-caption, access, creators, works, related,
                                       #   rights, validate
-assets/js/library-filter.js          # catalog filter, view switch, and chance selection
+assets/js/library-filter.js          # catalog filter and view switch
 assets/js/library-map.js             # experimental Map view (force-directed relationship diagram)
 scripts/audit-library-images.py      # offline image credit/source/rights report (`make library-image-audit`)
 layouts/partials/mark.html           # generated four-row mark SVG — do not edit
@@ -373,7 +373,7 @@ access:                # where to find it (many per entry); url/file exclusive
   - {label: "Download PDF", kind: hosted-file, file: "manual.pdf"}
 related:               # editorial links: {ref, relation}
   - {ref: meta-hodos, relation: discusses}
-weight:  sort_title:  featured:            # optional ordering / no-JS random default
+weight:  sort_title:                       # optional catalog ordering
 ```
 
 - **type** — nested under `library` (never Hugo's top-level `type`). One primary
@@ -464,84 +464,49 @@ composer's `part-of GRM` shows as *Member* on GRM) — so declare an affiliation
 once, on either side. Creator attribution uses `creators`, never `related`.
 Partials: `library-{creators,works,related}.html`.
 
-**Landing** (`layouts/library/list.html`): intro → **From the Library** (one
-entry sampled from whatever the controls below currently define) →
-**View**/**Filters** (`.library-controls` — Type/Subject, Clear, result count,
-and the View switch share one flex row, View pinned top-right so opening the
-Filter disclosure only grows the Filter column, not the whole row; Filter is
-collapsed by default behind a native `<details>`/`<summary>`, no custom
-disclosure JS; `library-filter.js` sets `open` explicitly on every
+**Landing** (`layouts/library/list.html`): intro → **View**/**Filters**
+(`.library-controls` — Type/Subject, Clear, result count, and the View switch
+share one flex row; View is pinned left as a fixed-width control so it never
+moves, Filter fills the remaining width to its right and is the only side
+that grows, so opening the Filter disclosure can never shift or overlap
+View. Filter is collapsed by default behind a native `<details>`/`<summary>`,
+no custom disclosure JS; `library-filter.js` sets `open` explicitly on every
 load/history navigation — true when the URL already carries an active filter,
 false otherwise, overriding whatever a browser's own reload/history-state
 restoration would otherwise leave it at) → **All entries** (ruled records with
-thumbnails). Even though the controls render *below* the chance panel, they
-still define its field: View/Type/Subject define one matching set, and both
-the chance panel and the complete results are sampled/filtered from that same
-set — there is exactly one matching-set computation (`library-filter.js`'s
-`matchesFields`/`matchesDataset`/`matchesEntry`), never a separate one for the
-random pick; DOM position doesn't change that coupling. **Filter** by type +
-subject: OR within a facet, AND across; shareable `?type=a,b&subject=c`;
-history-aware; Clear; polite `aria-live` count. Without JS the whole catalog
-is visible and `.library-controls` (Filter + View) is hidden entirely
-(CSS-gated on `data-nojs`), and the chance panel stands as its unfiltered
-deterministic fallback (`featured: true` or first) since there's no
-client-side filtering to apply it to. Records carry `data-type` /
-`data-subjects` / `data-library-id`.
+thumbnails). **Filter** by type + subject: OR within a facet, AND across;
+shareable `?type=a,b&subject=c`; history-aware; Clear; polite `aria-live`
+count. Without JS the whole catalog is visible and `.library-controls`
+(Filter + View) is hidden entirely (CSS-gated on `data-nojs`) — Catalog is
+the complete no-JS fallback. Records carry `data-type` / `data-subjects` /
+`data-library-id`.
 
-**Catalog / Images view switch.** A presentation toggle, not a second page or a
-gallery — it changes what's visible, never the image itself. **Catalog** is the
-existing ruled records; **Images** shows only the primary images of the
-currently matching entries, same filters, same order, same crop. Both render
-from one entry collection at build time (`#library-list` /
-`#library-image-index`, see `library-image-index.html`) and both call the same
-`library-thumbnail.html` partial for image resolution — this is the only place
-that resolves an entry's primary image into a thumbnail, so the two views can
-never end up with a different derivative, crop, or size. Sizing is one shared
-CSS custom property, `--library-thumbnail-size` (set once, redefined at the
-mobile breakpoint) — the Catalog thumbnail's `max-height` and the Images grid's
+**Catalog / Images / Map view switch.** A presentation toggle, not a second
+page or a gallery — it changes what's visible, never the underlying entry
+set. **Catalog** is the existing ruled records; **Images** shows only the
+primary images of the currently matching entries, same filters, same order,
+same crop; **Map** is the force-directed relationship diagram (see its own
+section below). Catalog and Images both render from one entry collection at
+build time (`#library-list` / `#library-image-index`, see
+`library-image-index.html`) and both call the same `library-thumbnail.html`
+partial for image resolution — this is the only place that resolves an
+entry's primary image into a thumbnail, so the two views can never end up
+with a different derivative, crop, or size. Sizing is one shared CSS custom
+property, `--library-thumbnail-size` (set once, redefined at the mobile
+breakpoint) — the Catalog thumbnail's `width`/`height` and the Images grid's
 item `width`/`height` both read it, so changing one changes both by
-construction. **Images is the default view** — state is `?view=catalog|images`
-in the URL, but an absent or invalid `view` resolves to Images, not Catalog
-(the switch lists Images first for the same reason); `library-filter.js` only
-ever adds `view=catalog` to the URL, never `view=images`. One script
-(`library-filter.js`; there is no separate random script anymore) owns
-View/Type/Subject state, filters both result collections, updates a
-view-aware result count (`"N entries · M with images"` in Images view; `"0
-images among N matching entries"` when none match), and — every single time
-any of that state changes — revalidates the chance panel against the same
-field. Entries with no image are simply omitted from the Images grid (Catalog
-still lists them normally) — never a placeholder.
-
-**Chance panel eligibility & revalidation.** The chance panel's pool is exactly
-the matching entries (from `/library/index.json`, fetched once client-side —
-the DOM's result records don't carry enough to render a featured card),
-further narrowed to entries with a primary image whenever Images view is
-active (Catalog may sample an image-less entry; Images never does). On *any*
-filter/view change the current pick is kept if it's still in the pool — it
-does not reshuffle just because an unrelated facet changed — and only its
-presentation (Images-view text hidden/shown) re-renders if needed; only when
-the current pick falls outside the new pool is a fresh one drawn. **"Select
-again"** is the one action that always forces a different entry (excluding the
-current one) from the live pool, and is hidden entirely when the pool has ≤1
-eligible entry (a single-entry pool still displays that entry, just with
-nothing to select again into). A pool of zero entries replaces the panel
-content with a restrained empty state — `"No matching entries."`, or `"No
-matching entries have images."` specifically when entries match but none have
-one — and never falls back to an unrelated/unfiltered entry. In Images view,
-the featured thumbnail link gets a real accessible name (`aria-label`, since
-the title link it normally defers to is `hidden`) by removing the
-`aria-hidden`/`tabindex` that suppress it as a redundant link in Catalog view;
-switching back to Catalog restores the text without re-picking. A polite,
-sparse `aria-live` region (`[data-chance-announce]`, only updated when the
-picked entry's identity actually changes — never on every filter click)
-announces `"Selected: <title> by <creators>"`. The pick itself is
-`sessionStorage`-only, revalidated against the live pool on every read — it
-never becomes URL state (View/Type/Subject are the only URL-backed state); a
-stored id that's no longer eligible is simply discarded and redrawn.
-The whole view switch and chance-selection behavior requires JS (there is no
-server-rendered Images view or client-filtered chance pick), so the switch is
-hidden under `data-nojs` exactly like the filter form; Catalog with its
-unfiltered fallback pick remains the complete no-JS fallback. Reuses
+construction. **Map is the default view** — state is `?view=catalog|images`
+in the URL, but an absent or invalid `view` resolves to Map, not Catalog or
+Images (the switch lists Map first for the same reason); `library-filter.js`
+only ever adds `view=catalog` or `view=images` to the URL, never `view=map`.
+One script (`library-filter.js`) owns View/Type/Subject state, filters both
+result collections, and updates a view-aware result count (`"N entries · M
+with images"` in Images view; `"0 images among N matching entries"` when none
+match; Catalog and Map share the same plain count). Entries with no image are
+simply omitted from the Images grid (Catalog still lists them normally) —
+never a placeholder. The whole view switch requires JS (there is no
+server-rendered Images or Map view), so it's hidden under `data-nojs` exactly
+like the filter form; Catalog remains the complete no-JS fallback. Reuses
 `.rf-facet`/`.rf-chip` styling — no new visual theme.
 
 **Map view (experimental).** A third View option — `layouts/partials/library-map-view.html`
@@ -1151,11 +1116,10 @@ without alt. It does **not** fail on: no images, a creator name without `ref`, n
 related, an absent optional field, or a subject with one entry.
 
 **Templates/JS/CSS.** `layouts/library/{list,single}.html`, `list.json`;
-`partials/library-{collect,record,random,featured,filters,view-switch,
+`partials/library-{collect,record,filters,view-switch,
 image-index,map-view,thumbnail,images,access,creators,works,related,rights,
-validate}.html`; `assets/js/library-{filter,map}.js` (there is no separate
-random script — that logic lives in `library-filter.js`, see the chance-panel
-paragraph above); `assets/css/library.css`. Ruled catalog rows — never
+validate}.html`; `assets/js/library-{filter,map}.js`; `assets/css/library.css`.
+Ruled catalog rows — never
 commercial cards, cover
 grids, shadows, ratings, badges, hover-zoom, or streaming-service styling. Images
 are documentary, not decoration. Reuse the base shell/header/footer/type — don't
@@ -1255,9 +1219,8 @@ never random) as the no-JS fallback, embeds all enabled quotes as inline JSON
 `<script>` — deliberately not the usual `<script src defer>` pattern used
 elsewhere, so it runs synchronously as the parser reaches it, right after the
 fallback markup, avoiding a visible flash from the fallback quote to the
-session pick. The client script mirrors the attribution-link rule by hand
-(same accepted duplication as `library-featured.html`/`cardHTML()` for the
-Library's chance panel) since it can't call a Hugo partial at runtime.
+session pick. The client script mirrors the attribution-link rule by hand,
+an accepted duplication since it can't call a Hugo partial at runtime.
 
 **Selection.** One quote, stable for the browser session (`sessionStorage`,
 revalidated against the current enabled set on every read — a stored id

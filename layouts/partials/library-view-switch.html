@@ -1,7 +1,7 @@
 {{- /* Catalog/Images/Map presentation switch. Same records, same filters —
-       this only toggles how the currently matching entries are shown. Images
+       this only toggles how the currently matching entries are shown. Map
        is the default view (library-filter.js resolves an absent/invalid
-       ?view= to "images", not "catalog" or "map"), so it's listed first here
+       ?view= to "map", not "catalog" or "images"), so it's listed first here
        and server-rendered as the pressed/active button — JS corrects this
        instantly from the URL on load, but this avoids a flash of the wrong
        state before it runs. Map is experimental (see CLAUDE.md § Library map
@@ -14,7 +14,7 @@
        Call: {{ partial "library-view-switch.html" . }} */ -}}
 <fieldset class="rf-facet library-view-switch" data-view-switch>
   <legend>View</legend>
-  <button type="button" class="rf-chip is-active" data-library-view="images" aria-pressed="true">Images</button>
+  <button type="button" class="rf-chip is-active" data-library-view="map" aria-pressed="true">Map</button>
+  <button type="button" class="rf-chip" data-library-view="images" aria-pressed="false">Images</button>
   <button type="button" class="rf-chip" data-library-view="catalog" aria-pressed="false">Catalog</button>
-  <button type="button" class="rf-chip" data-library-view="map" aria-pressed="false">Map</button>
 </fieldset>
