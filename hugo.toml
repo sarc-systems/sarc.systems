@@ -81,6 +81,21 @@ timeout = "60s"
     endLevel   = 3
 
 # ---------------------------------------------------------------------------
+# Permalinks — Library source bundles are organized on disk under a
+# public-type directory (content/library/<public-type>/<slug>/index.md, see
+# CLAUDE.md § Library) purely for editorial navigability. This flattens the
+# published URL back to /library/<slug>/ regardless of that nesting, so the
+# folder structure is never exposed publicly and never breaks an existing
+# /library/<slug>/ link. :slug falls back to the filename (the bundle's own
+# directory name) when no explicit `slug:` front-matter field is set, which
+# is always true here since library.id already serves as the stable
+# identifier and entries don't set a separate slug.
+# ---------------------------------------------------------------------------
+[permalinks]
+  [permalinks.page]
+    library = "/library/:contentbasename/"
+
+# ---------------------------------------------------------------------------
 # Outputs — home also emits RSS (full journal feed) alongside HTML.
 # ---------------------------------------------------------------------------
 [outputs]

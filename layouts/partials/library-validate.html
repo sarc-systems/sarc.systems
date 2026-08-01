@@ -134,6 +134,36 @@
   {{- end -}}
 {{- end -}}
 
+{{- /* Storage-folder / public-type check — Library-owned entries (physically
+       under content/library/, not a cross-included page elsewhere) must sit
+       under content/library/<public-type>/<slug>/index.md, where
+       <public-type> is the entry's OWN derived public type (never parsed
+       back to override the metadata — this only ever compares the folder
+       name to $pt.typeOf, computed purely from library.type above). Also
+       catches an unknown top-level folder under content/library/ (a typo, a
+       stray non-entry directory) since any entry inside one fails the
+       "known public-type folder" check below. See CLAUDE.md § Library
+       "reorganize Library bundles by public type". */ -}}
+{{- $permittedFolders := slice }}{{ range $lib.public_types }}{{ $permittedFolders = $permittedFolders | append .public_type }}{{ end -}}
+{{- range (where $entries "Section" "library") -}}
+  {{- $page := . -}}
+  {{- $parts := split $page.File.Path "/" -}}
+  {{- if lt (len $parts) 4 -}}
+    {{- errorf "Library: %q is not stored under a public-type folder — expected content/library/<type>/<slug>/index.md" $page.Path -}}
+  {{- else -}}
+    {{- $folder := index $parts 1 -}}
+    {{- if not (in $permittedFolders $folder) -}}
+      {{- errorf "Library: %q is stored under unknown top-level folder %q (allowed: %s)" $page.Path $folder (delimit $permittedFolders ", ") -}}
+    {{- else -}}
+      {{- $type := "" }}{{ with .Params.library }}{{ $type = .type }}{{ end -}}
+      {{- $derivedPublic := index $pt.typeOf $type -}}
+      {{- if and $derivedPublic (ne $derivedPublic $folder) -}}
+        {{- errorf "Library: %q has library.type %q (derives to public type %q) but is stored under %q" $page.Path $type $derivedPublic $folder -}}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+
 {{- /* Public/specific type audit — dev server only (hugo.IsServer), so
        production build logs stay quiet. Counts every published entry by its
        public type, then breaks down the specific types within any public

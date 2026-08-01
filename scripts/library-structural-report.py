@@ -1,12 +1,16 @@
 #!/usr/bin/env python3
 """Structural report on the Library's relationship graph.
 
-Parses every `content/library/<slug>/index.md` bundle's front matter and
+Parses every `content/library/**/index.md` bundle's front matter and
 builds an undirected graph from the two ways entries actually connect —
 `creators[].ref` (who made it) and `related[].ref` (an editorial cross-
 reference) — the same two fields assets/js/library-map.js's Map view draws
 from. No inferred edges: this reports exactly what's been explicitly
-declared, nothing derived from shared subjects/tags/types.
+declared, nothing derived from shared subjects/tags/types. Entries are
+discovered recursively (`rglob("index.md")`), so this works whether bundles
+sit flat under `content/library/<slug>/` or nested under a public-type
+directory (`content/library/<public_type>/<slug>/`) — the entry's slug is
+always its own directory name, not the full relative path.
 
 Uses PyYAML for real front-matter parsing (confirmed available in this
 environment — `python3 -c "import yaml"`). This is a different tradeoff from
@@ -39,14 +43,31 @@ This is a read-only, offline analysis tool for planning what most needs
 improving — it does not replace `make check`, which is the authoritative
 build-time gate.
 
-Usage: python3 scripts/library-structural-report.py [--json]
-  --json   also write a machine-readable dump (research/library-audit/
-           structural-report.json) alongside the markdown report, for a
-           script or agent that wants to work with the graph programmatically
-           rather than re-parsing the markdown.
+Usage:
+  python3 scripts/library-structural-report.py [--json]
+      Full report (default, unchanged behaviour). Writes the complete
+      Markdown report to research/library-audit/structural-report.md and
+      prints a short summary. Intended for a human's own periodic full
+      survey — not a routine agent read.
 
-Writes: research/library-audit/structural-report.md
+  python3 scripts/library-structural-report.py --section SECTION [--limit N]
+      Focused output: prints ONLY that one section to stdout (no file
+      write, no unrelated sections) — for an agent that needs one narrow
+      list rather than the whole report. SECTION is one of:
+        isolated             zero-edge entries
+        short-bios           entries at/under the thin-bio word threshold
+        missing-images       person/group/organization entries with no image
+        unresolved-creators  creators[] credits with a name but no ref
+      --limit N caps how many items are printed (default: all).
+
+  python3 scripts/library-structural-report.py --section vocab --field FIELD
+      Prints one field from data/library.yaml (subjects, creator_roles,
+      relation_types, relation_inverse, types, public_types, ...) as YAML,
+      instead of reading the whole file.
+
+Writes: research/library-audit/structural-report.md (default mode only)
 """
+import argparse
 import json
 import re
 import sys
@@ -61,10 +82,27 @@ LIBRARY_YAML = ROOT / "data" / "library.yaml"
 OUT_MD = ROOT / "research" / "library-audit" / "structural-report.md"
 OUT_JSON = ROOT / "research" / "library-audit" / "structural-report.json"
 
+# A rough, deliberately simple heuristic — not a quality judgment, just
+# "worth a second look": a real researched paragraph in this catalog's own
+# house style typically runs 60-150+ words; anything at or under 25 reads
+# as a thin one-liner stub. False positives (a legitimately concise,
+# complete entry) are expected and fine — a human/agent still reads the
+# actual text before deciding to expand anything.
+SHORT_BIO_THRESHOLD = 25
+
+# Public types where a portrait/likeness is the highest-value image gap —
+# images are optional generally (see CLAUDE.md), and a Work/System/Concept/
+# Place/Event entry with no image is routine, not a gap worth flagging here.
+PORTRAIT_PUBLIC_TYPES = {"person", "group", "organization"}
+
+
+def load_vocab_raw():
+    with open(LIBRARY_YAML) as f:
+        return yaml.safe_load(f)
+
 
 def load_vocab():
-    with open(LIBRARY_YAML) as f:
-        data = yaml.safe_load(f)
+    data = load_vocab_raw()
     return {
         "type_to_public": {t["type"]: t["public_type"] for t in data["types"]},
         "relation_types": set(data["relation_types"]),
@@ -75,10 +113,12 @@ def load_vocab():
 
 def load_entries():
     entries, duplicate_ids, parse_errors = {}, defaultdict(list), []
-    for slug in sorted(p.name for p in LIBRARY_DIR.iterdir() if p.is_dir()):
-        path = LIBRARY_DIR / slug / "index.md"
-        if not path.is_file():
-            continue
+    # Recursive: bundles may sit flat (content/library/<slug>/) or nested
+    # under a public-type directory (content/library/<public_type>/<slug>/).
+    # A bundle's slug is always its own directory name (index.md's parent),
+    # never the full path relative to content/library/.
+    for path in sorted(LIBRARY_DIR.rglob("index.md")):
+        slug = path.parent.name
         text = path.read_text(encoding="utf-8")
         parts = text.split("---\n", 2)
         if len(parts) < 3:
@@ -98,6 +138,7 @@ def load_entries():
         body = parts[2].strip() if len(parts) > 2 else ""
         entries[eid] = {
             "slug": slug,
+            "path": path.relative_to(ROOT).as_posix(),
             "title": fm.get("title", ""),
             "type": lib.get("type", ""),
             "sarc_work": lib.get("sarc_work", False),
@@ -166,62 +207,11 @@ def connected_components(entries, edges):
     return components, degree
 
 
-def main():
-    want_json = "--json" in sys.argv
-    vocab = load_vocab()
-    entries, duplicate_ids, parse_errors = load_entries()
-    edges, dangling, unknown_rel, unknown_role, missing_ref_creator = build_graph(entries, vocab)
-    components, degree = connected_components(entries, edges)
-    isolated = [c[0] for c in components if len(c) == 1]
-    single_edge = [eid for eid in entries if degree[eid] == 1]
+def norm_name(name):
+    return re.sub(r"\s+", " ", name.strip().lower())
 
-    by_public, by_specific = Counter(), Counter()
-    for e in entries.values():
-        by_specific[e["type"]] += 1
-        pub = vocab["type_to_public"].get(e["type"])
-        if pub:
-            by_public[pub] += 1
 
-    title_norm = defaultdict(list)
-    for eid, e in entries.items():
-        norm = re.sub(r"[^a-z0-9]", "", e["title"].lower())
-        title_norm[norm].append(eid)
-    dup_titles = {k: v for k, v in title_norm.items() if len(v) > 1}
-
-    top_degree = sorted(degree.items(), key=lambda kv: -kv[1])[:20]
-    total = len(entries)
-
-    # A rough, deliberately simple heuristic — not a quality judgment, just
-    # "worth a second look": a real researched paragraph in this catalog's
-    # own house style typically runs 60-150+ words; anything at or under 25
-    # reads as a thin one-liner stub. False positives (a legitimately
-    # concise, complete entry) are expected and fine — a human/agent still
-    # reads the actual text before deciding to expand anything.
-    SHORT_BIO_THRESHOLD = 25
-    short_bios = sorted(
-        (eid for eid, e in entries.items() if e["body_words"] <= SHORT_BIO_THRESHOLD),
-        key=lambda eid: entries[eid]["body_words"],
-    )
-
-    # Missing images, scoped to the public types where a portrait/likeness
-    # is the highest-value gap (person/group/organization) — images are
-    # optional generally (see CLAUDE.md), and a Work/System/Concept/Place/
-    # Event entry with no image is routine, not a gap worth flagging here.
-    PORTRAIT_PUBLIC_TYPES = {"person", "group", "organization"}
-    missing_portrait_image = sorted(
-        eid for eid, e in entries.items()
-        if not e["images"] and vocab["type_to_public"].get(e["type"]) in PORTRAIT_PUBLIC_TYPES
-    )
-
-    # Unresolved creator credits, grouped by normalized name — Librarian
-    # Mode D's research queue (see .claude/agents/librarian.md). Grouping
-    # (not just listing) is the point: the same real name typically recurs
-    # verbatim in front matter across several works, so a plain per-credit
-    # list would make a single frequently-credited person look like several
-    # unrelated one-off mentions.
-    def norm_name(name):
-        return re.sub(r"\s+", " ", name.strip().lower())
-
+def group_unresolved_creators(entries, missing_ref_creator):
     by_creator_name = defaultdict(list)  # normalized name -> [(eid, role), ...]
     display_name = {}  # normalized name -> an actual as-written name, for display
     for eid, name, role in missing_ref_creator:
@@ -244,6 +234,184 @@ def main():
         (key for key in by_creator_name if len(by_creator_name[key]) == 1),
         key=lambda k: display_name[k].lower()
     )
+    return by_creator_name, display_name, title_lookup, exact_title_candidates, repeated_unresolved, single_use_unresolved
+
+
+def isolated_entries(entries, components):
+    return sorted(c[0] for c in components if len(c) == 1)
+
+
+def short_bio_entries(entries, threshold=SHORT_BIO_THRESHOLD):
+    return sorted(
+        (eid for eid, e in entries.items() if e["body_words"] <= threshold),
+        key=lambda eid: entries[eid]["body_words"],
+    )
+
+
+def missing_image_entries(entries, vocab):
+    return sorted(
+        eid for eid, e in entries.items()
+        if not e["images"] and vocab["type_to_public"].get(e["type"]) in PORTRAIT_PUBLIC_TYPES
+    )
+
+
+def fmt_isolated(entries, ids, limit=None):
+    if limit:
+        ids = ids[:limit]
+    return [f"- {eid} ({entries[eid]['type']}): \"{entries[eid]['title']}\"" for eid in ids]
+
+
+def fmt_short_bios(entries, ids, limit=None):
+    if limit:
+        ids = ids[:limit]
+    return [
+        f"- {eid} ({entries[eid]['type']}, {entries[eid]['body_words']} words): \"{entries[eid]['title']}\""
+        for eid in ids
+    ]
+
+
+def fmt_missing_images(entries, ids, limit=None):
+    if limit:
+        ids = ids[:limit]
+    return [f"- {eid} ({entries[eid]['type']}): \"{entries[eid]['title']}\"" for eid in ids]
+
+
+def fmt_unresolved_creators(entries, grouping, limit=None, verbose=False):
+    by_creator_name, display_name, title_lookup, exact_title_candidates, repeated_unresolved, single_use_unresolved = grouping
+    exact = exact_title_candidates[:limit] if limit else exact_title_candidates
+    repeated = repeated_unresolved[:limit] if limit else repeated_unresolved
+    single = single_use_unresolved[:limit] if limit else single_use_unresolved
+
+    lines = [f"### Exact existing-title candidates ({len(exact_title_candidates)})", ""]
+    if verbose:
+        lines += [
+            "An unresolved credit whose name exactly matches an existing "
+            "entry's title — a likely candidate for adding `ref`, but confirm "
+            "identity before doing so (a same-named different person/entity is "
+            "possible, if less common).",
+            "",
+        ]
+    lines += [
+        f"- \"{display_name[k]}\" -> candidate: {title_lookup[k]} — "
+        + ", ".join(f"{eid} ({role})" if role else eid for eid, role in by_creator_name[k])
+        for k in exact
+    ]
+    lines += ["", f"### Repeated unresolved creators ({len(repeated_unresolved)})", ""]
+    if verbose:
+        lines += [
+            "Credited on 2+ works — worth researching even without an obvious "
+            "existing-entry match, since resolving the name once connects "
+            "every work it appears on.",
+            "",
+        ]
+    lines += [
+        f"- \"{display_name[k]}\" — {len(by_creator_name[k])} credits: "
+        + ", ".join(f"{eid} ({role})" if role else eid for eid, role in by_creator_name[k])
+        for k in repeated
+    ]
+    lines += ["", f"### Single-use unresolved creators ({len(single_use_unresolved)})", ""]
+    if verbose:
+        lines += [
+            "Credited on exactly one work — usually a minor/one-off credit; "
+            "most of these are fine to leave as a plain name (see the hard "
+            "rules in .claude/agents/librarian.md Mode D before creating an "
+            "entry for one).",
+            "",
+        ]
+    lines += [
+        f"- \"{display_name[k]}\" — {by_creator_name[k][0][0]}"
+        + (f" ({by_creator_name[k][0][1]})" if by_creator_name[k][0][1] else "")
+        for k in single
+    ]
+    return lines
+
+
+def parse_args():
+    p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    p.add_argument("--json", action="store_true", help="also write structural-report.json (full-report mode only)")
+    p.add_argument(
+        "--section",
+        choices=["all", "isolated", "short-bios", "missing-images", "unresolved-creators", "vocab"],
+        default="all",
+        help="print only this section to stdout (no file write), instead of the full report",
+    )
+    p.add_argument("--limit", type=int, default=None, help="cap how many items a focused section prints")
+    p.add_argument("--field", help="with --section vocab: the data/library.yaml top-level field to print")
+    return p.parse_args()
+
+
+def run_focused(args, entries, vocab, edges, components):
+    if args.section == "vocab":
+        if not args.field:
+            print("error: --section vocab requires --field <name>", file=sys.stderr)
+            sys.exit(1)
+        data = load_vocab_raw()
+        if args.field not in data:
+            print(f"error: unknown field {args.field!r}. Available: {', '.join(data.keys())}", file=sys.stderr)
+            sys.exit(1)
+        print(yaml.safe_dump({args.field: data[args.field]}, sort_keys=False, allow_unicode=True))
+        return
+
+    if args.section == "isolated":
+        ids = isolated_entries(entries, components)
+        print(f"Isolated entries (0 edges): {len(ids)}" + (f" (showing {args.limit})" if args.limit else ""))
+        print("\n".join(fmt_isolated(entries, ids, args.limit)))
+        return
+
+    if args.section == "short-bios":
+        ids = short_bio_entries(entries)
+        print(f"Short bios (<= {SHORT_BIO_THRESHOLD} words): {len(ids)}" + (f" (showing {args.limit})" if args.limit else ""))
+        print("\n".join(fmt_short_bios(entries, ids, args.limit)))
+        return
+
+    if args.section == "missing-images":
+        ids = missing_image_entries(entries, vocab)
+        print(f"Person/group/organization entries with no image: {len(ids)}" + (f" (showing {args.limit})" if args.limit else ""))
+        print("\n".join(fmt_missing_images(entries, ids, args.limit)))
+        return
+
+    if args.section == "unresolved-creators":
+        _, dangling, unknown_rel, unknown_role, missing_ref_creator = build_graph(entries, vocab)
+        grouping = group_unresolved_creators(entries, missing_ref_creator)
+        print("\n".join(fmt_unresolved_creators(entries, grouping, args.limit)))
+        return
+
+
+def main():
+    args = parse_args()
+    vocab = load_vocab()
+    entries, duplicate_ids, parse_errors = load_entries()
+    edges, dangling, unknown_rel, unknown_role, missing_ref_creator = build_graph(entries, vocab)
+    components, degree = connected_components(entries, edges)
+
+    if args.section != "all":
+        run_focused(args, entries, vocab, edges, components)
+        return
+
+    isolated = isolated_entries(entries, components)
+    single_edge = [eid for eid in entries if degree[eid] == 1]
+
+    by_public, by_specific = Counter(), Counter()
+    for e in entries.values():
+        by_specific[e["type"]] += 1
+        pub = vocab["type_to_public"].get(e["type"])
+        if pub:
+            by_public[pub] += 1
+
+    title_norm = defaultdict(list)
+    for eid, e in entries.items():
+        norm = re.sub(r"[^a-z0-9]", "", e["title"].lower())
+        title_norm[norm].append(eid)
+    dup_titles = {k: v for k, v in title_norm.items() if len(v) > 1}
+
+    top_degree = sorted(degree.items(), key=lambda kv: -kv[1])[:20]
+    total = len(entries)
+
+    short_bios = short_bio_entries(entries)
+    missing_portrait_image = missing_image_entries(entries, vocab)
+    grouping = group_unresolved_creators(entries, missing_ref_creator)
+    (by_creator_name, display_name, title_lookup,
+     exact_title_candidates, repeated_unresolved, single_use_unresolved) = grouping
 
     lines = [
         "# Library Structural Report",
@@ -294,43 +462,8 @@ def main():
         "for research prioritization only: never treat a match here as "
         "confirmed identity without checking it.",
         "",
-        f"### Exact existing-title candidates ({len(exact_title_candidates)})", "",
-        "An unresolved credit whose name exactly matches an existing "
-        "entry's title — a likely candidate for adding `ref`, but confirm "
-        "identity before doing so (a same-named different person/entity is "
-        "possible, if less common).",
-        "",
     ]
-    lines += [
-        f"- \"{display_name[k]}\" -> candidate: {title_lookup[k]} — "
-        + ", ".join(f"{eid} ({role})" if role else eid for eid, role in by_creator_name[k])
-        for k in exact_title_candidates
-    ]
-    lines += [
-        "", f"### Repeated unresolved creators ({len(repeated_unresolved)})", "",
-        "Credited on 2+ works — worth researching even without an obvious "
-        "existing-entry match, since resolving the name once connects "
-        "every work it appears on.",
-        "",
-    ]
-    lines += [
-        f"- \"{display_name[k]}\" — {len(by_creator_name[k])} credits: "
-        + ", ".join(f"{eid} ({role})" if role else eid for eid, role in by_creator_name[k])
-        for k in repeated_unresolved
-    ]
-    lines += [
-        "", f"### Single-use unresolved creators ({len(single_use_unresolved)})", "",
-        "Credited on exactly one work — usually a minor/one-off credit; "
-        "most of these are fine to leave as a plain name (see the hard "
-        "rules in .claude/agents/librarian.md Mode D before creating an "
-        "entry for one).",
-        "",
-    ]
-    lines += [
-        f"- \"{display_name[k]}\" — {by_creator_name[k][0][0]}"
-        + (f" ({by_creator_name[k][0][1]})" if by_creator_name[k][0][1] else "")
-        for k in single_use_unresolved
-    ]
+    lines += fmt_unresolved_creators(entries, grouping, verbose=True)
     lines += [
         "",
         f"## Short bios (body prose <= {SHORT_BIO_THRESHOLD} words) — candidates for expansion", "",
@@ -338,10 +471,7 @@ def main():
         "it needs work; some legitimately concise entries will show up here.",
         "",
     ]
-    lines += [
-        f"- {eid} ({entries[eid]['type']}, {entries[eid]['body_words']} words): \"{entries[eid]['title']}\""
-        for eid in short_bios
-    ]
+    lines += fmt_short_bios(entries, short_bios)
     lines += [
         "", "## Person/group/organization entries with no image", "",
         "Scoped to the public types where a portrait/likeness is the "
@@ -351,12 +481,9 @@ def main():
         "choice of sourced options.",
         "",
     ]
-    lines += [
-        f"- {eid} ({entries[eid]['type']}): \"{entries[eid]['title']}\""
-        for eid in missing_portrait_image
-    ]
+    lines += fmt_missing_images(entries, missing_portrait_image)
     lines += ["", "## Isolated entries (full list)", ""]
-    lines += [f"- {eid} ({entries[eid]['type']}): \"{entries[eid]['title']}\"" for eid in sorted(isolated)]
+    lines += fmt_isolated(entries, isolated)
 
     OUT_MD.parent.mkdir(parents=True, exist_ok=True)
     OUT_MD.write_text("\n".join(lines) + "\n")
@@ -365,7 +492,7 @@ def main():
     print(f"Isolated: {len(isolated)}")
     print(f"Report written to {OUT_MD.relative_to(ROOT)}")
 
-    if want_json:
+    if args.json:
         OUT_JSON.write_text(json.dumps({
             "entries": {
                 eid: {

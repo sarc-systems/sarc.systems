@@ -77,8 +77,11 @@ content/
   label/_index.md
   label/releases/_index.md
   library/_index.md                   # unified catalog landing (+ index.json output)
-  library/<slug>/index.md             # flat entries (books, people, groups, manuals, releases, …)
-  library/<slug>/cover.jpg            # entry images live in the bundle
+  library/<public-type>/<slug>/index.md   # entries, stored under their derived public
+                                       #   type (person|group|organization|work|system|
+                                       #   place|concept|event) — source organization
+                                       #   only; publishes flat at /library/<slug>/
+  library/<public-type>/<slug>/cover.jpg  # entry images live in the bundle
 layouts/          # custom theme: baseof, home, journal list/single, taxonomies, 404
 layouts/library/{list,single}.html + list.json   # unified catalog + JSON index
 layouts/partials/library-*.html      # collect, record, featured, filters, view-switch,
@@ -321,10 +324,27 @@ colour is **Forest** (in `data/palette.yaml`; never hardcoded). All vocabularies
 live in `data/library.yaml` — the single source of truth for templates, filters,
 the JSON index, archetypes, and validation.
 
-**Flat URLs.** Library-owned entries live at `content/library/<slug>/index.md`
-and publish at `/library/<slug>/` — do **not** encode type/subject in the URL and
-do **not** create per-type content trees. Taxonomy changes must never require
-page moves.
+**Flat URLs, type-organized source.** Library-owned entries are stored at
+`content/library/<public-type>/<slug>/index.md` — grouped into the eight
+`public_types` (person, group, organization, work, system, place, concept,
+event; see "Public Type vs Specific Type" below) purely for editorial
+navigability — but always **publish flat at `/library/<slug>/`**: never
+`/library/<public-type>/<slug>/`. This is source organization, not a second
+ontology or a change to the URL — do **not** encode type/subject into the
+published URL, and do **not** introduce public type-section pages (no
+`/library/person/`, `/library/work/`, etc. — the public Library remains one
+unified catalog at `/library/`). The flattening is a Hugo
+`[permalinks]` config (`hugo.toml`, `library = "/library/:contentbasename/"`)
+— `:contentbasename` is the bundle's own directory name (its slug), not its
+title, so it's stable across a title edit. No type subfolder exists for
+`content/library/<public-type>/` itself (no `_index.md` there) — Hugo
+generates a page only where one exists, so the type folders never produce
+their own list pages. `layouts/partials/library-validate.html` fails the
+build if an entry's storage folder doesn't match its derived public type,
+or sits under an unrecognized top-level folder. Taxonomy changes (a
+specific-type edit that changes the derived public type) require moving the
+bundle to the new type folder via `git mv` — but never require changing the
+published URL, since the folder never appears in it.
 
 **Stable identity.** Every entry has a unique `library.id` (not the title, URL,
 slug, or path — entries may move). Relationships resolve through `library.id`.
@@ -937,8 +957,11 @@ commercial cards, cover
 grids, shadows, ratings, badges, hover-zoom, or streaming-service styling. Images
 are documentary, not decoration. Reuse the base shell/header/footer/type — don't
 fork the layout. One archetype: `archetypes/library-entry.md`
-(`hugo new --kind library-entry library/<slug>/index.md`). Moving/renaming a URL:
-add the old path under `aliases:`.
+(`hugo new --kind library-entry library/<public-type>/<slug>/index.md`, e.g.
+`library/person/misha-mengelberg/index.md` — the public type is source
+organization only and never appears in the published URL, see "Flat URLs,
+type-organized source" above). Moving/renaming a URL: add the old path under
+`aliases:`.
 
 ## The SARC four-row mark
 

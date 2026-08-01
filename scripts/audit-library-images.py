@@ -2,11 +2,13 @@
 """Audit credit/source/rights metadata for every image in the Library.
 
 Scope: every entry the Hugo build treats as a catalog member — every
-`content/library/<slug>/index.md` bundle, PLUS any page anywhere else in
-`content/` that opts in with `library: {include: true, id: ...}` (a Label
-release, a Systems manual, a Studio doc joining the catalog from its own
-canonical URL). This mirrors the selection logic in
-`layouts/partials/library-validate.html`
+`content/library/**/index.md` bundle (flat or nested under a public-type
+directory — `find_entries()` below only checks that the first path
+component under `content/` is `library`, so it's agnostic to depth), PLUS
+any page anywhere else in `content/` that opts in with
+`library: {include: true, id: ...}` (a Label release, a Systems manual, a
+Studio doc joining the catalog from its own canonical URL). This mirrors
+the selection logic in `layouts/partials/library-validate.html`
 (`where site.RegularPages "Section" "library" | union where
 "Params.library.include" true`). `_index.md` list pages and drafts are
 skipped, same as the Hugo build.

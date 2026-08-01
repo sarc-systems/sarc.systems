@@ -101,11 +101,14 @@ chance-selection eligibility/revalidation). Section colour is Forest.
 **Add an entry** (one archetype for everything):
 
 ```
-hugo new --kind library-entry library/some-slug/index.md
+hugo new --kind library-entry library/person/some-slug/index.md
 ```
 
-Entries live flat at `content/library/<slug>/` → `/library/<slug>/`. Edit the
-front matter and set `draft: false`. Key fields:
+Entries are stored under a public-type directory —
+`content/library/<public-type>/<slug>/` (`person | group | organization |
+work | system | place | concept | event`) — but always publish flat at
+`/library/<slug>/`; the type folder is source organization only and never
+appears in the URL. Edit the front matter and set `draft: false`. Key fields:
 
 - `library.id` — stable, **unique** id (not the title/URL); relationships resolve
   through it. `library.type` — one controlled type (`book | person | group |
