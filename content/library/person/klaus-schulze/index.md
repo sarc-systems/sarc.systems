@@ -12,7 +12,8 @@ creators: []
 
 subjects: [sound, time]
 
-images: []
+images:
+  - {file: "portrait.jpg", alt: "Klaus Schulze performing live", role: portrait, credit: "Photograph by arcsi", source: "https://commons.wikimedia.org/wiki/File:Klaus_Schulze_01.jpg", rights: {status: licensed, note: "CC BY-SA 2.0, via Wikimedia Commons."}}
 
 access:
   - {label: "Official discography site", kind: website, url: "https://www.klaus-schulze.com"}

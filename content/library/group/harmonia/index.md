@@ -14,7 +14,8 @@ creators:
 
 subjects: [sound]
 
-images: []
+images:
+  - {file: "photo.jpg", alt: "Individual portraits of Harmonia's three members: Dieter Moebius, Hans-Joachim Roedelius, and Michael Rother", role: portrait, credit: "Photograph by WinfriedSchneider", source: "https://commons.wikimedia.org/wiki/File:Harmonia-Einzelportraits-2007-2013.jpg", rights: {status: licensed, note: "CC BY-SA 4.0, via Wikimedia Commons."}}
 
 access: []
 
