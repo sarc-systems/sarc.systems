@@ -10,7 +10,7 @@ library:
 subjects: [sound, instruments]
 
 images:
-  - {file: "portrait.jpg", alt: "Maggi Payne", role: portrait, credit: "Photograph by Allan J. Cronin", source: "https://commons.wikimedia.org/wiki/File:Maggi_payne.JPG", rights: {status: licensed, note: "CC BY-SA 3.0, via Wikimedia Commons."}}
+  - {file: "portrait.jpg", alt: "Maggi Payne", role: portrait, anchor: Top, credit: "Photograph by Allan J. Cronin", source: "https://commons.wikimedia.org/wiki/File:Maggi_payne.JPG", rights: {status: licensed, note: "CC BY-SA 3.0, via Wikimedia Commons."}}
 
 access: []
 
