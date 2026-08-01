@@ -9,7 +9,8 @@ library:
 
 subjects: [sound]
 
-images: []
+images:
+  - {file: "portrait.jpg", alt: "John Fahey performing on guitar, Paris, 1984", role: portrait, credit: "Photograph by Pascal P. Chassin", source: "https://commons.wikimedia.org/wiki/File:Scan_J_Fahey_1_Paris_1984_web.jpg", rights: {status: licensed, note: "CC BY-SA 4.0, via Wikimedia Commons."}}
 
 access: []
 

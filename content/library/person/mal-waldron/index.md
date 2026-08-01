@@ -12,7 +12,8 @@ creators: []
 
 subjects: [sound, time]
 
-images: []
+images:
+  - {file: "portrait.jpg", alt: "Mal Waldron performing at Bajones Jazz Club, San Francisco, 1987", role: portrait, credit: "Photograph by Brian McMillen", source: "https://commons.wikimedia.org/wiki/File:Mal_Waldron.jpg", rights: {status: licensed, note: "CC BY-SA 3.0, via Wikimedia Commons."}}
 
 access: []
 

@@ -9,7 +9,8 @@ library:
 
 subjects: [sound, perception]
 
-images: []
+images:
+  - {file: "portrait.png", alt: "John Duncan performing with Soharóza, UH Festival, Budapest, 2018", role: portrait, credit: "Photograph by Elekes Andor", source: "https://commons.wikimedia.org/wiki/File:John_Duncan.png", rights: {status: licensed, note: "CC BY-SA 4.0, via Wikimedia Commons."}}
 
 access: []
 

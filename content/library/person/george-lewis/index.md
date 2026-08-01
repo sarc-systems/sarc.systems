@@ -12,7 +12,8 @@ creators: []
 
 subjects: [sound, computation, feedback]
 
-images: []
+images:
+  - {file: "portrait.jpg", alt: "George Lewis performing on trombone", role: portrait, credit: "Photograph by Andy Newcombe", source: "https://commons.wikimedia.org/wiki/File:George_Lewis.JPG", rights: {status: licensed, note: "CC BY-SA 2.0, via Wikimedia Commons."}}
 
 access: []
 
