@@ -1,17 +1,41 @@
 {{- /* "Works in the Library" — reverse relationship. Given an entry, find every
        published entry that credits it (creators[].ref == this.library.id) and
-       list them as records. Renders nothing when the entry has no library.id or
-       nothing credits it. Call: {{ partial "library-works.html" (dict "page" .) }} */ -}}
+       list them as records, split into two sections by the crediting entry's
+       own public_type: Works (public_type work/system/event/place/concept) and
+       Groups (public_type group/organization — the person/group is a member/
+       performer/contributor credited on that group or organization's own
+       entry, distinct from an actual work). Renders nothing when the entry has
+       no library.id or nothing credits it.
+       Call: {{ partial "library-works.html" (dict "page" .) }} */ -}}
 {{- $id := .page.Params.library.id -}}
 {{- with $id -}}
+  {{- $pt := partialCached "library-public-types.html" . "library-public-types" -}}
   {{- $works := slice -}}
+  {{- $groups := slice -}}
   {{- range (partial "library-collect.html" (dict "ctx" $.page)) -}}
     {{- $p := . -}}
-    {{- range $p.Params.creators }}{{ if eq .ref $id }}{{ $works = $works | append $p }}{{ end }}{{ end -}}
+    {{- $credited := false -}}
+    {{- range $p.Params.creators }}{{ if eq .ref $id }}{{ $credited = true }}{{ end }}{{ end -}}
+    {{- if $credited -}}
+      {{- $srcType := "" }}{{ with $p.Params.library }}{{ $srcType = .type }}{{ end -}}
+      {{- if in (slice "group" "organization") (index $pt.typeOf $srcType) -}}
+        {{- $groups = $groups | append $p -}}
+      {{- else -}}
+        {{- $works = $works | append $p -}}
+      {{- end -}}
+    {{- end -}}
   {{- end -}}
   {{- with (uniq $works) -}}
   <section class="library-relations" aria-labelledby="works-h">
     <h2 id="works-h" class="library-relations-head">Works in the Library</h2>
+    <ul class="library-records">
+      {{- range . }}{{ partial "library-record.html" . }}{{ end }}
+    </ul>
+  </section>
+  {{- end -}}
+  {{- with (uniq $groups) -}}
+  <section class="library-relations" aria-labelledby="groups-h">
+    <h2 id="groups-h" class="library-relations-head">Groups in the Library</h2>
     <ul class="library-records">
       {{- range . }}{{ partial "library-record.html" . }}{{ end }}
     </ul>

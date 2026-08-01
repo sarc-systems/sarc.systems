@@ -13,7 +13,7 @@ creators: []
 subjects: [sound, instruments]
 
 images:
-  - {file: "portrait.jpg", alt: "Sun Ra at an electric keyboard, 1973 publicity photo", role: portrait, caption: "1973 publicity photo for Impulse!/ABC-Dunhill Records.", source: "https://commons.wikimedia.org/wiki/File:Sun_Ra_(1973_publicity_photo_-_Impulse_ABC_Dunhill).jpg", rights: {status: public-domain, note: "Public domain publicity photo, via Wikimedia Commons."}}
+  - {file: "portrait.jpg", alt: "Sun Ra at an electric keyboard, 1973 publicity photo", role: portrait, anchor: Top, caption: "1973 publicity photo for Impulse!/ABC-Dunhill Records.", source: "https://commons.wikimedia.org/wiki/File:Sun_Ra_(1973_publicity_photo_-_Impulse_ABC_Dunhill).jpg", rights: {status: public-domain, note: "Public domain publicity photo, via Wikimedia Commons."}}
 
 access: []
 
