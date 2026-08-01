@@ -5,7 +5,13 @@
 // removed for now — sarc_work is still a valid per-entry field and still in
 // the JSON index, just not filterable here.)
 // State lives in the URL query string (?type=a,b&subject=c&view=images) so
-// views are shareable and survive back/forward. Without this script the
+// views are shareable and survive back/forward. A fourth param, `select=
+// <library.id>`, coexists in the same query string but is owned and written
+// entirely by library-map.js (Map view's node selection) — this file never
+// reads it into its own state, only preserves it unmodified whenever it
+// rewrites the URL for a type/subject/view change (see toURL()) so a filter
+// or view-switch click never silently drops the current selection from the
+// address bar. Without this script the
 // whole catalog is visible (the filter form and view switch are CSS-hidden on
 // the no-JS flag), there is no Images view, and the "From the Library" panel
 // stands as its deterministic server-rendered fallback (unfiltered).
@@ -354,6 +360,15 @@
     if (sel.type.length) params.set("type", sel.type.join(","));
     if (sel.subject.length) params.set("subject", sel.subject.join(","));
     if (view === "catalog" || view === "map") params.set("view", view);
+    // `select` (the Map view's node selection) is owned entirely by
+    // library-map.js — never read into `sel` here — but this rewrite must
+    // still carry it forward, or toggling a filter chip / view button would
+    // silently drop it from the address bar. Preserve whatever's currently
+    // in the URL as-is; library-map.js is responsible for removing it (via
+    // its own history.replaceState) once a filter change actually leaves
+    // the selection invisible.
+    var currentSelect = new URLSearchParams(location.search).get("select");
+    if (currentSelect) params.set("select", currentSelect);
     var qs = params.toString();
     if (push) history.pushState(null, "", location.pathname + (qs ? "?" + qs : ""));
   }

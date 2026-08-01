@@ -112,7 +112,20 @@
 // filter change removes it, or it's explicitly cleared (click away /
 // Escape). Selecting neither moves the node nor pans the camera — per
 // direct user feedback the camera move read as unwanted motion — it only
-// shows a persistent card ("where I am"). The Selection Hierarchy
+// shows a persistent card ("where I am"). Selection is shareable: a
+// `?select=<library.id>` query param (this file's own, never library-
+// filter.js's — see setSelectURLParam()/readSelFromURL()/
+// applyPendingSelection()/restoreSelectionFromURL() below) is pushed on
+// every user-initiated select/deselect, coexists with type/subject/view in
+// the same query string (library-filter.js's toURL() preserves it verbatim
+// across its own rewrites), and is restored — or, if the id no longer
+// exists or isn't currently visible, quietly stripped via
+// history.replaceState rather than left dangling — on Back/Forward via this
+// file's own popstate listener, registered after library-filter.js's (see
+// script load order above) so `visible` is already current for the landed-
+// on URL by the time it runs. Restoring never re-triggers a history write,
+// moves the graph, or reheats the simulation — it's the exact same
+// selectNode()/deselectNode() a click uses. The Selection Hierarchy
 // (selected/neighbor/connected, plus the unstyled "unrelated" default) is
 // driven ENTIRELY by the selection, never by hover — hovering a different
 // node never replaces or dims it. Hover is a
@@ -283,6 +296,11 @@
   var visible = {}; // id -> bool, the current filtered set
   var currentVB = { x: 0, y: 0, w: W, h: H };
   var selectedId = null; // the persistent selection — see module comment
+  // pendingSelectId: a `?select=<library.id>` requested via the URL (a deep
+  // link, or a Back/Forward navigation that lands before the graph exists
+  // yet) that can't be applied until buildGraph()/relayout() have run — see
+  // readSelFromURL() and applyPendingSelection() below. Cleared once used.
+  var pendingSelectId = null;
   var hoveredId = null; // the transient hover preview, independent of selectedId
   var didPan = false; // true when the current gesture moved the map — see initPointerHandling()
   var draggedNode = null; // the node currently pinned to the pointer, if any — see startDrag()
@@ -301,12 +319,73 @@
     return !!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
   }
 
-  // Read the URL directly for the initial filter state — see the note above
-  // on why this can't just wait for the first library:filter-change event.
+  // Read the URL directly for the initial filter (and requested selection)
+  // state — see the note above on why this can't just wait for the first
+  // library:filter-change event.
   function readSelFromURL() {
     var params = new URLSearchParams(location.search);
     sel.type = (params.get("type") || "").split(",").filter(Boolean);
     sel.subject = (params.get("subject") || "").split(",").filter(Boolean);
+    pendingSelectId = params.get("select") || null;
+  }
+
+  // The one place that writes the `select` query param — every other piece
+  // of shareable state (type/subject/view) is library-filter.js's; this is
+  // the sole exception, since selection is entirely this file's own state.
+  // `mode` is "push" for a direct user action (click a node, click away,
+  // Escape — each becomes its own Back/Forward-able step) or "replace" for
+  // a programmatic cleanup (an invalid or filtered-out id, at load or after
+  // a filter change) that must not add a new history entry. Popstate
+  // restoration itself (see the popstate listener below) never calls this
+  // at all in its normal path — the browser already updated the URL for us
+  // — only its own invalid-id cleanup uses "replace".
+  function setSelectURLParam(id, mode) {
+    var params = new URLSearchParams(location.search);
+    if (id) params.set("select", id); else params.delete("select");
+    var qs = params.toString();
+    var url = location.pathname + (qs ? "?" + qs : "");
+    if (mode === "push") history.pushState(null, "", url);
+    else history.replaceState(null, "", url);
+  }
+
+  // Applies a `?select=` requested via the URL once the graph actually
+  // exists (see pendingSelectId above) — selectNode() itself never moves
+  // the graph or camera, so this is a plain, silent restore. The URL
+  // already carries this id (that's where it came from), so no history
+  // write on success; an id that doesn't exist or isn't currently visible
+  // under the active filters is quietly stripped instead (replaceState —
+  // not a new entry) rather than left dangling in the address bar.
+  function applyPendingSelection() {
+    if (!pendingSelectId) return;
+    var id = pendingSelectId;
+    pendingSelectId = null;
+    if (nodeById[id] && visible[id]) {
+      selectNode(id);
+    } else {
+      setSelectURLParam(null, "replace");
+    }
+  }
+
+  // Back/Forward: restore or clear the selection to match the URL we just
+  // landed on. Registered after library-filter.js's own popstate listener
+  // (script load order — see module comment), so by the time this runs,
+  // that listener has already re-applied type/subject/view and (via the
+  // synchronous library:filter-change dispatch) this file's own `visible`
+  // set already reflects the new filter state.
+  function restoreSelectionFromURL() {
+    var id = new URLSearchParams(location.search).get("select") || null;
+    if (!nodes.length) { pendingSelectId = id; return; } // graph not loaded yet
+    if (id === selectedId) return;
+    if (!id) {
+      deselectNode();
+      return;
+    }
+    if (nodeById[id] && visible[id]) {
+      selectNode(id);
+    } else {
+      if (selectedId) deselectNode();
+      setSelectURLParam(null, "replace");
+    }
   }
 
   // --- Deterministic seeded PRNG, keyed by a node's stable library_id — see
@@ -928,7 +1007,7 @@
 
     var anyVisible = visibleNodes.length > 0;
     if (emptyEl) emptyEl.hidden = anyVisible || nodes.length === 0;
-    if (selectedId && !idSet[selectedId]) deselectNode();
+    if (selectedId && !idSet[selectedId]) { deselectNode(); setSelectURLParam(null, "replace"); }
     if (hoveredId && !idSet[hoveredId]) clearHovered();
   }
 
@@ -2363,8 +2442,14 @@
       if (didDrag) { didDrag = false; return; } // a completed drag isn't also a click-select
       var world = screenToWorld(ev.clientX, ev.clientY);
       var hit = hitTestWorld(world.x, world.y, hitRadiusWorld());
-      if (hit) selectNode(hit.id);
-      else deselectNode();
+      if (hit) {
+        var changed = hit.id !== selectedId;
+        selectNode(hit.id);
+        if (changed) setSelectURLParam(hit.id, "push");
+      } else if (selectedId) {
+        deselectNode();
+        setSelectURLParam(null, "push");
+      }
     });
   }
 
@@ -2382,10 +2467,10 @@
   // isn't (e.g. filtering to a type the selection doesn't belong to).
   document.addEventListener("click", function (ev) {
     if (ev.target.closest && (ev.target.closest("#library-map-fx-canvas") || ev.target.closest(".library-map-card") || ev.target.closest(".library-controls"))) return;
-    deselectNode();
+    if (selectedId) { deselectNode(); setSelectURLParam(null, "push"); }
   });
   document.addEventListener("keydown", function (ev) {
-    if (ev.key === "Escape") deselectNode();
+    if (ev.key === "Escape" && selectedId) { deselectNode(); setSelectURLParam(null, "push"); }
   });
 
   // --- Filtering: same field as Catalog/Images. Rebuilds the visible
@@ -2416,6 +2501,7 @@
       buildGraph(data.entries);
       var visibleIds = data.entries.filter(matchesEntry).map(function (e) { return e.library_id; });
       relayout(visibleIds);
+      applyPendingSelection();
     })
     .catch(function () { /* Map view stays empty; Catalog/Images are unaffected */ });
 
@@ -2424,4 +2510,11 @@
     sel.subject = (ev.detail && ev.detail.subject) || [];
     if (nodes.length) applyFilter();
   });
+
+  // Registered after library-filter.js's own popstate listener (script load
+  // order — see module comment at the top of this file), so its own
+  // fromURL()/apply(true) — and the synchronous library:filter-change
+  // dispatch that follows — have already brought `visible` up to date for
+  // the URL we just navigated to before this runs.
+  window.addEventListener("popstate", restoreSelectionFromURL);
 })();
