@@ -33,14 +33,33 @@
    (confirmed: the two-column Images view grid, which already used fixed
    width+height instead, never showed this). Explicit width+height
    sidesteps the whole percentage/aspect-ratio computation — there's
-   nothing left for a browser to get wrong. */
-.library-record.has-thumb { display: grid; grid-template-columns: auto 1fr; gap: 0 1.2rem; align-items: start; }
+   nothing left for a browser to get wrong.
+
+   The grid column itself is a fixed length (--library-thumbnail-size), not
+   `auto`, for the same reason — an `auto` track's size is still negotiated
+   against the min-content of the ROW's other track, and .library-record-body
+   (the 1fr text column) had no min-width:0 of its own, so a long unbroken
+   access link (see .access-links below) that didn't actually shrink could
+   force the whole row over the available width and squeeze the `auto`
+   thumbnail column down to a sliver in the process — confirmed on iPhone:
+   the thumbnail rendered as a bare vertical line, not a small square, on a
+   record whose one access link was long enough to overflow. A fixed-length
+   track can't be squeezed by a sibling's overflow at all; text-column
+   overflow is now also fixed directly (`.library-record-body`'s own
+   min-width:0, below) so it doesn't happen in the first place. */
+.library-record.has-thumb { display: grid; grid-template-columns: var(--library-thumbnail-size) 1fr; gap: 0 1.2rem; align-items: start; }
 .library-record-thumb { display: block; }
 .library-record-thumb img {
   width: var(--library-thumbnail-size); height: var(--library-thumbnail-size);
   object-fit: cover; display: block;
   border: 1px solid var(--rule); background: var(--paper-2);
 }
+/* min-width: 0 overrides the grid item's default min-width:auto (which
+   would otherwise floor this column at its content's min-content width —
+   see the module comment above) so a long unbroken access link truncates
+   within its own .access-links row instead of forcing the whole grid row
+   wider than the viewport. */
+.library-record-body { min-width: 0; }
 /* Match the Images-view hover: the thumbnail border picks up the section signal
    colour on hover (and when the row's title link is hovered). */
 .library-record-thumb:hover img,
