@@ -14,7 +14,8 @@ creators:
 
 subjects: [sound]
 
-images: []
+images:
+  - {file: "photo.jpg", alt: "A chromatic phonogène, the tape-manipulation instrument developed for musique concrète", role: still, caption: "The phonogène, one of the GRMC's signature studio instruments.", source: "https://commons.wikimedia.org/wiki/File:Phonogene.jpg", rights: {status: licensed, note: "CC BY-SA 3.0, via Wikimedia Commons."}}
 
 access: []
 

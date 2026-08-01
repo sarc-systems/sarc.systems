@@ -17,7 +17,8 @@ creators:
 
 subjects: [sound]
 
-images: []
+images:
+  - {file: "photo.jpg", alt: "The last staff of the Polish Radio Experimental Studio, 2002, including Eugeniusz Rudnik and Bohdan Mazurek", role: portrait, credit: "Photograph by Barbara Szeremeta", source: "https://commons.wikimedia.org/wiki/File:Polish_Radio_Experimental_Studio_Staff_fot._Barbara_Szeremeta.jpg", rights: {status: licensed, note: "CC BY-SA 4.0, via Wikimedia Commons."}}
 
 access: []
 
