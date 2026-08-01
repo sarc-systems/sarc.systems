@@ -15,7 +15,8 @@ creators:
 
 subjects: [sound, computation, tuning]
 
-images: []
+images:
+  - {file: "cover.jpg", alt: "Cover of Makesnd Cassette by SND", role: cover, caption: "Original 1999 Mille Plateaux CD artwork.", source: "https://www.discogs.com/master/84441-Makesnd-Cassette", rights: {status: unknown}, use: {basis: identification, note: "Label cover art used for identification."}}
 
 access:
   - label: "Discogs"

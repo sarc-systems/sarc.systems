@@ -15,7 +15,8 @@ creators:
 
 subjects: [sound]
 
-images: []
+images:
+  - {file: "cover.jpg", alt: "Cover of Topography of the Lungs by Evan Parker, Derek Bailey, and Han Bennink", role: cover, caption: "OTOROKU 2023 repress artwork.", source: "https://evanparkerotoroku.bandcamp.com/album/topography-of-the-lungs", rights: {status: unknown}, use: {basis: identification, note: "Label cover art used for identification."}}
 
 access:
   - {label: "Bandcamp", kind: bandcamp, url: "https://evanparkerotoroku.bandcamp.com/album/topography-of-the-lungs"}

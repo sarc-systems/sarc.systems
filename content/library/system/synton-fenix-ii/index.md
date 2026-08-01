@@ -13,7 +13,8 @@ creators:
 
 subjects: [instruments]
 
-images: []
+images:
+  - {file: "photo.jpg", alt: "Synton Fénix II modular synthesizer with Fénix III sequencer", role: still, source: "https://commons.wikimedia.org/wiki/File:F%C3%A9nix_II_and_III.jpg", rights: {status: licensed, note: "CC BY-SA 3.0, via Wikimedia Commons."}}
 
 access: []
 

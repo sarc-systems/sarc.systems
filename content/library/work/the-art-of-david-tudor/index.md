@@ -14,7 +14,8 @@ creators:
 
 subjects: [sound, instruments, feedback]
 
-images: []
+images:
+  - {file: "cover.jpg", alt: "Cover of The Art of David Tudor (1963-1992)", role: cover, caption: "New World Records 7-CD box set artwork, 2013.", source: "https://www.newworldrecords.org/products/the-art-of-david-tudor-1963-1992-box-set", rights: {status: unknown}, use: {basis: identification, note: "Label box-set art used for identification."}}
 
 access:
   - label: "New World Records"
