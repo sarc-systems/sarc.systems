@@ -14,7 +14,8 @@ creators:
 
 subjects: [sound, computation, number]
 
-images: []
+images:
+  - {file: "photo.jpg", alt: "The UPIC system's drawing table and computer console on museum display", role: installation, caption: "The UPIC graphic composition system developed under Xenakis at CEMAMu, on museum display.", source: "https://commons.wikimedia.org/wiki/File:Xenakis_UPIC_system_global_view_1.jpg", rights: {status: public-domain, note: "CC0, via Wikimedia Commons."}}
 
 access: []
 

@@ -9,7 +9,8 @@ library:
 
 subjects: [sound]
 
-images: []
+images:
+  - {file: "portrait.jpg", alt: "Flo Menezes", role: portrait, source: "https://commons.wikimedia.org/wiki/File:FloMenezes.jpg", rights: {status: public-domain, note: "CC0, via Wikimedia Commons."}}
 
 access:
   - {label: "Official site", kind: website, url: "https://flomenezes.mus.br/"}

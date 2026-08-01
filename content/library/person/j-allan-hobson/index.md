@@ -9,7 +9,8 @@ library:
 
 subjects: [perception, memory]
 
-images: []
+images:
+  - {file: "portrait.jpg", alt: "J. Allan Hobson", role: portrait, credit: "Photograph by G. Ambrus", source: "https://commons.wikimedia.org/wiki/File:Allan_Hobson.jpg", rights: {status: licensed, note: "CC BY 3.0, via Wikimedia Commons."}}
 
 access:
   - {label: "Allan Hobson (Wikipedia)", kind: other, url: "https://en.wikipedia.org/wiki/Allan_Hobson"}
