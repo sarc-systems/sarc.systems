@@ -30,8 +30,10 @@ access: []
 
 related:
   - {ref: bbc-radiophonic-workshop, relation: used-by}
+  - {ref: studio-fur-elektronische-musik-des-wdr, relation: used-by}
+  - {ref: ipem, relation: used-by}
 
 draft: false
 ---
 
-Designed by David Cockerell and documented in 1971, the large-format Synthi 100 was produced in only 30 units at £6,500 each, finding homes at institutions including the BBC Radiophonic Workshop — a studio-scale instrument, distinct from EMS's contemporaneous portable [Synthi A](/library/ems-synthi-a/) and [Synthi AKS](/library/ems-synthi-aks/).
+Designed by David Cockerell and documented in 1971, the large-format Synthi 100 was produced in fewer than 40 units at £6,500 each (about £30,000 for the standard configuration), making it one of the rarest EMS instruments — a studio-scale instrument, distinct from EMS's contemporaneous portable [Synthi A](/library/ems-synthi-a/) and [Synthi AKS](/library/ems-synthi-aks/). Surviving and documented units include the [BBC Radiophonic Workshop](/library/bbc-radiophonic-workshop/)'s (nicknamed "Delaware," delivered 1970), the [Studio für elektronische Musik des WDR](/library/studio-fur-elektronische-musik-des-wdr/)'s (ordered 1973, used by Stockhausen and successors), [IPEM](/library/ipem/) at Ghent University (acquired mid-1970s, restored and still functional), Radio Belgrade's (restored 2017 after 15 years out of service), the Greek Contemporary Music Research Center's in Athens (restored and exhibited at Documenta 14, 2017), Bulgarian National Radio's (acquired 1973), the University of Melbourne's (restored by Tonmeister Les Craythorn, given an engineering heritage marker in 2016), Musikhochschule Stuttgart's (in continuous teaching use since 1977), Calgary's National Music Centre (formerly Melodia Radio's), and a unit at Q Room Studios in Bolzano, Italy, used on Randall Dunn's *Beloved* (2016–18). Private owners have included Stevie Wonder, Jack Dangers of Meat Beat Manifesto, and Billy Corgan.
