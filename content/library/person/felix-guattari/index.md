@@ -12,7 +12,8 @@ creators: []
 
 subjects: [dynamics, form]
 
-images: []
+images:
+  - {file: "portrait.jpg", alt: "Félix Guattari", role: portrait, source: "https://commons.wikimedia.org/wiki/File:%E3%83%95%E3%82%A7%E3%83%AA%E3%83%83%E3%82%AF%E3%82%B9%E3%83%BB%E3%82%AC%E3%82%BF%E3%83%AA.jpg", rights: {status: licensed, note: "CC BY-SA 4.0, via Wikimedia Commons."}}
 
 access: []
 

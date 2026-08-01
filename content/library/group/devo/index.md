@@ -17,7 +17,8 @@ creators:
 
 subjects: [sound]
 
-images: []
+images:
+  - {file: "photo.jpg", alt: "Devo performing live in their Energy Dome hats and yellow jumpsuits, 2009", role: portrait, credit: "Photograph by Mandy Hall", source: "https://commons.wikimedia.org/wiki/File:Devo_two.jpg", rights: {status: licensed, note: "CC BY 2.0, via Wikimedia Commons."}}
 
 access: []
 
