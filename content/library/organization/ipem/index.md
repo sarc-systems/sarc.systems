@@ -15,7 +15,8 @@ creators:
 
 subjects: [sound, perception]
 
-images: []
+images:
+  - {file: "photo.jpg", alt: "IPEM studio synthesizer, circa 1960-1980, on display at MIM Brussels", role: still, credit: "Photograph by chibicode", source: "https://commons.wikimedia.org/wiki/File:IPEM_studio_synthesizer_(ca.1960-1980)_-_MIM_Brussels_(2015-05-30_07.36.09_by_chibicode).jpg", rights: {status: licensed, note: "CC BY-SA 2.0, via Wikimedia Commons."}}
 
 access:
   - label: "Official site"
