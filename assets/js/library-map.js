@@ -91,11 +91,13 @@
 // descriptive, shown as `type_label` on preview cards.
 //
 // Image nodes: selection-dependent. Only the SELECTED node and its
-// neighbors up to 2nd order (direct neighbors, plus their own neighbors)
-// render using their primary_image (already processed/cropped by Hugo for
-// index.json elsewhere — no separate map-specific derivative); every other
-// entry — even one with an image — shows the abstract type shape until it
-// becomes selected or falls within that radius. This keeps a dense map
+// neighbors up to 3rd order (direct neighbors, plus their own neighbors,
+// out two more hops — the 2nd/3rd-order tier sharing one capped budget, see
+// MAP_VISUALS.selectionImages) render using their primary_image (already
+// processed/cropped by Hugo for index.json elsewhere — no separate
+// map-specific derivative); every other entry — even one with an image —
+// shows the abstract type shape until it becomes selected or falls within
+// that radius. This keeps a dense map
 // legible at rest (no images-for-everyone-at-once) while still using images
 // to disambiguate same-titled entries exactly where it matters: around the
 // current focus. isImageActive(n) below is the single source of truth for
@@ -1319,22 +1321,32 @@
     if (a.degree !== b.degree) return b.degree - a.degree;
     return a.id < b.id ? -1 : (a.id > b.id ? 1 : 0);
   }
+  // Budget pool now spans hop distances 2 AND 3 together (extended from
+  // 2nd-order-only per direct request) — one shared budget, not a separate
+  // cap per hop, so a 3rd-order neighbor competes for the same limited
+  // slots as a 2nd-order one rather than getting its own additional
+  // allowance. The Selection Hierarchy's opacity ladder (MAP_VISUALS.
+  // selection.opacitySteps, still 4 steps for distances 1/2/3/4+) is
+  // completely unaffected by this — image ACTIVATION and dimming are two
+  // independent systems that happen to both read selectionDistance.
   function refreshSecondOrderImageSet() {
     activeSecondOrderImageIds = {};
     if (!selectedId) return;
     var candidates = [];
     for (var i = 0; i < nodes.length; i++) {
       var n = nodes[i];
-      if (n.hasImage && selectionDistance[n.id] === 2) candidates.push(n);
+      var dist = selectionDistance[n.id];
+      if (n.hasImage && (dist === 2 || dist === 3)) candidates.push(n);
     }
     candidates.sort(secondOrderCandidateSort);
     var limit = imageBudgetState.limit;
     for (i = 0; i < candidates.length && i < limit; i++) activeSecondOrderImageIds[candidates[i].id] = true;
   }
 
-  // Only the SELECTED node and its neighbors up to 2nd order (direct
-  // neighbors, plus their own neighbors, the latter subject to the budget
-  // above) ever show their image — see the module comment on Image nodes.
+  // Only the SELECTED node and its neighbors up to 3rd order (direct
+  // neighbors, plus their own neighbors out to two more hops, the latter
+  // subject to the shared budget above) ever show their image — see the
+  // module comment on Image nodes.
   // Both drawBackground() and drawInteraction() call this so they can never
   // disagree about which nodes are currently image-active. selectionDistance
   // is the BFS hop count from selectedId, already computed for the opacity
@@ -1345,7 +1357,7 @@
     if (selectedId) {
       var dist = selectionDistance[n.id];
       if (dist === 1) return true;
-      if (dist === 2) return !!activeSecondOrderImageIds[n.id];
+      if (dist === 2 || dist === 3) return !!activeSecondOrderImageIds[n.id];
     }
     return false;
   }
