@@ -28,7 +28,8 @@ creators:
 
 subjects: [sound, instruments, feedback]
 
-images: []
+images:
+  - {file: "photo.png", alt: "Composers Inside Electronics group photo at the ICA, with David Tudor visible through a metal lattice sculpture", role: portrait, source: "https://www.bowerbird.org/event/tudor-works-for-live-electronics/", rights: {status: unknown}, use: {basis: identification, note: "Photo used for identification."}}
 
 access: []
 
