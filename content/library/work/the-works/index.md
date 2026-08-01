@@ -15,7 +15,8 @@ creators:
 
 subjects: [sound, feedback]
 
-images: []
+images:
+  - {file: "cover.jpg", alt: "Cover of Solo Works: The '70s by Alvin Curran", role: cover, caption: "New World Records' Solo Works: The '70s compilation cover — The Works has no separate stand-alone release artwork.", source: "https://www.discogs.com/master/2136496-Alvin-Curran-The-Works", rights: {status: unknown}, use: {basis: identification, note: "Label cover art used for identification."}}
 
 access:
   - label: "Discogs"

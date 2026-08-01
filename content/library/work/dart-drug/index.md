@@ -14,9 +14,11 @@ creators:
 
 subjects: [sound]
 
-images: []
+images:
+  - {file: "cover.jpg", alt: "Cover of Dart Drug by Derek Bailey and Jamie Muir", role: cover, caption: "Original 1981 Incus Records LP artwork.", source: "https://www.discogs.com/Derek-Bailey-Jamie-Muir-Dart-Drug/master/110081", rights: {status: unknown}, use: {basis: identification, note: "Label cover art used for identification."}}
 
-access: []
+access:
+  - {label: "Discogs", kind: discogs, url: "https://www.discogs.com/Derek-Bailey-Jamie-Muir-Dart-Drug/master/110081"}
 
 related:
   - {ref: incus-records, relation: release-of}

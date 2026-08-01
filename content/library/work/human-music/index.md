@@ -18,7 +18,8 @@ creators:
 
 subjects: [sound]
 
-images: []
+images:
+  - {file: "cover.jpg", alt: "Cover of Human Music by Jon Appleton and Don Cherry", role: cover, caption: "Original 1970 Flying Dutchman LP artwork.", source: "https://www.discogs.com/master/39985-Jon-Appleton-Don-Cherry-Human-Music", rights: {status: unknown}, use: {basis: identification, note: "Label cover art used for identification."}}
 
 access:
   - label: "Discogs"
