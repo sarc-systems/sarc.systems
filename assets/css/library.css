@@ -393,6 +393,98 @@
   color: var(--gray-1);
 }
 
+/* Relationship bridge panel — an independent overlay, positioned entirely
+   by library-map.js's positionBridge() (inline left/top/width), describing
+   how the selected and hovered cards above relate. Clearly subordinate to
+   both cards: smaller, no image, no shadow beyond the cards' own flat
+   style. pointer-events: none — informational only, never clickable, never
+   blocking a click on the canvas underneath it (see the JS module comment
+   on the bridge panel for the full non-goals list: it must not navigate,
+   select, hover, reheat, or move the camera). Direct vs second-order is
+   distinguished by more than color/border alone — the heading text and
+   internal structure differ too (see library-map.js's renderBridge()), so
+   the distinction still reads without relying on border style alone. */
+.library-map-bridge[hidden] { display: none !important; }
+.library-map-bridge {
+  position: absolute;
+  z-index: 1;
+  pointer-events: none;
+  padding: 0.6rem 0.7rem;
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  opacity: 0.94;
+  transition: opacity 0.15s ease;
+}
+@media (prefers-reduced-motion: reduce) {
+  .library-map-bridge { transition: none; }
+}
+/* Second-order ("Connected through") reads as the looser, less certain of
+   the two claims — a dashed border, same idea as the hover card's own
+   dashed-vs-solid distinction from the selected card. */
+.library-map-bridge--indirect { border-style: dashed; }
+.library-map-bridge-heading {
+  margin: 0 0 0.35rem;
+  font-family: var(--font-mono);
+  font-size: var(--t-xs);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--gray-2);
+}
+.library-map-bridge-body { min-width: 0; }
+.library-map-bridge-labels {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.library-map-bridge-labels li {
+  font-family: var(--font-mono);
+  font-size: var(--t-xs);
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--ink);
+  line-height: 1.5;
+}
+.library-map-bridge-detail {
+  margin: 0.35rem 0 0;
+  font-size: var(--t-xs);
+  line-height: 1.4;
+  color: var(--gray-1);
+}
+.library-map-bridge-also {
+  margin: 0.35rem 0 0;
+  font-size: var(--t-xs);
+  font-style: italic;
+  color: var(--gray-2);
+}
+.library-map-bridge-intermediaries {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.library-map-bridge-intermediaries li + li { margin-top: 0.5rem; }
+.library-map-bridge-intermediary-title {
+  display: block;
+  font-size: var(--t-sm);
+  color: var(--ink);
+}
+/* Lowercase, monospace, and smaller than the title — "path labels
+   secondary" (the intermediary's own name is the primary content here). */
+.library-map-bridge-intermediary-path {
+  display: block;
+  margin-top: 0.1rem;
+  font-family: var(--font-mono);
+  font-size: var(--t-xs);
+  letter-spacing: 0.02em;
+  text-transform: lowercase;
+  color: var(--gray-2);
+}
+.library-map-bridge-more {
+  margin-top: 0.35rem;
+  font-family: var(--font-mono);
+  font-size: var(--t-xs);
+  color: var(--gray-2);
+}
+
 /* --- Single entry: primary image + gallery ------------------------------- */
 .library-primary-image { margin: 1.6rem 0; }
 /* Prominent and uncropped (never a Fill crop — see single.html), but a

@@ -72,4 +72,4 @@
       "related" $related -}}
   {{- $out = $out | append $rec -}}
 {{- end -}}
-{{ dict "count" (len $out) "entries" $out "public_type_styles" $pt.styles | jsonify (dict "indent" "  ") }}
+{{ dict "count" (len $out) "entries" $out "public_type_styles" $pt.styles "relation_inverse" $lib.relation_inverse | jsonify (dict "indent" "  ") }}

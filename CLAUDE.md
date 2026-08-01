@@ -906,6 +906,54 @@ view animation (`animateViewBox()`'s single shared handle — the same one
 `relayout()`'s filter-change viewport fit uses, so the two can never fight
 each other either) so nothing stomps on `currentVB` mid-transition.
 
+**Relationship bridge panel.** When a node is selected AND a different node
+is hovered at the same time (both preview cards visible), a small,
+independent, informational-only overlay appears between them explaining how
+the two are connected — "why these two entries belong in the same map,"
+alongside the cards' own "where I am"/"what I'm considering next"
+(`assets/js/library-map.js`'s "Relationship bridge panel" section;
+`#library-map-bridge` in `library-map-view.html`). It never navigates,
+changes selection or hover, moves a node, reheats the simulation, or pans/
+zooms/fits the viewport — purely derived, purely additive, recomputed from
+scratch on every selection/hover/filter change (`updateBridge()`) rather
+than patched incrementally. Two cases, direct always taking priority over
+second-order: a **direct** relationship (one or more explicit edges between
+the two, from `edgesByPair` — an "idA|idB" -> edges index built once
+alongside the graph, giving an O(1)-average lookup) shows up to
+`maxDirectRelations` (default 3, "+N more" beyond that) compact relation
+labels, mechanically title-cased the same way `library-related.html`
+already renders these (`displayLabelFor()`), plus — only when there's
+exactly one — a small disambiguating sentence built from an authored verb-
+phrase vocabulary (`CREATOR_VERB_PHRASE`/`RELATION_VERB_PHRASE`, e.g.
+`founder` → "founded", `part-of` → "is part of"; deliberately hand-authored
+per relation/role rather than generated from the hyphenated vocabulary
+string, and always built from the edge's own stored source/target, never
+from which of selected/hovered happens to be which). A **second-order**
+relationship (no direct edge, but `neighbors(selected) ∩ neighbors(hovered)`
+is non-empty within the currently *visible* graph — `graphAdjacency`, so a
+filtered-out intermediary is structurally never a candidate, not filtered
+after the fact) shows up to `maxIntermediaries` (default 3) shared
+intermediary entries, each with the clearest label from each of its two
+path legs, ordered by strongest relationship-category pair, then visible
+degree, then total graph degree, then stable `library_id` — no cultural-
+importance or popularity signal, same discipline as the second-order IMAGE
+budget above. A leg's label is resolved from the INTERMEDIARY's own point
+of view (`legLabel()`), reusing the exact same forward/inverse distinction
+and `relation_inverse` vocabulary (now also exported into `/library/
+index.json`, once, rather than duplicated client-side) `library-related.html`
+already applies when rendering a relation on the entry that didn't declare
+it — including `part-of`'s contextual Contains/Member split — while a
+creator-kind edge is never inverted on either side, matching how a role
+word is shown identically everywhere else on the site regardless of which
+end you're looking from. Placement (`positionBridge()`) never resizes
+either card: it measures the two cards' own current bounding boxes and, when
+at least `minGapWidth` (144px) of screen space already exists between them,
+centers itself in that gap, top-aligned with the cards; otherwise it drops
+below both cards instead (screen-space positioning, `fallbackOffset` below
+the taller card, clamped to the viewport with `viewportPadding`) — never
+overlapping either one. `pointer-events: none` throughout (a click "through"
+the panel reaches the canvas underneath it, same as empty space would).
+
 **Images.** Resolved through Hugo page resources (never hotlink Bandcamp/Discogs/
 publishers; never auto-download third-party artwork). List = square thumbnail
 (`Fill`, srcset, w/h, lazy, `object-fit: cover`); no image → clean text-only row.

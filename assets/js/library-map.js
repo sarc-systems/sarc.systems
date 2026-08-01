@@ -246,6 +246,14 @@
                           // container's real CSS box (see resizeCanvases()).
   var nodes = [], edges = [];
   var nodeById = {}, entryById = {};
+  // edgesByPair: "idA|idB" (ids sorted lexicographically, so lookup doesn't
+  // care which side is source/target) -> every edge connecting that pair —
+  // built once in buildGraph()'s addEdge(), consumed by the relationship
+  // bridge panel below for O(1)-average direct lookup and O(degree)
+  // second-order (shared-intermediary) lookup, never a per-hover scan of
+  // the whole edge list. See "Relationship bridge panel" section below.
+  var edgesByPair = {};
+  function pairKey(a, b) { return a < b ? a + "|" + b : b + "|" + a; }
   // Community membership (label propagation, see detectCommunities()) is
   // recomputed only when the visible graph itself changes (relayout — a
   // filter change or the initial load), never per settle-tick or per drag,
@@ -266,6 +274,11 @@
   // reachable set (a filter change).
   var graphAdjacency = {}, selectionDistance = {};
   var typeStyles = {};
+  // The canonical relation_inverse mapping from data/library.yaml, exported
+  // once into index.json (layouts/library/list.json) rather than duplicated
+  // here by hand — see "Relationship bridge panel" below, which is the only
+  // consumer. Populated from the fetched data alongside typeStyles.
+  var relationInverse = {};
   var sel = { type: [], subject: [] };
   var visible = {}; // id -> bool, the current filtered set
   var currentVB = { x: 0, y: 0, w: W, h: H };
@@ -373,10 +386,13 @@
       // already dedupes edges, so two edges between the same pair of nodes
       // (different kind/label) get independently deterministic curves.
       var h = hashId(key);
-      edges.push({
+      var edge = {
         source: a, target: b, kind: kind, label: label || "", category: edgeCategory(kind, label),
         _curveSign: (h & 1) ? 1 : -1, _curveVariance: seededRng(h)()
-      });
+      };
+      edges.push(edge);
+      var pk = pairKey(a, b);
+      (edgesByPair[pk] || (edgesByPair[pk] = [])).push(edge);
     }
     entries.forEach(function (e) {
       (e.creators || []).forEach(function (c) {
@@ -968,6 +984,13 @@
     // node's neighbors, and thus its degree of separation from the
     // selection, can genuinely change under a different filter.
     if (selectedId && idSet[selectedId]) { selectionDistance = computeSelectionDistances(selectedId); refreshSecondOrderImageSet(); }
+    // Recomputed synchronously here (not deferred to finishRelayout(), which
+    // only runs once the settle animation finishes, a real second or more
+    // later) since graphAdjacency/visible are already fully up to date at
+    // this point — a filter change that removes the current intermediary,
+    // or the selected/hovered entry itself, should hide or update the
+    // bridge panel immediately, not once the graph finishes resettling.
+    updateBridge();
     // First-paint hulls, computed against the just-seeded (pre-settle)
     // positions so the field isn't simply absent for however long the
     // settle takes — recomputeCommunityHulls() runs again periodically as
@@ -1666,6 +1689,10 @@
     bgCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
     fxCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
     invalidate();
+    // A container resize can change the gap the bridge panel measures
+    // between the two (fixed-corner) cards even though neither card's own
+    // content changed — reposition it (a no-op if it's currently hidden).
+    updateBridge();
   }
 
   // Plain BFS over graphAdjacency, restricted to the currently visible set —
@@ -1777,6 +1804,392 @@
     });
   });
 
+  // --- Relationship bridge panel: a small, independent, informational-only
+  // overlay that appears between the two preview cards when a node is
+  // SELECTED and a DIFFERENT node is HOVERED at the same time, explaining
+  // how the two are connected — "why these two entries belong in the same
+  // map," alongside the cards' own "where I am" / "what I'm considering
+  // next." Purely derived, purely additive: it never navigates, selects,
+  // reheats the simulation, or moves the camera (pointer-events: none — see
+  // CSS), and it never resizes either card to make room for itself (see
+  // positionBridge() below, which only ever uses the leftover space between
+  // their own measured bounding boxes). Two independent relationships:
+  //   - DIRECT: selected and hovered share one or more explicit edges
+  //     (creators[].ref or related[].ref) — shown as the compact relation
+  //     label(s) (e.g. "Founder"), plus a small disambiguating sentence
+  //     ("Misha Mengelberg founded STEIM") when there's exactly one, built
+  //     straight from that edge's own stored source/target — never assuming
+  //     the selected or hovered card is the "source" side.
+  //   - SECOND-ORDER: no direct edge, but selected and hovered share one or
+  //     more intermediary nodes (neighbors(selected) ∩ neighbors(hovered),
+  //     restricted to the currently VISIBLE graph via graphAdjacency, which
+  //     relayout() already rebuilds from only the filtered/visible set — a
+  //     filtered-out intermediary is never used, since it simply isn't in
+  //     that adjacency at all). A direct relationship always takes priority
+  //     over second-order paths (see updateBridge()).
+  // A direct edge's compact label is its own forward vocabulary word,
+  // mechanically title-cased (mechanicalLabel/displayLabelFor) — matching
+  // the plain "replace hyphens, title-case" convention library-related.html
+  // already uses for the very same vocabulary. A second-order leg's label,
+  // though, needs to read correctly from the INTERMEDIARY's own point of
+  // view (legLabel()) — the same forward-vs-inverse distinction
+  // library-related.html applies when rendering a relation on the entry
+  // that DIDN'T declare it (including part-of's contextual Contains/Member
+  // split — see CLAUDE.md § Library "Systems Ontology"), reusing that exact
+  // canonical relation_inverse vocabulary (exported once into index.json,
+  // see the fetch handler below) rather than re-deriving a second
+  // independent interpretation of direction. A creator-kind edge is never
+  // inverted at all, on either side — same as everywhere else on the site,
+  // a role word (e.g. "Founder") is shown as-is regardless of which end
+  // you're looking from.
+  // Performance: edgesByPair (built once in buildGraph(), see its own
+  // comment above) makes a direct lookup an O(1)-average dict read, and a
+  // second-order lookup an O(degree) adjacency-set intersection — never a
+  // scan of the whole edge list, and never per pointer-move (setHovered()
+  // already only fires on an actual hovered-node change, not continuous
+  // movement).
+  var BRIDGE_CFG = {
+    enabled: true,
+    maxDirectRelations: 3,
+    maxIntermediaries: 3,
+    preferredWidth: 224,
+    minUsableWidth: 128,
+    maxWidth: 288,
+    minGapWidth: 144,
+    viewportPadding: 16,
+    fallbackOffset: 12
+  };
+  var bridgeEl = document.getElementById("library-map-bridge");
+  var bridgeHeadingEl = bridgeEl && bridgeEl.querySelector(".library-map-bridge-heading");
+  var bridgeBodyEl = bridgeEl && bridgeEl.querySelector(".library-map-bridge-body");
+
+  var CATEGORY_RANK = { structural: 0, historical: 1, contextual: 2 };
+  function categoryRank(cat) { return CATEGORY_RANK[cat] !== undefined ? CATEGORY_RANK[cat] : CATEGORY_RANK.contextual; }
+
+  // Mechanical display form — replicates library-related.html's own
+  // `.relation | replaceRE "-" " " | title` convention exactly, so a
+  // vocabulary word reads the same way here as it does on an entry's own
+  // page. Works unmodified for creator roles too (single words). This is
+  // also the spec's own required fallback for any unmapped-but-valid
+  // vocabulary value — it never fails or hides a relationship for lacking
+  // authored phrasing (see verbPhraseFor()/legLabel() below).
+  function mechanicalLabel(raw) {
+    if (!raw) return "";
+    return raw.replace(/-/g, " ").replace(/\b\w/g, function (c) { return c.toUpperCase(); });
+  }
+  function displayLabelFor(edge) {
+    var raw = edge.label || (edge.kind === "creator" ? "credited" : "related-work");
+    return mechanicalLabel(raw);
+  }
+
+  // Authored sentence-form verb phrases — deliberately NOT generated by
+  // string manipulation (see CLAUDE.md-style reasoning: "some relationships
+  // need authored phrasing"). Centralized here, the only place this file
+  // builds a full sentence. A raw value with no entry here simply produces
+  // no sentence (edgeSentence() returns "") — the compact label always
+  // still shows regardless, so an unmapped value never hides anything.
+  var CREATOR_VERB_PHRASE = {
+    author: "authored", artist: "was the artist for", composer: "composed",
+    performer: "performed", director: "directed", founder: "founded",
+    lecturer: "delivered", editor: "edited", researcher: "researched",
+    designer: "designed", developer: "developed", manufacturer: "manufactured",
+    organization: "produced", label: "released", publisher: "published"
+  };
+  var RELATION_VERB_PHRASE = {
+    "related-work": "is related to", "version-of": "is a version of",
+    "edition-of": "is an edition of", "release-of": "is a release of",
+    "recording-of": "is a recording of", "performance-of": "is a performance of",
+    "discusses": "discusses", "influenced-by": "was influenced by",
+    "related-reading": "is related reading for", "documents": "documents",
+    "used-by": "is used by", "part-of": "is part of",
+    "successor-to": "is the successor to", "predecessor-to": "is the predecessor to",
+    "implements": "implements", "programmed-in": "is programmed in",
+    "compatible-with": "is compatible with", "made-with": "was made with",
+    "based-at": "is based at", "commissioned-by": "was commissioned by",
+    "affiliated-with": "is affiliated with", "created-at": "was created at",
+    "collaborator-of": "is a collaborator of"
+  };
+  function verbPhraseFor(edge) {
+    var map = edge.kind === "creator" ? CREATOR_VERB_PHRASE : RELATION_VERB_PHRASE;
+    return map[edge.label] || "";
+  }
+  // Always built from the edge's OWN stored source/target — never from
+  // which of selected/hovered happens to be which, so this reads correctly
+  // no matter which card the user hovered first.
+  function edgeSentence(edge) {
+    var verb = verbPhraseFor(edge);
+    if (!verb) return "";
+    var a = nodeById[edge.source], b = nodeById[edge.target];
+    if (!a || !b) return "";
+    return a.title + " " + verb + " " + b.title + ".";
+  }
+
+  // The label for ONE edge as seen from `viewerId`'s side (one of that
+  // edge's own source/target) — mirrors library-related.html's forward-vs-
+  // inverse split exactly, including part-of's contextual Contains/Member
+  // resolution (based on the DECLARING side's — the edge's source — own
+  // public type, read straight off the already-built node, never re-parsed
+  // from anything). A creator-kind edge is never inverted, matching how
+  // creator roles are shown identically on both the work's and the
+  // creator's own page everywhere else on the site.
+  function legLabel(edge, viewerId) {
+    if (edge.kind === "creator") return displayLabelFor(edge);
+    if (viewerId === edge.source) return displayLabelFor(edge);
+    var raw = edge.label;
+    var inv = (raw && relationInverse[raw]) || raw;
+    if (raw === "part-of") {
+      var srcNode = nodeById[edge.source];
+      inv = (srcNode && srcNode.publicType === "system") ? "contains" : "member";
+    }
+    return mechanicalLabel(inv || "related-work");
+  }
+
+  // Every edge directly connecting aId/bId, deduplicated by DISPLAYED label
+  // (two differently-stored edges that happen to read identically shouldn't
+  // show as two lines), sorted deterministically (category strength, then
+  // label text) — never an arbitrary/insertion-order pick.
+  function directRelationships(aId, bId) {
+    var list = edgesByPair[pairKey(aId, bId)] || [];
+    var seen = {}, out = [];
+    list.forEach(function (e) {
+      var label = displayLabelFor(e);
+      if (seen[label]) return;
+      seen[label] = true;
+      out.push({
+        edge: e, source: e.source, target: e.target, kind: e.kind,
+        rawLabel: e.label, forwardLabel: label,
+        inverseLabel: legLabel(e, e.target),
+        category: e.category
+      });
+    });
+    out.sort(function (x, y) {
+      var r = categoryRank(x.category) - categoryRank(y.category);
+      if (r !== 0) return r;
+      return x.forwardLabel < y.forwardLabel ? -1 : (x.forwardLabel > y.forwardLabel ? 1 : 0);
+    });
+    return out;
+  }
+
+  // graphAdjacency (buildAdjacency(), rebuilt every relayout from only the
+  // currently VISIBLE nodes/edges) pushes one neighbor id per EDGE, so a
+  // pair joined by more than one edge appears twice — deduped here before
+  // using it as a candidate SET.
+  function uniqueNeighbors(id) {
+    var seen = {}, out = [];
+    (graphAdjacency[id] || []).forEach(function (nb) { if (!seen[nb]) { seen[nb] = true; out.push(nb); } });
+    return out;
+  }
+  // The strongest (lowest-rank) category among every edge on BOTH legs —
+  // priority 1 of the four-tier ordering below.
+  function intermediaryRank(cand) {
+    var minRank = CATEGORY_RANK.contextual;
+    cand.legA.concat(cand.legB).forEach(function (e) {
+      var r = categoryRank(e.category);
+      if (r < minRank) minRank = r;
+    });
+    return minRank;
+  }
+  // neighbors(aId) ∩ neighbors(bId), excluding aId/bId themselves — both
+  // adjacency sets are already scoped to the visible graph (see above), so
+  // a filtered-out intermediary is structurally absent, never a result that
+  // needs excluding after the fact. Ordering: strongest category pair ->
+  // highest visible degree -> highest total graph degree -> stable
+  // library_id — no cultural-importance or popularity signal, matching the
+  // same deterministic-ordering discipline the second-order IMAGE budget
+  // (secondOrderCandidateSort() above) already uses for this graph.
+  function sharedIntermediaries(aId, bId) {
+    var bNeighbors = {};
+    uniqueNeighbors(bId).forEach(function (id) { bNeighbors[id] = true; });
+    var candidates = [];
+    uniqueNeighbors(aId).forEach(function (id) {
+      if (id === aId || id === bId || !bNeighbors[id]) return;
+      var legA = edgesByPair[pairKey(aId, id)] || [];
+      var legB = edgesByPair[pairKey(id, bId)] || [];
+      if (!legA.length || !legB.length) return;
+      candidates.push({ id: id, legA: legA, legB: legB });
+    });
+    candidates.sort(function (x, y) {
+      var r = intermediaryRank(x) - intermediaryRank(y);
+      if (r !== 0) return r;
+      var vx = (graphAdjacency[x.id] || []).length, vy = (graphAdjacency[y.id] || []).length;
+      if (vx !== vy) return vy - vx;
+      var nx = nodeById[x.id], ny = nodeById[y.id];
+      var dx = (nx && nx.degree) || 0, dy = (ny && ny.degree) || 0;
+      if (dx !== dy) return dy - dx;
+      return x.id < y.id ? -1 : (x.id > y.id ? 1 : 0);
+    });
+    return candidates;
+  }
+  // "The display may choose the clearest label from each leg" — the
+  // strongest-category, then alphabetically-first label among a leg's own
+  // (possibly several) edges, as seen from the intermediary's own side.
+  function clearestLegLabel(legEdges, viewerId) {
+    if (!legEdges.length) return "";
+    var labeled = legEdges.map(function (e) { return { rank: categoryRank(e.category), label: legLabel(e, viewerId) }; });
+    labeled.sort(function (x, y) {
+      if (x.rank !== y.rank) return x.rank - y.rank;
+      return x.label < y.label ? -1 : (x.label > y.label ? 1 : 0);
+    });
+    return labeled[0].label;
+  }
+
+  function clearEl(el) { while (el && el.firstChild) el.removeChild(el.firstChild); }
+
+  function hideBridge() {
+    if (bridgeEl) bridgeEl.hidden = true;
+  }
+
+  // Builds the panel's content via plain DOM calls (textContent, not
+  // innerHTML) — matching this file's existing card-population convention
+  // (populateCard() above) and avoiding any need for a separate HTML-escape
+  // helper, since every string here already comes from our own index.json,
+  // not user input.
+  function renderBridge(direct, intermediaries) {
+    bridgeEl.classList.toggle("library-map-bridge--direct", direct.length > 0);
+    bridgeEl.classList.toggle("library-map-bridge--indirect", direct.length === 0);
+    clearEl(bridgeBodyEl);
+    if (direct.length) {
+      bridgeHeadingEl.textContent = "Relationship";
+      var shown = direct.slice(0, BRIDGE_CFG.maxDirectRelations);
+      var extra = direct.length - shown.length;
+      var ul = document.createElement("ul");
+      ul.className = "library-map-bridge-labels";
+      shown.forEach(function (d) {
+        var li = document.createElement("li");
+        li.textContent = d.forwardLabel;
+        ul.appendChild(li);
+      });
+      if (extra > 0) {
+        var moreLi = document.createElement("li");
+        moreLi.className = "library-map-bridge-more";
+        moreLi.textContent = "+" + extra + " more";
+        ul.appendChild(moreLi);
+      }
+      bridgeBodyEl.appendChild(ul);
+      // Only when there's exactly one direct relation — three separate
+      // sentences alongside three compact labels would be clutter; the
+      // compact label list alone stays legible at any count.
+      if (shown.length === 1) {
+        var sentence = edgeSentence(shown[0].edge);
+        if (sentence) {
+          var p = document.createElement("p");
+          p.className = "library-map-bridge-detail";
+          p.textContent = sentence;
+          bridgeBodyEl.appendChild(p);
+        }
+      }
+      // "Direct relationships take priority... optionally, a small
+      // secondary line" — never a full second-order listing alongside a
+      // direct one, just the count.
+      if (intermediaries.length) {
+        var also = document.createElement("p");
+        also.className = "library-map-bridge-also";
+        also.textContent = "Also connected through " + intermediaries.length +
+          (intermediaries.length === 1 ? " entry" : " entries");
+        bridgeBodyEl.appendChild(also);
+      }
+    } else {
+      bridgeHeadingEl.textContent = "Connected through";
+      var shownI = intermediaries.slice(0, BRIDGE_CFG.maxIntermediaries);
+      var extraI = intermediaries.length - shownI.length;
+      var ulI = document.createElement("ul");
+      ulI.className = "library-map-bridge-intermediaries";
+      shownI.forEach(function (cand) {
+        var n = nodeById[cand.id];
+        var li = document.createElement("li");
+        var titleSpan = document.createElement("span");
+        titleSpan.className = "library-map-bridge-intermediary-title";
+        titleSpan.textContent = n.title;
+        li.appendChild(titleSpan);
+        var la = clearestLegLabel(cand.legA, cand.id);
+        var lb = clearestLegLabel(cand.legB, cand.id);
+        var legLabels = [];
+        if (la) legLabels.push(la);
+        if (lb && lb !== la) legLabels.push(lb);
+        if (legLabels.length) {
+          var pathSpan = document.createElement("span");
+          pathSpan.className = "library-map-bridge-intermediary-path";
+          pathSpan.textContent = legLabels.join(" · ");
+          li.appendChild(pathSpan);
+        }
+        ulI.appendChild(li);
+      });
+      if (extraI > 0) {
+        var moreLiI = document.createElement("li");
+        moreLiI.className = "library-map-bridge-more";
+        moreLiI.textContent = "+" + extraI + " more";
+        ulI.appendChild(moreLiI);
+      }
+      bridgeBodyEl.appendChild(ulI);
+    }
+  }
+
+  // Placement (§3 of the spec this implements): read the two cards' OWN
+  // current measured bounding boxes — never the cards' widths, never
+  // node/camera coordinates — and use only whatever screen space already
+  // exists between them. Neither card is ever resized. When that gap is at
+  // least minGapWidth, center the panel within it, top-aligned with the
+  // cards; otherwise (a narrow window, or both cards near-filling it) drop
+  // the panel below both cards instead, still never overlapping either one.
+  // Pure DOM read/write — no relation to currentVB, no repaint of either
+  // canvas layer, so pan/zoom never needs to call this.
+  function positionBridge() {
+    if (!bridgeEl || bridgeEl.hidden || !hoverCard || !selectedCard) return;
+    var containerRect = container.getBoundingClientRect();
+    var hoverRect = hoverCard.root.getBoundingClientRect();
+    var selRect = selectedCard.root.getBoundingClientRect();
+    var leftEdge = hoverRect.right - containerRect.left;
+    var rightEdge = selRect.left - containerRect.left;
+    var gap = rightEdge - leftEdge;
+    bridgeEl.style.transform = "";
+    if (gap >= BRIDGE_CFG.minGapWidth) {
+      var width = Math.max(BRIDGE_CFG.minUsableWidth,
+        Math.min(BRIDGE_CFG.preferredWidth, gap - 16, BRIDGE_CFG.maxWidth));
+      var left = leftEdge + (gap - width) / 2;
+      var top = Math.max(hoverRect.top, selRect.top) - containerRect.top;
+      bridgeEl.classList.remove("library-map-bridge--below");
+      bridgeEl.classList.add("library-map-bridge--between");
+      bridgeEl.style.left = left + "px";
+      bridgeEl.style.top = top + "px";
+      bridgeEl.style.width = width + "px";
+    } else {
+      var below = Math.max(hoverRect.bottom, selRect.bottom) - containerRect.top + BRIDGE_CFG.fallbackOffset;
+      var fallbackWidth = Math.max(BRIDGE_CFG.minUsableWidth,
+        Math.min(BRIDGE_CFG.preferredWidth, containerRect.width - BRIDGE_CFG.viewportPadding * 2));
+      bridgeEl.classList.remove("library-map-bridge--between");
+      bridgeEl.classList.add("library-map-bridge--below");
+      bridgeEl.style.left = "50%";
+      bridgeEl.style.top = below + "px";
+      bridgeEl.style.width = fallbackWidth + "px";
+      bridgeEl.style.transform = "translateX(-50%)";
+    }
+  }
+
+  // The one entry point every hook below calls — recomputes from scratch
+  // every time rather than incrementally patching, which is cheap at this
+  // graph's scale (an O(1) direct lookup plus an O(degree) intersection,
+  // never an O(edges) scan — see the module comment above) and means this
+  // can never drift out of sync with a selection/hover/filter change that
+  // updated selectedId/hoveredId/visible/graphAdjacency out from under it.
+  function updateBridge() {
+    if (!bridgeEl || !BRIDGE_CFG.enabled || !hoverCard || !selectedCard) return;
+    if (!selectedId || !hoveredId || hoveredId === selectedId ||
+        !nodeById[selectedId] || !nodeById[hoveredId] ||
+        !visible[selectedId] || !visible[hoveredId]) {
+      hideBridge();
+      return;
+    }
+    var direct = directRelationships(selectedId, hoveredId);
+    var intermediaries = sharedIntermediaries(selectedId, hoveredId);
+    if (!direct.length && !intermediaries.length) {
+      hideBridge();
+      return;
+    }
+    renderBridge(direct, intermediaries);
+    bridgeEl.hidden = false;
+    positionBridge();
+  }
+
   // Clicking a node makes it the new selection: show its persistent card —
   // that's it. Selection no longer moves anything OR pans the camera: an
   // earlier design both nudged the neighborhood apart for breathing room
@@ -1798,6 +2211,7 @@
     // to be the thing just hovered) would be redundant with the new
     // selected card.
     if (hoveredId === id) hideCardFor(hoverCard);
+    updateBridge();
   }
 
   // A selection has no other way to clear once made (otherwise it would be
@@ -1810,6 +2224,7 @@
     activeSecondOrderImageIds = {};
     invalidate();
     hideCardFor(selectedCard);
+    hideBridge();
   }
 
   // --- Hover: a secondary, transient layer that never touches the
@@ -1822,9 +2237,10 @@
     invalidateHover();
     if (!id || id === selectedId) {
       hideCardFor(hoverCard);
-      return;
+    } else {
+      showCardFor(hoverCard, id);
     }
-    showCardFor(hoverCard, id);
+    updateBridge();
   }
 
   function clearHovered() { setHovered(null); }
@@ -1996,6 +2412,7 @@
     .then(function (data) {
       if (!data || !data.entries || !data.entries.length) return;
       typeStyles = data.public_type_styles || {};
+      relationInverse = data.relation_inverse || {};
       buildGraph(data.entries);
       var visibleIds = data.entries.filter(matchesEntry).map(function (e) { return e.library_id; });
       relayout(visibleIds);
