@@ -1056,15 +1056,28 @@ attribute and its body's `aria-label`. No sentence, no endpoint titles
 (the cards already identify both entries), no heading of any kind — every
 line shares one small (~9px, below the site's own `--t-xs` scale)
 mono-uppercase treatment. Placement (`layoutBridge()`) never resizes or
-moves either card: it measures their own current bounding boxes, decides
-content against that real gap (`BRIDGE_CFG.minimumWidth` — deliberately
-low, since one-word-per-line wrapping needs far less width than a
-single-line label would — through `maximumWidth`, a hard ceiling), then
-centers the actual rendered box in that gap, vertically centered relative
-to the two cards — when the gap is narrower than `minimumWidth`, or even
-the fallback content doesn't fit, the panel is simply hidden, never
-relocated below the cards or over the graph. `pointer-events: none`
-throughout (a click "through" the panel reaches the canvas underneath it,
+moves either card — the two preview cards themselves sit close to the
+render window's own edges (`0.4rem`, not a generous inset) specifically to
+leave more of that gap for this panel. `layoutBridge()` measures the
+cards' own current bounding boxes, decides content against that real gap
+(`BRIDGE_CFG.minimumWidth` — deliberately low, since one-word-per-line
+wrapping needs far less width than a single-line label would — through
+`maximumWidth`, a hard ceiling), then lets the label box shrink-to-fit its
+own content (never forced wider than it needs, only ever capped by
+`maximumWidth`) and centers THAT actual box in the gap, vertically
+centered relative to the two cards. The flanking rules
+(`.library-map-bridge-rule`, `layoutBridgeRules()`) are deliberately
+separate, plain elements, not `::before`/`::after` pseudo-elements
+competing with the label for the same box width — an earlier flex-row
+design had the rules and the label fighting over that width, and once the
+label's content came close to filling it the rules collapsed to zero and
+the text visibly drifted off-center; decoupling them (each rule just spans
+independently from wherever the already-centered label ended up out to
+its own card) fixed this and can't regress the same way. When the gap is
+narrower than `minimumWidth`, or even the fallback content doesn't fit,
+the panel is simply hidden, never relocated below the cards or over the
+graph. `pointer-events: none` throughout (a click "through" the panel
+reaches the canvas underneath it,
 same as empty space would).
 
 **Images.** Resolved through Hugo page resources (never hotlink Bandcamp/Discogs/

@@ -328,14 +328,18 @@
 .library-map-card[hidden] { display: none !important; }
 .library-map-card {
   position: absolute;
-  top: 0.75rem;
-  right: 0.75rem;
+  /* Closer to the render window's own edges than the cards' generous
+     internal padding might suggest — every pixel saved here is a pixel
+     gained for the relationship bridge panel's own gap between them (see
+     CLAUDE.md § Library "Relationship bridge panel"). */
+  top: 0.4rem;
+  right: 0.4rem;
   z-index: 1;
   display: flex;
   gap: 1rem;
   align-items: center;
   width: 26rem;
-  max-width: calc(100% - 1.5rem);
+  max-width: calc(100% - 0.8rem);
   padding: 0.9rem 1rem;
   border: 1px solid var(--rule);
   background: var(--paper);
@@ -348,7 +352,7 @@
    the shared style. */
 .library-map-card--hover {
   right: auto;
-  left: 0.75rem;
+  left: 0.4rem;
   z-index: 2;
   opacity: 0.86;
   border-style: dashed;
@@ -395,29 +399,33 @@
 
 /* Relationship bridge panel — a minimal edge label, not a third card:
    positioned entirely by library-map.js's layoutBridge() (inline
-   left/top/width) in whatever horizontal gap already exists between the
-   selected and hovered cards, never below them or over the graph (see that
-   function's own comment — a too-narrow gap hides the panel outright
+   left/top/max-width) in whatever horizontal gap already exists between
+   the selected and hovered cards, never below them or over the graph (see
+   that function's own comment — a too-narrow gap hides the panel outright
    rather than relocating it). pointer-events: none — informational only,
    never clickable, never blocking a click on the canvas underneath it (see
    the JS module comment on the bridge panel for the full non-goals list:
    it must not navigate, select, hover, reheat, or move the camera).
-   Deliberately no border/shadow of its own — a translucent paper fill plus
-   the flanking rules below (::before/::after) are the only framing, so it
-   reads as an edge label pointing at the two cards it sits between, not a
-   third bordered card competing with them. The real available gap here is
-   often only ~54-70px (two fixed-width preview cards on this site's capped
-   content width) — too narrow for most words on one line — so content
-   wraps one WORD per line (see library-map.js's renderBridge()) rather
-   than truncating with an ellipsis; this file only needs to keep that text
-   small and tightly spaced, never to clip it. */
+   Deliberately no border/shadow of its own — a translucent paper fill is
+   the only framing; the flanking rules (.library-map-bridge-rule below)
+   are separate elements, not part of this box at all — an earlier
+   ::before/::after flex-row design had the rules and the label fighting
+   over the same box width, and when the label's content came close to
+   filling that width the rules collapsed to zero and the text visibly
+   drifted off-center (see the HTML partial's own comment on the fix). This
+   box is now plain, shrink-to-fit content (no flex, no explicit width) —
+   it never renders wider than its own text actually needs, only ever
+   capped by max-width (JS-set, from the real measured gap). The real
+   available gap here is often only ~54-70px (two fixed-width preview
+   cards on this site's capped content width) — too narrow for most words
+   on one line — so content wraps one WORD per line (see
+   library-map.js's renderBridge()) rather than truncating with an
+   ellipsis; this file only needs to keep that text small and tightly
+   spaced, never to clip it. */
 .library-map-bridge[hidden] { display: none !important; }
 .library-map-bridge {
   position: absolute;
   z-index: 1;
-  display: flex;
-  align-items: center;
-  gap: 0.3rem;
   pointer-events: none;
   padding: 0.2rem 0.3rem;
   background: var(--paper);
@@ -427,38 +435,28 @@
 @media (prefers-reduced-motion: reduce) {
   .library-map-bridge { transition: none; }
 }
-/* Thin rules extending toward the two cards on either side — the hover
-   card sits fixed upper-left, the selected card upper-right (see
-   .library-map-card below), so left literally points toward "what I'm
-   considering" and right toward "where I am." flex: 1 1 auto lets each
-   rule fill whatever space remains once the (content-sized, never wider
-   than necessary — see .library-map-bridge-body below) text block in
-   between has laid out; a short one-word label leaves long flanking
-   rules, a wrapped multi-line one leaves short rules either side. */
-.library-map-bridge::before,
-.library-map-bridge::after {
-  content: "";
-  flex: 1 1 auto;
+/* The two flanking rules — plain siblings of the label box, positioned
+   independently by layoutBridgeRules() (inline left/top/width), each
+   spanning from wherever the label box actually ended up out to its own
+   card's edge. The hover card sits fixed upper-left, the selected card
+   upper-right (see .library-map-card below), so the left rule literally
+   points toward "what I'm considering" and the right rule toward "where I
+   am." A rule shorter than layoutBridgeRules()'s own floor is hidden
+   rather than drawn as a barely-visible sliver — see that function. */
+.library-map-bridge-rule[hidden] { display: none !important; }
+.library-map-bridge-rule {
+  position: absolute;
+  z-index: 1;
   height: 1px;
   background: var(--rule);
+  pointer-events: none;
 }
-/* flex: 0 0 auto (content-sized, not stretched to fill the panel's own
-   width) is what lets the ::before/::after rules above actually claim any
-   leftover space at all — see their own comment. Safe to size to content
-   here: library-map.js's renderBridge()/wordsFit() already measures every
-   word against the real available width BEFORE ever rendering it, and
-   falls back (a bare node count, or hiding the panel outright) rather
-   than hand this a word it can't fit — see that file's module comment.
-   overflow: hidden stays as a last-resort backstop only, never the actual
-   containment mechanism. */
 .library-map-bridge-body {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 0.05rem;
   min-width: 0;
-  overflow: hidden;
-  flex: 0 0 auto;
 }
 /* Every line is exactly one already-measured WORD (see renderBridge()) —
    a direct relation word, "Via", one word of an intermediary's title, or a

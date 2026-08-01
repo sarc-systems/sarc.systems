@@ -62,13 +62,29 @@
          only when both cards above are visible at once, the entries are
          direct or second-order neighbors, AND the measured gap between the
          two cards is wide enough (see library-map.js's updateBridge()/
-         positionBridge() — otherwise hidden entirely, never relocated below
+         layoutBridge() — otherwise hidden entirely, never relocated below
          the cards or over the graph). Position is computed entirely in JS
          from the two cards' own measured bounding boxes — this markup
          starts with no inline position and is simply hidden until then.
          aria-live is safe here without extra debouncing: hover only
          actually changes on a genuine hovered-NODE change (setHovered()'s
-         own dedupe), never per pointer-pixel. */}}
+         own dedupe), never per pointer-pixel.
+
+         The two rule elements are deliberately separate, plain (non-flex)
+         siblings of the label box itself, not ::before/::after pseudo-
+         elements competing for space inside it — an earlier flex-row
+         design had the rules and the label fighting over the same box
+         width, and when the label's content came close to filling that
+         width the rules collapsed to zero and the text visibly drifted off
+         -center. Sizing the label to its own content first, then drawing
+         each rule independently from wherever the label ended up out to
+         its own card, can't drift the label — see layoutBridge()/
+         layoutBridgeRules() in library-map.js. Each starts with no inline
+         position and is hidden until laid out; a rule shorter than a small
+         floor is simply omitted rather than shown as a barely-visible
+         sliver. */}}
+  <span class="library-map-bridge-rule" id="library-map-bridge-rule-left" hidden></span>
+  <span class="library-map-bridge-rule" id="library-map-bridge-rule-right" hidden></span>
   <aside class="library-map-bridge" id="library-map-bridge"
          aria-live="polite" aria-label="Relationship between selected and hovered entries" hidden>
     <div class="library-map-bridge-body"></div>

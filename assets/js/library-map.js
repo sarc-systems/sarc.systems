@@ -1952,14 +1952,23 @@
     minimumWidth: 28,
     // Breathing room subtracted from the raw measured gap before content
     // is ever considered — keeps the panel from ever touching either
-    // card's own edge.
-    gapMargin: 12,
+    // card's own edge. Deliberately small: the flanking rules (see
+    // layoutBridgeRules()) are what visually connect the panel to each
+    // card, so it doesn't need much clearance of its own to read as a
+    // separate element from them.
+    gapMargin: 6,
     // Hard ceiling regardless of how much gap is actually available —
     // this is an edge label, not a growing panel.
     maximumWidth: 128
   };
   var bridgeEl = document.getElementById("library-map-bridge");
   var bridgeBodyEl = bridgeEl && bridgeEl.querySelector(".library-map-bridge-body");
+  // Separate, plain elements — not flex-row ::before/::after fighting the
+  // label for the same box width (see the module comment on this and the
+  // HTML partial's own comment on why). Positioned entirely by
+  // layoutBridgeRules() below, independent of the label's own sizing.
+  var bridgeRuleLeft = document.getElementById("library-map-bridge-rule-left");
+  var bridgeRuleRight = document.getElementById("library-map-bridge-rule-right");
 
   var CATEGORY_RANK = { structural: 0, historical: 1, contextual: 2 };
   function categoryRank(cat) { return CATEGORY_RANK[cat] !== undefined ? CATEGORY_RANK[cat] : CATEGORY_RANK.contextual; }
@@ -2113,6 +2122,8 @@
 
   function hideBridge() {
     if (bridgeEl) bridgeEl.hidden = true;
+    if (bridgeRuleLeft) bridgeRuleLeft.hidden = true;
+    if (bridgeRuleRight) bridgeRuleRight.hidden = true;
   }
 
   // A single reusable offscreen clone of the real line style — the only
@@ -2135,12 +2146,27 @@
     bridgeMeasureEl.textContent = text;
     return bridgeMeasureEl.offsetWidth;
   }
+  // The label box's own horizontal padding — read once from the real CSS
+  // (never hardcoded, same reasoning as measureToken() above) and added on
+  // top of a word's own measured width: a word that just barely matches
+  // maxWidth would otherwise still overflow the box once its padding is
+  // added, since maxWidth is a budget for the whole box, not just its text.
+  var bridgePaddingPx = null;
+  function bridgeHorizontalPadding() {
+    if (bridgePaddingPx == null && bridgeEl) {
+      var cs = getComputedStyle(bridgeEl);
+      bridgePaddingPx = (parseFloat(cs.paddingLeft) || 0) + (parseFloat(cs.paddingRight) || 0);
+    }
+    return bridgePaddingPx || 0;
+  }
   // A label only ever renders one WORD per line (see renderBridge()), so
-  // "fits" means every individual word's own measured width clears the
-  // real available content width — never the label's combined/unwrapped
-  // width, which is irrelevant once it's already split across lines.
+  // "fits" means every individual word's own measured width, plus the
+  // box's own padding, clears the real available width — never the
+  // label's combined/unwrapped width, which is irrelevant once it's
+  // already split across lines.
   function wordsFit(text, maxWidth) {
-    return text.split(" ").every(function (w) { return measureToken(w) <= maxWidth; });
+    var usable = maxWidth - bridgeHorizontalPadding();
+    return text.split(" ").every(function (w) { return measureToken(w) <= usable; });
   }
 
   // Builds the panel's content via plain DOM calls (textContent, not
@@ -2201,11 +2227,16 @@
   // against the REAL measured gap (never a fixed pixel target): compute
   // the gap -> hide outright if it's below BRIDGE_CFG.minimumWidth -> ask
   // renderBridge() to fit content within it (which may itself decide to
-  // hide, if even the short/fallback form doesn't fit) -> only then center
-  // the actual rendered box in that gap, vertically centered relative to
-  // the two cards. Never below them, never over the graph. Pure DOM
-  // read/write — no relation to currentVB, no repaint of either canvas
-  // layer, so pan/zoom never needs to call this.
+  // hide, if even the short/fallback form doesn't fit) -> let the box
+  // shrink-to-fit its own content (capped at maxWidth, but never forced
+  // wider than it needs to be — see the module/HTML-partial comments on
+  // why a flex-grow-based box used to drift the text off-center) -> center
+  // THAT actual measured box in the gap, vertically centered relative to
+  // the two cards -> draw the two flanking rules independently, from
+  // wherever the box actually ended up out to each card (layoutBridgeRules()).
+  // Never below the cards, never over the graph. Pure DOM read/write — no
+  // relation to currentVB, no repaint of either canvas layer, so pan/zoom
+  // never needs to call this.
   function layoutBridge(direct, intermediaries) {
     if (!bridgeEl || !hoverCard || !selectedCard) return;
     var containerRect = container.getBoundingClientRect();
@@ -2223,13 +2254,50 @@
       hideBridge();
       return;
     }
-    bridgeEl.style.width = maxWidth + "px";
+    // maxWidth here is only a CAP (via CSS max-width) — the box itself is
+    // plain absolutely-positioned content (shrink-to-fit), so it never
+    // renders wider than its own text actually needs, regardless of how
+    // much of the gap it was allowed to use.
+    bridgeEl.style.maxWidth = maxWidth + "px";
     bridgeEl.hidden = false;
+    var boxRect = bridgeEl.getBoundingClientRect(); // natural size, not yet positioned
+    var width = boxRect.width, height = boxRect.height;
     var centerY = (((hoverRect.top + hoverRect.bottom) / 2) +
       ((selRect.top + selRect.bottom) / 2)) / 2 - containerRect.top;
-    var height = bridgeEl.offsetHeight;
-    bridgeEl.style.left = (leftEdge + (gap - maxWidth) / 2) + "px";
-    bridgeEl.style.top = (centerY - height / 2) + "px";
+    var left = leftEdge + (gap - width) / 2;
+    var top = centerY - height / 2;
+    bridgeEl.style.left = left + "px";
+    bridgeEl.style.top = top + "px";
+    layoutBridgeRules(leftEdge, left, left + width, rightEdge, centerY);
+  }
+
+  // The two flanking rules, positioned independently of the label box's
+  // own flex layout (see module/HTML-partial comments on why) — each
+  // simply spans from wherever the (already-centered) label box ended up
+  // out to its own card's edge. A rule shorter than MIN_RULE reads as
+  // visual noise rather than a connector, so it's omitted rather than
+  // shown as a barely-visible sliver — these are the spec's own "optional"
+  // rules, never a required part of the layout.
+  function layoutBridgeRules(gapLeft, boxLeft, boxRight, gapRight, centerY) {
+    var MIN_RULE = 5;
+    var leftLen = boxLeft - gapLeft;
+    var rightLen = gapRight - boxRight;
+    if (bridgeRuleLeft) {
+      bridgeRuleLeft.hidden = leftLen < MIN_RULE;
+      if (!bridgeRuleLeft.hidden) {
+        bridgeRuleLeft.style.left = gapLeft + "px";
+        bridgeRuleLeft.style.width = leftLen + "px";
+        bridgeRuleLeft.style.top = centerY + "px";
+      }
+    }
+    if (bridgeRuleRight) {
+      bridgeRuleRight.hidden = rightLen < MIN_RULE;
+      if (!bridgeRuleRight.hidden) {
+        bridgeRuleRight.style.left = boxRight + "px";
+        bridgeRuleRight.style.width = rightLen + "px";
+        bridgeRuleRight.style.top = centerY + "px";
+      }
+    }
   }
 
   // The one entry point every hook below calls — recomputes from scratch
