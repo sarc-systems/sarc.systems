@@ -9,7 +9,8 @@ library:
 
 subjects: [computation, sound]
 
-images: []
+images:
+  - {file: "portrait.jpg", alt: "Lejaren Hiller working at the University of Illinois Experimental Music Studios, 1960", role: portrait, caption: "At the University of Illinois Experimental Music Studios, 1960.", credit: "University of Illinois Archives", source: "https://distributedmuseum.illinois.edu/exhibit/illiac-suite/", rights: {status: unknown}, use: {basis: identification, note: "University of Illinois Distributed Museum photo used for identification."}}
 
 access: []
 

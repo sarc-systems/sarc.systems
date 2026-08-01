@@ -9,7 +9,8 @@ library:
 
 subjects: [sound, feedback, computation]
 
-images: []
+images:
+  - {file: "portrait.jpg", alt: "Ron Kuivila with a hand-held electric fan and live-electronics setup", role: portrait, source: "https://www.last.fm/music/Ron+Kuivila/+images", rights: {status: unknown}, use: {basis: identification, note: "Photo used for identification."}}
 
 access: []
 
