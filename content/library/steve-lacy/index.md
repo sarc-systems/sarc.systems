@@ -24,8 +24,9 @@ access: []
 related:
   - {ref: mev, relation: affiliated-with}
   - {ref: cecil-taylor, relation: collaborator-of}
+  - {ref: denis-charles, relation: collaborator-of}
 
 draft: false
 ---
 
-Steve Lacy (1934–2004) was the first avant-garde jazz musician to specialize in the soprano saxophone, single-handedly returning the instrument to modern music after playing with Cecil Taylor, Gil Evans, and Thelonious Monk. Settling for a period in Rome after 1965, he began performing with Musica Elettronica Viva's Alvin Curran and Frederic Rzewski in the group's late-1960s improvisations.
+Steve Lacy (1934–2004) was the first avant-garde jazz musician to specialize in the soprano saxophone, single-handedly returning the instrument to modern music after playing with Cecil Taylor, Gil Evans, and Thelonious Monk. In 1963 his quartet with Roswell Rudd, Henry Grimes, and [Denis Charles](/library/denis-charles/) recorded a live set of Monk repertoire, released in 1975 as *[School Days](/library/school-days-1963/)*. Settling for a period in Rome after 1965, he began performing with Musica Elettronica Viva's Alvin Curran and Frederic Rzewski in the group's late-1960s improvisations.

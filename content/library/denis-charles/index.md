@@ -25,4 +25,4 @@ related:
 draft: false
 ---
 
-Denis Charles (1933-1998) was a drummer born in St. Croix whose loose, melodic sense of pulse made him an early and longtime collaborator in Cecil Taylor's groups, and a foundational voice in free jazz drumming.
+Denis Charles (1933-1998) was a drummer born in St. Croix whose loose, melodic sense of pulse made him an early and longtime collaborator in Cecil Taylor's groups, and a foundational voice in free jazz drumming. In 1963 he recorded live with [Steve Lacy](/library/steve-lacy/)'s Monk-repertoire quartet, released in 1975 as *[School Days](/library/school-days-1963/)*.
