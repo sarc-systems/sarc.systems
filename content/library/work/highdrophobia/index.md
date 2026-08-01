@@ -14,7 +14,8 @@ creators:
 
 subjects: [sound, instruments]
 
-images: []
+images:
+  - {file: "cover.jpg", alt: "Cover of Highdrophobia by Solmania", role: cover, source: "https://urashima.bandcamp.com/album/highdrophobia", rights: {status: unknown}, use: {basis: identification, note: "Urashima reissue cover art used for identification."}}
 
 access:
   - {label: "Bandcamp", kind: bandcamp, url: "https://urashima.bandcamp.com/album/highdrophobia"}

@@ -14,7 +14,8 @@ creators:
 
 subjects: [sound]
 
-images: []
+images:
+  - {file: "cover.jpg", alt: "Cover of Magnesia Nova by Merzbow", role: cover, source: "https://urashima.bandcamp.com/album/magnesia-nova", rights: {status: unknown}, use: {basis: identification, note: "Urashima reissue cover art used for identification."}}
 
 access:
   - {label: "Bandcamp", kind: bandcamp, url: "https://urashima.bandcamp.com/album/magnesia-nova"}

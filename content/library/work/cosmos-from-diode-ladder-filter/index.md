@@ -14,7 +14,8 @@ creators:
 
 subjects: [sound, instruments]
 
-images: []
+images:
+  - {file: "cover.jpg", alt: "Cover of Cosmos From Diode Ladder Filter by Space Machine", role: cover, source: "https://urashima.bandcamp.com/album/cosmos-from-diode-ladder-filter", rights: {status: unknown}, use: {basis: identification, note: "Urashima reissue cover art used for identification."}}
 
 access:
   - {label: "Bandcamp", kind: bandcamp, url: "https://urashima.bandcamp.com/album/cosmos-from-diode-ladder-filter"}

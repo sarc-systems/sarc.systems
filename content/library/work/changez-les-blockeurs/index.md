@@ -14,7 +14,8 @@ creators:
 
 subjects: [sound]
 
-images: []
+images:
+  - {file: "cover.jpg", alt: "Cover of Changez les Blockeurs by The New Blockaders", role: cover, source: "https://urashima.bandcamp.com/album/changez-les-blockeurs", rights: {status: unknown}, use: {basis: identification, note: "Urashima reissue cover art used for identification."}}
 
 access:
   - {label: "Bandcamp", kind: bandcamp, url: "https://urashima.bandcamp.com/album/changez-les-blockeurs"}

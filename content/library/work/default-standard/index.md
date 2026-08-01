@@ -14,7 +14,8 @@ creators:
 
 subjects: [sound, feedback]
 
-images: []
+images:
+  - {file: "cover.jpg", alt: "Cover of Default Standard by Incapacitants", role: cover, source: "https://urashima.bandcamp.com/album/default-standard", rights: {status: unknown}, use: {basis: identification, note: "Urashima reissue cover art used for identification."}}
 
 access:
   - {label: "Bandcamp", kind: bandcamp, url: "https://urashima.bandcamp.com/album/default-standard"}

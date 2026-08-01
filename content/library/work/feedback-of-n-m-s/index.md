@@ -14,7 +14,8 @@ creators:
 
 subjects: [sound, feedback]
 
-images: []
+images:
+  - {file: "cover.jpg", alt: "Cover of Feedback of N.M.S. by Incapacitants", role: cover, source: "https://urashima.bandcamp.com/album/feedback-of-n-m-s", rights: {status: unknown}, use: {basis: identification, note: "Urashima reissue cover art used for identification."}}
 
 access:
   - {label: "Bandcamp", kind: bandcamp, url: "https://urashima.bandcamp.com/album/feedback-of-n-m-s"}

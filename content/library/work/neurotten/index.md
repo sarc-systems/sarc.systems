@@ -14,7 +14,8 @@ creators:
 
 subjects: [sound]
 
-images: []
+images:
+  - {file: "cover.jpg", alt: "Cover of Neurotten by Pain Jerk", role: cover, source: "https://urashima.bandcamp.com/album/neurotten", rights: {status: unknown}, use: {basis: identification, note: "Urashima reissue cover art used for identification."}}
 
 access:
   - {label: "Bandcamp", kind: bandcamp, url: "https://urashima.bandcamp.com/album/neurotten"}

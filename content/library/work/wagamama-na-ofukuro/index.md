@@ -14,7 +14,8 @@ creators:
 
 subjects: [sound]
 
-images: []
+images:
+  - {file: "cover.jpg", alt: "Cover of Wagamama na Ofukuro by Violent Onsen Geisha", role: cover, source: "https://urashima.bandcamp.com/album/wagamama-na-ofukuro", rights: {status: unknown}, use: {basis: identification, note: "Urashima reissue cover art used for identification."}}
 
 access:
   - {label: "Bandcamp", kind: bandcamp, url: "https://urashima.bandcamp.com/album/wagamama-na-ofukuro"}

@@ -14,7 +14,8 @@ creators:
 
 subjects: [sound, feedback]
 
-images: []
+images:
+  - {file: "cover.jpg", alt: "Cover of The Human Race Was Restored to Life Repeatedly by Government Alpha", role: cover, source: "https://urashima.bandcamp.com/album/the-human-race-was-restored-to-life-repeatedly", rights: {status: unknown}, use: {basis: identification, note: "Urashima reissue cover art used for identification."}}
 
 access:
   - {label: "Bandcamp", kind: bandcamp, url: "https://urashima.bandcamp.com/album/the-human-race-was-restored-to-life-repeatedly"}
