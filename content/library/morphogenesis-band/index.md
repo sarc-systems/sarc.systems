@@ -24,9 +24,16 @@ creators:
 
 subjects: [sound, feedback]
 
-images: []
+images:
+  - file: "photo.jpg"
+    alt: "Morphogenesis performing with self-built electronic instruments"
+    source: "https://f4.bcbits.com/img/0010839280_10.jpg"
+    rights:
+      status: unknown
+      note: "Group's own Bandcamp profile photo; photographer and original publication not established."
 
-access: []
+access:
+  - {label: "Bandcamp", kind: bandcamp, url: "https://morphogenesis.bandcamp.com"}
 
 related:
   - {ref: organum, relation: collaborator-of}
