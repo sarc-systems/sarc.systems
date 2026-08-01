@@ -27,9 +27,10 @@
 
 {{- /* primary image (first) → thumbnail, resolved once by the shared partial so
        the Catalog list and the Images view can never process it differently.
-       The thumbnail fills the record's height (set by the text) and never
-       grows the row; a per-image `anchor` sets both the Fill focus and the
-       CSS object-position. */ -}}
+       A fixed-size square (see library.css's --library-thumbnail-size),
+       top-aligned against a row whose real height comes from the text
+       column, never stretched to match it — a per-image `anchor` sets both
+       the Fill focus and the CSS object-position. */ -}}
 {{- $thumb := partial "library-thumbnail.html" . -}}
 <li class="library-record{{ if $thumb.has }} has-thumb{{ end }}" data-library-id="{{ $id }}" data-type="{{ $publicType }}" data-subjects="{{ delimit $subs " " }}" data-has-image="{{ if $thumb.has }}true{{ else }}false{{ end }}">
   {{- with $thumb.has }}
