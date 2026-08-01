@@ -35,6 +35,7 @@ types:
   - {type: recording,    label: "Recording",       order: 80,  public_type: work}
   - {type: album,        label: "Album",           order: 90,  public_type: work}
   - {type: composition,  label: "Composition",     order: 100, public_type: work}
+  - {type: installation, label: "Installation",    order: 105, public_type: work}
   - {type: film,         label: "Film",            order: 110, public_type: work}
   - {type: video,        label: "Video",           order: 120, public_type: work}
   - {type: lecture,      label: "Lecture",         order: 130, public_type: work}
