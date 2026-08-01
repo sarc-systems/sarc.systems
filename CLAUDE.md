@@ -610,10 +610,22 @@ small one; `SIM_SPEED` is a pure playback-speed control, independent of the
 convergence math itself. It still comes to a genuine, permanent stop once
 alpha decays low enough (`SIM_ALPHA_MIN`) — not a perpetually drifting
 physics demo — and then keeps ticking through the SAME animated loop, now
-applying direct overlap correction instead of a force step, until a pass
-finds nothing left to resolve, so any final untangling the user sees is
-still ordinary settle motion, never a synchronous jump applied after the
-fact. `prefers-reduced-motion` runs the identical alpha-decay convergence
+applying direct overlap correction (`resolveOverlapsOnce()`) instead of a
+force step, until a pass finds nothing left to resolve, so any final
+untangling the user sees is still ordinary settle motion, never a
+synchronous jump applied after the fact. That overlap correction also
+runs every ordinary tick throughout the settle, not only after alpha
+crosses `SIM_ALPHA_MIN` — an earlier version called it only in the
+post-alpha phase, and because exponential decay tapers visible motion to
+nothing well before alpha numerically crosses that threshold, the settle
+would appear to have already finished (the map sitting still for a second
+or two) before that phase suddenly started nudging apart whatever
+residual overlap — usually in the densest, most contended part of the
+graph, near the center — force integration alone hadn't fully resolved,
+reading as an unexplained glitch rather than the tail of the same settle.
+Resolving overlaps continuously from early on means there's rarely
+anything left for the post-alpha phase to actually do by the time it's
+reached. `prefers-reduced-motion` runs the identical alpha-decay convergence
 synchronously to completion in one pass instead of animating it across
 frames — same final layout, no motion. Node type only affects appearance,
 never physical placement. **Dragging** a node (press-and-move past a small

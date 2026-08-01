@@ -842,8 +842,21 @@
     // see resolveOverlapsOnce()'s own comment), keep ticking through the
     // SAME animated per-frame loop, now applying direct overlap correction
     // instead of a force step, until a pass finds nothing left to resolve.
-    // Any motion this produces is still ordinary settle motion the user
-    // watches happen, frame by frame, never a jump applied after the fact.
+    // This is now a CATCH-UP for whatever's still left, not the first time
+    // overlaps get resolved at all — resolveOverlapsOnce() also runs every
+    // ordinary tick below, throughout the whole settle, not just here. An
+    // earlier version only called it here, after alpha had already decayed
+    // past SIM_ALPHA_MIN: exponential decay means visible motion tapers to
+    // nothing well before alpha actually crosses that threshold, so the
+    // settle LOOKED finished — the map sat still for a second or two — and
+    // then this catch-up phase would suddenly start nudging apart whatever
+    // residual overlap (usually in the densest, most contended part of the
+    // graph — near the center) force integration hadn't fully resolved,
+    // reading as an abrupt glitch appearing out of nowhere rather than the
+    // tail of the same settle. Resolving overlaps continuously from early
+    // on means there's rarely anything left for this phase to do by the
+    // time it's reached, so it now finishes in 0-1 ticks in the ordinary
+    // case instead of visibly running for up to SIM_OVERLAP_MAX_TICKS.
     if (sim.alpha < SIM_ALPHA_MIN) {
       var stillOverlapping = resolveOverlapsOnce(sim.nodes);
       sim.overlapTicks = (sim.overlapTicks || 0) + 1;
@@ -855,6 +868,12 @@
     for (i = 0; i < sim.nodes.length; i++) { cx += sim.nodes[i].x; cy += sim.nodes[i].y; }
     cx /= sim.nodes.length; cy /= sim.nodes.length;
     forceIterationWithCentering(sim.nodes, sim.edges, cx, cy, sim.alpha);
+    // Same geometric correction the post-alpha catch-up phase above uses,
+    // run every tick rather than saved up for the end — see this
+    // function's own comment on why. A small, bounded push (half the
+    // overlap distance) blends into whatever movement the force step just
+    // produced instead of standing out as its own event.
+    resolveOverlapsOnce(sim.nodes);
     // Pin the dragged node (if any) back to the pointer's current world
     // position AFTER the physics step, overriding whatever force/velocity
     // integration just computed for it — every OTHER node still feels
