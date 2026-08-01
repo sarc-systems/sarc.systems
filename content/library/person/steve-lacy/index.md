@@ -13,6 +13,7 @@ images:
   - file: "portrait.jpg"
     alt: "Steve Lacy"
     role: portrait
+    anchor: Top
     source: "https://commons.wikimedia.org/wiki/File:Steve_Lacy.jpg"
     credit: "Lionel Decoster"
     rights:
