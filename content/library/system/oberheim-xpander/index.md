@@ -14,7 +14,8 @@ creators:
 
 subjects: [instruments]
 
-images: []
+images:
+  - {file: "photo.jpg", alt: "Oberheim Xpander owner's manual cover, showing the unit", role: still, caption: "Owner's manual cover, showing the unit.", source: "https://www.ebay.com/itm/114682532447", rights: {status: unknown}, use: {basis: identification, note: "Photo used for identification."}}
 
 access: []
 
