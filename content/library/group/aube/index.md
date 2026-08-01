@@ -12,7 +12,8 @@ creators:
 
 subjects: [sound]
 
-images: []
+images:
+  - {file: "photo.jpg", alt: "Akifumi Nakajima (Aube) surrounded by electronic equipment", role: portrait, source: "https://4ibrecords.com/2013/12/06/aube-interview-from-qvadrivivm-4-2001-a-tribute/", rights: {status: unknown}, use: {basis: identification, note: "Photo used for identification."}}
 
 access: []
 

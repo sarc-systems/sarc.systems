@@ -12,7 +12,8 @@ creators:
 
 subjects: [sound]
 
-images: []
+images:
+  - {file: "photo.jpg", alt: "Maso Yamazaki (Space Machine) surrounded by vintage synthesizers", role: portrait, source: "https://www.forcedexposure.com/Artists/SPACE.MACHINE.html", rights: {status: unknown}, use: {basis: identification, note: "Photo used for identification."}}
 
 access: []
 
