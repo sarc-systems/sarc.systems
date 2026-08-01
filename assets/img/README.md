@@ -21,9 +21,9 @@ prominently at masthead scale with substantial space and no colour effects; do
 not propagate its glow into the rest of the interface; do not shrink it into a
 nav logo (the header uses the SARC text wordmark).
 
-## Planned: live SVG reconstruction
+## Live SVG reconstruction
 
-`CLAUDE.md` describes an eventual responsive-SVG reconstruction of the mark
-(stable outer rows, an active transform layer, derived reflections,
-reduced-motion behaviour). That remains future work and should be built against
-these real letterforms — not the placeholder that previously stood in for it.
+Implemented — `layouts/partials/mark.html` (generated from these real
+letterforms by `scripts/generate-mark.py` / `make mark`), animated by
+`assets/js/mark.js`. See `CLAUDE.md` § "Live landing mark (SVG
+reconstruction)" for the full behaviour.
