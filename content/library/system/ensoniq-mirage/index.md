@@ -12,7 +12,8 @@ creators:
 
 subjects: [computation, sound, memory, instruments]
 
-images: []
+images:
+  - {file: "photo.jpg", alt: "Ensoniq Mirage sampling keyboard", role: still, credit: "Photograph by emily przybylinski", source: "https://commons.wikimedia.org/wiki/File:Ensoniq_Mirage_(with_cable).jpg", rights: {status: licensed, note: "CC BY 2.0, via Wikimedia Commons."}}
 
 access: []
 

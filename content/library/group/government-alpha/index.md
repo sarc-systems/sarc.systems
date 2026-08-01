@@ -12,7 +12,8 @@ creators:
 
 subjects: [sound]
 
-images: []
+images:
+  - {file: "photo.png", alt: "Government Alpha (Yasutoshi Yoshida) performing live", role: portrait, credit: "Photograph by Arnaud DG", source: "https://commons.wikimedia.org/wiki/File:Government_alpha.PNG", rights: {status: licensed, note: "CC BY 2.0, via Wikimedia Commons."}}
 
 access: []
 
