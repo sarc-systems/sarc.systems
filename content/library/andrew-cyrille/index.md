@@ -25,4 +25,4 @@ related:
 draft: false
 ---
 
-Andrew Cyrille is an American free-jazz drummer, a longtime collaborator of Cecil Taylor, known for a rhythmic language built from timbre and space as much as pulse.
+Andrew Cyrille is an American free-jazz drummer, a longtime collaborator of Cecil Taylor, known for a rhythmic language built from timbre and space as much as pulse. He played drums on [Mal Waldron](/library/mal-waldron/) and [Steve Lacy](/library/steve-lacy/)'s *[The Mighty Warriors: Live in Antwerp](/library/the-mighty-warriors-live-in-antwerp/)*, recorded during Waldron's 70th birthday tour in 1995.
