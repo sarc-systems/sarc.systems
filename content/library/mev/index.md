@@ -1,6 +1,6 @@
 ---
-title: "Musica Elettronica Viva"
-summary: "Rome electroacoustic improvisation ensemble, founded 1966 by Alvin Curran, Frederic Rzewski, and Richard Teitelbaum."
+title: "MEV"
+summary: "Musica Elettronica Viva — Rome electroacoustic improvisation ensemble, founded 1966 by Alvin Curran, Frederic Rzewski, and Richard Teitelbaum."
 
 library:
   id: mev
