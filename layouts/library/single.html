@@ -19,7 +19,11 @@
 <article class="entry-full library-single" data-library-id="{{ .Params.library.id }}">
   <div class="wrap">
     <header class="entry-header">
-      <p class="eyebrow"><a href="{{ "/library/" | relURL }}">Library</a>{{ with $typeLabel }} <span class="dot" aria-hidden="true">·</span> {{ . }}{{ end }}</p>
+      {{- /* Same ?view=map&select=<library.id> deep-link as the "← Library"
+             nav at the foot of the page (see its own comment) — this
+             breadcrumb is the more prominent of the two "Library" links on
+             an entry page, so it gets the same treatment. */}}
+      <p class="eyebrow"><a href="{{ printf "/library/?view=map&select=%s" .Params.library.id | relURL }}">Library</a>{{ with $typeLabel }} <span class="dot" aria-hidden="true">·</span> {{ . }}{{ end }}</p>
       <h1 class="entry-full-title">{{ .Title }}</h1>
       {{- with .Params.summary }}<p class="entry-lede">{{ . }}</p>{{ end }}
     </header>
@@ -103,7 +107,12 @@
     {{ partial "library-related.html" (dict "page" .) }}
 
     <nav class="entry-nav" aria-label="Library navigation">
-      <a class="entry-nav-prev" href="{{ "/library/" | relURL }}"><span class="entry-nav-dir">← Library</span></a>
+      {{- /* Deep-links back into the catalog with this entry selected — the
+             same ?view=map&select=<library.id> contract library-map.js reads
+             on load (see CLAUDE.md § Library "Map view" — Selection-Centered
+             Navigation). Explicit view=map even though Map is already the
+             default, so this keeps working if that default ever changes. */}}
+      <a class="entry-nav-prev" href="{{ printf "/library/?view=map&select=%s" .Params.library.id | relURL }}"><span class="entry-nav-dir">← Library</span></a>
     </nav>
   </div>
 </article>
