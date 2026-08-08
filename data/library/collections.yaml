@@ -1,0 +1,32 @@
+# Library v2 Collection registry — see docs/library-v2.md § 3.
+#
+# Binding: this file's path (data/library/collections.yaml) plus its
+# root-level LIST shape (not a `collections:`-keyed map) is what makes Hugo
+# expose it as `hugo.Data.library.collections` — a plain slice, one item per
+# Collection. (Hugo's data tree mirrors the data/ directory structure:
+# data/library.yaml supplies the map at hugo.Data.library; this file, one
+# level down, supplies the same map's "collections" key.)
+#
+# `color` must be an existing data/colorplan.json `colors[].slug` — build
+# fails otherwise (library-validate.html). Never a raw hex value.
+#
+# `source.section` is the content-relative directory (under content/) this
+# Collection's Hugo-adapter Entries live under — see docs/library-v2.md
+# § 2.2/§ 13. Today it is "library" because the pre-v2 corpus hasn't moved
+# yet (that's Phase 4); once it moves to content/library/research/, this
+# becomes "library/research".
+- id: research
+  title: SARC Research
+  description: >
+    Historical, conceptual, technical, and artistic references surrounding SARC.
+  color: forest
+  source:
+    adapter: hugo
+    section: library
+  views:
+    enabled: [catalog, images, map]
+    default: map
+  projections:
+    default: all
+  build:
+    production: true

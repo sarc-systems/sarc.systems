@@ -25,6 +25,54 @@
 {{- /* all published catalog entries (in-section + cross-site), deduped */ -}}
 {{- $entries := where (where site.RegularPages "Section" "library" | union (where site.RegularPages "Params.library.include" true)) "Draft" false -}}
 
+{{- /* Library v2 Collection registry (data/library/collections.yaml — see
+       docs/library-v2.md § 3/§ 9). Validated here, then used below to
+       resolve each entry's owning Collection (by content-path prefix for
+       adapter:hugo Collections, by an explicit library.collection field for
+       cross-site-included pages) so the id-uniqueness and storage-folder
+       checks scope correctly per Collection instead of assuming a single
+       global corpus. */ -}}
+{{- $registry := hugo.Data.library.collections -}}
+{{- $colorplanSlugs := slice }}{{ range hugo.Data.colorplan.colors }}{{ $colorplanSlugs = $colorplanSlugs | append .slug }}{{ end -}}
+{{- $collIds := slice -}}
+{{- range $registry -}}
+  {{- if not .id }}{{ errorf "Library: a Collection in data/library/collections.yaml has no id" }}{{ end -}}
+  {{- if in $collIds .id }}{{ errorf "Library: duplicate Collection id %q in data/library/collections.yaml" .id }}{{ end -}}
+  {{- $collIds = $collIds | append .id -}}
+  {{- if not .color }}{{ errorf "Library: Collection %q has no color" .id }}{{ end -}}
+  {{- if and .color (not (in $colorplanSlugs .color)) }}{{ errorf "Library: Collection %q has color %q, which is not a data/colorplan.json slug" .id .color }}{{ end -}}
+  {{- if not .source.adapter }}{{ errorf "Library: Collection %q has no source.adapter" .id }}{{ end -}}
+  {{- if and (eq .source.adapter "hugo") (not .source.section) }}{{ errorf "Library: Collection %q (adapter: hugo) has no source.section" .id }}{{ end -}}
+  {{- $collId := .id -}}
+  {{- $enabled := .views.enabled -}}
+  {{- if not $enabled }}{{ errorf "Library: Collection %q declares no views.enabled" $collId }}{{ end -}}
+  {{- range $enabled }}{{ if not (in (slice "catalog" "images" "map") .) }}{{ errorf "Library: Collection %q enables unknown view %q" $collId . }}{{ end }}{{ end -}}
+  {{- if and .views.default (not (in $enabled .views.default)) }}{{ errorf "Library: Collection %q views.default %q is not in its own views.enabled" $collId .views.default }}{{ end -}}
+{{- end -}}
+
+{{- /* Resolve each entry's owning Collection id. adapter:hugo Collections
+       match by longest content-path prefix (source.section); cross-site
+       included pages use an explicit library.collection, defaulting to the
+       sole registered Collection while only one exists. */ -}}
+{{- $collectionOf := dict -}}
+{{- range $entries -}}
+  {{- $page := . -}}
+  {{- $cid := "" }}{{ $bestLen := 0 -}}
+  {{- if eq $page.Section "library" -}}
+    {{- range $registry -}}
+      {{- if and (eq .source.adapter "hugo") .source.section (hasPrefix $page.File.Path (printf "%s/" .source.section)) (gt (len .source.section) $bestLen) -}}
+        {{- $cid = .id }}{{ $bestLen = len .source.section -}}
+      {{- end -}}
+    {{- end -}}
+    {{- if not $cid }}{{ errorf "Library: %q is under the library section but doesn't match any Collection's source.section in data/library/collections.yaml" $page.Path }}{{ end -}}
+  {{- else -}}
+    {{- with $page.Params.library }}{{ $cid = .collection }}{{ end -}}
+    {{- if and (not $cid) (eq (len $registry) 1) }}{{ $cid = (index $registry 0).id }}{{ end -}}
+    {{- if not $cid }}{{ errorf "Library: cross-included page %q has no library.collection, and more than one Collection is registered — ambiguous" $page.Path }}{{ end -}}
+  {{- end -}}
+  {{- $collectionOf = merge $collectionOf (dict $page.Path $cid) -}}
+{{- end -}}
+
 {{- /* Pre-pass: tally every image `source` URL across all entries, so a
        source reused across unrelated entries can be flagged once below. */ -}}
 {{- $sourceTally := dict -}}
@@ -34,15 +82,26 @@
   {{- end -}}
 {{- end -}}
 
-{{- /* Pre-pass: reference_id must be gone; collect library.id, detect dups. */ -}}
+{{- /* Pre-pass: reference_id must be gone; collect library.id, detect dups
+       WITHIN each Collection (library.id is collection-local in v2, not
+       site-wide — see docs/library-v2.md § 4.1/§ 13). $ids stays a flat,
+       site-wide set for ref resolution below: with exactly one Collection
+       registered today, bare refs are unambiguous; namespaced
+       cross-Collection refs (§ 4.3) aren't yet exercised by any real
+       content, so full compound-key ref resolution is deferred. */ -}}
 {{- $counts := dict }}{{ $ids := slice -}}
 {{- range $entries -}}
   {{- if .Params.reference_id }}{{ errorf "Library: %q still uses reference_id — migrate to library.id" .Path }}{{ end -}}
   {{- $id := "" }}{{ with .Params.library }}{{ $id = .id }}{{ end -}}
   {{- if not $id }}{{ errorf "Library: %q has no library.id (a stable unique id is required)" .Path -}}
-  {{- else }}{{ $counts = merge $counts (dict $id (add (int (index $counts $id | default 0)) 1)) }}{{ $ids = $ids | append $id }}{{ end -}}
+  {{- else -}}
+    {{- $cid := index $collectionOf .Path -}}
+    {{- $key := printf "%s::%s" $cid $id -}}
+    {{- $counts = merge $counts (dict $key (add (int (index $counts $key | default 0)) 1)) -}}
+    {{- $ids = $ids | append $id -}}
+  {{- end -}}
 {{- end -}}
-{{- range $id, $n := $counts }}{{ if gt $n 1 }}{{ errorf "Library: duplicate library.id %q used by %d published entries" $id $n }}{{ end }}{{ end -}}
+{{- range $key, $n := $counts }}{{ if gt $n 1 }}{{ $parts := split $key "::" }}{{ errorf "Library: duplicate library.id %q used by %d published entries in Collection %q" (index $parts 1) $n (index $parts 0) }}{{ end }}{{ end -}}
 {{- $ids = uniq $ids -}}
 
 {{- range $entries -}}
@@ -136,22 +195,32 @@
 
 {{- /* Storage-folder / public-type check — Library-owned entries (physically
        under content/library/, not a cross-included page elsewhere) must sit
-       under content/library/<public-type>/<slug>/index.md, where
-       <public-type> is the entry's OWN derived public type (never parsed
-       back to override the metadata — this only ever compares the folder
-       name to $pt.typeOf, computed purely from library.type above). Also
-       catches an unknown top-level folder under content/library/ (a typo, a
-       stray non-entry directory) since any entry inside one fails the
-       "known public-type folder" check below. See CLAUDE.md § Library
-       "reorganize Library bundles by public type". */ -}}
+       under content/<collection's source.section>/<public-type>/<slug>/index.md,
+       where <public-type> is the entry's OWN derived public type (never
+       parsed back to override the metadata — this only ever compares the
+       folder name to $pt.typeOf, computed purely from library.type above).
+       The public-type folder's position in the path depends on how many
+       segments the entry's own Collection's source.section occupies — 1
+       today ("library"), 2 once research moves to "library/research" in
+       Phase 4 — so this generalizes across that migration with no further
+       change needed here. Also catches an unknown top-level folder under a
+       Collection's own root (a typo, a stray non-entry directory) since any
+       entry inside one fails the "known public-type folder" check below.
+       See CLAUDE.md § Library "reorganize Library bundles by public type"
+       and docs/library-v2.md § 2.2/§ 9/§ 13. */ -}}
 {{- $permittedFolders := slice }}{{ range $lib.public_types }}{{ $permittedFolders = $permittedFolders | append .public_type }}{{ end -}}
+{{- $sectionDepth := dict -}}
+{{- range $registry }}{{ if eq .source.adapter "hugo" }}{{ $sectionDepth = merge $sectionDepth (dict .id (len (split .source.section "/"))) }}{{ end }}{{ end -}}
 {{- range (where $entries "Section" "library") -}}
   {{- $page := . -}}
+  {{- $cid := index $collectionOf $page.Path -}}
+  {{- $depth := index $sectionDepth $cid | default 1 -}}
+  {{- $section := "library" }}{{ range $registry }}{{ if eq .id $cid }}{{ $section = .source.section }}{{ end }}{{ end -}}
   {{- $parts := split $page.File.Path "/" -}}
-  {{- if lt (len $parts) 4 -}}
-    {{- errorf "Library: %q is not stored under a public-type folder — expected content/library/<type>/<slug>/index.md" $page.Path -}}
+  {{- if lt (len $parts) (add $depth 3) -}}
+    {{- errorf "Library: %q is not stored under a public-type folder — expected content/%s/<type>/<slug>/index.md" $page.Path $section -}}
   {{- else -}}
-    {{- $folder := index $parts 1 -}}
+    {{- $folder := index $parts $depth -}}
     {{- if not (in $permittedFolders $folder) -}}
       {{- errorf "Library: %q is stored under unknown top-level folder %q (allowed: %s)" $page.Path $folder (delimit $permittedFolders ", ") -}}
     {{- else -}}

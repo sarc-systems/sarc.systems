@@ -1,12 +1,48 @@
-{{- /* The whole Library catalog: every published entry stored under
-       content/library/ (inclusion is implicit there) plus any page elsewhere on
-       the site with `library.include: true`. Deduplicated by canonical page.
-       Sorted by weight (when supplied) → sort_title → title. Call:
-       {{ $entries := partial "library-collect.html" (dict "ctx" .) }} */ -}}
+{{- /* Every published Entry belonging to ONE Collection: pages stored under
+       that Collection's own content subtree (content/library/<sectionPath>/…)
+       plus any page elsewhere on the site with `library.include: true` and a
+       matching (or, pre-v2-compatibly, absent) `library.collection`.
+       Deduplicated by canonical page. Sorted by weight (when supplied) →
+       sort_title → title. Call:
+
+       {{ $entries := partial "library-collect.html"
+            (dict "ctx" . "sectionPath" "library/research" "collection" "research") }}
+
+       `sectionPath` is the content-relative directory this Collection's
+       Hugo-adapter content lives under (see docs/library-v2.md § 2.2/§ 8) —
+       everything under content/<sectionPath>/ belongs to this Collection,
+       nothing outside it does, regardless of how many other Collections
+       also happen to sit under the top-level "library" Hugo section. */ -}}
 {{- $ctx := .ctx -}}
-{{- $inSection := where $ctx.Site.RegularPages "Section" "library" -}}
+{{- $sectionPath := .sectionPath -}}
+{{- $collectionId := .collection -}}
+{{- $prefix := printf "%s/" $sectionPath -}}
+
+{{- /* All library-ish content shares one top-level Hugo section ("library")
+       regardless of Collection, however deep it's nested — .Section only
+       ever reflects the first path element under content/. So this is
+       still the right broad candidate pool; the path-prefix filter below is
+       what actually scopes it to one Collection. */ -}}
+{{- $pool := where $ctx.Site.RegularPages "Section" "library" -}}
+{{- $inSection := slice -}}
+{{- range $pool -}}
+  {{- if hasPrefix .File.Path $prefix }}{{ $inSection = $inSection | append . }}{{ end -}}
+{{- end -}}
+
+{{- /* Cross-site inclusion: a page anywhere else on the site with
+       `library.include: true` joins whichever Collection its own
+       `library.collection` names. Left unset, it defaults to this
+       Collection — the only behavior possible before a second Collection
+       exists (no included page sets this field yet; see
+       docs/library-v2.md § 8). */ -}}
 {{- $included := where $ctx.Site.RegularPages "Params.library.include" true -}}
-{{- $all := $inSection | union $included -}}
+{{- $includedHere := slice -}}
+{{- range $included -}}
+  {{- $c := $collectionId }}{{ with .Params.library.collection }}{{ $c = . }}{{ end -}}
+  {{- if eq $c $collectionId }}{{ $includedHere = $includedHere | append . }}{{ end -}}
+{{- end -}}
+
+{{- $all := $inSection | union $includedHere -}}
 {{- /* stable ordering: 6-digit weight (default high) then sort_title|title */ -}}
 {{- $keyed := slice -}}
 {{- range $all -}}

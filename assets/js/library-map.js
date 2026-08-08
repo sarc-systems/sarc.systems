@@ -163,7 +163,12 @@
   var bgCtx = bgCanvas.getContext("2d");
   var fxCtx = fxCanvas.getContext("2d");
   var emptyEl = document.getElementById("library-map-empty");
-  var HUB_TYPES = { person: true, group: true, organization: true };
+  // Hub sizing is data-driven, not a hardcoded type list: a public type
+  // renders as a hub node when data/library.yaml's public_types marks it
+  // `hub: true`, fetched at runtime via typeStyles[publicType].hub (see
+  // "Stage 1: Library data -> graph model" below and docs/library-v2.md
+  // § 12.2) — so a future Collection's own vocabulary can declare its own
+  // hub types the same way, with no engine-side edit required.
   var FALLBACK_STYLE = { color: "dark-grey", shape: "circle", label: "Other" };
   var SUMMARY_MAX = 110;
 
@@ -229,27 +234,22 @@
     }
   };
 
-  // Every relation_type in data/library.yaml's controlled vocabulary maps to
-  // exactly one of three restrained line styles — see CLAUDE.md § Library
-  // "Map view" for the full rationale. A creator-kind edge (author, artist,
-  // composer, designer, developer, manufacturer, founder, …) is always
-  // structural — "who made this" is as structural a fact as "part of."
-  // Unmapped relation types (future additions to data/library.yaml) fall
-  // back to "contextual" as the least-assertive default rather than failing
-  // silently into "structural."
-  var RELATION_CATEGORY = {
-    "part-of": "structural", "made-with": "structural", "implements": "structural",
-    "programmed-in": "structural", "based-at": "structural", "commissioned-by": "structural",
-    "created-at": "structural", "collaborator-of": "structural", "co-member-of": "structural", "version-of": "structural", "edition-of": "structural",
-    "release-of": "structural", "recording-of": "structural", "performance-of": "structural",
-    "influenced-by": "historical", "successor-to": "historical", "predecessor-to": "historical",
-    "affiliated-with": "contextual", "used-by": "contextual", "compatible-with": "contextual",
-    "discusses": "contextual", "related-work": "contextual", "related-reading": "contextual",
-    "documents": "contextual"
-  };
+  // Every relation_type in the Collection's own controlled vocabulary maps
+  // to exactly one of three restrained line styles — see CLAUDE.md § Library
+  // "Map view" for the full rationale. Data-driven, not a hardcoded JS map:
+  // fetched per-Collection as relationCategory (data.relation_category —
+  // sibling export to relation_inverse, sourced from data/library.yaml's
+  // relation_categories, or a future Collection's own equivalent — see
+  // docs/library-v2.md § 12.2), populated alongside typeStyles right before
+  // buildGraph() runs. A creator-kind edge (author, artist, composer,
+  // designer, developer, manufacturer, founder, …) is always structural —
+  // "who made this" is as structural a fact as "part of." An unmapped
+  // relation type falls back to "contextual" as the least-assertive default
+  // rather than failing silently into "structural."
+  var relationCategory = {};
   function edgeCategory(kind, label) {
     if (kind === "creator") return "structural";
-    return RELATION_CATEGORY[label] || "contextual";
+    return relationCategory[label] || "contextual";
   }
 
   var W = 1000, H = 700; // reference WORLD size — only used as the initial
@@ -429,7 +429,7 @@
   function buildGraph(entries) {
     entries.forEach(function (e) {
       entryById[e.library_id] = e;
-      var hub = !!HUB_TYPES[e.type];
+      var hub = !!(typeStyles[e.public_type] && typeStyles[e.public_type].hub);
       var hasImage = !!(e.primary_image && e.primary_image.url);
       var rng = seededRng(hashId(e.library_id));
       nodeById[e.library_id] = {
@@ -2696,6 +2696,7 @@
     .then(function (data) {
       if (!data || !data.entries || !data.entries.length) return;
       typeStyles = data.public_type_styles || {};
+      relationCategory = data.relation_category || {};
       buildGraph(data.entries);
       var visibleIds = data.entries.filter(matchesEntry).map(function (e) { return e.library_id; });
       relayout(visibleIds);

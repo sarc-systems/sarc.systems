@@ -12,7 +12,8 @@
   {{- $pt := partialCached "library-public-types.html" . "library-public-types" -}}
   {{- $works := slice -}}
   {{- $groups := slice -}}
-  {{- range (partial "library-collect.html" (dict "ctx" $.page)) -}}
+  {{- $coll := partial "library-resolve-collection.html" $.page -}}
+  {{- range (partial "library-collect.html" (dict "ctx" $.page "sectionPath" $coll.source.section "collection" $coll.id)) -}}
     {{- $p := . -}}
     {{- $credited := false -}}
     {{- range $p.Params.creators }}{{ if eq .ref $id }}{{ $credited = true }}{{ end }}{{ end -}}

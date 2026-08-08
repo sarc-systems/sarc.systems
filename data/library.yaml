@@ -74,10 +74,15 @@ types:
 # CLAUDE.md § Library "Public Type vs Specific Type". Deliberately avoids
 # forest/slate/cobalt/bitter-chocolate, already meaningful elsewhere (Library
 # section, Journal section, SARC-100 project, site default).
+# `hub: true` marks public types that render as larger Map nodes (people,
+# groups, and organizations are the graph's natural connective tissue).
+# Read by assets/js/library-map.js via the fetched public_type_styles dict —
+# never a hardcoded JS list — so a future Collection's own vocabulary can
+# declare its own hub types the same way. See docs/library-v2.md § 12.2.
 public_types:
-  - {public_type: person,       label: "Person",       order: 10, color: bagdad-brown, shape: circle}
-  - {public_type: group,        label: "Group",        order: 20, color: claret,       shape: diamond}
-  - {public_type: organization, label: "Organization", order: 30, color: dark-grey,     shape: square}
+  - {public_type: person,       label: "Person",       order: 10, color: bagdad-brown, shape: circle,  hub: true}
+  - {public_type: group,        label: "Group",        order: 20, color: claret,       shape: diamond, hub: true}
+  - {public_type: organization, label: "Organization", order: 30, color: dark-grey,     shape: square,  hub: true}
   - {public_type: work,         label: "Work",         order: 40, color: sapphire,     shape: circle}
   - {public_type: system,       label: "System",       order: 45, color: rust,         shape: square}
   - {public_type: event,        label: "Event",        order: 50, color: emerald,      shape: triangle}
@@ -237,6 +242,42 @@ relation_inverse:
   created-at: creation-site
   collaborator-of: collaborator-of
   co-member-of: co-member-of
+
+# Line-style category for each relation type on the Map view (structural =
+# solid, historical = dashed, contextual = dotted — see CLAUDE.md § Library
+# "Map view" § Edges). Exported per-Collection through list.json's
+# `relation_category` field and read at runtime by assets/js/library-map.js
+# instead of a hardcoded JS map, so a future Collection's own relation
+# vocabulary can declare its own categories the same way. A creator-kind
+# edge (author, artist, designer, …) is always structural regardless of this
+# map — "who made this" is as structural a fact as "part of." An relation
+# type with no entry here falls back to "contextual", the least-assertive
+# default. See docs/library-v2.md § 12.2.
+relation_categories:
+  part-of: structural
+  made-with: structural
+  implements: structural
+  programmed-in: structural
+  based-at: structural
+  commissioned-by: structural
+  created-at: structural
+  collaborator-of: structural
+  co-member-of: structural
+  version-of: structural
+  edition-of: structural
+  release-of: structural
+  recording-of: structural
+  performance-of: structural
+  influenced-by: historical
+  successor-to: historical
+  predecessor-to: historical
+  affiliated-with: contextual
+  used-by: contextual
+  compatible-with: contextual
+  discusses: contextual
+  related-work: contextual
+  related-reading: contextual
+  documents: contextual
 
 # Access kinds (`access[].kind`). `url` and `file` are mutually exclusive per
 # item; `hosted-file` requires a bundle-relative `file` (and is the only kind

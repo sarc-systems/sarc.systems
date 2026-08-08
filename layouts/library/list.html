@@ -1,7 +1,8 @@
 {{ define "body-class" }}library library-catalog{{ end }}
 
 {{ define "main" }}
-{{- $entries := partial "library-collect.html" (dict "ctx" .) -}}
+{{- $coll := partial "library-resolve-collection.html" . -}}
+{{- $entries := partial "library-collect.html" (dict "ctx" . "sectionPath" $coll.source.section "collection" $coll.id) -}}
 <div class="wrap">
   <header class="page-head library-head">
     <h1 class="page-title">{{ .Title }}</h1>
