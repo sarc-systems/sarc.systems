@@ -3,7 +3,7 @@
 
 HUGO ?= hugo
 
-.PHONY: dev build check new-post deploy clean colorplan mark library-image-audit library-structural-report
+.PHONY: dev build check new-post deploy clean colorplan mark library-image-audit library-structural-report library-covers
 
 ## dev — local server with drafts and future-dated posts
 dev:
@@ -62,6 +62,15 @@ library-image-audit:
 ## data-integrity checks. Read-only, no network calls.
 library-structural-report:
 	python3 scripts/library-structural-report.py
+
+## library-covers — regenerate each Library Collection's placeholder cover
+## image (a solid square in its own Colorplan identity color — see
+## scripts/generate-library-collection-covers.py) so it always has a primary
+## image for the root's Images view. Committed output; re-run only when a
+## Collection's color changes or a new Collection is registered. Requires:
+## pip install Pillow PyYAML.
+library-covers:
+	python3 scripts/generate-library-collection-covers.py
 
 ## clean — remove build artifacts
 clean:

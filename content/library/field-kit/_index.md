@@ -29,6 +29,17 @@ library:
   id: field-kit
   type: collection
   color: mandarin
+# Placeholder cover — see the equivalent comment in
+# content/library/research/_index.md. Never actually shown in production
+# (this whole Collection is draft-excluded there), but keeps dev-mode
+# testing of the root's Images view consistent with the real Collections.
+images:
+  - file: "cover.png"
+    alt: "Solid square in Colorplan Mandarin, representing the Field Kit collection"
+    role: cover
+    credit: "SARC"
+    rights:
+      status: sarc-owned
 outputs:
   - HTML
   - JSON

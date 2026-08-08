@@ -15,6 +15,15 @@ library:
   id: manuals
   type: collection
   color: imperial-blue
+# Placeholder cover — see the equivalent comment in
+# content/library/research/_index.md.
+images:
+  - file: "cover.png"
+    alt: "Solid square in Colorplan Imperial Blue, representing the Manuals collection"
+    role: cover
+    credit: "SARC"
+    rights:
+      status: sarc-owned
 outputs:
   - HTML
   - JSON
