@@ -313,42 +313,49 @@ import mistakes and poor contrast without hand-editing the palette.
 
 ## Library
 
-> **Library v2 migration in progress.** A phased rewrite into a
-> multi-Collection architecture (Library as a meta-Collection, `research` as
-> the first child Collection, Shelves/Projections/Views as first-class
-> concepts) is underway — see `docs/library-v2.md` for the target
-> architecture and `todo_libv2.txt` for the originating work order. Status:
-> Phases 1/2/3/4 are done — the corpus lives at `/library/research/`, and
-> `/library/` itself is now a real meta-Collection (Collection-summary cards
-> in Catalog, a Colorplan-colored node per Collection in Map, cross-
-> Collection halo rendering wired but currently inert with only one
-> Collection registered) — see `docs/library-v2.md` § 11/§ 12.3. The "Flat
-> URLs, type-organized source" paragraph directly below is up to date. Phase
-> 5 (Shelves/Projections) and Phase 6 (the genericity fixture) are not yet
-> built. **Everything else in this section below still describes the
-> single-Collection model** (many examples still show a bare
-> `/library/<slug>/` prefix instead of `/library/research/<slug>/`, and
-> don't yet mention Shelves/Projections) — it gets a full coherent rewrite
-> once Phase 5 lands rather than being re-edited piecemeal per phase.
+> **Library v2 landed.** All six phases of the multi-Collection
+> architecture (Library as a meta-Collection, `research` as the first child
+> Collection, per-Collection vocabularies, Shelves, Projections, and a
+> non-production genericity fixture proving none of it is SARC-Research-
+> specific) are implemented — see `docs/library-v2.md` for the full target
+> architecture and terminology, and the "Library v2 — Collections, Shelves,
+> Projections" subsection below for a summary of what's new. The corpus
+> lives at `/library/research/`; `/library/` is the meta-Collection root.
+> **What's not yet cleaned up**: this section's older prose (Map view
+> internals, image handling, etc. — mostly unchanged in behavior by v2)
+> still contains scattered inline `/library/<slug>/`-style examples that
+> should read as `/library/research/<slug>/`, and doesn't yet weave
+> Shelves/Projections into every relevant paragraph — treat the new
+> subsection below and `docs/library-v2.md` as authoritative wherever they
+> conflict with older prose elsewhere in this section.
 
-**One unified catalog of entries** — a growing research collection and small
-knowledge graph, not a set of shelves. There are no public Writings / References
-/ Manuals / Sources / Reading / Links sections. Anything durable SARC wants to
-identify, annotate, connect, preserve, or point toward is an *entry*: essays,
-books, manuals, people, groups, organizations, recordings, releases,
-compositions, films, lectures, websites, software, instruments, systems, documents.
-Type, subject, and access are **metadata and filters, never sections.** Section
-colour is **Forest** (in `data/palette.yaml`; never hardcoded). All vocabularies
-live in `data/library.yaml` — the single source of truth for templates, filters,
-the JSON index, archetypes, and validation.
+**Each Collection is one unified catalog of entries** — a growing research
+collection and small knowledge graph, not a set of shelves in the old sense
+of directory-like sections (Library v2's own `Shelf` concept, below, is a
+different thing — a named, overlapping, non-exclusive selection, never a
+directory). There are no public Writings / References / Manuals / Sources /
+Reading / Links sections. Anything durable SARC wants to identify, annotate,
+connect, preserve, or point toward is an *entry*: essays, books, manuals,
+people, groups, organizations, recordings, releases, compositions, films,
+lectures, websites, software, instruments, systems, documents. Type, subject,
+and access are **metadata and filters, never sections.** Section colour is
+**Forest** (in `data/palette.yaml`; never hardcoded — this is the Library
+section's own site-chrome accent, separate from a Collection's own identity
+color, below). `research`'s vocabulary lives in `data/library.yaml` — the
+single source of truth for its own templates, filters, JSON index,
+archetype, and validation; a different Collection may have its own
+independent vocabulary instead (see "Library v2" below).
 
 **Collection-flat URLs, type-organized source.** (Library v2 — see
 `docs/library-v2.md` § 2.) Library-owned entries are stored at
 `content/library/<collection>/<public-type>/<slug>/index.md` — grouped
-first by owning Collection (today, only `research`), then into the eight
-`public_types` (person, group, organization, work, system, place, concept,
-event; see "Public Type vs Specific Type" below) purely for editorial
-navigability — but always **publish flat within their Collection**, at
+first by owning Collection (`research` is the only production one; see
+"Library v2" below for the non-production `field-kit` fixture, which has
+its own, much smaller `public_types`), then, within `research`, into its
+eight `public_types` (person, group, organization, work, system, place,
+concept, event; see "Public Type vs Specific Type" below) purely for
+editorial navigability — but always **publish flat within their
+Collection**, at
 `/library/<collection>/<slug>/` (e.g. `/library/research/david-tudor/`):
 never `/library/<collection>/<public-type>/<slug>/`. This is source
 organization, not a second ontology or a change to the URL — do **not**
@@ -372,15 +379,93 @@ changes the derived public type) require moving the bundle to the new type
 folder via `git mv` — but never require changing the published URL, since
 neither the Collection nor the public-type folder appears in it. The
 Library **root** (`/library/`, with no Collection segment) is the
-meta-Collection itself — see `docs/library-v2.md` § 11 for the target
-design (not yet built; currently a placeholder page with no Entries, see
-the status note at the top of this section). It does not host Entries of
-its own the way `/library/research/` etc. do.
+meta-Collection itself — see `docs/library-v2.md` § 11 and "Library v2"
+below. It does not host Entries of its own the way `/library/research/`
+etc. do; its own "Entries" are Collection-summary records, one per
+production-eligible registered Collection.
 
-**Stable identity.** Every entry has a unique `library.id` (not the title, URL,
-slug, or path — entries may move). Relationships resolve through `library.id`.
-The old `reference_id` is gone; validation rejects it. `library.id` is exposed in
-markup (`<article data-library-id="…">`) so a future comment system can key to it.
+**Stable identity.** Every entry has a unique `library.id`, unique *within its
+Collection* (not the title, URL, slug, or path — entries may move; not
+site-wide, since Library v2 — a different Collection may reuse the same bare
+id, distinguished by its namespaced form `<collection>:<id>` for
+cross-Collection references, though that's not yet exercised by any real
+content). Relationships resolve through `library.id`. The old `reference_id`
+is gone; validation rejects it. `library.id` is exposed in markup
+(`<article data-library-id="…">`) so a future comment system can key to it.
+
+**Library v2 — Collections, Shelves, Projections.** The Library is a
+*recursive modular collection browser*, not a single fixed corpus — see
+`docs/library-v2.md` for the full architecture and terminology. Summary of
+what's new (all implemented; consult that doc, not this paragraph, for
+detail that will drift less):
+
+- **Collection** — a bounded corpus with its own schema/vocabulary, Facets,
+  Shelves, Projections, Views, source, and one stable Colorplan identity
+  color. Registered in `data/library/collections.yaml`. `research` is the
+  original corpus, migrated in place; `field-kit` is a small non-production
+  fixture proving the engine holds for a genuinely different domain (see
+  below). A Collection's identity color shows as a left-rule accent on its
+  Collection-summary Catalog card and as that Collection's own node fill on
+  the root Map (`assets/js/library-map.js` prefers an entry's own declared
+  `color` over the shared per-public-type color for exactly this reason) —
+  never asserted as one dominant color over the Library root itself, which
+  stays neutral.
+- **Per-Collection vocabulary** — `data/library.yaml` is `research`'s own
+  vocabulary (types, public_types, subjects, creator_roles, relation_types,
+  access_kinds, rights vocab), not a site-wide global one. A Collection
+  declaring `vocabulary: <name>` in its registry row gets an entirely
+  independent vocabulary from `data/library/vocabularies/<name>.yaml`
+  instead — different specific types, different (and not necessarily
+  eight) public types, different subjects, different creator roles and
+  relation types. Resolved per-page by `library-vocab.html`/
+  `library-page-context.html`; `library-public-types.html` takes a
+  vocabulary as input rather than assuming the global one, and every
+  `partialCached` call site varies its cache key by vocabulary name.
+- **Shelf** — a named, persistent, overlapping selection of Entries within
+  one Collection (`data/library/shelves/<collection>.yaml`), never a
+  directory or an exclusive parent. Three authoring methods, normalized
+  into one membership rule (`library-entry-shelves.html`):
+  `(rule matches ∪ explicit includes ∪ entry-declared) − explicit excludes`,
+  explicit exclusion always winning. Multiple active Shelves combine by
+  union/OR, same as multiple values within one Facet; different Facets
+  still combine by AND. Renders as toggleable chips (`Shelf` fieldset in
+  the existing Filter disclosure) exactly like Type/Subject, with the same
+  "don't show an empty facet" rule — `research` has no Shelves defined yet,
+  so nothing renders there; `field-kit`'s three overlapping Shelves
+  (`Bench Stock`, `Fragile Items`, `Mara's Essentials`) are the live
+  demonstration. Full URL state (`?shelf=a,b`).
+- **Projection** — transforms a Collection's focus set (corpus after
+  Shelves/Filters) into a displayed set for a View; every Collection has at
+  least the implicit `all` Projection (identity transform). A Projection
+  declares which Views it's compatible with; the *effective* Views at any
+  moment are `Collection.views.enabled ∩ Projection.views`. Switching
+  Projection resolves the current View through `resolveProjectionView()`
+  (`assets/js/library-filter.js`): keep it if still compatible, else the
+  Projection's own `default_view`, else its first View — and hides any View
+  button the new Projection doesn't support. The Projection chip row (next
+  to View, reusing the same `.rf-facet`/`.rf-chip` styling) only renders
+  once a Collection has more than the implicit `all` — `field-kit`'s
+  `inventory` Projection (Catalog only) is the live demonstration:
+  selecting it auto-switches away from Map/Images and hides both buttons.
+- **The `field-kit` fixture** (`content/library/field-kit/`,
+  `build.production: false` in the registry, kept out of production via
+  `cascade: [{draft: true}]` on its own `_index.md` — Hugo excludes draft
+  content entirely from a build without `-D`; the registry flag is the
+  human-readable marker of that fact, not the enforcement mechanism) is 8
+  fictional entries (a technician, a workshop, a container, three tools,
+  two materials) with their own vocabulary, Shelves, Projections,
+  relationships, and creator credits, used to prove none of the above is
+  secretly SARC-Research-specific. Visit `/library/field-kit/` directly
+  with `make dev` — it deliberately never appears as a card on the Library
+  root, in any environment, so it doesn't need to be mentally filtered out
+  of the real catalog while browsing.
+- **Root Map cross-Collection halo** — a boundary node (an Entry rendered
+  on a Collection's Map but owned by a *different* Collection, via a
+  cross-Collection `creators[].ref`/`related[].ref`) draws an outer ring in
+  its owning Collection's color, on top of its own normal type-driven
+  fill/shape (`drawCollectionHalo()` in `library-map.js`). Implemented and
+  wired but currently inert — no content anywhere declares a real
+  cross-Collection reference yet.
 
 **Cross-site inclusion.** A canonical page elsewhere (a Label release, a Systems
 manual, a Studio doc) joins the catalog with `library: { include: true, id: … }`
