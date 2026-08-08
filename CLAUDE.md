@@ -318,15 +318,18 @@ import mistakes and poor contrast without hand-editing the palette.
 > the first child Collection, Shelves/Projections/Views as first-class
 > concepts) is underway — see `docs/library-v2.md` for the target
 > architecture and `todo_libv2.txt` for the originating work order. Status:
-> Phases 1/2/4 are done — the corpus now lives at `/library/research/`, and
-> the "Flat URLs, type-organized source" paragraph directly below is
-> up to date. Phase 3 (the root `/library/` as a real Collection-of-
-> Collections landing page, not a stub) and Phase 5 (Shelves/Projections)
-> are not yet built. **Everything else in this section below still
-> describes the single-Collection model** (many examples still show a bare
-> `/library/<slug>/` prefix instead of `/library/research/<slug>/`) — it
-> gets a full coherent rewrite once Phase 3 lands rather than being
-> re-edited piecemeal per phase.
+> Phases 1/2/3/4 are done — the corpus lives at `/library/research/`, and
+> `/library/` itself is now a real meta-Collection (Collection-summary cards
+> in Catalog, a Colorplan-colored node per Collection in Map, cross-
+> Collection halo rendering wired but currently inert with only one
+> Collection registered) — see `docs/library-v2.md` § 11/§ 12.3. The "Flat
+> URLs, type-organized source" paragraph directly below is up to date. Phase
+> 5 (Shelves/Projections) and Phase 6 (the genericity fixture) are not yet
+> built. **Everything else in this section below still describes the
+> single-Collection model** (many examples still show a bare
+> `/library/<slug>/` prefix instead of `/library/research/<slug>/`, and
+> don't yet mention Shelves/Projections) — it gets a full coherent rewrite
+> once Phase 5 lands rather than being re-edited piecemeal per phase.
 
 **One unified catalog of entries** — a growing research collection and small
 knowledge graph, not a set of shelves. There are no public Writings / References
