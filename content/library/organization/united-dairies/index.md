@@ -13,7 +13,7 @@ creators:
   - name: "John Fothergill"
     role: founder
 
-subjects: [sound, feedback]
+subjects: [sound]
 
 images:
   - file: "logo.jpg"

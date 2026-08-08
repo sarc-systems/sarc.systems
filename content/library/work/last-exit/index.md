@@ -21,7 +21,7 @@ creators:
     role: artist
     ref: ronald-shannon-jackson
 
-subjects: [sound, time]
+subjects: [sound]
 
 images:
   - file: "cover.jpg"

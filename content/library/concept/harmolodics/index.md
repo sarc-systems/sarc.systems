@@ -10,7 +10,7 @@ library:
 creators:
   - {name: "Ornette Coleman", role: researcher, ref: ornette-coleman}
 
-subjects: [sound, form]
+subjects: [time, form, sound]
 
 images: []
 

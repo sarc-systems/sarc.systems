@@ -11,7 +11,7 @@ library:
 creators:
   - {name: "François Bayle", role: composer, ref: francois-bayle}
 
-subjects: [sound, space]
+subjects: [time, sound, space]
 
 images:
   - {file: "cover.jpg", alt: "Cover of Érosphère by François Bayle", role: cover, caption: "INA GRM Bandcamp reissue artwork.", source: "https://francoisbayle.bandcamp.com/album/rosph-re", rights: {status: unknown}, use: {basis: identification, note: "Label cover art used for identification."}}

@@ -13,7 +13,7 @@ creators:
     role: author
     ref: jorge-luis-borges
 
-subjects: [form, memory]
+subjects: [form, morphogenesis]
 
 images:
   - file: "cover.jpg"

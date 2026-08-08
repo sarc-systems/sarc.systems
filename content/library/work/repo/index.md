@@ -11,7 +11,7 @@ library:
 creators:
   - {name: "Incapacitants", role: artist, ref: incapacitants}
 
-subjects: [sound, feedback]
+subjects: [sound]
 
 images:
   - {file: "cover.jpg", alt: "Cover of Repo by Incapacitants", role: cover, source: "https://urashima.bandcamp.com/album/repo", rights: {status: unknown}, use: {basis: identification, note: "Urashima reissue cover art used for identification."}}

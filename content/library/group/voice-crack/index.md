@@ -7,7 +7,7 @@ library:
   type: group
   sarc_work: false
 
-subjects: [sound, instruments, feedback]
+subjects: [sound, instruments]
 
 images:
   - file: "voice-crack.jpg"

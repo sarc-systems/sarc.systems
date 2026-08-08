@@ -16,7 +16,7 @@ creators:
     role: label
     ref: eddie-prevost
 
-subjects: [sound, perception]
+subjects: [sound]
 
 images:
   - file: "cover.jpg"

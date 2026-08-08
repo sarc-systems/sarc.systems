@@ -13,7 +13,7 @@ creators:
     role: composer
     ref: gordon-mumma
 
-subjects: [sound, feedback]
+subjects: [sound, instruments]
 
 images: []
 

@@ -13,7 +13,7 @@ creators:
     role: author
     ref: karl-niklas
 
-subjects: [morphogenesis, form]
+subjects: [number, form, morphogenesis]
 
 images:
   - file: "cover.jpg"

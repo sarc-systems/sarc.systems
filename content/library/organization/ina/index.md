@@ -7,7 +7,7 @@ library:
   type: organization
   sarc_work: false
 
-subjects: [sound]
+subjects: [sound, memory]
 
 images:
   - file: "logo.png"

@@ -10,7 +10,7 @@ library:
 creators:
   - {name: "Ensoniq", role: manufacturer, ref: ensoniq}
 
-subjects: [computation, sound, instruments]
+subjects: [time, computation, sound, instruments]
 
 images: []
 

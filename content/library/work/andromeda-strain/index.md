@@ -12,7 +12,7 @@ creators:
   - name: "Gil Mellé"
     role: composer
 
-subjects: [sound]
+subjects: [sound, instruments]
 
 images:
   - file: "cover.jpg"

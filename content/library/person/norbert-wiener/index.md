@@ -7,7 +7,7 @@ library:
   type: person
   sarc_work: false
 
-subjects: [cybernetics, feedback, computation]
+subjects: [cybernetics, feedback]
 
 images:
   - file: "norbert-wiener.webp"

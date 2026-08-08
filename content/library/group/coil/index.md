@@ -11,7 +11,7 @@ creators:
   - {name: "John Balance", role: performer}
   - {name: "Peter Christopherson", role: performer, ref: peter-christopherson}
 
-subjects: [sound, feedback]
+subjects: [sound]
 
 images: []
 

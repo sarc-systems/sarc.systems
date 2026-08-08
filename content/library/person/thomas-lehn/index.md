@@ -7,7 +7,7 @@ library:
   type: person
   sarc_work: false
 
-subjects: [sound, instruments, feedback]
+subjects: [sound, instruments]
 
 images:
   - file: "thomas-lehn.jpg"

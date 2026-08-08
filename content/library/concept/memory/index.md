@@ -7,7 +7,7 @@ library:
   type: concept
   sarc_work: false
 
-subjects: [cybernetics, memory, computation]
+subjects: [time, cybernetics, computation, memory]
 
 images: []
 

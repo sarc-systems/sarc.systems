@@ -12,7 +12,7 @@ creators:
   - {name: "Stanislaw Ulam", role: researcher}
   - {name: "John Conway", role: researcher, ref: john-conway}
 
-subjects: [computation]
+subjects: [form, morphogenesis, dynamics, computation]
 
 images: []
 

@@ -13,7 +13,7 @@ creators:
   - {name: "Thomas Lehn", role: artist, ref: thomas-lehn}
   - {name: "Marcus Schmickler", role: artist, ref: marcus-schmickler}
 
-subjects: [sound, feedback]
+subjects: [sound, instruments]
 
 images:
   - {file: "cover.jpg", alt: "Cover of Rabbit Run by Keith Rowe, Thomas Lehn, and Marcus Schmickler", role: cover, caption: "Original 2003 Erstwhile Records CD artwork.", source: "https://erstwhilerecords.bandcamp.com/album/rabbit-run", rights: {status: unknown}, use: {basis: identification, note: "Label cover art used for identification."}}

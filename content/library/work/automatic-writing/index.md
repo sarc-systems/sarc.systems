@@ -13,7 +13,7 @@ creators:
     role: artist
     ref: robert-ashley
 
-subjects: [sound, time, language]
+subjects: [perception, sound, language]
 
 images:
   - file: "cover.jpg"

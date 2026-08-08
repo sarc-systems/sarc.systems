@@ -10,7 +10,7 @@ library:
 
 creators: []
 
-subjects: [computation]
+subjects: [number, dynamics, computation]
 
 images: []
 

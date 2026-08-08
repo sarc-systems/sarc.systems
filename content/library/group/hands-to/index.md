@@ -11,7 +11,7 @@ library:
 creators:
   - {name: "Jeph Jerman", role: artist, ref: jeph-jerman}
 
-subjects: [sound]
+subjects: [sound, instruments]
 
 images: []
 

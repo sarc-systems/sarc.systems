@@ -7,7 +7,7 @@ library:
   type: language
   sarc_work: false
 
-subjects: [computation]
+subjects: [computation, language]
 
 images: []
 

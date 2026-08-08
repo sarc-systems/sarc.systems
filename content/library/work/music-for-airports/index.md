@@ -11,7 +11,7 @@ library:
 creators:
   - {name: "Brian Eno", role: artist, ref: brian-eno}
 
-subjects: [sound, space]
+subjects: [perception, sound, space]
 
 images:
   - {file: "cover.jpg", alt: "Cover of Ambient 1: Music for Airports by Brian Eno", role: cover, caption: "Original 1978 Polydor/EG Records LP artwork.", source: "https://www.discogs.com/master/6265-Brian-Eno-Ambient-1-Music-For-Airports", rights: {status: unknown}, use: {basis: identification, note: "Label cover art used for identification."}}

@@ -14,7 +14,7 @@ creators:
     role: manufacturer
     ref: nonlinear-labs
 
-subjects: [instruments]
+subjects: [computation, sound, instruments, feedback]
 
 images: []
 

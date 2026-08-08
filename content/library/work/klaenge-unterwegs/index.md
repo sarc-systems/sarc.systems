@@ -13,7 +13,7 @@ creators:
     role: composer
     ref: herbert-brun
 
-subjects: [sound, computation, cybernetics]
+subjects: [sound]
 
 images: []
 

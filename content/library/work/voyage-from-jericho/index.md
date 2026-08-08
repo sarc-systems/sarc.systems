@@ -15,7 +15,7 @@ creators:
     role: performer
     ref: steve-reid
 
-subjects: [sound, time]
+subjects: [sound]
 
 images:
   - file: "cover.jpg"

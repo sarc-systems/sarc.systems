@@ -12,7 +12,7 @@ creators:
   - {name: "Aaron Dilloway", role: performer, ref: aaron-dilloway}
   - {name: "John Olson", role: performer}
 
-subjects: [sound, feedback]
+subjects: [sound]
 
 images:
   - file: "photo.jpg"

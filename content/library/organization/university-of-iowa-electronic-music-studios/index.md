@@ -16,7 +16,7 @@ creators:
     role: director
     ref: kenneth-gaburo
 
-subjects: [sound, computation]
+subjects: [computation, sound, instruments]
 
 images: []
 

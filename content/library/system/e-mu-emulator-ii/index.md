@@ -15,7 +15,7 @@ creators:
     role: manufacturer
     ref: e-mu-systems
 
-subjects: [instruments]
+subjects: [computation, sound, instruments, memory]
 
 images:
   - file: "e-mu-emulator-ii.jpg"

@@ -10,7 +10,7 @@ library:
 creators:
   - {name: "Alan Turing", role: researcher, ref: alan-turing}
 
-subjects: [computation]
+subjects: [computation, memory]
 
 images: []
 

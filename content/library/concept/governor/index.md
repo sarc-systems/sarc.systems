@@ -7,7 +7,7 @@ library:
   type: concept
   sarc_work: false
 
-subjects: [feedback, cybernetics]
+subjects: [dynamics, cybernetics, feedback]
 
 images: []
 

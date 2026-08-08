@@ -16,7 +16,7 @@ creators:
     role: artist
     ref: susumu-yokota
 
-subjects: [sound, perception]
+subjects: [sound]
 
 images:
   - file: "cover.jpg"

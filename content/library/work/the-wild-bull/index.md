@@ -13,7 +13,7 @@ creators:
     role: composer
     ref: morton-subotnick
 
-subjects: [sound]
+subjects: [sound, instruments]
 
 images:
   - file: "cover.jpg"

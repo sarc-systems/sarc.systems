@@ -15,7 +15,7 @@ creators:
     role: director
     ref: knut-wiggen
 
-subjects: [sound, computation]
+subjects: [computation, sound, instruments]
 
 images:
   - file: "logo.png"

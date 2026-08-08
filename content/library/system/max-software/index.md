@@ -15,7 +15,7 @@ creators:
     role: developer
     ref: cycling-74
 
-subjects: [computation, sound]
+subjects: [computation, sound, language]
 
 images: []
 

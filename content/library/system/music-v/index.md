@@ -12,7 +12,7 @@ creators:
     role: developer
     ref: max-mathews
 
-subjects: [computation, sound]
+subjects: [computation, sound, language]
 
 images: []
 

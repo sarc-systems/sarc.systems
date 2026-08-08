@@ -12,7 +12,7 @@ creators:
     role: developer
     ref: miller-puckette
 
-subjects: [computation, sound]
+subjects: [computation, sound, language]
 
 images: []
 

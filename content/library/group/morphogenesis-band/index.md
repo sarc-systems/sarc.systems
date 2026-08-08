@@ -22,7 +22,7 @@ creators:
     role: founder
     ref: michael-allen-z-prime
 
-subjects: [sound, feedback]
+subjects: [sound, instruments]
 
 images:
   - file: "photo.jpg"

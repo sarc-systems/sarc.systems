@@ -11,7 +11,7 @@ library:
 creators:
   - {name: "Klaus Schulze", role: artist, ref: klaus-schulze}
 
-subjects: [sound, time]
+subjects: [sound, instruments]
 
 images:
   - {file: "cover.jpg", alt: "Cover of Cyborg by Klaus Schulze", role: cover, caption: "Original 1973 Kosmische Musik LP artwork.", source: "https://www.discogs.com/master/28971-Klaus-Schulze-Cyborg", rights: {status: unknown}, use: {basis: identification, note: "Label cover art used for identification."}}

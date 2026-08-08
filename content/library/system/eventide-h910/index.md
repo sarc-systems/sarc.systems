@@ -14,7 +14,7 @@ creators:
     role: manufacturer
     ref: eventide
 
-subjects: [instruments]
+subjects: [computation, sound, instruments]
 
 images: []
 

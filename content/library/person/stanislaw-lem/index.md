@@ -7,7 +7,7 @@ library:
   type: person
   sarc_work: false
 
-subjects: [computation, language]
+subjects: [cybernetics, computation, language]
 
 images:
   - file: "portrait.jpg"

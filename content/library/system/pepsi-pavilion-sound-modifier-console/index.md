@@ -13,7 +13,7 @@ creators:
   - {name: "Gordon Mumma", role: designer, ref: gordon-mumma}
   - {name: "Fred Waldhauer", role: designer}
 
-subjects: [sound, space]
+subjects: [time, sound, instruments, space]
 
 images: []
 

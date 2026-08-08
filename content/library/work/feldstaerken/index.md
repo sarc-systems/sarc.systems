@@ -13,7 +13,7 @@ creators:
     role: artist
     ref: thomas-lehn
 
-subjects: [sound, instruments, feedback]
+subjects: [sound, instruments]
 
 images:
   - file: "cover.jpg"

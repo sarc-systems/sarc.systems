@@ -10,7 +10,7 @@ library:
 creators:
   - {name: "Nicolas Minorsky", role: researcher}
 
-subjects: [feedback, cybernetics]
+subjects: [dynamics, cybernetics, computation, feedback]
 
 images: []
 

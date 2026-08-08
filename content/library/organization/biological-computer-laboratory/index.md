@@ -11,7 +11,7 @@ creators:
   - {name: "Heinz von Foerster", role: founder, ref: heinz-von-foerster}
   - {name: "Heinz von Foerster", role: director, ref: heinz-von-foerster}
 
-subjects: [cybernetics, computation, perception]
+subjects: [morphogenesis, cybernetics, computation, perception]
 
 images: []
 

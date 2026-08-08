@@ -13,7 +13,7 @@ creators:
     role: composer
     ref: jean-schwarz
 
-subjects: [sound, space]
+subjects: [sound]
 
 images:
   - file: "cover.jpg"

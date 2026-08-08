@@ -15,7 +15,7 @@ creators:
   - name: "Barry Bermange"
     role: author
 
-subjects: [sound, time, language]
+subjects: [perception, sound, language]
 
 images: []
 

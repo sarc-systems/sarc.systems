@@ -15,7 +15,7 @@ creators:
   - name: "The Legendary Master Brotherhood"
     role: artist
 
-subjects: [sound, time]
+subjects: [sound]
 
 images:
   - file: "cover.jpg"

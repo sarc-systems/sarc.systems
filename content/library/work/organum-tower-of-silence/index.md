@@ -13,7 +13,7 @@ creators:
     role: artist
     ref: organum
 
-subjects: [sound, perception]
+subjects: [sound]
 
 images:
   - file: "cover.jpg"

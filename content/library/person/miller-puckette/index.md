@@ -7,7 +7,7 @@ library:
   type: person
   sarc_work: false
 
-subjects: [computation, sound]
+subjects: [computation, sound, language]
 
 images:
   - file: "miller-puckette-2014.jpg"

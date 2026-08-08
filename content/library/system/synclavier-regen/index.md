@@ -12,7 +12,7 @@ creators:
     role: manufacturer
     ref: synclavier-digital
 
-subjects: [instruments]
+subjects: [computation, sound, instruments, memory]
 
 images:
   - {file: "photo.png", alt: "Synclavier Regen", role: still, source: "https://www.synclavier.com/synclavier-regen/", rights: {status: unknown}, use: {basis: identification, note: "Manufacturer product photo used for identification."}}

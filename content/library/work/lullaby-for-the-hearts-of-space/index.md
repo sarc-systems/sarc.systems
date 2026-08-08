@@ -13,7 +13,7 @@ creators:
     role: artist
     ref: kevin-fortune
 
-subjects: [sound, instruments, space]
+subjects: [sound, instruments]
 
 images:
   - file: "cover.jpg"

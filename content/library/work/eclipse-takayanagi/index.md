@@ -14,7 +14,7 @@ creators:
   - {name: "Nobuyoshi Ino", role: performer}
   - {name: "Hiroshi Yamazaki", role: performer}
 
-subjects: [sound, feedback]
+subjects: [sound]
 
 images: []
 

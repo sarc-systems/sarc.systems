@@ -7,7 +7,7 @@ library:
   type: person
   sarc_work: false
 
-subjects: [sound]
+subjects: [sound, instruments]
 
 images:
   - file: "morton-subotnick.jpg"

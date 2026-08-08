@@ -16,7 +16,7 @@ creators:
     role: artist
     ref: brian-eno
 
-subjects: [sound, perception]
+subjects: [sound]
 
 images:
   - file: "cover.jpg"

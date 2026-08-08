@@ -11,7 +11,7 @@ creators:
   - {name: "Ludwig Boltzmann", role: researcher}
   - {name: "Claude Shannon", role: researcher}
 
-subjects: [cybernetics, computation]
+subjects: [number, dynamics]
 
 images: []
 

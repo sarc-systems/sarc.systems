@@ -12,7 +12,7 @@ creators:
     role: researcher
     ref: john-chowning
 
-subjects: [computation, sound]
+subjects: [number, computation, sound]
 
 images: []
 

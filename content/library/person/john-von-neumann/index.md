@@ -7,7 +7,7 @@ library:
   type: person
   sarc_work: false
 
-subjects: [computation, number, cybernetics]
+subjects: [number, morphogenesis, cybernetics, computation]
 
 images:
   - file: "john-von-neumann.jpg"

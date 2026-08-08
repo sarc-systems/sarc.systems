@@ -13,7 +13,7 @@ creators:
     role: author
     ref: stanislaw-lem
 
-subjects: [computation, language]
+subjects: [computation, perception, language]
 
 images:
   - file: "lem.jpg"

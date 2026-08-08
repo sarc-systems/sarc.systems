@@ -18,7 +18,7 @@ creators:
     role: manufacturer
     ref: fairlight-instruments
 
-subjects: [instruments]
+subjects: [computation, sound, instruments, memory]
 
 images:
   - file: "fairlight-cmi.jpg"

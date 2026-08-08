@@ -7,7 +7,7 @@ library:
   type: person
   sarc_work: false
 
-subjects: [instruments]
+subjects: [computation, instruments]
 
 images:
   - {file: "portrait.jpg", alt: "Sydney Alonso (left) and Cameron Jones (right) working on the Synclavier prototype at Dartmouth College", role: portrait, caption: "Research engineer Sydney Alonso (left) and Cameron Jones '75 Th'77 (right) working on the Synclavier prototype.", credit: "Dartmouth College Library", source: "https://www.flickr.com/photos/thayerschool/2554293228", rights: {status: unknown}, use: {basis: identification, note: "Historical photo of the Synclavier's co-creators used for identification."}}

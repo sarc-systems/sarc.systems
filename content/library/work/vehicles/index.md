@@ -15,10 +15,7 @@ creators:
     role: author
     ref: valentino-braitenberg
 
-subjects:
-  - cybernetics
-  - perception
-  - computation
+subjects: [morphogenesis, dynamics, cybernetics, perception]
 
 images:
   - file: "tape-predictor.jpg"

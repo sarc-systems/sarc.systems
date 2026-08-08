@@ -15,7 +15,7 @@ creators:
   - name: "Alfredo Lietti"
     role: designer
 
-subjects: [sound]
+subjects: [sound, instruments]
 
 images:
   - file: "photo.jpg"

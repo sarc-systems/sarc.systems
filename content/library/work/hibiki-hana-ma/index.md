@@ -13,7 +13,7 @@ creators:
     role: composer
     ref: iannis-xenakis
 
-subjects: [number, sound]
+subjects: [sound]
 
 images:
   - file: "hibiki-hana-ma-spatialization.png"

@@ -14,7 +14,7 @@ creators:
     role: developer
     ref: symbolic-sound
 
-subjects: [computation, sound]
+subjects: [computation, sound, language]
 
 images: []
 

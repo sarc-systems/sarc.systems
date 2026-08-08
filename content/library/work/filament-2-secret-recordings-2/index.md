@@ -13,7 +13,7 @@ creators:
   - {name: "Günter Müller", role: artist, ref: gunter-muller}
   - {name: "Otomo Yoshihide", role: artist, ref: otomo-yoshihide}
 
-subjects: [sound, tuning]
+subjects: [sound]
 
 images:
   - {file: "cover.jpg", alt: "Cover of Filament 2: Secret Recordings by Sachiko M, Günter Müller, and Otomo Yoshihide", role: cover, caption: "Original 1999 For4Ears CD artwork.", source: "https://www.discogs.com/Sachiko-M-G%C3%BCnter-M%C3%BCller-Otomo-Yoshihide-Filament-2-Secret-Recordings-2/release/537011", rights: {status: unknown}, use: {basis: identification, note: "Label cover art used for identification."}}

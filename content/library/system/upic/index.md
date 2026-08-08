@@ -14,7 +14,7 @@ creators:
     role: designer
     ref: iannis-xenakis
 
-subjects: [sound, computation, form]
+subjects: [form, computation, sound, language]
 
 images:
   - file: "upic-system.jpg"

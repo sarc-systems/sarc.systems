@@ -21,7 +21,7 @@ creators:
     role: manufacturer
     ref: new-england-digital
 
-subjects: [instruments]
+subjects: [computation, sound, instruments]
 
 images:
   - file: "synclavier-ii.jpg"

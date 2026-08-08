@@ -12,7 +12,7 @@ creators:
     role: developer
     ref: barry-vercoe
 
-subjects: [computation, sound]
+subjects: [computation, sound, language]
 
 images: []
 

@@ -13,7 +13,7 @@ creators:
     role: author
     ref: hans-jenny
 
-subjects: [sound, form, morphogenesis]
+subjects: [time, form, morphogenesis, sound]
 
 images:
   - file: "cymatic-pattern.jpg"

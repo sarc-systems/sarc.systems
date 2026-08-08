@@ -13,7 +13,7 @@ creators:
   - {name: "Karlheinz Stockhausen", role: researcher, ref: karlheinz-stockhausen}
   - {name: "Milton Babbitt", role: researcher, ref: milton-babbitt}
 
-subjects: [sound, form, number]
+subjects: [time, number, form, sound]
 
 images: []
 

@@ -7,7 +7,7 @@ library:
   type: person
   sarc_work: false
 
-subjects: [sound]
+subjects: [computation, sound]
 
 images:
   - file: "markus-popp.jpg"

@@ -13,7 +13,7 @@ creators:
     role: composer
     ref: francois-bayle
 
-subjects: [sound, space]
+subjects: [perception, sound, space]
 
 images:
   - file: "cover.jpg"

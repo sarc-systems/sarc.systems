@@ -12,7 +12,7 @@ creators:
     role: manufacturer
     ref: waldorf-music
 
-subjects: [instruments]
+subjects: [computation, sound, instruments, memory]
 
 images:
   - {file: "photo.jpg", alt: "Waldorf Microwave XT", role: still, source: "https://commons.wikimedia.org/wiki/File:Waldorf_MicrowaveXTk.jpg", rights: {status: licensed, note: "CC BY-SA 3.0, via Wikimedia Commons."}}

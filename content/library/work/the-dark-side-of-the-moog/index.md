@@ -12,7 +12,7 @@ creators:
   - {name: "Klaus Schulze", role: artist, ref: klaus-schulze}
   - {name: "Pete Namlook", role: artist, ref: pete-namlook}
 
-subjects: [sound, time]
+subjects: [sound]
 
 images:
   - {file: "cover.jpg", alt: "Cover of The Dark Side of the Moog by Klaus Schulze and Pete Namlook", role: cover, caption: "Original 1994 FAX +49-69/450464 CD artwork.", source: "https://www.discogs.com/release/1073955-Pete-Namlook-Klaus-Schulze-The-Dark-Side-Of-The-Moog", rights: {status: unknown}, use: {basis: identification, note: "Label cover art used for identification."}}

@@ -7,7 +7,7 @@ library:
   type: person
   sarc_work: false
 
-subjects: [cybernetics, sound]
+subjects: [morphogenesis, dynamics, cybernetics, sound]
 
 images:
   - file: "roland-kayn.jpg"

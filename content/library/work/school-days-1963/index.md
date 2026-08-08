@@ -14,7 +14,7 @@ creators:
   - {name: "Henry Grimes", role: performer}
   - {name: "Denis Charles", role: performer, ref: denis-charles}
 
-subjects: [sound, time]
+subjects: [sound]
 
 images: []
 

@@ -7,7 +7,7 @@ library:
   type: person
   sarc_work: false
 
-subjects: [sound, perception, feedback]
+subjects: [time, computation, perception, sound]
 
 images:
   - file: "milford-graves.jpg"

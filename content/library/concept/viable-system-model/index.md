@@ -10,7 +10,7 @@ library:
 creators:
   - {name: "Stafford Beer", role: researcher, ref: stafford-beer}
 
-subjects: [cybernetics, feedback]
+subjects: [form, cybernetics, feedback]
 
 images: []
 

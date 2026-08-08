@@ -12,7 +12,7 @@ creators:
     role: manufacturer
     ref: roland-corporation
 
-subjects: [instruments]
+subjects: [computation, sound, instruments, memory]
 
 images:
   - file: "roland-d50.jpg"

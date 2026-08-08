@@ -7,7 +7,7 @@ library:
   type: person
   sarc_work: false
 
-subjects: [computation, sound, tuning]
+subjects: [computation, sound, space]
 
 images:
   - file: "john-chowning.jpg"

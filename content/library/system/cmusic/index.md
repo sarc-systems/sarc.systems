@@ -11,7 +11,7 @@ creators:
   - name: "F. Richard Moore"
     role: developer
 
-subjects: [computation, sound]
+subjects: [computation, sound, language]
 
 images: []
 

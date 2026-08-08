@@ -13,7 +13,7 @@ creators:
     role: composer
     ref: thorkell-sigurbjornsson
 
-subjects: [sound, tuning]
+subjects: [sound]
 
 images:
   - file: "cover.jpg"

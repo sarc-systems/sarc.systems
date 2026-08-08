@@ -13,7 +13,7 @@ creators:
     role: author
     ref: gordon-pask
 
-subjects: [cybernetics]
+subjects: [form, cybernetics, perception, space]
 
 access:
   - label: "PDF"

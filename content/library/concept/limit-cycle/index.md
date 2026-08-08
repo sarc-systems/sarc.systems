@@ -10,7 +10,7 @@ library:
 creators:
   - {name: "Henri Poincaré", role: researcher}
 
-subjects: [dynamics]
+subjects: [time, form, dynamics]
 
 images: []
 

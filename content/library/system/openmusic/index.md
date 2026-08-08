@@ -10,7 +10,7 @@ library:
 creators:
   - {name: "IRCAM", role: developer, ref: ircam}
 
-subjects: [computation, sound]
+subjects: [computation, sound, language]
 
 images: []
 

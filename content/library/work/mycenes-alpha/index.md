@@ -13,7 +13,7 @@ creators:
     role: composer
     ref: iannis-xenakis
 
-subjects: [number, sound]
+subjects: [form, computation, sound, language]
 
 images:
   - file: "upic-score.jpg"

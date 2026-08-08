@@ -15,7 +15,7 @@ creators:
   - name: "Gerry Hemingway"
     role: performer
 
-subjects: [sound, instruments, time]
+subjects: [sound, instruments]
 
 images:
   - file: "cover.jpg"

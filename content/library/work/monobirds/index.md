@@ -12,7 +12,7 @@ creators:
     role: composer
     ref: david-tudor
 
-subjects: [sound, instruments, feedback]
+subjects: [sound, instruments]
 
 images:
   - {file: "cover.jpg", alt: "Cover of Monobirds (From Ahmedabad to Xenon) by David Tudor", role: cover, caption: "Topos 2LP + book edition, 2021.", source: "https://www.soundohm.com/product/monobirds-2lp-book", rights: {status: unknown}, use: {basis: identification, note: "Label cover art used for identification."}}

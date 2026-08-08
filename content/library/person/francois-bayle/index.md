@@ -7,7 +7,7 @@ library:
   type: person
   sarc_work: false
 
-subjects: [sound, space]
+subjects: [sound, instruments, space]
 
 images:
   - file: "bayle.jpg"

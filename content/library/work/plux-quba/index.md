@@ -13,7 +13,7 @@ creators:
     role: artist
     ref: nuno-canavarro
 
-subjects: [sound, perception]
+subjects: [sound]
 
 images:
   - file: "cover.jpg"

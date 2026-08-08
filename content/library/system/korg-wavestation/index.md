@@ -11,7 +11,7 @@ creators:
   - {name: "Korg", role: manufacturer, ref: korg}
   - {name: "Dave Smith", role: designer, ref: dave-smith}
 
-subjects: [computation, sound, instruments]
+subjects: [time, computation, sound, instruments]
 
 images:
   - file: "korg-wavestation.png"

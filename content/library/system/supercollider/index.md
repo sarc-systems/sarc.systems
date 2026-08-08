@@ -12,7 +12,7 @@ creators:
     role: developer
     ref: james-mccartney
 
-subjects: [computation, sound]
+subjects: [computation, sound, language]
 
 images: []
 

@@ -11,7 +11,7 @@ creators:
   - {name: "Humberto Maturana", role: researcher, ref: humberto-maturana}
   - {name: "Francisco Varela", role: researcher, ref: francisco-varela}
 
-subjects: [cybernetics, feedback]
+subjects: [morphogenesis, dynamics, cybernetics]
 
 images: []
 

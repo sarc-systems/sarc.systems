@@ -13,7 +13,7 @@ creators:
     role: composer
     ref: eduard-artemyev
 
-subjects: [sound, time]
+subjects: [time, sound, instruments]
 
 images:
   - file: "stalker-still.jpg"

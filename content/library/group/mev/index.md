@@ -18,7 +18,7 @@ creators:
     role: founder
     ref: richard-teitelbaum
 
-subjects: [sound, instruments, feedback]
+subjects: [sound, instruments]
 
 images:
   - file: "mev.jpg"

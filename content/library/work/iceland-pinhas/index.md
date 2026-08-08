@@ -13,7 +13,7 @@ creators:
     role: artist
     ref: richard-pinhas
 
-subjects: [sound, cybernetics]
+subjects: [sound]
 
 images:
   - file: "cover.jpg"

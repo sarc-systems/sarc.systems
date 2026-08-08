@@ -15,7 +15,7 @@ creators:
     role: manufacturer
     ref: ppg
 
-subjects: [instruments]
+subjects: [computation, sound, instruments, memory]
 
 images:
   - file: "ppg-wave-2.jpg"

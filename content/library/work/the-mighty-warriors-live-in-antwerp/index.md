@@ -14,7 +14,7 @@ creators:
   - {name: "Reggie Workman", role: performer}
   - {name: "Andrew Cyrille", role: performer, ref: andrew-cyrille}
 
-subjects: [sound, time]
+subjects: [sound]
 
 images: []
 

@@ -11,7 +11,7 @@ library:
 creators:
   - {name: "David Hilbert", role: researcher, ref: david-hilbert}
 
-subjects: [computation, sound]
+subjects: [number, computation, sound]
 
 images: []
 

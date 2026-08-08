@@ -10,7 +10,7 @@ library:
 creators:
   - {name: "Norbert Wiener", role: researcher, ref: norbert-wiener}
 
-subjects: [cybernetics, feedback]
+subjects: [dynamics, cybernetics, feedback]
 
 images: []
 

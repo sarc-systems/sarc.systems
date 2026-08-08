@@ -16,7 +16,7 @@ creators:
     role: artist
     ref: faust
 
-subjects: [sound, time, tuning]
+subjects: [time, sound]
 
 images:
   - file: "cover.jpg"

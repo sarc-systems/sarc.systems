@@ -12,7 +12,7 @@ creators:
     role: composer
     ref: roland-kayn
 
-subjects: [cybernetics, sound, feedback]
+subjects: [form, morphogenesis, dynamics, cybernetics, sound]
 
 images:
   - file: "cover.jpg"

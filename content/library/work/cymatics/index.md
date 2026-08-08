@@ -13,7 +13,7 @@ creators:
     role: director
     ref: hans-jenny
 
-subjects: [sound, form, morphogenesis]
+subjects: [time, form, morphogenesis, sound]
 
 images:
   - file: "cymatics-still.jpg"

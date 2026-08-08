@@ -10,7 +10,7 @@ library:
 
 creators: []
 
-subjects: [sound, feedback]
+subjects: [sound, instruments]
 
 images: []
 

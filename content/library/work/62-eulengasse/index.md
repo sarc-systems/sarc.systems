@@ -16,7 +16,7 @@ creators:
     role: artist
     ref: tetsu-inoue
 
-subjects: [sound, space]
+subjects: [sound]
 
 images:
   - file: "cover.jpg"

@@ -7,7 +7,7 @@ library:
   type: concept
   sarc_work: false
 
-subjects: [form, space]
+subjects: [number, form, space]
 
 images: []
 

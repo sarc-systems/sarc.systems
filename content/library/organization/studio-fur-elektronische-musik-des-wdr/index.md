@@ -16,7 +16,7 @@ creators:
     role: director
     ref: karlheinz-stockhausen
 
-subjects: [sound]
+subjects: [sound, instruments]
 
 images:
   - {file: "console.jpg", alt: "The studio's custom-made 1970s mixing console and equipment racks, including an EMS Synthi 100", role: installation, caption: "The studio's custom-built 1970s console, standing-height for Stockhausen's own working method.", credit: "Photograph by Peter Beste", source: "https://daily.redbullmusicacademy.com/2017/08/stockhausen-photo-essay", rights: {status: unknown, note: "Converted to grayscale."}, use: {basis: identification, note: "Red Bull Music Academy photo essay, used for identification."}}

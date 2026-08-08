@@ -7,7 +7,7 @@ library:
   type: person
   sarc_work: false
 
-subjects: [sound, feedback]
+subjects: [time, form, computation, sound]
 
 images:
   - file: "brian-eno.jpg"

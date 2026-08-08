@@ -10,7 +10,7 @@ library:
 creators:
   - {name: "W. Ross Ashby", role: researcher, ref: w-ross-ashby}
 
-subjects: [cybernetics]
+subjects: [number, cybernetics]
 
 images: []
 

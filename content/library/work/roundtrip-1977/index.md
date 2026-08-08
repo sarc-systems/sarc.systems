@@ -16,7 +16,7 @@ creators:
     role: artist
     ref: jean-schwarz
 
-subjects: [sound, time]
+subjects: [sound]
 
 images:
   - file: "cover.jpg"

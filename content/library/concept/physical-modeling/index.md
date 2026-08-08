@@ -7,7 +7,7 @@ library:
   type: concept
   sarc_work: false
 
-subjects: [computation, sound]
+subjects: [dynamics, computation, sound, instruments]
 
 images: []
 

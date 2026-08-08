@@ -13,7 +13,7 @@ creators:
   - {name: "Theodore Spagna", role: artist}
   - {name: "Paul Earls", role: composer}
 
-subjects: [perception, feedback, sound]
+subjects: [time, perception, sound]
 
 images: []
 

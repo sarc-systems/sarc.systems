@@ -12,7 +12,7 @@ creators:
   - name: "Peter Liechti"
     role: director
 
-subjects: [sound, instruments, feedback]
+subjects: [sound, instruments]
 
 images:
   - file: "kick-that-habit-still.jpg"

@@ -13,7 +13,7 @@ creators:
     role: composer
     ref: eduard-artemyev
 
-subjects: [sound, time]
+subjects: [sound, instruments]
 
 images:
   - file: "cover.jpg"

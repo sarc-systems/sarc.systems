@@ -7,7 +7,7 @@ library:
   type: protocol
   sarc_work: false
 
-subjects: [computation, sound]
+subjects: [computation, sound, language]
 
 images: []
 

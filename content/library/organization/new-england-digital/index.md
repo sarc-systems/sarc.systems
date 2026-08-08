@@ -11,7 +11,7 @@ creators:
   - {name: "Cameron Jones", role: founder, ref: cameron-jones}
   - {name: "Sydney Alonso", role: founder, ref: sydney-alonso}
 
-subjects: [instruments]
+subjects: [computation, instruments]
 
 images:
   - file: "logo.jpg"

@@ -10,7 +10,7 @@ library:
 creators:
   - {name: "Yevgeny Murzin", role: designer}
 
-subjects: [sound, computation]
+subjects: [sound, tuning, instruments]
 
 images:
   - file: "ans-synthesizer.jpg"

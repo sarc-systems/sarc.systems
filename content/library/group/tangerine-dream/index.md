@@ -11,7 +11,7 @@ creators:
   - {name: "Edgar Froese", role: founder}
   - {name: "Conrad Schnitzler", role: performer, ref: conrad-schnitzler}
 
-subjects: [sound, instruments]
+subjects: [time, sound, instruments]
 
 images:
   - file: "photo.jpg"

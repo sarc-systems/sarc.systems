@@ -16,7 +16,7 @@ creators:
     role: author
     ref: francisco-varela
 
-subjects: [cybernetics, perception, feedback]
+subjects: [morphogenesis, cybernetics, perception]
 
 images:
   - file: "cover.jpg"

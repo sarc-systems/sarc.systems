@@ -12,7 +12,7 @@ creators:
   - {name: "Dave Smith", role: designer, ref: dave-smith}
   - {name: "Tom Oberheim", role: designer, ref: tom-oberheim}
 
-subjects: [sound, instruments]
+subjects: [time, computation, sound, instruments]
 
 images: []
 

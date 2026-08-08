@@ -7,7 +7,7 @@ library:
   type: person
   sarc_work: false
 
-subjects: [form]
+subjects: [number, form, space]
 
 images:
   - file: "buckminster-fuller.jpg"

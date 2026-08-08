@@ -15,7 +15,7 @@ creators:
   - name: "Edmond Dewan"
     role: researcher
 
-subjects: [sound, feedback, perception]
+subjects: [perception, sound]
 
 images: []
 

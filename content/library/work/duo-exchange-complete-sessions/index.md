@@ -16,7 +16,7 @@ creators:
     role: artist
     ref: frank-lowe
 
-subjects: [sound, time]
+subjects: [sound]
 
 images:
   - file: "cover.jpg"

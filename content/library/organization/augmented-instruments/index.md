@@ -7,7 +7,7 @@ library:
   type: organization
   sarc_work: false
 
-subjects: [instruments]
+subjects: [computation, instruments]
 
 images:
   - file: "logo.png"

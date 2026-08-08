@@ -13,7 +13,7 @@ creators:
     role: composer
     ref: iannis-xenakis
 
-subjects: [number, sound]
+subjects: [form, sound, space]
 
 images:
   - file: "philips-pavilion.jpg"

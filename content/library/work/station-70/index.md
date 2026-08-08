@@ -14,7 +14,7 @@ creators:
   - {name: "Sabu Toyozumi", role: performer}
   - {name: "Mototeru Takagi", role: performer}
 
-subjects: [sound, feedback]
+subjects: [sound]
 
 images: []
 

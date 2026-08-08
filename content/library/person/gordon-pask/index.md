@@ -7,7 +7,7 @@ library:
   type: person
   sarc_work: false
 
-subjects: [cybernetics, feedback]
+subjects: [cybernetics, perception, feedback, language]
 
 images:
   - file: "gordon-pask.jpg"

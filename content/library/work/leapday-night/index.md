@@ -13,7 +13,7 @@ creators:
     role: composer
     ref: david-behrman
 
-subjects: [sound, computation, feedback, instruments]
+subjects: [computation, sound, instruments]
 
 images:
   - file: "cover.jpg"

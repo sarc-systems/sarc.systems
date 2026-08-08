@@ -11,7 +11,7 @@ library:
 creators:
   - {name: "Klaus Schulze", role: artist, ref: klaus-schulze}
 
-subjects: [sound, time]
+subjects: [sound, instruments]
 
 images:
   - {file: "cover.jpg", alt: "Cover of Mirage by Klaus Schulze", role: cover, caption: "Original 1977 Brain Records LP artwork.", source: "https://www.discogs.com/master/29406-Klaus-Schulze-Mirage", rights: {status: unknown}, use: {basis: identification, note: "Label cover art used for identification."}}

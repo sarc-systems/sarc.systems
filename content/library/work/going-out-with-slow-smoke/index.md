@@ -16,7 +16,7 @@ creators:
     role: artist
     ref: nicolas-collins
 
-subjects: [sound, feedback, computation]
+subjects: [sound, instruments]
 
 images:
   - {file: "cover.jpg", alt: "Cover of Going Out With Slow Smoke by Ron Kuivila and Nicolas Collins", role: cover, caption: "Original 1982 Lovely Music LP artwork.", source: "https://www.discogs.com/release/638806-Ron-Kuivila-Nicolas-Collins-Going-Out-With-Slow-Smoke", rights: {status: unknown}, use: {basis: identification, note: "Label cover art used for identification."}}

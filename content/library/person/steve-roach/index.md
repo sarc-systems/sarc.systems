@@ -7,7 +7,7 @@ library:
   type: person
   sarc_work: false
 
-subjects: [time, sound]
+subjects: [time, sound, space]
 
 images:
   - file: "steve-roach.jpg"

@@ -7,7 +7,7 @@ library:
   type: person
   sarc_work: false
 
-subjects: [sound, computation, tuning]
+subjects: [time, computation, sound, tuning]
 
 images:
   - file: "mark-fell.jpg"

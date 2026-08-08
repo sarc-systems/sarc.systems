@@ -15,9 +15,7 @@ creators:
     role: lecturer
     ref: stafford-beer
 
-subjects:
-  - cybernetics
-  - dynamics
+subjects: [form, dynamics, cybernetics]
 
 related:
   - {ref: project-cybersyn, relation: discusses}

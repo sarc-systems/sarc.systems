@@ -16,7 +16,7 @@ creators:
     role: designer
     ref: gordon-pask
 
-subjects: [cybernetics, computation]
+subjects: [time, cybernetics, computation, feedback]
 
 images:
   - file: "diagram.jpg"

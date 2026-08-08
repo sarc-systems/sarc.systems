@@ -7,7 +7,7 @@ library:
   type: person
   sarc_work: false
 
-subjects: [cybernetics, feedback, perception]
+subjects: [cybernetics, computation, perception]
 
 images:
   - file: "portrait.jpg"

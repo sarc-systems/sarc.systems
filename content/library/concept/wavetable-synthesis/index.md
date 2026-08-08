@@ -7,7 +7,7 @@ library:
   type: concept
   sarc_work: false
 
-subjects: [computation, sound]
+subjects: [time, computation, sound, memory]
 
 images: []
 

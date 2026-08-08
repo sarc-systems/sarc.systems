@@ -19,7 +19,7 @@ creators:
     role: artist
     ref: bill-laswell
 
-subjects: [sound, instruments, time]
+subjects: [sound, instruments]
 
 images:
   - file: "cover.webp"

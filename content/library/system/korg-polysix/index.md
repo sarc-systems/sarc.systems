@@ -10,7 +10,7 @@ library:
 creators:
   - {name: "Korg", role: manufacturer, ref: korg}
 
-subjects: [sound, instruments]
+subjects: [sound, instruments, memory]
 
 images:
   - file: "korg-polysix.jpg"

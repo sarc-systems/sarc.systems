@@ -7,7 +7,7 @@ library:
   type: person
   sarc_work: false
 
-subjects: [sound, perception, cybernetics]
+subjects: [cybernetics, perception, sound, language]
 
 images:
   - file: "david-dunn.png"

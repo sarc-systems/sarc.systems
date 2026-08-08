@@ -11,7 +11,7 @@ library:
 creators:
   - {name: "Stafford Beer", role: author, ref: stafford-beer}
 
-subjects: [cybernetics, feedback]
+subjects: [form, cybernetics, feedback]
 
 images: []
 

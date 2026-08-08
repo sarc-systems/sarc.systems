@@ -17,7 +17,7 @@ creators:
   - {name: "Oliver Johnson", role: performer}
   - {name: "George Lewis", role: performer, ref: george-lewis}
 
-subjects: [sound, space]
+subjects: [sound]
 
 images:
   - {file: "cover.jpg", alt: "Cover of Prospectus by the Steve Lacy Seven", role: cover, caption: "Original 1983 hat ART double LP artwork, cover art and design concept by Brion Gysin.", source: "https://en.wikipedia.org/wiki/Prospectus_(album)", rights: {status: unknown}, use: {basis: identification, note: "Label cover art used for identification."}}

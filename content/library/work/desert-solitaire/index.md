@@ -19,7 +19,7 @@ creators:
     role: artist
     ref: michael-stearns
 
-subjects: [sound, space, time]
+subjects: [sound, space]
 
 images:
   - file: "cover.jpg"

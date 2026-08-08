@@ -7,7 +7,7 @@ library:
   type: person
   sarc_work: false
 
-subjects: [perception, memory]
+subjects: [time, perception]
 
 images:
   - {file: "portrait.jpg", alt: "J. Allan Hobson", role: portrait, credit: "Photograph by G. Ambrus", source: "https://commons.wikimedia.org/wiki/File:Allan_Hobson.jpg", rights: {status: licensed, note: "CC BY 3.0, via Wikimedia Commons."}}

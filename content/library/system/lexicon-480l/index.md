@@ -14,7 +14,7 @@ creators:
     role: manufacturer
     ref: lexicon
 
-subjects: [instruments]
+subjects: [computation, sound, instruments, space]
 
 images: []
 

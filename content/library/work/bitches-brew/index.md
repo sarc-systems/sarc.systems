@@ -13,7 +13,7 @@ creators:
     role: artist
     ref: miles-davis
 
-subjects: [sound, time]
+subjects: [sound, instruments]
 
 images:
   - file: "cover.jpg"

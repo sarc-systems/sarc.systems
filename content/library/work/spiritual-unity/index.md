@@ -13,7 +13,7 @@ creators:
     role: artist
     ref: albert-ayler
 
-subjects: [sound, perception]
+subjects: [sound]
 
 images:
   - file: "cover.jpg"

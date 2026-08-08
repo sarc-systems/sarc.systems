@@ -12,7 +12,7 @@ creators:
     role: manufacturer
     ref: lexicon
 
-subjects: [instruments]
+subjects: [time, computation, sound, instruments]
 
 images: []
 

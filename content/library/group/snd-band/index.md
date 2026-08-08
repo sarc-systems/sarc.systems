@@ -14,7 +14,7 @@ creators:
   - name: "Mat Steel"
     role: artist
 
-subjects: [sound, computation, tuning]
+subjects: [time, form, computation, sound]
 
 images: []
 

@@ -15,7 +15,7 @@ creators:
   - name: "Heman Pathak"
     role: founder
 
-subjects: [sound, feedback]
+subjects: [sound]
 
 images:
   - file: "photo.jpg"

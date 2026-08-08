@@ -7,7 +7,7 @@ library:
   type: person
   sarc_work: false
 
-subjects: [sound, computation, feedback]
+subjects: [computation, sound, instruments]
 
 images:
   - file: "portrait.jpg"

@@ -16,7 +16,7 @@ creators:
     role: artist
     ref: don-pullen
 
-subjects: [sound, time]
+subjects: [sound]
 
 images:
   - file: "cover.jpg"

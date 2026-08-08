@@ -12,7 +12,7 @@ creators:
   - {name: "Roger Linn", role: designer, ref: roger-linn}
   - {name: "Akai", role: manufacturer}
 
-subjects: [sound, instruments, computation]
+subjects: [time, computation, sound, instruments, memory]
 
 images:
   - file: "akai-mpc60.jpg"

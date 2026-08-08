@@ -11,7 +11,7 @@ creators:
   - {name: "Mika Vainio", role: founder, ref: mika-vainio}
   - {name: "Ilpo Väisänen", role: founder}
 
-subjects: [sound]
+subjects: [sound, instruments]
 
 images:
   - file: "pan-sonic.jpg"

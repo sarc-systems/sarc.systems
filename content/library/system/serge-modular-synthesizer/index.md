@@ -15,7 +15,7 @@ creators:
     role: manufacturer
     ref: serge-modular-music-systems
 
-subjects: [instruments]
+subjects: [sound, instruments]
 
 images:
   - {file: "serge-temp.jpg", alt: "Serge Tcherepnin leaning on an early Serge modular system, circa 1978", role: still, caption: "Serge Tcherepnin with an early Serge system, circa 1978.", source: "https://www.instagram.com/p/DUcczVwDT6H/", rights: {status: unknown}, use: {basis: identification, note: "Photo used for identification, pending replacement."}}

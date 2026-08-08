@@ -7,7 +7,7 @@ library:
   type: person
   sarc_work: false
 
-subjects: [computation, number, form]
+subjects: [number, form, morphogenesis, computation]
 
 images:
   - file: "john-conway.jpg"

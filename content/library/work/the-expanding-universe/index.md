@@ -13,7 +13,7 @@ creators:
     role: composer
     ref: laurie-spiegel
 
-subjects: [sound, time]
+subjects: [time, form, computation, sound]
 
 images:
   - file: "cover.jpg"

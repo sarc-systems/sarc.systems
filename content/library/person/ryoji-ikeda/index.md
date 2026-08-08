@@ -7,7 +7,7 @@ library:
   type: person
   sarc_work: false
 
-subjects: [number, sound, perception]
+subjects: [number, computation, perception, sound]
 
 images:
   - file: "ryoji-ikeda.jpg"

@@ -11,7 +11,7 @@ library:
 creators:
   - {name: "C.C.C.C.", role: artist, ref: cccc}
 
-subjects: [sound, feedback]
+subjects: [sound]
 
 images:
   - {file: "cover.jpg", alt: "Cover of Reflexive Universe by C.C.C.C.", role: cover, source: "https://urashima.bandcamp.com/album/reflexive-universe", rights: {status: unknown}, use: {basis: identification, note: "Urashima reissue cover art used for identification."}}

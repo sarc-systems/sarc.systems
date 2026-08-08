@@ -12,7 +12,7 @@ creators:
   - {name: "Stevie Wonder", role: founder, ref: stevie-wonder}
   - {name: "Bruce Cichowlas", role: founder}
 
-subjects: [computation, sound]
+subjects: [computation, sound, instruments]
 
 images:
   - file: "logo.png"

@@ -12,7 +12,7 @@ creators:
   - {name: "Wolfgang Palm", role: designer, ref: wolfgang-palm}
   - {name: "PPG", role: manufacturer, ref: ppg}
 
-subjects: [computation, sound, instruments]
+subjects: [computation, sound, instruments, memory]
 
 images: []
 

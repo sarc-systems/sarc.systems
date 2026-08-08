@@ -7,7 +7,7 @@ library:
   type: person
   sarc_work: false
 
-subjects: [sound, computation]
+subjects: [computation, sound, language]
 
 images:
   - file: "max-mathews-violin.png"

@@ -7,7 +7,7 @@ library:
   type: person
   sarc_work: false
 
-subjects: [number, form, sound]
+subjects: [number, form, computation, sound, space]
 
 images:
   - file: "iannis-xenakis.jpg"

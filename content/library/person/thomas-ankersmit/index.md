@@ -10,7 +10,7 @@ library:
 
 creators: []
 
-subjects: [sound, perception, feedback]
+subjects: [perception, sound, instruments, feedback]
 
 images:
   - {file: "portrait.jpg", alt: "Thomas Ankersmit performing on his Serge modular synthesizer", role: portrait, source: "https://www.forcedexposure.com/Artists/ANKERSMIT.THOMAS.html", rights: {status: unknown}, use: {basis: identification, note: "Photo used for identification."}}

@@ -12,7 +12,7 @@ creators:
     role: manufacturer
     ref: eventide
 
-subjects: [instruments]
+subjects: [computation, sound, instruments]
 
 images:
   - {file: "photo.jpg", alt: "Eventide H3000 SE Ultra-Harmonizer", role: still, credit: "Photograph by John R. Southern", source: "https://commons.wikimedia.org/wiki/File:Eventide_H3000_SE_Ultra-Harmonizer.jpg", rights: {status: licensed, note: "CC BY-SA 2.0, via Wikimedia Commons."}}

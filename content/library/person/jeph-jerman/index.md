@@ -10,7 +10,7 @@ library:
 
 creators: []
 
-subjects: [sound]
+subjects: [sound, instruments]
 
 images: []
 

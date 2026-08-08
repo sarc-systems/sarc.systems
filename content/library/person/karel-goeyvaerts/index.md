@@ -7,7 +7,7 @@ library:
   type: person
   sarc_work: false
 
-subjects: [sound, number]
+subjects: [time, number, form, sound]
 
 images: []
 

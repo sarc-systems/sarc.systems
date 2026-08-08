@@ -13,7 +13,7 @@ creators:
     role: composer
     ref: louis-and-bebe-barron
 
-subjects: [sound, feedback]
+subjects: [sound, instruments, feedback]
 
 images:
   - file: "cover.jpg"

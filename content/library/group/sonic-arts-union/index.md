@@ -21,7 +21,7 @@ creators:
     role: founder
     ref: gordon-mumma
 
-subjects: [sound, feedback]
+subjects: [sound, instruments]
 
 images:
   - {file: "photo.jpg", alt: "Sonic Arts Union performing and portrait collage: Alvin Lucier, Robert Ashley, Gordon Mumma, and David Behrman", role: portrait, source: "https://daily.redbullmusicacademy.com/2018/07/sonic-arts-union-history-and-key-works/", rights: {status: unknown}, use: {basis: identification, note: "Photo used for identification."}}

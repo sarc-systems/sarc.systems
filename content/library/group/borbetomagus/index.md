@@ -13,7 +13,7 @@ creators:
   - {name: "Jim Sauter", role: performer}
   - {name: "Donald Miller", role: performer}
 
-subjects: [sound, feedback]
+subjects: [sound]
 
 images:
   - {file: "photo.jpg", alt: "Don Dietrich and Jim Sauter of Borbetomagus performing on saxophones", role: portrait, source: "https://commons.wikimedia.org/wiki/File:Don_Dietrich_%26_Jim_Sauter12.jpg", rights: {status: licensed, note: "CC BY-SA 2.0, via Wikimedia Commons."}}

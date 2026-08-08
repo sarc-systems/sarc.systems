@@ -23,7 +23,7 @@ creators:
     role: director
     ref: vladimir-ussachevsky
 
-subjects: [sound]
+subjects: [sound, instruments]
 
 images:
   - file: "photo.jpg"

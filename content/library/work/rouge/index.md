@@ -12,7 +12,7 @@ creators:
   - name: "Jean Piché"
     role: composer
 
-subjects: [sound, time]
+subjects: [sound]
 
 images:
   - file: "cover.jpg"
