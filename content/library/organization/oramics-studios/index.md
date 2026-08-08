@@ -21,7 +21,7 @@ images:
     source: "https://commons.wikimedia.org/wiki/File:Tower_Folly,_Gravesend_Road,_Wrotham,_Kent_-_geograph.org.uk_-_778149.jpg"
     rights:
       status: licensed
-      note: "CC BY-SA 2.0 Generic, via Wikimedia Commons / geograph.org.uk."
+      note: "CC BY-SA 2.0 Generic, via Wikimedia Commons / geograph.org.uk. Converted to grayscale."
 
 access: []
 

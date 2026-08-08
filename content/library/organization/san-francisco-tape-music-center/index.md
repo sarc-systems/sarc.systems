@@ -17,14 +17,14 @@ creators:
 subjects: [sound, instruments]
 
 images:
-  - {file: "group-photo.jpg", alt: "Ramon Sender, Mike Callahan, Morton Subotnick, and Pauline Oliveros at the San Francisco Tape Music Center", role: portrait, credit: "Photograph by Art Frisch", source: "https://www.sfgate.com/music/article/Pauline-Oliveros-John-Cage-celebration-3917149.php", rights: {status: unknown}, use: {basis: identification, note: "Photo used for identification."}}
+  - {file: "group-photo.jpg", alt: "Ramon Sender, Mike Callahan, Morton Subotnick, and Pauline Oliveros at the San Francisco Tape Music Center", role: portrait, credit: "Photograph by Art Frisch", source: "https://www.sfgate.com/music/article/Pauline-Oliveros-John-Cage-celebration-3917149.php", rights: {status: unknown, note: "Converted to grayscale."}, use: {basis: identification, note: "Photo used for identification."}}
   - file: "morton-subotnick-buchla.jpg"
     alt: "Morton Subotnick with a Buchla touch keyboard, 2012"
     role: portrait
     source: "https://commons.wikimedia.org/wiki/File:Simultaneous_MIDI_control_and_Buchla_touch_keyboard.jpg"
     rights:
       status: licensed
-      note: "CC BY 2.0 Generic, via Wikimedia Commons."
+      note: "CC BY 2.0 Generic, via Wikimedia Commons. Converted to grayscale."
 
 access:
   - {label: "Remembering the San Francisco Tape Music Center (Hoodline)", kind: other, url: "https://hoodline.com/2014/08/the-san-francisco-tape-music-center/"}

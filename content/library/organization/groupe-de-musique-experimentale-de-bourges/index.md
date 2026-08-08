@@ -22,7 +22,7 @@ images:
     source: "https://commons.wikimedia.org/wiki/File:Maison_de_la_Culture_Bourges.JPG"
     rights:
       status: licensed
-      note: "CC BY-SA 3.0 Unported (multi-licensed), via Wikimedia Commons."
+      note: "CC BY-SA 3.0 Unported (multi-licensed), via Wikimedia Commons. Converted to grayscale."
 
 access: []
 

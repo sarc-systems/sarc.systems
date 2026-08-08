@@ -35,4 +35,4 @@ related:
 draft: false
 ---
 
-Designed by RCA engineers Harry F. Olson and Herbert Belar, with contributions from Peter Mauzey and composer Vladimir Ussachevsky, the Mark II was the first programmable electronic synthesizer — a three-ton, twenty-four-oscillator vacuum-tube instrument controlled by a punched paper roll. Installed at Columbia's Prentis Hall in 1957 and acquired by the new Columbia-Princeton Electronic Music Center in 1959, it became the Center's central instrument.
+Designed by RCA engineers Harry F. Olson and Herbert Belar, with contributions from Peter Mauzey and composer [Vladimir Ussachevsky](/library/vladimir-ussachevsky/), the Mark II was the first programmable electronic synthesizer — a three-ton, twenty-four-oscillator vacuum-tube instrument controlled by a punched paper roll. Installed at Columbia's Prentis Hall in 1957 and acquired by the new [Columbia-Princeton Electronic Music Center](/library/columbia-princeton-electronic-music-center/) in 1959, it became the Center's central instrument.

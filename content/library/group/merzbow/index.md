@@ -7,6 +7,10 @@ library:
   type: group
   sarc_work: false
 
+creators:
+  - {name: "Masami Akita", role: founder, ref: masami-akita}
+  - {name: "Kiyoshi Mizutani", role: founder, ref: kiyoshi-mizutani}
+
 subjects: [sound]
 
 images:
@@ -18,5 +22,4 @@ images:
 draft: false
 ---
 
-Merzbow is a noise art project started by Masami Akita in 1979.
-Merzbow has released over 500 recordings.
+Merzbow is a Japanese noise project founded in Tokyo in 1979 by [Masami Akita](/library/masami-akita/) and [Kiyoshi Mizutani](/library/kiyoshi-mizutani/), high-school friends who had already been playing improvised rock together — its name taken from Kurt Schwitters' *Merzbau* to signal a junk-art, Dada-inflected sensibility. Mizutani performed on Merzbow's earliest tape releases and live shows through the 1980s before leaving after the project's 1989 European tour to pursue a solo career; Akita has continued Merzbow alone since, its studio output now exceeding 300 full-length releases and widely regarded as among the most important and prolific bodies of work in noise music.

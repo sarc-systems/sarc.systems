@@ -16,7 +16,7 @@ images:
     credit: "Guillaume70"
     rights:
       status: licensed
-      note: "CC BY-SA 3.0, via Wikimedia Commons."
+      note: "CC BY-SA 3.0, via Wikimedia Commons. Converted to grayscale."
 
 access: []
 

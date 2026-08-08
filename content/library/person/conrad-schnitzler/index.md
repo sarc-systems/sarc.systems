@@ -22,6 +22,9 @@ access:
     kind: website
     url: "https://fancymoon.com/con_s/"
 
+related:
+  - {ref: tangerine-dream, relation: part-of}
+
 draft: false
 ---
 

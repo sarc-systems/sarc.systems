@@ -22,6 +22,7 @@ images:
     source: "https://www.library.illinois.edu/sousa/2013/11/16/illinois-experimental-music-studio-photograph-rediscovered/"
     rights:
       status: unknown
+      note: "Converted to grayscale."
     use:
       basis: identification
       note: "University of Illinois Sousa Archive photo used for identification."

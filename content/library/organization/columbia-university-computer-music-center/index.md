@@ -20,7 +20,7 @@ images:
     source: "https://commons.wikimedia.org/wiki/File:Computer_Music_Center_sign.jpg"
     rights:
       status: licensed
-      note: "CC BY-SA 2.0, via Wikimedia Commons."
+      note: "CC BY-SA 2.0, via Wikimedia Commons. Converted to grayscale."
 
 access:
   - label: "Official site"

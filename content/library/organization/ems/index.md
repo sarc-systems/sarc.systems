@@ -25,7 +25,7 @@ images:
     source: "https://commons.wikimedia.org/wiki/File:EMS_Synthi_100_(400%25,_edit1).jpg"
     rights:
       status: licensed
-      note: "CC BY 3.0, via Wikimedia Commons."
+      note: "CC BY 3.0, via Wikimedia Commons. Converted to grayscale."
 
 access: []
 

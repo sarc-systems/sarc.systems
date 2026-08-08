@@ -24,7 +24,7 @@ images:
     source: "https://commons.wikimedia.org/wiki/File:BBC_Radiophonic_Workshop_(1958-98)_machines_-_Tape_Recorder_with_tape_loop_equipment,_Beat_Frequency_Oscillator_%26_EMS_Putney_VCS3.jpg"
     rights:
       status: licensed
-      note: "CC BY-SA 2.0 Generic, via Wikimedia Commons."
+      note: "CC BY-SA 2.0 Generic, via Wikimedia Commons. Converted to grayscale."
 
 access: []
 

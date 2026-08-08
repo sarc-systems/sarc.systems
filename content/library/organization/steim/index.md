@@ -31,7 +31,7 @@ images:
     source: "https://commons.wikimedia.org/wiki/File:Crackle_Box.jpg"
     rights:
       status: public-domain
-      note: "CC0 1.0 Universal, via Wikimedia Commons."
+      note: "CC0 1.0 Universal, via Wikimedia Commons. Converted to grayscale."
 
 access:
   - label: "Official site"

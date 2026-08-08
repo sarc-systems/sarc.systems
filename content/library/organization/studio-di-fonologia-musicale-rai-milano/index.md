@@ -24,7 +24,7 @@ images:
     credit: "Mikhail (Vokabre) Shcherbakov"
     rights:
       status: licensed
-      note: "CC BY-SA 2.0, via Wikimedia Commons."
+      note: "CC BY-SA 2.0, via Wikimedia Commons. Converted to grayscale."
 
 access: []
 

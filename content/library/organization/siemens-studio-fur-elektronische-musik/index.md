@@ -25,7 +25,7 @@ images:
     source: "https://commons.wikimedia.org/wiki/File:Siemens_Tonstudio,_Deutsches_Museum.jpg"
     rights:
       status: licensed
-      note: "CC BY 2.0 Generic, via Wikimedia Commons."
+      note: "CC BY 2.0 Generic, via Wikimedia Commons. Converted to grayscale."
 
 access: []
 

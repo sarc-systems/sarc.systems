@@ -21,7 +21,7 @@ images:
     credit: "Tktktk"
     rights:
       status: licensed
-      note: "CC BY 3.0 / GFDL, via Wikimedia Commons. Shows the department's current building, not its original studio location."
+      note: "CC BY 3.0 / GFDL, via Wikimedia Commons. Shows the department's current building, not its original studio location. Converted to grayscale."
 
 access: []
 

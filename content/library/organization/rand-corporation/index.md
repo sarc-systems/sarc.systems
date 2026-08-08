@@ -14,7 +14,7 @@ creators:
 subjects: [cybernetics, computation]
 
 images:
-  - {file: "photo.jpg", alt: "RAND Corporation headquarters, Santa Monica, California", role: still, credit: "Photograph by Cbl62", source: "https://commons.wikimedia.org/wiki/File:Rand_Corporation_Headquarters,_Santa_Monica.jpg", rights: {status: licensed, note: "CC BY-SA 3.0, via Wikimedia Commons."}}
+  - {file: "photo.jpg", alt: "RAND Corporation headquarters, Santa Monica, California", role: still, credit: "Photograph by Cbl62", source: "https://commons.wikimedia.org/wiki/File:Rand_Corporation_Headquarters,_Santa_Monica.jpg", rights: {status: licensed, note: "CC BY-SA 3.0, via Wikimedia Commons. Converted to grayscale."}}
 
 access:
   - {label: "Website", kind: website, url: "https://www.rand.org"}

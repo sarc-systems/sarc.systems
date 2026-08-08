@@ -21,6 +21,7 @@ images:
     source: "https://www.sfu.ca/~truax/wsp.html"
     rights:
       status: unknown
+      note: "Converted to grayscale."
     use:
       basis: identification
       note: "Archival photo from Barry Truax's World Soundscape Project page used for identification."

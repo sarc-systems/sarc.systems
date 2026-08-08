@@ -16,7 +16,7 @@ creators:
 subjects: [sound]
 
 images:
-  - {file: "photo.jpg", alt: "LAFMS's Airway performing at the Museum of Contemporary Art, Los Angeles, 2014", role: installation, credit: "Photograph by StaceyEOB", source: "https://commons.wikimedia.org/wiki/File:LAFMS_Airway.jpg", rights: {status: licensed, note: "CC BY-SA 3.0, via Wikimedia Commons."}}
+  - {file: "photo.jpg", alt: "LAFMS's Airway performing at the Museum of Contemporary Art, Los Angeles, 2014", role: installation, credit: "Photograph by StaceyEOB", source: "https://commons.wikimedia.org/wiki/File:LAFMS_Airway.jpg", rights: {status: licensed, note: "CC BY-SA 3.0, via Wikimedia Commons. Converted to grayscale."}}
 
 access: []
 

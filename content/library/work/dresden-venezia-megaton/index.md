@@ -22,7 +22,10 @@ access:
     kind: discogs
     url: "https://www.discogs.com/release/484844-Gordon-Mumma-Dresden-Venezia-Megaton"
 
+related:
+  - {ref: william-s-burroughs, relation: related-work}
+
 draft: false
 ---
 
-Released on Lovely Music in 1979, *Dresden / Venezia / Megaton* collects three of Gordon Mumma's electroacoustic works — *Dresden Interleaf 13 February 1945*, *Music from the Venezia Space Theatre*, and *Megaton for William Burroughs* — built from tape collage and the live-electronic circuitry Mumma developed across his Sonic Arts Union years.
+Released on Lovely Music in 1979, *Dresden / Venezia / Megaton* collects three of Gordon Mumma's electroacoustic works — *Dresden Interleaf 13 February 1945*, *Music from the Venezia Space Theatre*, and *Megaton for William Burroughs* — dedicated to [William S. Burroughs](/library/william-s-burroughs/) — built from tape collage and the live-electronic circuitry Mumma developed across his Sonic Arts Union years.

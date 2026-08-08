@@ -21,6 +21,7 @@ images:
     source: "https://es.wikipedia.org/wiki/Centro_Latinoamericano_de_Altos_Estudios_Musicales"
     rights:
       status: public-domain
+      note: "Converted to grayscale."
 
 access: []
 

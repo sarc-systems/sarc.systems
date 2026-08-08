@@ -16,7 +16,7 @@ images:
     source: "https://commons.wikimedia.org/wiki/File:PDP-15_at_Varesezaal.jpg"
     rights:
       status: licensed
-      note: "CC BY 2.0 Generic, via Wikimedia Commons."
+      note: "CC BY 2.0 Generic, via Wikimedia Commons. Converted to grayscale."
 
 access:
   - label: "Official site"

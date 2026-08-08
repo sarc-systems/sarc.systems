@@ -10,7 +10,7 @@ library:
 subjects: [sound, computation]
 
 images:
-  - {file: "photo.jpg", alt: "Detail of the UPIC system's graphic drawing tablet", role: still, caption: "Detail of the UPIC drawing table used in Les Ateliers UPIC's residencies and training courses.", source: "https://commons.wikimedia.org/wiki/File:Xenakis_UPIC_system_drawing_table_detail.jpg", rights: {status: public-domain, note: "CC0, via Wikimedia Commons."}}
+  - {file: "photo.jpg", alt: "Detail of the UPIC system's graphic drawing tablet", role: still, caption: "Detail of the UPIC drawing table used in Les Ateliers UPIC's residencies and training courses.", source: "https://commons.wikimedia.org/wiki/File:Xenakis_UPIC_system_drawing_table_detail.jpg", rights: {status: public-domain, note: "CC0, via Wikimedia Commons. Converted to grayscale."}}
 
 access: []
 

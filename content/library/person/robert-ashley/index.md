@@ -18,7 +18,8 @@ images:
     rights:
       status: unknown
 
-access: []
+access:
+  - {label: "Official website", kind: website, url: "http://robertashley.org"}
 
 related:
   - {ref: alvin-lucier, relation: co-member-of}

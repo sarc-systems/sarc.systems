@@ -25,9 +25,6 @@ images:
 
 access: []
 
-related:
-  - {ref: conrad-schnitzler, relation: collaborator-of}
-
 draft: false
 ---
 
