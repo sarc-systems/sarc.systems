@@ -1,0 +1,18 @@
+{{- /* The Library root's own "Entries": one per registered Collection,
+       represented by that Collection's own section index page (which
+       doubles as its Collection-summary Entry — see docs/library-v2.md
+       § 11 and the comment in content/library/research/_index.md).
+       Non-production Collections (build.production: false) are excluded
+       from production builds, included on the dev server, matching the
+       existing minimal build-inclusion mechanism (docs/library-v2.md § 3).
+       Call: {{ $entries := partial "library-root-entries.html" . }}
+       Returns a plain slice of Pages, in registry order. */ -}}
+{{- $out := slice -}}
+{{- range hugo.Data.library.collections -}}
+  {{- if or .build.production (not hugo.IsProduction) -}}
+    {{- if eq .source.adapter "hugo" -}}
+      {{- with site.GetPage (printf "/%s" .source.section) }}{{ $out = $out | append . }}{{ end -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+{{- return $out -}}

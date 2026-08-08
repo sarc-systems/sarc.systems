@@ -2,12 +2,13 @@
 
 {{ define "main" }}
 {{- $coll := partial "library-resolve-collection.html" . -}}
-{{- /* The Library root (the meta-Collection) has no gathered Hugo Entries
-       of its own — see the matching stub note in list.json. Real
-       Collection-card rendering lands in Phase 3; until then this keeps
-       the root page (and the migration in Phase 4) buildable. */ -}}
+{{- /* The Library root's "Entries" are the registered Collections
+       themselves (see library-root-entries.html); any other Collection
+       gathers its own Hugo content as before. */ -}}
 {{- $entries := slice -}}
-{{- if ne $coll.source.adapter "root" -}}
+{{- if eq $coll.source.adapter "root" -}}
+  {{- $entries = partial "library-root-entries.html" . -}}
+{{- else -}}
   {{- $entries = partial "library-collect.html" (dict "ctx" . "sectionPath" $coll.source.section "collection" $coll.id) -}}
 {{- end -}}
 <div class="wrap">

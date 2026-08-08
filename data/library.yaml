@@ -23,6 +23,10 @@
 # generic case when no finer subtype applies (e.g. a whole platform), exactly
 # how `person`/`group`/`organization` each map 1:1 to their own public type.
 types:
+  # Library v2 (docs/library-v2.md § 11) — root-only: a Collection-summary
+  # Entry representing one registered child Collection at the Library root
+  # (/library/). Never used by an ordinary catalog entry.
+  - {type: collection,   label: "Collection",      order: 5,   public_type: collection}
   - {type: person,       label: "Person",          order: 15,  public_type: person}
   - {type: group,        label: "Group",           order: 18,  public_type: group}
   - {type: organization, label: "Organization",    order: 20,  public_type: organization}
@@ -80,6 +84,14 @@ types:
 # never a hardcoded JS list — so a future Collection's own vocabulary can
 # declare its own hub types the same way. See docs/library-v2.md § 12.2.
 public_types:
+  # Root-only (docs/library-v2.md § 11/§ 12.2) — a Collection-summary node
+  # at the Library root. Its color here is only ever a fallback: every real
+  # Collection-summary Entry sets its own library.color (research: forest),
+  # which assets/js/library-map.js and library-record.html prefer over this
+  # shared per-public-type color — see docs/library-v2.md § 7/§ 12.3, since
+  # the whole point of Collection identity color is that each Collection
+  # gets its OWN color, not one shared "collection" color for all of them.
+  - {public_type: collection,   label: "Collection",   order: 5,  color: cool-grey,    shape: circle}
   - {public_type: person,       label: "Person",       order: 10, color: bagdad-brown, shape: circle,  hub: true}
   - {public_type: group,        label: "Group",        order: 20, color: claret,       shape: diamond, hub: true}
   - {public_type: organization, label: "Organization", order: 30, color: dark-grey,     shape: square,  hub: true}

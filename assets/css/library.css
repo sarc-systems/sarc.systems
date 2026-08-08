@@ -15,6 +15,10 @@
 .library-records { list-style: none; padding: 0; margin: 0; }
 .library-record { padding: 1rem 0; border-bottom: 1px solid var(--rule); }
 .library-records > .library-record:first-child { border-top: 1px solid var(--rule); }
+/* Collection identity color (docs/library-v2.md § 7) — a Collection-summary
+   record at the Library root only (see library-record.html); a restrained
+   left rule in the Collection's own Colorplan color, never a colored card. */
+.library-record.has-collection-color { border-left: 3px solid var(--collection-color); padding-left: 0.85rem; }
 /* Filtered-out records: the hidden attribute must win over the has-thumb grid
    display below (equal specificity, later rule), so force it. */
 .library-record[hidden] { display: none !important; }

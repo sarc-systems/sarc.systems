@@ -1,9 +1,10 @@
-{{- /* /library/<collection>/index.json (root: /library/index.json — see
-       Phase 3) — normalized public Collection data (docs/library-v2.md § 4).
-       Every PUBLISHED entry belonging to THIS Collection (in-section +
-       cross-site), display-ready so the client scripts need no vocabulary
-       lookups. No filesystem paths, no drafts, no rights-review working
-       notes. */ -}}
+{{- /* /library/<collection>/index.json (root: /library/index.json) —
+       normalized public Collection data (docs/library-v2.md § 4). Every
+       PUBLISHED entry belonging to THIS Collection (in-section +
+       cross-site; at the root, the registered Collections themselves —
+       see library-root-entries.html), display-ready so the client scripts
+       need no vocabulary lookups. No filesystem paths, no drafts, no
+       rights-review working notes. */ -}}
 {{- $lib := hugo.Data.library -}}
 {{- $typeLabels := dict }}{{ range $lib.types }}{{ $typeLabels = merge $typeLabels (dict .type .label) }}{{ end -}}
 {{- $subjectLabels := dict }}{{ range $lib.subjects }}{{ $subjectLabels = merge $subjectLabels (dict .subject .label) }}{{ end -}}
@@ -11,26 +12,9 @@
 
 {{- /* Which Collection is this list page? Not hardcoded — resolved from the
        registry, so the same template serves any Collection's own
-       index.json once Phase 4 gives each its own section. Exactly one
-       match today (research). */ -}}
+       index.json, and the root's own. */ -}}
 {{- $coll := partial "library-resolve-collection.html" . -}}
-
-{{- /* The Library root itself (the meta-Collection) has no gathered Hugo
-       Entries of its own to run through library-collect.html — its
-       "entries" are the registered child Collections. Full root rendering
-       (Collection-summary entries) lands in Phase 3; this is a safe,
-       non-erroring stub so Phase 4's route migration alone still builds
-       and serves valid (empty) JSON at /library/index.json. */ -}}
-{{- if eq $coll.source.adapter "root" -}}
-{{ dict
-    "collection" (dict "id" $coll.id "title" $coll.title "color" "" "description" "")
-    "count" 0
-    "entries" (slice)
-    "public_type_styles" (dict)
-    "relation_inverse" (dict)
-    "relation_category" (dict)
-  | jsonify (dict "indent" "  ") }}
-{{- else -}}
+{{- $isRoot := eq $coll.source.adapter "root" -}}
 
 {{- /* The one centralized specific-type -> public-type mapping (colors,
        shapes, labels) — see partials/library-public-types.html and
@@ -39,11 +23,26 @@
        assets/js/library-map.js (node fill/shape) via this file's exported
        `public_type` per entry and top-level `public_type_styles`. */ -}}
 {{- $pt := partialCached "library-public-types.html" . "library-public-types" -}}
-{{- $entries := partial "library-collect.html" (dict "ctx" . "sectionPath" $coll.source.section "collection" $coll.id) -}}
+{{- $entries := slice -}}
+{{- if $isRoot -}}
+  {{- $entries = partial "library-root-entries.html" . -}}
+{{- else -}}
+  {{- $entries = partial "library-collect.html" (dict "ctx" . "sectionPath" $coll.source.section "collection" $coll.id) -}}
+{{- end -}}
+
+{{- /* Registry lookups used only for root entries: a Collection-summary
+       Entry's `related` (cross-Collection edges) comes from its own
+       registry row, not from Params.related (its section page doesn't set
+       that) — see collections.yaml's own `related` field. */ -}}
+{{- $registry := hugo.Data.library.collections -}}
+{{- $registryById := dict }}{{ range $registry }}{{ $registryById = merge $registryById (dict .id .) }}{{ end -}}
+{{- $collectionColors := dict }}{{ range $registry }}{{ $collectionColors = merge $collectionColors (dict .id .color) }}{{ end -}}
+
 {{- $out := slice -}}
 {{- range $entries -}}
   {{- $p := . -}}
   {{- $type := "" }}{{ with .Params.library }}{{ $type = .type }}{{ end -}}
+  {{- $entryId := .Params.library.id -}}
 
   {{- /* creators (resolve refs to urls) */ -}}
   {{- $creators := slice }}{{ $names := slice -}}
@@ -71,15 +70,21 @@
   {{- /* related — {ref, relation}, one entry per declaration (forward direction
          only; the reverse/inverse shown on the target entry's own page is a
          display-only convention in library-related.html, not a second stored
-         edge, so this never double-counts a relationship). */ -}}
+         edge, so this never double-counts a relationship). Root entries
+         (Collection-summaries) take this from their registry row's own
+         `related` instead of Params.related — see above. */ -}}
   {{- $related := slice -}}
-  {{- range .Params.related -}}
+  {{- $relatedSrc := .Params.related -}}
+  {{- if $isRoot }}{{ with index $registryById $entryId }}{{ $relatedSrc = .related }}{{ end }}{{ end -}}
+  {{- range $relatedSrc -}}
     {{- $rel := . -}}
     {{- with $rel.ref }}{{ $related = $related | append (dict "ref" . "relation" ($rel.relation | default "")) }}{{ end -}}
   {{- end -}}
 
   {{- $rec := dict
-      "library_id" .Params.library.id
+      "library_id" $entryId
+      "collection" $coll.id
+      "color" (.Params.library.color | default "")
       "title" .Title
       "url" .RelPermalink
       "type" $type
@@ -104,10 +109,10 @@
     "description" ($coll.description | default "") -}}
 {{ dict
     "collection" $collOut
+    "collections" $collectionColors
     "count" (len $out)
     "entries" $out
     "public_type_styles" $pt.styles
     "relation_inverse" $lib.relation_inverse
     "relation_category" $lib.relation_categories
   | jsonify (dict "indent" "  ") }}
-{{- end -}}

@@ -48,6 +48,25 @@
   {{- if not $enabled }}{{ errorf "Library: Collection %q declares no views.enabled" $collId }}{{ end -}}
   {{- range $enabled }}{{ if not (in (slice "catalog" "images" "map") .) }}{{ errorf "Library: Collection %q enables unknown view %q" $collId . }}{{ end }}{{ end -}}
   {{- if and .views.default (not (in $enabled .views.default)) }}{{ errorf "Library: Collection %q views.default %q is not in its own views.enabled" $collId .views.default }}{{ end -}}
+
+  {{- /* An adapter:hugo Collection's own section page doubles as its
+         Collection-summary Entry at the Library root (docs/library-v2.md
+         § 11) — its library.id/library.color front matter must exist and
+         match this registry row, or the root would silently show the
+         wrong id/color, or root's Catalog rendering (library-record.html,
+         which reads these directly off the page) would break. See the
+         comment in content/library/research/_index.md. */ -}}
+  {{- if eq .source.adapter "hugo" -}}
+    {{- $collColor := .color -}}
+    {{- $collSection := .source.section -}}
+    {{- with site.GetPage (printf "/%s" $collSection) -}}
+      {{- $pageId := "" }}{{ $pageColor := "" }}{{ with .Params.library }}{{ $pageId = .id }}{{ $pageColor = .color }}{{ end -}}
+      {{- if ne $pageId $collId }}{{ errorf "Library: Collection %q's section page (%s) has library.id %q, which doesn't match the registry" $collId .Path $pageId }}{{ end -}}
+      {{- if ne $pageColor $collColor }}{{ errorf "Library: Collection %q's section page (%s) has library.color %q, which doesn't match the registry's %q" $collId .Path $pageColor $collColor }}{{ end -}}
+    {{- else -}}
+      {{- errorf "Library: Collection %q's source.section %q has no section page (expected content/%s/_index.md)" $collId $collSection $collSection -}}
+    {{- end -}}
+  {{- end -}}
 {{- end -}}
 
 {{- /* Resolve each entry's owning Collection id. adapter:hugo Collections

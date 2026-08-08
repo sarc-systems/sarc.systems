@@ -13,6 +13,13 @@
 # `source.section` is the content-relative directory (under content/) this
 # Collection's Hugo-adapter Entries live under — see docs/library-v2.md
 # § 2.2/§ 13.
+#
+# `related` — explicit, editorially-authored Collection-to-Collection
+# relationships, rendered on the root Map (docs/library-v2.md § 11).
+# {ref, relation} exactly like an Entry's own `related` field; `relation`
+# must be one of data/library.yaml's relation_types. Automatic derivation
+# from lower-level cross-Collection Entry references is explicitly
+# deferred — see docs/library-v2.md § 12.3/§ 15.
 - id: research
   title: SARC Research
   description: >
@@ -28,3 +35,4 @@
     default: all
   build:
     production: true
+  related: []

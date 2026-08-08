@@ -32,7 +32,12 @@
        column, never stretched to match it — a per-image `anchor` sets both
        the Fill focus and the CSS object-position. */ -}}
 {{- $thumb := partial "library-thumbnail.html" . -}}
-<li class="library-record{{ if $thumb.has }} has-thumb{{ end }}" data-library-id="{{ $id }}" data-type="{{ $publicType }}" data-subjects="{{ delimit $subs " " }}" data-has-image="{{ if $thumb.has }}true{{ else }}false{{ end }}">
+{{- /* Collection identity color (docs/library-v2.md § 7) — set only on a
+       root Collection-summary record (content/library/<id>/_index.md's own
+       library.color); never present on an ordinary catalog entry, so this
+       is a no-op everywhere else. */ -}}
+{{- $collColor := .Params.library.color -}}
+<li class="library-record{{ if $thumb.has }} has-thumb{{ end }}{{ if $collColor }} has-collection-color{{ end }}" data-library-id="{{ $id }}" data-type="{{ $publicType }}" data-subjects="{{ delimit $subs " " }}" data-has-image="{{ if $thumb.has }}true{{ else }}false{{ end }}"{{ with $collColor }} style="--collection-color: var(--colorplan-{{ . }});"{{ end }}>
   {{- with $thumb.has }}
   <a class="library-record-thumb" href="{{ $.RelPermalink }}" tabindex="-1" aria-hidden="true">
     <img src="{{ $thumb.url }}" srcset="{{ $thumb.url }} 1x, {{ $thumb.url2x }} 2x"

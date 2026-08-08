@@ -287,6 +287,18 @@
   // reachable set (a filter change).
   var graphAdjacency = {}, selectionDistance = {};
   var typeStyles = {};
+  // Cross-Collection support (docs/library-v2.md § 12.3) — currentCollectionId
+  // is this page's own Collection (data.collection.id, e.g. "research", or
+  // "library" at the root); collectionColors maps EVERY registered
+  // Collection's id to its own Colorplan color (data.collections, exported
+  // by every Collection's own index.json — see list.json), so a boundary
+  // node owned by a DIFFERENT Collection can draw a ring in that other
+  // Collection's color without a second fetch. Both stay empty/inert
+  // (drawing nothing extra) until an entry's own `collection` differs from
+  // currentCollectionId, which doesn't happen anywhere in the single-
+  // Collection research corpus today.
+  var currentCollectionId = "";
+  var collectionColors = {};
   var sel = { type: [], subject: [] };
   var visible = {}; // id -> bool, the current filtered set
   var currentVB = { x: 0, y: 0, w: W, h: H };
@@ -443,7 +455,9 @@
         radius: nodeRadius(hub, hasImage),
         x: W / 2 + (rng() - 0.5) * W * 0.8,
         y: H / 2 + (rng() - 0.5) * H * 0.8,
-        vx: 0, vy: 0
+        vx: 0, vy: 0,
+        ownColor: e.color || null,
+        collectionId: e.collection || null
       };
     });
     nodes = entries.map(function (e) { return nodeById[e.library_id]; });
@@ -1529,7 +1543,12 @@
 
   function drawShapeNode(ctx, n, p, style, scale, extraScale) {
     var size = (n.hub ? SHAPE_SIZE.hub : SHAPE_SIZE.leaf) * scale * (n.sizeScale || 1) * (extraScale || 1);
-    ctx.fillStyle = cssVar("--colorplan-" + style.color);
+    // A node's own declared color (docs/library-v2.md § 7/§ 12.3 — currently
+    // only Collection-summary nodes at the Library root set this) always
+    // wins over the shared per-public-type color: the point of Collection
+    // identity color is that each Collection gets its OWN color, not one
+    // shared color for every node of the same public type.
+    ctx.fillStyle = cssVar("--colorplan-" + (n.ownColor || style.color));
     ctx.beginPath();
     if (style.shape === "square") {
       ctx.rect(p.x - size, p.y - size, size * 2, size * 2);
@@ -1571,9 +1590,30 @@
       ctx.drawImage(img, p.x - dw / 2, p.y - dh / 2, dw, dh);
       ctx.restore();
     }
-    ctx.strokeStyle = cssVar("--colorplan-" + style.color);
+    ctx.strokeStyle = cssVar("--colorplan-" + (n.ownColor || style.color));
     ctx.lineWidth = 1.5;
     ctx.strokeRect(p.x - s, p.y - s, s * 2, s * 2);
+  }
+
+  // Cross-Collection boundary ring (docs/library-v2.md § 12.3): drawn around
+  // a node owned by a DIFFERENT Collection than the one this page's own Map
+  // belongs to, in that other Collection's own color — never the node's own
+  // fill/shape, which still reads its public type exactly as usual. A no-op
+  // whenever collectionId is unset/matches (every node in the single-
+  // Collection research corpus today).
+  function drawCollectionHalo(ctx, n, p, scale, showImage, extraScale) {
+    if (!n.collectionId || !currentCollectionId || n.collectionId === currentCollectionId) return;
+    var color = collectionColors[n.collectionId];
+    if (!color) return;
+    var half = nodeVisualHalfSize(n, scale, showImage, extraScale);
+    ctx.save();
+    ctx.setLineDash([]);
+    ctx.strokeStyle = cssVar("--colorplan-" + color);
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, half + 3, 0, Math.PI * 2);
+    ctx.stroke();
+    ctx.restore();
   }
 
   function nodeVisualHalfSize(n, scale, showImage, extraScale) {
@@ -1656,6 +1696,7 @@
       bgCtx.globalAlpha = nodeAlpha(n);
       if (showImage) drawImageNode(bgCtx, n, p, style, t.scale, extraScale);
       else drawShapeNode(bgCtx, n, p, style, t.scale, extraScale);
+      drawCollectionHalo(bgCtx, n, p, t.scale, showImage, extraScale);
       if (n.id === selectedId) {
         // A double ring, not the single ring used elsewhere (hover's dashed
         // outline, a drag's own ring) — with 2nd-order image neighbors
@@ -2697,6 +2738,8 @@
       if (!data || !data.entries || !data.entries.length) return;
       typeStyles = data.public_type_styles || {};
       relationCategory = data.relation_category || {};
+      currentCollectionId = (data.collection && data.collection.id) || "";
+      collectionColors = data.collections || {};
       buildGraph(data.entries);
       var visibleIds = data.entries.filter(matchesEntry).map(function (e) { return e.library_id; });
       relayout(visibleIds);
