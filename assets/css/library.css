@@ -489,19 +489,16 @@
    toggles it per view. Without that script ever running, the hint would
    otherwise describe a map that's never shown. */
 :root[data-nojs] .library-map-hint { display: none; }
-/* Filter and View share one row — View is pinned top-right (align-items:
-   flex-start) so opening the Filter disclosure only grows the Filter column
-   taller; View's own height never changes. This is what keeps the row
-   compact (saving vertical space above the chance-selection panel) instead
-   of two separate full-width blocks stacked on top of each other. The
-   border/padding that used to belong to .reference-filters alone now frames
-   the whole row, so the rule spans both controls, not just Filter. */
+/* View and Filter stack as two separate rows — Filter (collapsed by
+   default) sits below View rather than beside it, so opening the Filter
+   disclosure only ever grows this block downward, never widens or crowds
+   View. The border/padding that used to belong to .reference-filters alone
+   now frames the whole block, so the rule spans both controls, not just
+   Filter. */
 .library-controls {
   display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 0.5rem 1rem;
+  flex-direction: column;
+  gap: 0.7rem;
   border-top: 1px solid var(--rule);
   border-bottom: 1px solid var(--rule);
   padding: 1.1rem 0;
@@ -514,8 +511,7 @@
   border: 0;
   padding: 0;
   margin: 0;
-  flex: 1 1 auto;
-  min-width: 0;
+  flex: 0 0 auto;
 }
 /* Native <details>/<summary>: collapsed by default, the browser's own
    disclosure triangle is the "element next to Filter" that opens it — no

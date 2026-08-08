@@ -245,6 +245,11 @@
     c.addEventListener("click", function () {
       var facet = c.dataset.facet, v = c.dataset.value;
       if (v === "") {
+        // "All" is already the active state whenever nothing in this facet
+        // is selected — clicking it again must be a true no-op (no URL
+        // rewrite, no filter-change event), or the Map view reacts to a
+        // filter change that never actually happened.
+        if (sel[facet].length === 0) return;
         sel[facet] = [];
       } else {
         var i = sel[facet].indexOf(v);

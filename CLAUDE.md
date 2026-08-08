@@ -466,10 +466,9 @@ Partials: `library-{creators,works,related}.html`.
 
 **Landing** (`layouts/library/list.html`): intro → **View**/**Filters**
 (`.library-controls` — Type/Subject, Clear, result count, and the View switch
-share one flex row; View is pinned left as a fixed-width control so it never
-moves, Filter fills the remaining width to its right and is the only side
-that grows, so opening the Filter disclosure can never shift or overlap
-View. Filter is collapsed by default behind a native `<details>`/`<summary>`,
+stack as two rows, View above Filter, so opening the Filter disclosure only
+ever grows the block downward and never shifts or crowds View. Filter is
+collapsed by default behind a native `<details>`/`<summary>`,
 no custom disclosure JS; `library-filter.js` sets `open` explicitly on every
 load/history navigation — true when the URL already carries an active filter,
 false otherwise, overriding whatever a browser's own reload/history-state

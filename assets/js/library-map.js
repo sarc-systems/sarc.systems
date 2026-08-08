@@ -642,6 +642,24 @@
               var ux = ddx / dist, uy = ddy / dist;
               a.x += ux * push; a.y += uy * push;
               b.x -= ux * push; b.y -= uy * push;
+              // This correction only ever touches position, never velocity —
+              // so on the very next tick, force integration (still carrying
+              // whatever velocity brought the pair together) drives them
+              // straight back toward each other, gets pushed apart again,
+              // and repeats. In a dense cluster (typically near the visual
+              // center, where degree and thus overlap pressure is highest)
+              // many such pairs doing this in lockstep reads as a persistent
+              // high-frequency shimmer rather than a settle. Canceling the
+              // closing component of relative velocity along the same
+              // normal — standard inelastic-collision damping — means a
+              // corrected pair actually stops approaching instead of
+              // re-colliding next frame.
+              var relVx = a.vx - b.vx, relVy = a.vy - b.vy;
+              var closing = relVx * ux + relVy * uy;
+              if (closing < 0) {
+                a.vx -= ux * closing * 0.5; a.vy -= uy * closing * 0.5;
+                b.vx += ux * closing * 0.5; b.vy += uy * closing * 0.5;
+              }
             }
           }
         }
@@ -955,7 +973,7 @@
     var visibleEdges = edges.filter(function (e) { return visible[e.source] && visible[e.target]; });
     if (visibleNodes.length < 2) return; // nothing to simulate
     var sim = { nodes: visibleNodes, edges: visibleEdges, alpha: minAlpha, ticks: 0, done: false };
-    runContinuousSettle(sim, gen, function () { finishRelayout(gen, visibleNodes, visible); });
+    runContinuousSettle(sim, gen, function () { finishRelayout(gen, visibleNodes); });
   }
 
   // Called once the drag threshold is crossed (see initPointerHandling()) —
@@ -1009,7 +1027,7 @@
   // the graph still settles underneath, but the camera itself is the
   // user's to control from then on, never snapped or re-centered out from
   // under them.
-  function finishRelayout(gen, visibleNodes, idSet) {
+  function finishRelayout(gen, visibleNodes) {
     if (gen !== relayoutGen) return; // superseded
     // No separate overlap-resolution pass here anymore — settleTick() now
     // keeps ticking (still animated) until overlaps are already resolved
@@ -1021,8 +1039,6 @@
 
     var anyVisible = visibleNodes.length > 0;
     if (emptyEl) emptyEl.hidden = anyVisible || nodes.length === 0;
-    if (selectedId && !idSet[selectedId]) { deselectNode(); setSelectURLParam(null, "replace"); }
-    if (hoveredId && !idSet[hoveredId]) clearHovered();
   }
 
   // --- relayout(): the one orchestrator for a full load or a filter change.
@@ -1046,6 +1062,14 @@
     var idSet = {};
     visibleIds.forEach(function (id) { idSet[id] = true; });
     visible = idSet;
+
+    // A filter change that hides the current selection or hover clears it
+    // right away, synchronously, rather than waiting for finishRelayout()
+    // (which only runs once the settle animation converges — a real second
+    // or more later, during which the selected node's card would otherwise
+    // keep showing an entry no longer even on the map).
+    if (selectedId && !idSet[selectedId]) { deselectNode(); setSelectURLParam(null, "replace"); }
+    if (hoveredId && !idSet[hoveredId]) clearHovered();
 
     var visibleNodes = nodes.filter(function (n) { return idSet[n.id]; });
     var visibleEdges = edges.filter(function (e) { return idSet[e.source] && idSet[e.target]; });
@@ -1091,7 +1115,7 @@
     // finishRelayout().
     recomputeCommunityHulls(visibleNodes);
 
-    function done() { finishRelayout(gen, visibleNodes, idSet); }
+    function done() { finishRelayout(gen, visibleNodes); }
     if (visibleNodes.length >= 2) {
       runContinuousSettle({ nodes: visibleNodes, edges: visibleEdges, alpha: 1, ticks: 0, done: false }, gen, done);
     } else {
