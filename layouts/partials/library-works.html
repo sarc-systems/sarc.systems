@@ -6,25 +6,36 @@
        performer/contributor credited on that group or organization's own
        entry, distinct from an actual work). Renders nothing when the entry has
        no library.id or nothing credits it.
+
+       Searches ALL Collections, not just the viewed entry's own — a creator
+       credit is a fact about who made something regardless of which
+       Collection that something happens to be filed under (e.g. a
+       manufacturer Organization entry in `research` credited by a manual
+       Entry now filed under `manuals` — see docs/library-v2.md § 4.3).
+       Matches library-related.html's own reverse scan, which is global for
+       the same reason. Each credited page's public type is resolved through
+       ITS OWN Collection's vocabulary (library-page-context.html), never the
+       viewed entry's — two different Collections may classify types
+       differently.
+
        Call: {{ partial "library-works.html" (dict "page" .) }} */ -}}
 {{- $id := .page.Params.library.id -}}
 {{- with $id -}}
-  {{- $coll := partial "library-resolve-collection.html" $.page -}}
-  {{- $lib := partial "library-vocab.html" $coll -}}
-  {{- $vocabName := $coll.vocabulary | default "library" -}}
-  {{- $pt := partialCached "library-public-types.html" $lib (printf "library-public-types-%s" $vocabName) -}}
   {{- $works := slice -}}
   {{- $groups := slice -}}
-  {{- range (partial "library-collect.html" (dict "ctx" $.page "sectionPath" $coll.source.section "collection" $coll.id)) -}}
+  {{- range site.RegularPages -}}
     {{- $p := . -}}
-    {{- $credited := false -}}
-    {{- range $p.Params.creators }}{{ if eq .ref $id }}{{ $credited = true }}{{ end }}{{ end -}}
-    {{- if $credited -}}
-      {{- $srcType := "" }}{{ with $p.Params.library }}{{ $srcType = .type }}{{ end -}}
-      {{- if in (slice "group" "organization") (index $pt.typeOf $srcType) -}}
-        {{- $groups = $groups | append $p -}}
-      {{- else -}}
-        {{- $works = $works | append $p -}}
+    {{- if $p.Params.library.id -}}
+      {{- $credited := false -}}
+      {{- range $p.Params.creators }}{{ if eq .ref $id }}{{ $credited = true }}{{ end }}{{ end -}}
+      {{- if $credited -}}
+        {{- $srcType := "" }}{{ with $p.Params.library }}{{ $srcType = .type }}{{ end -}}
+        {{- $pCtx := partial "library-page-context.html" $p -}}
+        {{- if in (slice "group" "organization") (index $pCtx.pt.typeOf $srcType) -}}
+          {{- $groups = $groups | append $p -}}
+        {{- else -}}
+          {{- $works = $works | append $p -}}
+        {{- end -}}
       {{- end -}}
     {{- end -}}
   {{- end -}}
