@@ -1,18 +1,27 @@
-{{- /* The Library root's own "Entries": one per registered Collection,
-       represented by that Collection's own section index page (which
-       doubles as its Collection-summary Entry — see docs/library-v2.md
-       § 11 and the comment in content/library/research/_index.md).
-       Non-production Collections (build.production: false) are excluded
-       from production builds, included on the dev server, matching the
-       existing minimal build-inclusion mechanism (docs/library-v2.md § 3).
+{{- /* The Library root's own "Entries": one per PRODUCTION-eligible
+       registered Collection (build.production: true), represented by
+       that Collection's own section index page (which doubles as its
+       Collection-summary Entry — see docs/library-v2.md § 11 and the
+       comment in content/library/research/_index.md).
+
+       Filters on `.build.production` alone, unconditionally — in every
+       environment, not just an actual production build. `site.GetPage`
+       does NOT respect draft-exclusion the way site.RegularPages does
+       (it will happily return a draft page's reference regardless of
+       whether -D was passed), so it can't be used as an implicit "is
+       this Collection's content actually in this build" signal — a
+       build.production: false Collection (e.g. the field-kit fixture,
+       cascaded draft: true) is deliberately never surfaced at the root
+       at all, dev or production; test it directly at its own URL
+       (/library/field-kit/ with `make dev`) instead. See
+       docs/library-v2.md § 3/§ 14.
+
        Call: {{ $entries := partial "library-root-entries.html" . }}
        Returns a plain slice of Pages, in registry order. */ -}}
 {{- $out := slice -}}
 {{- range hugo.Data.library.collections -}}
-  {{- if or .build.production (not hugo.IsProduction) -}}
-    {{- if eq .source.adapter "hugo" -}}
-      {{- with site.GetPage (printf "/%s" .source.section) }}{{ $out = $out | append . }}{{ end -}}
-    {{- end -}}
+  {{- if and (eq .source.adapter "hugo") .build.production -}}
+    {{- with site.GetPage (printf "/%s" .source.section) }}{{ $out = $out | append . }}{{ end -}}
   {{- end -}}
 {{- end -}}
 {{- return $out -}}

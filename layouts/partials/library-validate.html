@@ -78,22 +78,21 @@
          wrong id/color, or root's Catalog rendering (library-record.html,
          which reads these directly off the page) would break. See the
          comment in content/library/research/_index.md.
-         Content-dependent (unlike the checks above), so a
-         build.production: false Collection (e.g. the field-kit fixture)
-         is skipped here during an actual production build, where its
-         content is legitimately absent (draft-excluded) — checking it
-         then would only ever fail on "no section page found." */ -}}
-  {{- if or .build.production (not hugo.IsProduction) -}}
-    {{- if eq .source.adapter "hugo" -}}
-      {{- $collColor := .color -}}
-      {{- $collSection := .source.section -}}
-      {{- with site.GetPage (printf "/%s" $collSection) -}}
-        {{- $pageId := "" }}{{ $pageColor := "" }}{{ with .Params.library }}{{ $pageId = .id }}{{ $pageColor = .color }}{{ end -}}
-        {{- if ne $pageId $collId }}{{ errorf "Library: Collection %q's section page (%s) has library.id %q, which doesn't match the registry" $collId .Path $pageId }}{{ end -}}
-        {{- if ne $pageColor $collColor }}{{ errorf "Library: Collection %q's section page (%s) has library.color %q, which doesn't match the registry's %q" $collId .Path $pageColor $collColor }}{{ end -}}
-      {{- else -}}
-        {{- errorf "Library: Collection %q's source.section %q has no section page (expected content/%s/_index.md)" $collId $collSection $collSection -}}
-      {{- end -}}
+         Runs unconditionally, for every registered Collection regardless
+         of build.production: site.GetPage (unlike site.RegularPages)
+         does NOT respect draft-exclusion — it returns a draft page's
+         reference the same in every build mode — so a missing page here
+         is always a genuine misconfiguration (source.section pointing
+         nowhere), never an expected absence. */ -}}
+  {{- if eq .source.adapter "hugo" -}}
+    {{- $collColor := .color -}}
+    {{- $collSection := .source.section -}}
+    {{- with site.GetPage (printf "/%s" $collSection) -}}
+      {{- $pageId := "" }}{{ $pageColor := "" }}{{ with .Params.library }}{{ $pageId = .id }}{{ $pageColor = .color }}{{ end -}}
+      {{- if ne $pageId $collId }}{{ errorf "Library: Collection %q's section page (%s) has library.id %q, which doesn't match the registry" $collId .Path $pageId }}{{ end -}}
+      {{- if ne $pageColor $collColor }}{{ errorf "Library: Collection %q's section page (%s) has library.color %q, which doesn't match the registry's %q" $collId .Path $pageColor $collColor }}{{ end -}}
+    {{- else -}}
+      {{- errorf "Library: Collection %q's source.section %q has no section page (expected content/%s/_index.md)" $collId $collSection $collSection -}}
     {{- end -}}
   {{- end -}}
 
@@ -148,12 +147,16 @@
        fails the build — unlike a cross-Collection related.ref, a Shelf can
        only ever point within its own Collection, so there's no "target
        Collection doesn't exist yet" excuse for a broken one.
-       Content-dependent (needs $collectionOf, built from $entries, which
-       excludes a build.production: false Collection's content during an
-       actual production build) — same guard as the section-page check
-       above, for the same reason. */ -}}
+       Content-dependent: needs $collectionOf, built from $entries, which
+       excludes EVERY draft page unconditionally (see its own comment
+       above) — not just in a production build. A build.production: false
+       Collection's content is cascaded draft: true (e.g. the field-kit
+       fixture), so $collectionOf never contains its pages in ANY build
+       mode, meaning this check would always spuriously fail its real
+       include/exclude refs against an empty set if it ran at all — skip
+       it outright for a non-production Collection, unconditionally. */ -}}
 {{- range $registry -}}
-  {{- if and (eq .source.adapter "hugo") (or .build.production (not hugo.IsProduction)) -}}
+  {{- if and (eq .source.adapter "hugo") .build.production -}}
     {{- $collId := .id -}}
     {{- $shelvesData := index (index hugo.Data.library.shelves | default dict) $collId | default slice -}}
     {{- $collIdsInThisCollection := slice -}}

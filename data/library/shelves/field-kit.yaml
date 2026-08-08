@@ -1,0 +1,17 @@
+# Shelves for the "field-kit" Collection — see docs/library-v2.md § 5/§ 14.
+# Demonstrates all three authoring methods with genuine overlap (the
+# acceptance requirement is "at least two overlapping Shelves" — these
+# three overlap pairwise: multimeter sits on both Bench Stock and Fragile
+# Items; the Field Case and Tuning Fork Set sit on both Bench Stock and
+# Mara's Essentials).
+- id: bench-stock
+  title: "Bench Stock"
+  filter:
+    subjects: {includes: portable}
+- id: fragile-items
+  title: "Fragile Items"
+  filter:
+    subjects: {includes: fragile}
+- id: maras-essentials
+  title: "Mara's Essentials"
+  include: [tuning-fork-set, field-case, mara-solberg]

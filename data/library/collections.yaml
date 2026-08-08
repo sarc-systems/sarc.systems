@@ -49,3 +49,46 @@
   build:
     production: true
   related: []
+
+# "field-kit" — the Library v2 genericity fixture (docs/library-v2.md § 14,
+# todo_libv2.txt "Genericity proof"). Non-production test data proving the
+# shared engine isn't hardcoded to SARC Research: its own independent
+# vocabulary (data/library/vocabularies/field-kit.yaml — different public
+# types, specific types, subjects, creator roles, relation types), its own
+# Colorplan color, overlapping Shelves (data/library/shelves/field-kit.yaml),
+# and two Projections with different compatible Views. `build.production:
+# false` here is the declarative/documentation-level marker; the actual
+# enforcement is `cascade: [{draft: true}]` on
+# content/library/field-kit/_index.md — Hugo excludes draft content
+# entirely from a production build (no -D), so this Collection's pages
+# produce no output there at all, while `make dev` (hugo server -D) builds
+# and serves them normally for testing. See the comment on that file for
+# why draft (not this flag) is the actual mechanism.
+- id: field-kit
+  title: Field Kit
+  description: >
+    A traveling instrument technician's tool case — a small, deliberately
+    non-SARC fixture proving the Library engine works for an unrelated
+    domain, vocabulary, and Shelf/Projection configuration.
+  color: mandarin
+  vocabulary: field-kit
+  source:
+    adapter: hugo
+    section: library/field-kit
+  views:
+    enabled: [catalog, images, map]
+    default: map
+  projections:
+    default: all
+    list:
+      - id: all
+        title: All Entries
+        views: [catalog, images, map]
+        default_view: catalog
+      - id: inventory
+        title: Inventory
+        views: [catalog]
+        default_view: catalog
+  build:
+    production: false
+  related: []
