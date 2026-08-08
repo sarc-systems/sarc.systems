@@ -313,6 +313,16 @@ import mistakes and poor contrast without hand-editing the palette.
 
 ## Library
 
+> **Library v2 migration in progress.** This section describes the
+> pre-v2 production reality (one unified catalog, single flat corpus) as it
+> exists on `main` right now. A phased rewrite into a multi-Collection
+> architecture (Library as a meta-Collection, `research` as the first child
+> Collection at `/library/research/`, Shelves/Projections/Views as
+> first-class concepts) is underway — see `docs/library-v2.md` for the
+> target architecture and `todo_libv2.txt` for the originating work order.
+> This section is rewritten to match once the migration (its Phase 4) lands;
+> until then, treat everything below as accurate for the code as it stands.
+
 **One unified catalog of entries** — a growing research collection and small
 knowledge graph, not a set of shelves. There are no public Writings / References
 / Manuals / Sources / Reading / Links sections. Anything durable SARC wants to
