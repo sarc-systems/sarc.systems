@@ -17,10 +17,12 @@
     {{- $type := $page.Params.library.type -}}
     {{- $publicType := index $pt.typeOf $type -}}
     {{- $subs := $page.Params.subjects | default slice -}}
+    {{- $coll := partial "library-resolve-collection.html" $page -}}
+    {{- $shelves := partial "library-entry-shelves.html" (dict "page" $page "collection" $coll.id) -}}
     {{- $thumb := partial "library-thumbnail.html" $page -}}
     {{- if $thumb.has }}
   <a class="library-image-index__item" href="{{ $page.RelPermalink }}" aria-label="View {{ $page.Title }}"
-     data-library-id="{{ $id }}" data-type="{{ $publicType }}" data-subjects="{{ delimit $subs " " }}">
+     data-library-id="{{ $id }}" data-type="{{ $publicType }}" data-subjects="{{ delimit $subs " " }}" data-shelves="{{ delimit $shelves " " }}">
     <img src="{{ $thumb.url }}" srcset="{{ $thumb.url }} 1x, {{ $thumb.url2x }} 2x"
          style="object-position: {{ $thumb.pos }}" alt="{{ $thumb.alt }}" width="240" height="240" loading="lazy" decoding="async">
   </a>

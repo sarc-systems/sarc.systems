@@ -299,7 +299,7 @@
   // Collection research corpus today.
   var currentCollectionId = "";
   var collectionColors = {};
-  var sel = { type: [], subject: [] };
+  var sel = { type: [], subject: [], shelf: [] };
   var visible = {}; // id -> bool, the current filtered set
   var currentVB = { x: 0, y: 0, w: W, h: H };
   var selectedId = null; // the persistent selection — see module comment
@@ -319,7 +319,12 @@
     var subjOk = sel.subject.length === 0 || sel.subject.some(function (s) {
       return (e.subjects || []).indexOf(s) !== -1;
     });
-    return typeOk && subjOk;
+    // Shelves combine by union/OR, same as library-filter.js's own
+    // matchesFields() — see docs/library-v2.md § 5.
+    var shelfOk = sel.shelf.length === 0 || sel.shelf.some(function (s) {
+      return (e.shelves || []).indexOf(s) !== -1;
+    });
+    return typeOk && subjOk && shelfOk;
   }
 
   function reduceMotion() {
@@ -333,6 +338,7 @@
     var params = new URLSearchParams(location.search);
     sel.type = (params.get("type") || "").split(",").filter(Boolean);
     sel.subject = (params.get("subject") || "").split(",").filter(Boolean);
+    sel.shelf = (params.get("shelf") || "").split(",").filter(Boolean);
     pendingSelectId = params.get("select") || null;
   }
 
@@ -2750,6 +2756,7 @@
   document.addEventListener("library:filter-change", function (ev) {
     sel.type = (ev.detail && ev.detail.type) || [];
     sel.subject = (ev.detail && ev.detail.subject) || [];
+    sel.shelf = (ev.detail && ev.detail.shelf) || [];
     if (nodes.length) applyFilter();
   });
 

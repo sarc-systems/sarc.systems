@@ -67,6 +67,24 @@
       {{- errorf "Library: Collection %q's source.section %q has no section page (expected content/%s/_index.md)" $collId $collSection $collSection -}}
     {{- end -}}
   {{- end -}}
+
+  {{- /* Projections (docs/library-v2.md § 6.2/§ 6.4). Every Projection's
+         own `views` must be a subset of the Collection's views.enabled —
+         a Projection can never claim a View its Collection's data doesn't
+         support at all — and its `default_view` must be one of its own
+         `views`. `projections.default` must name a real Projection id;
+         the implicit `all` Projection always counts as real even when
+         not listed explicitly. */ -}}
+  {{- $projIds := slice "all" -}}
+  {{- range .projections.list -}}
+    {{- $projId := .id -}}
+    {{- if not $projId }}{{ errorf "Library: Collection %q has a Projection with no id" $collId }}{{ end -}}
+    {{- if and $projId (ne $projId "all") }}{{ if in $projIds $projId }}{{ errorf "Library: Collection %q has duplicate Projection id %q" $collId $projId }}{{ end }}{{ $projIds = $projIds | append $projId }}{{ end -}}
+    {{- if not .views }}{{ errorf "Library: Collection %q Projection %q declares no views" $collId $projId }}{{ end -}}
+    {{- range .views }}{{ if not (in $enabled .) }}{{ errorf "Library: Collection %q Projection %q claims view %q, which isn't in the Collection's own views.enabled" $collId $projId . }}{{ end }}{{ end -}}
+    {{- if and .default_view (not (in .views .default_view)) }}{{ errorf "Library: Collection %q Projection %q default_view %q is not in its own views" $collId $projId .default_view }}{{ end -}}
+  {{- end -}}
+  {{- if and .projections.default (not (in $projIds .projections.default)) }}{{ errorf "Library: Collection %q projections.default %q is not a known Projection id" $collId .projections.default }}{{ end -}}
 {{- end -}}
 
 {{- /* Resolve each entry's owning Collection id. adapter:hugo Collections
@@ -90,6 +108,38 @@
     {{- if not $cid }}{{ errorf "Library: cross-included page %q has no library.collection, and more than one Collection is registered — ambiguous" $page.Path }}{{ end -}}
   {{- end -}}
   {{- $collectionOf = merge $collectionOf (dict $page.Path $cid) -}}
+{{- end -}}
+
+{{- /* Shelves (docs/library-v2.md § 5) — data/library/shelves/<id>.yaml per
+       adapter:hugo Collection. Validates: unique shelf ids within the
+       Collection; include/exclude reference this Collection's own
+       (bare, not namespaced) library.id values; a rule-based filter only
+       names recognized facet keys (type, subjects — the only two Facets
+       `research` currently has; see docs/library-v2.md § 6.1 on Facets
+       being Collection-specific). An unresolved include/exclude ref fails
+       the build — unlike a cross-Collection related.ref, a Shelf can only
+       ever point within its own Collection, so there's no "target
+       Collection doesn't exist yet" excuse for a broken one. */ -}}
+{{- range $registry -}}
+  {{- if eq .source.adapter "hugo" -}}
+    {{- $collId := .id -}}
+    {{- $shelvesData := index (index hugo.Data.library.shelves | default dict) $collId | default slice -}}
+    {{- $collIdsInThisCollection := slice -}}
+    {{- range $entries -}}{{ if eq (index $collectionOf .Path) $collId }}{{ with .Params.library.id }}{{ $collIdsInThisCollection = $collIdsInThisCollection | append . }}{{ end }}{{ end }}{{ end -}}
+    {{- $shelfIds := slice -}}
+    {{- range $shelvesData -}}
+      {{- $shelfId := .id -}}
+      {{- if not $shelfId }}{{ errorf "Library: Collection %q has a Shelf with no id" $collId }}{{ end -}}
+      {{- if and $shelfId (in $shelfIds $shelfId) }}{{ errorf "Library: Collection %q has duplicate Shelf id %q" $collId $shelfId }}{{ end -}}
+      {{- $shelfIds = $shelfIds | append $shelfId -}}
+      {{- if not .title }}{{ errorf "Library: Collection %q Shelf %q has no title" $collId $shelfId }}{{ end -}}
+      {{- range .include }}{{ if not (in $collIdsInThisCollection .) }}{{ errorf "Library: Collection %q Shelf %q includes %q, which doesn't resolve within this Collection" $collId $shelfId . }}{{ end }}{{ end -}}
+      {{- range .exclude }}{{ if not (in $collIdsInThisCollection .) }}{{ errorf "Library: Collection %q Shelf %q excludes %q, which doesn't resolve within this Collection" $collId $shelfId . }}{{ end }}{{ end -}}
+      {{- with .filter -}}
+        {{- range $k, $v := . }}{{ if not (in (slice "type" "subjects") $k) }}{{ errorf "Library: Collection %q Shelf %q filter uses unrecognized facet %q (allowed: type, subjects)" $collId $shelfId $k }}{{ end }}{{ end -}}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
 {{- end -}}
 
 {{- /* Pre-pass: tally every image `source` URL across all entries, so a

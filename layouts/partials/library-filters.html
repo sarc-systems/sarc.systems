@@ -23,6 +23,7 @@
        that matters for state/accessibility. */ -}}
 {{- $lib := hugo.Data.library -}}
 {{- $pages := .pages -}}
+{{- $coll := .coll -}}
 {{- $pt := partialCached "library-public-types.html" . "library-public-types" -}}
 {{- $haveType := slice }}{{ $haveSub := slice -}}
 {{- range $pages -}}
@@ -31,6 +32,13 @@
 {{- end -}}
 {{- $haveType = uniq $haveType }}{{ $haveSub = uniq $haveSub -}}
 {{- $publicTypesOrdered := sort $lib.public_types "order" -}}
+{{- /* Shelves (docs/library-v2.md § 5) — same toggleable-chip mechanism as
+       Type/Subject, never a color swatch (Shelves inherit their
+       Collection's context, no identity color of their own). Renders
+       nothing when the current Collection has no Shelves configured
+       (true for research today — see data/library/shelves/research.yaml)
+       rather than showing an empty, useless fieldset. */ -}}
+{{- $shelves := slice }}{{ if $coll }}{{ $shelves = index (index hugo.Data.library.shelves | default dict) $coll.id | default slice }}{{ end -}}
 <details class="reference-filters">
   <summary class="rf-head">Filter</summary>
   <form aria-label="Filter the Library">
@@ -50,6 +58,16 @@
     <button type="button" class="rf-chip" data-facet="subject" data-value="{{ .subject }}" aria-pressed="false">{{ .label }}</button>
     {{- end }}{{ end }}
   </fieldset>
+
+  {{- with $shelves }}
+  <fieldset class="rf-facet">
+    <legend>Shelf</legend>
+    <button type="button" class="rf-chip is-active" data-facet="shelf" data-value="" aria-pressed="true">All</button>
+    {{- range . }}
+    <button type="button" class="rf-chip" data-facet="shelf" data-value="{{ .id }}" aria-pressed="false">{{ .title }}</button>
+    {{- end }}
+  </fieldset>
+  {{- end }}
 
   <div class="rf-actions">
     <button type="button" class="rf-clear" hidden>Clear filters</button>

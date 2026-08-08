@@ -31,8 +31,21 @@
   views:
     enabled: [catalog, images, map]
     default: map
+  # Every Collection has an implicit `all` Projection (identity transform,
+  # no context Entries added) even if not listed here — see
+  # docs/library-v2.md § 6.2. `default` names which Projection loads with
+  # no `?projection=` in the URL. Listing `all` explicitly here (rather
+  # than leaving it purely implicit) is what lets the config validation and
+  # the client-side Projection/View compatibility resolver
+  # (assets/js/library-filter.js) treat every Collection uniformly, with
+  # no special-cased "there's no explicit list" branch.
   projections:
     default: all
+    list:
+      - id: all
+        title: All Entries
+        views: [catalog, images, map]
+        default_view: catalog
   build:
     production: true
   related: []

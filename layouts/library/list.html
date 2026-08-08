@@ -19,7 +19,7 @@
 
   <div class="library-controls">
     {{ partial "library-view-switch.html" . }}
-    {{ partial "library-filters.html" (dict "pages" $entries) }}
+    {{ partial "library-filters.html" (dict "pages" $entries "coll" $coll) }}
   </div>
 
   <h2 class="library-all-head" id="all-entries">All entries</h2>

@@ -81,10 +81,16 @@
     {{- with $rel.ref }}{{ $related = $related | append (dict "ref" . "relation" ($rel.relation | default "")) }}{{ end -}}
   {{- end -}}
 
+  {{- /* shelves (docs/library-v2.md § 5) — one shared evaluator, see
+         library-entry-shelves.html; empty for root entries (no Shelves
+         data registered under the "library" pseudo-collection id). */ -}}
+  {{- $entryShelves := partial "library-entry-shelves.html" (dict "page" $p "collection" $coll.id) -}}
+
   {{- $rec := dict
       "library_id" $entryId
       "collection" $coll.id
       "color" (.Params.library.color | default "")
+      "shelves" $entryShelves
       "title" .Title
       "url" .RelPermalink
       "type" $type
@@ -107,6 +113,31 @@
     "title" $coll.title
     "color" $coll.color
     "description" ($coll.description | default "") -}}
+
+{{- /* Shelves metadata (id/title only — membership already lives on each
+       entry's own `shelves` field above) and Projections (docs/library-v2.md
+       § 6.2), both empty/degenerate-but-correct for the root. */ -}}
+{{- $shelvesOut := slice -}}
+{{- range (index (index hugo.Data.library.shelves | default dict) $coll.id | default slice) -}}
+  {{- $shelvesOut = $shelvesOut | append (dict "id" .id "title" .title) -}}
+{{- end -}}
+{{- /* The root has no registry row of its own (it's the implicit
+       meta-Collection, not one of its own children — see
+       library-resolve-collection.html), so it falls back to the actual
+       three Views its own templates support. */ -}}
+{{- $regRow := index $registryById $coll.id -}}
+{{- $projList := slice -}}
+{{- if $regRow }}{{ $projList = $regRow.projections.list }}{{ end -}}
+{{- if not $projList -}}
+  {{- $viewsEnabled := slice "catalog" "images" "map" }}{{ $viewsDefault := "map" -}}
+  {{- if $regRow }}{{ $viewsEnabled = $regRow.views.enabled }}{{ $viewsDefault = $regRow.views.default }}{{ end -}}
+  {{- $projList = slice (dict "id" "all" "views" $viewsEnabled "default_view" $viewsDefault) -}}
+{{- end -}}
+{{- $projectionsOut := slice -}}
+{{- range $projList }}{{ $projectionsOut = $projectionsOut | append (dict "id" .id "title" (.title | default "All Entries") "views" .views "default_view" .default_view) }}{{ end -}}
+{{- $projDefault := "all" -}}
+{{- if $regRow }}{{ with $regRow.projections.default }}{{ $projDefault = . }}{{ end }}{{ end -}}
+
 {{ dict
     "collection" $collOut
     "collections" $collectionColors
@@ -115,4 +146,7 @@
     "public_type_styles" $pt.styles
     "relation_inverse" $lib.relation_inverse
     "relation_category" $lib.relation_categories
+    "shelves" $shelvesOut
+    "projections" $projectionsOut
+    "projection_default" $projDefault
   | jsonify (dict "indent" "  ") }}

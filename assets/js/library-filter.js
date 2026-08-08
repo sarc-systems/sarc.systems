@@ -4,10 +4,16 @@
 // (typeA OR typeB) AND (subjA OR subjB). (An Origin/SARC-work facet was
 // removed for now — sarc_work is still a valid per-entry field and still in
 // the JSON index, just not filterable here.)
-// State lives in the URL query string (?type=a,b&subject=c&view=catalog) so
-// views are shareable and survive back/forward. A fourth param, `select=
-// <library.id>`, coexists in the same query string but is owned and written
-// entirely by library-map.js (Map view's node selection) — this file never
+// Shelf (docs/library-v2.md § 5) is a distinct concept from a Facet — a
+// named, persistent, possibly-overlapping Entry selection rather than a
+// property of the Entry itself — but shares this exact multi/OR toggleable-
+// chip mechanism, and combines with Type/Subject the same way any other
+// facet-like group does: (shelfA OR shelfB) AND (typeA OR typeB) AND ...
+// State lives in the URL query string (?type=a,b&subject=c&shelf=d&view=
+// catalog) so views are shareable and survive back/forward. A further
+// param, `select=<library.id>`, coexists in the same query string but is
+// owned and written entirely by library-map.js (Map view's node selection)
+// — this file never
 // reads it into its own state, only preserves it unmodified whenever it
 // rewrites the URL for a type/subject/view change (see toURL()) so a filter
 // or view-switch click never silently drops the current selection from the
@@ -41,6 +47,41 @@
   var mapEmpty = document.getElementById("library-map-empty");
   var viewSwitch = document.querySelector("[data-view-switch]");
   var viewButtons = viewSwitch ? Array.prototype.slice.call(viewSwitch.querySelectorAll("[data-library-view]")) : [];
+
+  // Projections (docs/library-v2.md § 6.2/§ 6.4) — every Collection has at
+  // least the implicit "all" Projection; library-view-switch.html always
+  // emits `data-projections` (a JSON array of {id, title, views,
+  // default_view}) somewhere on the page, whether or not it also rendered
+  // a visible chip row (only shown once a second Projection actually
+  // exists — see that file). projectionSwitch/projectionButtons are only
+  // the (possibly absent) visible chips; projList/projections is always
+  // populated so the compatibility resolver below works regardless.
+  var projectionSwitch = document.querySelector("[data-projection-switch]");
+  var projectionButtons = projectionSwitch ? Array.prototype.slice.call(projectionSwitch.querySelectorAll("[data-projection]")) : [];
+  var projectionsEl = document.querySelector("[data-projections]");
+  var projList = [];
+  try { projList = projectionsEl ? JSON.parse(projectionsEl.dataset.projections || "[]") : []; } catch (e) { projList = []; }
+  var projectionsById = {};
+  projList.forEach(function (p) { projectionsById[p.id] = p; });
+  var defaultProjectionId = (projectionsEl && projectionsEl.dataset.projectionDefault) || (projList[0] && projList[0].id) || "all";
+
+  // Projection/View compatibility resolution (docs/library-v2.md § 6.4):
+  //   effective views = Collection.views.enabled ∩ Projection.views
+  // When switching Projection: keep the current View if still compatible;
+  // else the Projection's own default_view; else the first view the
+  // Projection allows at all. A pure function of its inputs (verified
+  // directly against synthetic Projection data — research itself only
+  // ever has one Projection today, so this has no real second-Projection
+  // case to exercise yet; see docs/library-v2.md § 6.4/§ 15 and the Phase 6
+  // fixture, which is where an actual view-restricting Projection first
+  // exists to click through).
+  function resolveProjectionView(currentView, projection) {
+    var views = (projection && projection.views) || ["catalog", "images", "map"];
+    if (views.indexOf(currentView) !== -1) return currentView;
+    if (projection && projection.default_view && views.indexOf(projection.default_view) !== -1) return projection.default_view;
+    return views[0] || "map";
+  }
+  window.__libraryResolveProjectionView = resolveProjectionView; // exposed for direct verification (see above)
 
   var records = Array.prototype.slice.call(list.querySelectorAll(".library-record"));
   var imageItems = imageIndex ? Array.prototype.slice.call(imageIndex.querySelectorAll(".library-image-index__item")) : [];
@@ -99,12 +140,16 @@
     return chips.filter(function (c) { return c.dataset.facet === facet; });
   }
 
-  // Active state: multi sets for type + subject, plus the presentation view
-  // ("catalog" | "images" | "map"). Map is the default — an absent or
-  // invalid ?view= resolves to "map" (see fromURL/toURL below, which only
-  // ever add view=catalog or view=images to the URL).
-  var sel = { type: [], subject: [] };
+  // Active state: multi sets for type + subject + shelf (docs/library-v2.md
+  // § 5 — Shelves are a distinct concept from Facets but share this exact
+  // toggleable-chip mechanism, so they're just a third entry here), plus
+  // the presentation view ("catalog" | "images" | "map"). Map is the
+  // default — an absent or invalid ?view= resolves to "map" (see
+  // fromURL/toURL below, which only ever add view=catalog or view=images
+  // to the URL).
+  var sel = { type: [], subject: [], shelf: [] };
   var view = "map";
+  var projection = defaultProjectionId;
 
   function setView(v) {
     view = (v === "catalog" || v === "images") ? v : "map";
@@ -120,15 +165,34 @@
     // that content, only on whether Map's own elements should be visible
     // at all under a different view.
     if (mapEmpty && view !== "map") mapEmpty.hidden = true;
+    var effectiveViews = (projectionsById[projection] && projectionsById[projection].views) || ["catalog", "images", "map"];
     viewButtons.forEach(function (b) {
       var on = b.dataset.libraryView === view;
       b.setAttribute("aria-pressed", on ? "true" : "false");
       b.classList.toggle("is-active", on);
+      // A View button incompatible with the current Projection is hidden,
+      // not just disabled — matching "don't show useless UI" (see the
+      // Shelf/Projection chip-row rules above). Inert on research today
+      // (its one Projection allows every View); ready for Phase 6's
+      // fixture, whose "table"-only-style Projection would actually
+      // exercise this.
+      b.hidden = effectiveViews.indexOf(b.dataset.libraryView) === -1;
     });
   }
 
+  function setProjection(id) {
+    projection = projectionsById[id] ? id : defaultProjectionId;
+    if (projectionButtons.length) {
+      projectionButtons.forEach(function (b) {
+        var on = b.dataset.projection === projection;
+        b.setAttribute("aria-pressed", on ? "true" : "false");
+        b.classList.toggle("is-active", on);
+      });
+    }
+  }
+
   function paint() {
-    ["type", "subject"].forEach(function (facet) {
+    ["type", "subject", "shelf"].forEach(function (facet) {
       chipsFor(facet).forEach(function (c) {
         var v = c.dataset.value;
         var on = v === "" ? sel[facet].length === 0 : sel[facet].indexOf(v) !== -1;
@@ -136,18 +200,24 @@
         c.classList.toggle("is-active", on);
       });
     });
-    if (clearBtn) clearBtn.hidden = !sel.type.length && !sel.subject.length;
+    if (clearBtn) clearBtn.hidden = !sel.type.length && !sel.subject.length && !sel.shelf.length;
   }
 
-  function matchesFields(type, subjects) {
+  function matchesFields(type, subjects, shelves) {
     var typeOk = sel.type.length === 0 || sel.type.indexOf(type) !== -1;
     var subjOk = sel.subject.length === 0 || sel.subject.some(function (s) {
       return subjects.indexOf(s) !== -1;
     });
-    return typeOk && subjOk;
+    // Shelves combine by union/OR, same as multiple values within any one
+    // Facet (docs/library-v2.md § 5/§ 6.1) — an entry matches if it sits on
+    // ANY currently-active Shelf, not all of them.
+    var shelfOk = sel.shelf.length === 0 || sel.shelf.some(function (s) {
+      return shelves.indexOf(s) !== -1;
+    });
+    return typeOk && subjOk && shelfOk;
   }
   function matchesDataset(ds) {
-    return matchesFields(ds.type || "", (ds.subjects || "").split(/\s+/).filter(Boolean));
+    return matchesFields(ds.type || "", (ds.subjects || "").split(/\s+/).filter(Boolean), (ds.shelves || "").split(/\s+/).filter(Boolean));
   }
 
   // `fromNav` is true only when called right after fromURL() (initial load or
@@ -163,7 +233,7 @@
   // ordinary chip click never touches `open`, so it doesn't fight a visitor
   // who's already opened or closed the panel themselves mid-session.
   function apply(fromNav) {
-    var anyFilter = sel.type.length > 0 || sel.subject.length > 0;
+    var anyFilter = sel.type.length > 0 || sel.subject.length > 0 || sel.shelf.length > 0;
     if (allHead) allHead.textContent = anyFilter ? "Matching entries" : "All entries";
     if (fromNav && "open" in form) form.open = anyFilter;
 
@@ -210,7 +280,7 @@
     // it owns its own rendering entirely (see that file), so this is the only
     // coupling between the two: one event, not a shared internal API.
     document.dispatchEvent(new CustomEvent("library:filter-change", {
-      detail: { view: view, type: sel.type.slice(), subject: sel.subject.slice() }
+      detail: { view: view, type: sel.type.slice(), subject: sel.subject.slice(), shelf: sel.shelf.slice() }
     }));
   }
 
@@ -218,6 +288,8 @@
     var params = new URLSearchParams();
     if (sel.type.length) params.set("type", sel.type.join(","));
     if (sel.subject.length) params.set("subject", sel.subject.join(","));
+    if (sel.shelf.length) params.set("shelf", sel.shelf.join(","));
+    if (projection !== defaultProjectionId) params.set("projection", projection);
     if (view === "catalog" || view === "images") params.set("view", view);
     // `select` (the Map view's node selection) is owned entirely by
     // library-map.js — never read into `sel` here — but this rewrite must
@@ -233,10 +305,12 @@
   }
   function fromURL() {
     var params = new URLSearchParams(location.search);
-    var valid = { type: {}, subject: {} };
+    var valid = { type: {}, subject: {}, shelf: {} };
     chips.forEach(function (c) { if (c.dataset.value) valid[c.dataset.facet][c.dataset.value] = 1; });
     sel.type = (params.get("type") || "").split(",").filter(function (v) { return valid.type[v]; });
     sel.subject = (params.get("subject") || "").split(",").filter(function (v) { return valid.subject[v]; });
+    sel.shelf = (params.get("shelf") || "").split(",").filter(function (v) { return valid.shelf[v]; });
+    setProjection(params.get("projection") || defaultProjectionId);
     var v = params.get("view") || "";
     setView(v === "catalog" ? "catalog" : v === "images" ? "images" : "map");
   }
@@ -269,9 +343,24 @@
     });
   });
 
+  projectionButtons.forEach(function (b) {
+    b.addEventListener("click", function () {
+      var id = b.dataset.projection;
+      if (id === projection) return;
+      setProjection(id);
+      // Switching Projection can leave the current View incompatible with
+      // the new one — resolve to a still-compatible View per
+      // docs/library-v2.md § 6.4 (see resolveProjectionView() above)
+      // before repainting anything.
+      setView(resolveProjectionView(view, projectionsById[projection]));
+      toURL(true);
+      apply(false);
+    });
+  });
+
   if (clearBtn) {
     clearBtn.addEventListener("click", function () {
-      sel = { type: [], subject: [] };
+      sel = { type: [], subject: [], shelf: [] };
       toURL(true);
       apply(false);
     });

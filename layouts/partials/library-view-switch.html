@@ -12,9 +12,35 @@
        server-rendered Images or Map view), so it's hidden under data-nojs
        like the filter form.
        Call: {{ partial "library-view-switch.html" . }} */ -}}
+{{- /* Projections (docs/library-v2.md § 6.2/§ 6.4) — every Collection has
+       at least the implicit `all` Projection; the chip row (and the whole
+       mechanism client-side) only matters once a second one exists, so it
+       renders nothing when there's just one, same "don't show useless UI"
+       rule Shelf/Type/Subject already follow (research has only `all`
+       today — see data/library/collections.yaml). `data-projections`
+       carries every Projection's {id, views, default_view} as JSON so
+       library-filter.js can resolve Projection/View compatibility
+       (docs/library-v2.md § 6.4) without a second fetch. */ -}}
+{{- $coll := partial "library-resolve-collection.html" . -}}
+{{- $projList := slice -}}
+{{- $projDefault := "all" -}}
+{{- if eq $coll.source.adapter "hugo" -}}
+  {{- range hugo.Data.library.collections }}{{ if eq .id $coll.id }}{{ $projList = .projections.list }}{{ with .projections.default }}{{ $projDefault = . }}{{ end }}{{ end }}{{ end -}}
+{{- end -}}
+{{- if not $projList }}{{ $projList = slice (dict "id" "all" "title" "All Entries" "views" (slice "catalog" "images" "map") "default_view" "catalog") }}{{ $projDefault = "all" }}{{ end -}}
 <fieldset class="rf-facet library-view-switch" data-view-switch>
   <legend>View</legend>
   <button type="button" class="rf-chip is-active" data-library-view="map" aria-pressed="true">Map</button>
   <button type="button" class="rf-chip" data-library-view="images" aria-pressed="false">Images</button>
   <button type="button" class="rf-chip" data-library-view="catalog" aria-pressed="false">Catalog</button>
 </fieldset>
+{{- if gt (len $projList) 1 }}
+<fieldset class="rf-facet library-projection-switch" data-projection-switch data-projections='{{ jsonify $projList }}' data-projection-default="{{ $projDefault }}">
+  <legend>Projection</legend>
+  {{- range $projList }}
+  <button type="button" class="rf-chip" data-projection="{{ .id }}" aria-pressed="false">{{ .title | default .id }}</button>
+  {{- end }}
+</fieldset>
+{{- else }}
+<span hidden data-projections='{{ jsonify $projList }}' data-projection-default="{{ $projDefault }}"></span>
+{{- end }}

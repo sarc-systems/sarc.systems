@@ -1,0 +1,49 @@
+{{- /* Which Shelves (data/library/shelves/<collection>.yaml) does ONE
+       Entry belong to? Evaluates entry-declared/rule-based/curated
+       membership with explicit exclusion winning — see
+       docs/library-v2.md § 5:
+         membership = (rule matches ∪ explicit includes ∪ entry-declared)
+                      − explicit excludes
+       One shared implementation for both list.json (called once per
+       entry while building the JSON index) and library-record.html
+       (called once for the single page it's rendering) — Catalog is
+       server-rendered straight from Params, Map is JSON-driven, and
+       there's no single shared per-request entries list to precompute
+       membership from once, so evaluating per-page is what makes the two
+       callers agree without duplicating the matching logic itself.
+
+       Call: {{ $shelves := partial "library-entry-shelves.html"
+                  (dict "page" . "collection" $coll.id) }}
+
+       Returns a slice of shelf ids — empty for the Library root or any
+       Collection with no Shelves configured (research has none yet; see
+       data/library/shelves/research.yaml). */ -}}
+{{- $page := .page -}}
+{{- $collId := .collection -}}
+{{- $shelvesData := index (index hugo.Data.library.shelves | default dict) $collId | default slice -}}
+{{- $out := slice -}}
+{{- if $shelvesData -}}
+  {{- $pt := partialCached "library-public-types.html" $page "library-public-types" -}}
+  {{- $eid := $page.Params.library.id -}}
+  {{- $etype := "" }}{{ with $page.Params.library }}{{ $etype = .type }}{{ end -}}
+  {{- $epublic := index $pt.typeOf $etype -}}
+  {{- $esubs := $page.Params.subjects | default slice -}}
+  {{- $declaredShelves := $page.Params.shelves | default slice -}}
+  {{- range $shelvesData -}}
+    {{- $shelf := . -}}
+    {{- /* Rule-based: every key in `filter` must match (AND across keys);
+           `filter` itself absent means "not rule-based" (false, not a
+           vacuous match-everything). */ -}}
+    {{- $ruleMatch := false -}}
+    {{- with $shelf.filter -}}
+      {{- $ruleMatch = true -}}
+      {{- with .type }}{{ if ne . $epublic }}{{ $ruleMatch = false }}{{ end }}{{ end -}}
+      {{- with .subjects }}{{ with .includes }}{{ if not (in $esubs .) }}{{ $ruleMatch = false }}{{ end }}{{ end }}{{ end -}}
+    {{- end -}}
+    {{- $included := in ($shelf.include | default slice) $eid -}}
+    {{- $declared := in $declaredShelves $shelf.id -}}
+    {{- $excluded := in ($shelf.exclude | default slice) $eid -}}
+    {{- if and (or $ruleMatch $included $declared) (not $excluded) }}{{ $out = $out | append $shelf.id }}{{ end -}}
+  {{- end -}}
+{{- end -}}
+{{- return $out -}}

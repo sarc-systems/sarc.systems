@@ -1,0 +1,29 @@
+# Shelves for the "research" Collection — see docs/library-v2.md § 5.
+# Path binding: data/library/shelves/<collection-id>.yaml -> a plain slice
+# at hugo.Data.library.shelves.<collection-id> (same nesting mechanism as
+# data/library/collections.yaml -> hugo.Data.library.collections).
+#
+# Normalized membership (computed once per build, list.json/library-collect
+# don't care which authoring method produced it):
+#   membership = (rule matches ∪ explicit includes ∪ entry-declared)
+#                − explicit excludes
+# Multiple ACTIVE shelves (a visitor toggling more than one on) combine by
+# union/OR — that's a client-side (library-filter.js) concern, not this file.
+#
+# Fields per shelf:
+#   id       required, stable, kebab-case
+#   title    required, display name
+#   filter   optional, rule-based membership — {type: <public_type>} and/or
+#            {subjects: {includes: <subject>}}; a Collection with different
+#            Facets would need its own matching logic (Facets are
+#            Collection-specific by design, docs/library-v2.md § 6.1)
+#   include  optional, curated membership — list of this Collection's own
+#            library.id values (bare, not namespaced — same-Collection only)
+#   exclude  optional, wins over rule/include/entry-declared
+#
+# Empty for now — no shelf has actually been curated for the research
+# corpus yet. This is the mechanism (schema, normalization, UI toggle, URL
+# state), not editorial content; see docs/library-v2.md § 5 and the Phase 6
+# fixture Collection for a working demonstration with real overlapping
+# membership.
+[]

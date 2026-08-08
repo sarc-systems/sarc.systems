@@ -37,7 +37,11 @@
        library.color); never present on an ordinary catalog entry, so this
        is a no-op everywhere else. */ -}}
 {{- $collColor := .Params.library.color -}}
-<li class="library-record{{ if $thumb.has }} has-thumb{{ end }}{{ if $collColor }} has-collection-color{{ end }}" data-library-id="{{ $id }}" data-type="{{ $publicType }}" data-subjects="{{ delimit $subs " " }}" data-has-image="{{ if $thumb.has }}true{{ else }}false{{ end }}"{{ with $collColor }} style="--collection-color: var(--colorplan-{{ . }});"{{ end }}>
+{{- /* Shelf membership (docs/library-v2.md § 5) — data-shelves mirrors
+       data-type/data-subjects exactly, read by the same client filter. */ -}}
+{{- $coll := partial "library-resolve-collection.html" . -}}
+{{- $shelves := partial "library-entry-shelves.html" (dict "page" . "collection" $coll.id) -}}
+<li class="library-record{{ if $thumb.has }} has-thumb{{ end }}{{ if $collColor }} has-collection-color{{ end }}" data-library-id="{{ $id }}" data-type="{{ $publicType }}" data-subjects="{{ delimit $subs " " }}" data-shelves="{{ delimit $shelves " " }}" data-has-image="{{ if $thumb.has }}true{{ else }}false{{ end }}"{{ with $collColor }} style="--collection-color: var(--colorplan-{{ . }});"{{ end }}>
   {{- with $thumb.has }}
   <a class="library-record-thumb" href="{{ $.RelPermalink }}" tabindex="-1" aria-hidden="true">
     <img src="{{ $thumb.url }}" srcset="{{ $thumb.url }} 1x, {{ $thumb.url2x }} 2x"
