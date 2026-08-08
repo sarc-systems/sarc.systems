@@ -27,4 +27,4 @@ related:
 draft: false
 ---
 
-Jon Hassell (1937-2021) was an American trumpeter and composer, a student of [Stockhausen](/library/karlheinz-stockhausen/) and collaborator with La Monte Young, who developed "Fourth World" music — a hybrid of electronically processed trumpet, studio production, and vocal and instrumental techniques drawn from non-Western traditions.
+Jon Hassell (1937-2021) was an American trumpeter and composer, a student of [Stockhausen](/library/research/karlheinz-stockhausen/) and collaborator with La Monte Young, who developed "Fourth World" music — a hybrid of electronically processed trumpet, studio production, and vocal and instrumental techniques drawn from non-Western traditions.

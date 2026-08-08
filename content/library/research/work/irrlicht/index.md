@@ -24,4 +24,4 @@ related: []
 draft: false
 ---
 
-[Klaus Schulze](/library/klaus-schulze/)'s solo debut, recorded after his departure from Ash Ra Tempel, built entirely from organ and a recording of an orchestra run through filtering until it dissolved almost past recognition — no synthesizer appears anywhere on the record. Despite that absence, its slow-moving, drone-based structure is widely credited as a founding document of the Berlin School and an early landmark of proto-ambient electronic music.
+[Klaus Schulze](/library/research/klaus-schulze/)'s solo debut, recorded after his departure from Ash Ra Tempel, built entirely from organ and a recording of an orchestra run through filtering until it dissolved almost past recognition — no synthesizer appears anywhere on the record. Despite that absence, its slow-moving, drone-based structure is widely credited as a founding document of the Berlin School and an early landmark of proto-ambient electronic music.

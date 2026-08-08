@@ -26,4 +26,4 @@ related: []
 draft: false
 ---
 
-[Devo](/library/devo/)'s debut album for Warner Bros., produced by [Brian Eno](/library/brian-eno/) at [Conny Plank](/library/conny-plank/)'s studio near Cologne — with David Bowie, originally slated to produce, assisting on weekends around a film shoot — rerecorded the group's earlier singles "Mongoloid" and its jerking, deconstructed cover of the Rolling Stones' "(I Can't Get No) Satisfaction" alongside new material voicing the band's satirical concept of human "de-evolution" — now regarded as a founding document of American new wave.
+[Devo](/library/research/devo/)'s debut album for Warner Bros., produced by [Brian Eno](/library/research/brian-eno/) at [Conny Plank](/library/research/conny-plank/)'s studio near Cologne — with David Bowie, originally slated to produce, assisting on weekends around a film shoot — rerecorded the group's earlier singles "Mongoloid" and its jerking, deconstructed cover of the Rolling Stones' "(I Can't Get No) Satisfaction" alongside new material voicing the band's satirical concept of human "de-evolution" — now regarded as a founding document of American new wave.

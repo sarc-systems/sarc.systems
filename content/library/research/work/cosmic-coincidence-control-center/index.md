@@ -24,4 +24,4 @@ related: []
 draft: false
 ---
 
-Originally released in 1992 on Endorphine Factory, this is [C.C.C.C.](/library/cccc/)'s debut album, recorded not long after Hiroshi Hasegawa and Mayuko Hino formed the group in 1989: four members on electronics, synths, bass, vocals, and metal percussion, ranging from dense electronic-noise ambiance to stretches of pure synth tonality. Urashima's 2021 vinyl reissue was remastered from the original DAT tapes.
+Originally released in 1992 on Endorphine Factory, this is [C.C.C.C.](/library/research/cccc/)'s debut album, recorded not long after Hiroshi Hasegawa and Mayuko Hino formed the group in 1989: four members on electronics, synths, bass, vocals, and metal percussion, ranging from dense electronic-noise ambiance to stretches of pure synth tonality. Urashima's 2021 vinyl reissue was remastered from the original DAT tapes.

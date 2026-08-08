@@ -27,4 +27,4 @@ related:
 draft: false
 ---
 
-Francisco Varela (1946–2001) studied under Humberto Maturana and, as a frequent visitor to Heinz von Foerster's Biological Computer Laboratory, helped extend second-order cybernetics into biology. With Maturana, he co-developed the concept of "[autopoiesis](/library/autopoiesis/)," describing living systems as self-producing organizations, laid out together in *The Tree of Knowledge* (1987); Varela later moved into cognitive science and the neurophenomenology of consciousness.
+Francisco Varela (1946–2001) studied under Humberto Maturana and, as a frequent visitor to Heinz von Foerster's Biological Computer Laboratory, helped extend second-order cybernetics into biology. With Maturana, he co-developed the concept of "[autopoiesis](/library/research/autopoiesis/)," describing living systems as self-producing organizations, laid out together in *The Tree of Knowledge* (1987); Varela later moved into cognitive science and the neurophenomenology of consciousness.

@@ -23,4 +23,4 @@ related:
 draft: false
 ---
 
-A feedback circuit that compares the phase of a local oscillator against a reference signal and continuously adjusts the oscillator to minimize the difference, locking the two into a fixed phase relationship. Henri de Bellescize published the first PLL circuit, for synchronous radio reception, in 1932; the technique became a standard building block of radio, television, and telecommunications engineering, and later a core circuit in analog synthesizers, used both to track pitch and to generate [quadrature](/library/quadrature/) and sync signals.
+A feedback circuit that compares the phase of a local oscillator against a reference signal and continuously adjusts the oscillator to minimize the difference, locking the two into a fixed phase relationship. Henri de Bellescize published the first PLL circuit, for synchronous radio reception, in 1932; the technique became a standard building block of radio, television, and telecommunications engineering, and later a core circuit in analog synthesizers, used both to track pitch and to generate [quadrature](/library/research/quadrature/) and sync signals.

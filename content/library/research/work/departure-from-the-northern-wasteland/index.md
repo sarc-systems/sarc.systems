@@ -24,4 +24,4 @@ related: []
 draft: false
 ---
 
-[Michael Hoenig](/library/michael-hoenig/)'s only 1970s solo album, released shortly before he left Germany for Los Angeles, drew directly on his time filling in for Peter Baumann in [Tangerine Dream](/library/tangerine-dream/): side-long pieces of sequenced analog synthesizer close in spirit to that group's mid-1970s Berlin School sound, with guitar contributed by former Agitation Free bandmates Lutz Ulbrich and Michael "Micki" Duwe.
+[Michael Hoenig](/library/research/michael-hoenig/)'s only 1970s solo album, released shortly before he left Germany for Los Angeles, drew directly on his time filling in for Peter Baumann in [Tangerine Dream](/library/research/tangerine-dream/): side-long pieces of sequenced analog synthesizer close in spirit to that group's mid-1970s Berlin School sound, with guitar contributed by former Agitation Free bandmates Lutz Ulbrich and Michael "Micki" Duwe.

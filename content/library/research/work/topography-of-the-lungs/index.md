@@ -27,4 +27,4 @@ related:
 draft: false
 ---
 
-Recorded by [Evan Parker](/library/evan-parker/), [Derek Bailey](/library/derek-bailey/), and [Han Bennink](/library/han-bennink/) in 1970, *Topography of the Lungs* launched [Incus Records](/library/incus-records/) as its very first release and stands as Parker's debut recording as a leader. A 2023 repress on Parker's own OTOROKU label, transcribed and restored by Andreas "LUPO" Lubich at Calyx in Berlin from an original pressing in Parker's archive, gathers the original liner notes alongside a new note Parker wrote in 2014.
+Recorded by [Evan Parker](/library/research/evan-parker/), [Derek Bailey](/library/research/derek-bailey/), and [Han Bennink](/library/research/han-bennink/) in 1970, *Topography of the Lungs* launched [Incus Records](/library/research/incus-records/) as its very first release and stands as Parker's debut recording as a leader. A 2023 repress on Parker's own OTOROKU label, transcribed and restored by Andreas "LUPO" Lubich at Calyx in Berlin from an original pressing in Parker's archive, gathers the original liner notes alongside a new note Parker wrote in 2014.

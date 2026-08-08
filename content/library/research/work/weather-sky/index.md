@@ -25,4 +25,4 @@ related: []
 draft: false
 ---
 
-Recorded live at Le Chok Theatre in Saint-Étienne, France, on June 11, 2001, and released on [Erstwhile Records](/library/erstwhile-records/), *Weather Sky* paired [Keith Rowe](/library/keith-rowe/)'s tabletop guitar and electronics with [Toshimaru Nakamura](/library/toshimaru-nakamura/)'s no-input mixing board across three extended tracks — the first of five duo albums the two made together, and Rowe's own cover painting for its artwork.
+Recorded live at Le Chok Theatre in Saint-Étienne, France, on June 11, 2001, and released on [Erstwhile Records](/library/research/erstwhile-records/), *Weather Sky* paired [Keith Rowe](/library/research/keith-rowe/)'s tabletop guitar and electronics with [Toshimaru Nakamura](/library/research/toshimaru-nakamura/)'s no-input mixing board across three extended tracks — the first of five duo albums the two made together, and Rowe's own cover painting for its artwork.

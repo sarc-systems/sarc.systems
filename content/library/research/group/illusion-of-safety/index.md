@@ -21,4 +21,4 @@ access: []
 draft: false
 ---
 
-Founded in Chicago in 1983 by Daniel Burke, Illusion of Safety moved across four decades from early industrial-pop deconstruction through minimal sound art to dense found-sound collage, releasing more than forty full-length albums. [Jim O'Rourke](/library/jim-orourke/) was an early member and co-composed the 1992 album *Probe* with Burke.
+Founded in Chicago in 1983 by Daniel Burke, Illusion of Safety moved across four decades from early industrial-pop deconstruction through minimal sound art to dense found-sound collage, releasing more than forty full-length albums. [Jim O'Rourke](/library/research/jim-orourke/) was an early member and co-composed the 1992 album *Probe* with Burke.

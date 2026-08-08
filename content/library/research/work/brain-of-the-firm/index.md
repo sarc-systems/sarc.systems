@@ -20,4 +20,4 @@ access: []
 draft: false
 ---
 
-Published by Herder and Herder in 1972, [Stafford Beer](/library/stafford-beer/)'s *Brain of the Firm* introduced the Viable System Model, an account of organizational structure built by analogy to the human nervous system's own layered, self-regulating control of a body. Written for a managerial audience, it effectively founded management cybernetics as an applied discipline and underpinned Beer's own subsequent work, including Project Cybersyn.
+Published by Herder and Herder in 1972, [Stafford Beer](/library/research/stafford-beer/)'s *Brain of the Firm* introduced the Viable System Model, an account of organizational structure built by analogy to the human nervous system's own layered, self-regulating control of a body. Written for a managerial audience, it effectively founded management cybernetics as an applied discipline and underpinned Beer's own subsequent work, including Project Cybersyn.

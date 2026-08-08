@@ -26,4 +26,4 @@ related:
 draft: false
 ---
 
-Recorded at Piethopraxis Tonstudio in Cologne in August 2000 and released as [Erstwhile Records](/library/erstwhile-records/)' twelfth title, *Bart* paired [Thomas Lehn](/library/thomas-lehn/)'s analog synthesizer with [Marcus Schmickler](/library/marcus-schmickler/)'s digital synthesizer and computer across five improvised tracks shifting constantly between chaos and control — the duo's first recorded meeting, later expanded into a trio with Keith Rowe on *[Rabbit Run](/library/rabbit-run/)* (2003).
+Recorded at Piethopraxis Tonstudio in Cologne in August 2000 and released as [Erstwhile Records](/library/research/erstwhile-records/)' twelfth title, *Bart* paired [Thomas Lehn](/library/research/thomas-lehn/)'s analog synthesizer with [Marcus Schmickler](/library/research/marcus-schmickler/)'s digital synthesizer and computer across five improvised tracks shifting constantly between chaos and control — the duo's first recorded meeting, later expanded into a trio with Keith Rowe on *[Rabbit Run](/library/research/rabbit-run/)* (2003).

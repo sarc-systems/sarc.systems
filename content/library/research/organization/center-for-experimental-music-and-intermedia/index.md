@@ -24,4 +24,4 @@ access:
 draft: false
 ---
 
-Founded in 1963 by composer [Merrill Ellis](/library/merrill-ellis/) as the Electronic Music Center — a tape music studio in an old house on Denton's Mulberry Street, one of the first of its kind in the United States — the University of North Texas program was renamed the Center for Experimental Music and Intermedia (CEMI) in 1983, reflecting Ellis's expansion into intermedia work alongside the new Merrill Ellis Intermedia Theater.
+Founded in 1963 by composer [Merrill Ellis](/library/research/merrill-ellis/) as the Electronic Music Center — a tape music studio in an old house on Denton's Mulberry Street, one of the first of its kind in the United States — the University of North Texas program was renamed the Center for Experimental Music and Intermedia (CEMI) in 1983, reflecting Ellis's expansion into intermedia work alongside the new Merrill Ellis Intermedia Theater.

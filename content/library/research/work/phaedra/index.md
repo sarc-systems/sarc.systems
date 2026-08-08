@@ -24,4 +24,4 @@ related: []
 draft: false
 ---
 
-Recorded by the trio of Edgar Froese, Christopher Franke, and Peter Baumann, *Phaedra* was [Tangerine Dream](/library/tangerine-dream/)'s first album for Virgin Records and the record that established the group's sequencer-driven "Berlin School" sound — its side-long title track built around a slowly drifting Moog synthesizer sequence, an effect achieved partly by accident when a faulty filter began cycling on its own. A UK Top 20 hit, it introduced electronic sequencer music to a mainstream rock audience years ahead of most of its contemporaries.
+Recorded by the trio of Edgar Froese, Christopher Franke, and Peter Baumann, *Phaedra* was [Tangerine Dream](/library/research/tangerine-dream/)'s first album for Virgin Records and the record that established the group's sequencer-driven "Berlin School" sound — its side-long title track built around a slowly drifting Moog synthesizer sequence, an effect achieved partly by accident when a faulty filter began cycling on its own. A UK Top 20 hit, it introduced electronic sequencer music to a mainstream rock audience years ahead of most of its contemporaries.

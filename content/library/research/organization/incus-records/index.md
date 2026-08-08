@@ -23,4 +23,4 @@ access:
 draft: false
 ---
 
-Founded in London in 1970 by Derek Bailey, Tony Oxley, Evan Parker, and Michael Walters, Incus Records was the first musician-owned independent record label in England, launched with *[Topography of the Lungs](/library/topography-of-the-lungs/)*, a trio recording by Parker, Bailey, and Han Bennink, and going on to document British free improvisation for decades.
+Founded in London in 1970 by Derek Bailey, Tony Oxley, Evan Parker, and Michael Walters, Incus Records was the first musician-owned independent record label in England, launched with *[Topography of the Lungs](/library/research/topography-of-the-lungs/)*, a trio recording by Parker, Bailey, and Han Bennink, and going on to document British free improvisation for decades.

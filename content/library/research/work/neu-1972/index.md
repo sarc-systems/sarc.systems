@@ -25,4 +25,4 @@ related: []
 draft: false
 ---
 
-The self-titled debut of [Neu!](/library/neu/), recorded with producer [Conny Plank](/library/conny-plank/) at Hamburg's Star-Musik studio in December 1971, months after Klaus Dinger and Michael Rother left [Kraftwerk](/library/kraftwerk/) to form the duo. Its opening track "Hallogallo" introduced the steady, forward-driving "motorik" beat that became one of krautrock's most widely cited rhythmic templates.
+The self-titled debut of [Neu!](/library/research/neu/), recorded with producer [Conny Plank](/library/research/conny-plank/) at Hamburg's Star-Musik studio in December 1971, months after Klaus Dinger and Michael Rother left [Kraftwerk](/library/research/kraftwerk/) to form the duo. Its opening track "Hallogallo" introduced the steady, forward-driving "motorik" beat that became one of krautrock's most widely cited rhythmic templates.

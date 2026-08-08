@@ -32,4 +32,4 @@ related:
 draft: false
 ---
 
-Nuno Canavarro's 1988 album, originally released on Ama Romanta, assembling short, intimate electronic and acoustic fragments into a singular, widely cited work of dreamlike sound-collage, built largely around an [Ensoniq Mirage](/library/ensoniq-mirage/) sampler.
+Nuno Canavarro's 1988 album, originally released on Ama Romanta, assembling short, intimate electronic and acoustic fragments into a singular, widely cited work of dreamlike sound-collage, built largely around an [Ensoniq Mirage](/library/research/ensoniq-mirage/) sampler.

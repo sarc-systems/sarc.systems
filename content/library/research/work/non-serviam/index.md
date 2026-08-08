@@ -32,5 +32,5 @@ rights:
 draft: false
 ---
 
-[Lem](/library/stanislaw-lem/)'s fictional account of "personoids" — conscious beings created inside a
+[Lem](/library/research/stanislaw-lem/)'s fictional account of "personoids" — conscious beings created inside a
 computer, who reason their way to theology and confront their creator.

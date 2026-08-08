@@ -25,4 +25,4 @@ related: []
 draft: false
 ---
 
-[Harmonia](/library/harmonia/)'s second album brought in Guru Guru drummer Mani Neumeier as a guest performer, giving the trio's synthesizer-and-guitar interplay a more overtly rhythmic foundation than their 1974 debut *Musik von Harmonia*. Neumeier's playing here led Dieter Moebius to invite him, eight years later, into the studio trio Moebius-Plank-Neumeier for *Zero Set*.
+[Harmonia](/library/research/harmonia/)'s second album brought in Guru Guru drummer Mani Neumeier as a guest performer, giving the trio's synthesizer-and-guitar interplay a more overtly rhythmic foundation than their 1974 debut *Musik von Harmonia*. Neumeier's playing here led Dieter Moebius to invite him, eight years later, into the studio trio Moebius-Plank-Neumeier for *Zero Set*.

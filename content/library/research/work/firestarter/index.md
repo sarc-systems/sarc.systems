@@ -24,4 +24,4 @@ related: []
 draft: false
 ---
 
-[Tangerine Dream](/library/tangerine-dream/)'s score for Mark L. Lester's 1984 film adaptation of Stephen King's *Firestarter*, one of a long run of 1980s Hollywood soundtrack commissions — following *Thief* (1981) and *Risky Business* (1983) — that carried the group's sequencer-driven electronic sound into mainstream American cinema.
+[Tangerine Dream](/library/research/tangerine-dream/)'s score for Mark L. Lester's 1984 film adaptation of Stephen King's *Firestarter*, one of a long run of 1980s Hollywood soundtrack commissions — following *Thief* (1981) and *Risky Business* (1983) — that carried the group's sequencer-driven electronic sound into mainstream American cinema.

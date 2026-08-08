@@ -20,4 +20,4 @@ access:
 draft: false
 ---
 
-Cambridge Street Records is the label [Barry Truax](/library/barry-truax/) created in 1985 as an alternative to commercial publication for computer and electroacoustic music, releasing his own compositions — beginning with *[Sequence of Earlier Heaven](/library/sequence-of-earlier-heaven/)* — directly to specialist audiences.
+Cambridge Street Records is the label [Barry Truax](/library/research/barry-truax/) created in 1985 as an alternative to commercial publication for computer and electroacoustic music, releasing his own compositions — beginning with *[Sequence of Earlier Heaven](/library/research/sequence-of-earlier-heaven/)* — directly to specialist audiences.

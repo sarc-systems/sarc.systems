@@ -19,4 +19,4 @@ access: []
 draft: false
 ---
 
-In cybernetics, the number of distinguishable states a system or its environment can take on. [W. Ross Ashby's](/library/w-ross-ashby/) Law of Requisite Variety, introduced in *An Introduction to Cybernetics* (1956), holds that only variety can destroy variety — a regulator can reduce the variety (the disorder or uncertainty) of the system it controls only to the extent that the regulator itself possesses at least as much variety in its own possible responses. The law sets a hard lower bound on how simple a controller can be and still govern a given system.
+In cybernetics, the number of distinguishable states a system or its environment can take on. [W. Ross Ashby's](/library/research/w-ross-ashby/) Law of Requisite Variety, introduced in *An Introduction to Cybernetics* (1956), holds that only variety can destroy variety — a regulator can reduce the variety (the disorder or uncertainty) of the system it controls only to the extent that the regulator itself possesses at least as much variety in its own possible responses. The law sets a hard lower bound on how simple a controller can be and still govern a given system.

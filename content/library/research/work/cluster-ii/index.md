@@ -26,4 +26,4 @@ related:
 draft: false
 ---
 
-[Cluster](/library/cluster/)'s second album, again produced by [Conny Plank](/library/conny-plank/) and released on Brain Records, expanded on the dense drone of *[Cluster](/library/cluster-71/)* with more rhythmic material and heavier tape manipulation — a transitional record between the group's raw improvised beginnings and the more structured, melodic direction of *Zuckerzeit* two years later.
+[Cluster](/library/research/cluster/)'s second album, again produced by [Conny Plank](/library/research/conny-plank/) and released on Brain Records, expanded on the dense drone of *[Cluster](/library/research/cluster-71/)* with more rhythmic material and heavier tape manipulation — a transitional record between the group's raw improvised beginnings and the more structured, melodic direction of *Zuckerzeit* two years later.

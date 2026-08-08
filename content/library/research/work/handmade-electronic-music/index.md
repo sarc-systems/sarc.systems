@@ -29,4 +29,4 @@ access:
 draft: false
 ---
 
-[Nicolas Collins](/library/nicolas-collins/)'s practical, project-based guide to building, hacking, and circuit-bending electronic instruments, drawn from decades of his own experimental practice.
+[Nicolas Collins](/library/research/nicolas-collins/)'s practical, project-based guide to building, hacking, and circuit-bending electronic instruments, drawn from decades of his own experimental practice.

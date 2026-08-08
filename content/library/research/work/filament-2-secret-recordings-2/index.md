@@ -26,4 +26,4 @@ related: []
 draft: false
 ---
 
-Recorded at GOK Sound in Tokyo in July 1998 and released in 1999 on [Günter Müller](/library/gunter-muller/)'s For4Ears label, *Filament 2: Secret Recordings* pairs Müller's electronics and drums with [Sachiko M](/library/sachiko-m/)'s sampler played through sine-wave test tones and [Otomo Yoshihide](/library/otomo-yoshihide/)'s manipulated records and CDs — a meeting of European and Japanese electroacoustic improvisation extending Sachiko M and Otomo's own Filament duo.
+Recorded at GOK Sound in Tokyo in July 1998 and released in 1999 on [Günter Müller](/library/research/gunter-muller/)'s For4Ears label, *Filament 2: Secret Recordings* pairs Müller's electronics and drums with [Sachiko M](/library/research/sachiko-m/)'s sampler played through sine-wave test tones and [Otomo Yoshihide](/library/research/otomo-yoshihide/)'s manipulated records and CDs — a meeting of European and Japanese electroacoustic improvisation extending Sachiko M and Otomo's own Filament duo.

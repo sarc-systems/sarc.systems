@@ -25,4 +25,4 @@ related: []
 draft: false
 ---
 
-The self-titled debut of [Cluster](/library/cluster/), recorded by Dieter Moebius and Hans-Joachim Roedelius shortly after Conrad Schnitzler's departure from their earlier trio Kluster, and produced by [Conny Plank](/library/conny-plank/) — three side-long tracks of dense, largely improvised electronic drone, informally known as *Cluster '71* to distinguish it from the group's own name.
+The self-titled debut of [Cluster](/library/research/cluster/), recorded by Dieter Moebius and Hans-Joachim Roedelius shortly after Conrad Schnitzler's departure from their earlier trio Kluster, and produced by [Conny Plank](/library/research/conny-plank/) — three side-long tracks of dense, largely improvised electronic drone, informally known as *Cluster '71* to distinguish it from the group's own name.

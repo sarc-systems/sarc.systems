@@ -30,4 +30,4 @@ related: []
 draft: false
 ---
 
-Recorded live on November 1 and 2, 1983, at IRCAM's Espace de Projection in Paris, *Prospectus* documents [Steve Lacy](/library/steve-lacy/)'s working septet — Steve Potts (alto/soprano saxophone), Jean-Jacques Avenel (bass), Irene Aebi (cello, violin, voice), Bobby Few (piano), Oliver Johnson (drums, percussion), and [George Lewis](/library/george-lewis/) (trombone) — released as a double LP on hat ART, with cover art and design concept by Brion Gysin.
+Recorded live on November 1 and 2, 1983, at IRCAM's Espace de Projection in Paris, *Prospectus* documents [Steve Lacy](/library/research/steve-lacy/)'s working septet — Steve Potts (alto/soprano saxophone), Jean-Jacques Avenel (bass), Irene Aebi (cello, violin, voice), Bobby Few (piano), Oliver Johnson (drums, percussion), and [George Lewis](/library/research/george-lewis/) (trombone) — released as a double LP on hat ART, with cover art and design concept by Brion Gysin.

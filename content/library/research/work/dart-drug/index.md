@@ -26,4 +26,4 @@ related:
 draft: false
 ---
 
-Recorded at Crane Grove, London, in August 1981 and released on [Incus Records](/library/incus-records/), *Dart Drug* documents a duo session between [Derek Bailey](/library/derek-bailey/) and percussionist Jamie Muir, its title printed as "Dart Drug" on the sleeve but "Dark Drug" on the labels.
+Recorded at Crane Grove, London, in August 1981 and released on [Incus Records](/library/research/incus-records/), *Dart Drug* documents a duo session between [Derek Bailey](/library/research/derek-bailey/) and percussionist Jamie Muir, its title printed as "Dart Drug" on the sleeve but "Dark Drug" on the labels.

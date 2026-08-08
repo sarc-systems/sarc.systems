@@ -27,4 +27,4 @@ related:
 draft: false
 ---
 
-Recorded June 19–20, 2002, at Piethopraxis in Cologne and released on [Erstwhile Records](/library/erstwhile-records/), *Rabbit Run* expanded [Thomas Lehn](/library/thomas-lehn/) and [Marcus Schmickler](/library/marcus-schmickler/)'s duo partnership from *[Bart](/library/bart/)* into a trio with [Keith Rowe](/library/keith-rowe/)'s tabletop guitar — issued across 42 untitled, sequentially numbered tracks with no printed listing.
+Recorded June 19–20, 2002, at Piethopraxis in Cologne and released on [Erstwhile Records](/library/research/erstwhile-records/), *Rabbit Run* expanded [Thomas Lehn](/library/research/thomas-lehn/) and [Marcus Schmickler](/library/research/marcus-schmickler/)'s duo partnership from *[Bart](/library/research/bart/)* into a trio with [Keith Rowe](/library/research/keith-rowe/)'s tabletop guitar — issued across 42 untitled, sequentially numbered tracks with no printed listing.

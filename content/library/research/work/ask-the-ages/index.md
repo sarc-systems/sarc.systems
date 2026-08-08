@@ -41,4 +41,4 @@ access:
 draft: false
 ---
 
-Sonny Sharrock's 1991 album with [Pharoah Sanders](/library/pharoah-sanders/), Charnett Moffett, and Elvin Jones, produced by [Bill Laswell](/library/bill-laswell/).
+Sonny Sharrock's 1991 album with [Pharoah Sanders](/library/research/pharoah-sanders/), Charnett Moffett, and Elvin Jones, produced by [Bill Laswell](/library/research/bill-laswell/).

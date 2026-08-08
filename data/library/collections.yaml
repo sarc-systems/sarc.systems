@@ -50,6 +50,39 @@
     production: true
   related: []
 
+# "manuals" — hardware/instrument manuals and technical documentation,
+# split out of `research` into their own Collection. Shares research's
+# vocabulary (data/library.yaml — no `vocabulary` field, same as leaving it
+# unset on `research` itself) since manuals still use the same
+# manual/document specific types, subjects, and (critically) `manufacturer`
+# creator role and organization refs as before — only the corpus boundary
+# and route change, not the ontology. A manual's `creators[].ref` to its
+# manufacturer Organization (which stays in `research`) is therefore a
+# genuine cross-Collection reference — see docs/library-v2.md § 4.3 and
+# library-works.html's global (not per-Collection) reverse-credit scan.
+- id: manuals
+  title: Manuals
+  description: >
+    Hardware and instrument manuals, service documentation, and technical
+    literature.
+  color: imperial-blue
+  source:
+    adapter: hugo
+    section: library/manuals
+  views:
+    enabled: [catalog, images, map]
+    default: map
+  projections:
+    default: all
+    list:
+      - id: all
+        title: All Entries
+        views: [catalog, images, map]
+        default_view: catalog
+  build:
+    production: true
+  related: []
+
 # "field-kit" — the Library v2 genericity fixture (docs/library-v2.md § 14,
 # todo_libv2.txt "Genericity proof"). Non-production test data proving the
 # shared engine isn't hardcoded to SARC Research: its own independent

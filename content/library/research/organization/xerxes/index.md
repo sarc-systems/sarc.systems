@@ -22,4 +22,4 @@ related:
 draft: false
 ---
 
-Yasutoshi Yoshida's own label, Xerxes has released the bulk of his [Government Alpha](/library/government-alpha/) catalog since the project's start in 1992, alongside a run of international split releases with artists including Jazzkammer, Bastard Noise, MSBR, and Azoikum.
+Yasutoshi Yoshida's own label, Xerxes has released the bulk of his [Government Alpha](/library/research/government-alpha/) catalog since the project's start in 1992, alongside a run of international split releases with artists including Jazzkammer, Bastard Noise, MSBR, and Azoikum.

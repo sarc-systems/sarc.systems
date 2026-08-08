@@ -23,4 +23,4 @@ related:
 draft: false
 ---
 
-Formed in London by John Balance in 1983 as a Psychic TV side project and expanded into a full group with [Peter "Sleazy" Christopherson](/library/peter-christopherson/) the following year, Coil explored the occult, alchemy, and drugs across a body of work spanning gothic, neofolk, and dark ambient. The group effectively ended with Balance's death in 2004, closing with *The Ape of Naples* (2005); Christopherson died in 2010.
+Formed in London by John Balance in 1983 as a Psychic TV side project and expanded into a full group with [Peter "Sleazy" Christopherson](/library/research/peter-christopherson/) the following year, Coil explored the occult, alchemy, and drugs across a body of work spanning gothic, neofolk, and dark ambient. The group effectively ended with Balance's death in 2004, closing with *The Ape of Naples* (2005); Christopherson died in 2010.

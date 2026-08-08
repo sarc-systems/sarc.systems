@@ -35,4 +35,4 @@ rights:
 draft: false
 ---
 
-[Tufte](/library/edward-tufte/) on the principled graphical display of data.
+[Tufte](/library/research/edward-tufte/) on the principled graphical display of data.

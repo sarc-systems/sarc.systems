@@ -22,4 +22,4 @@ related:
 draft: false
 ---
 
-Phillip B. Klingler (b. 1960, Flint, Michigan) studied art at Northern Michigan University and California State University, San Bernardino, in the early 1980s, exhibiting expressionistic paintings and working within the international mail-art network before turning to noise, drone, and electroacoustic composition as PBK from 1986. He recorded the collaborative album *Unidentified Again* (2015) with [Jim O'Rourke](/library/jim-orourke/).
+Phillip B. Klingler (b. 1960, Flint, Michigan) studied art at Northern Michigan University and California State University, San Bernardino, in the early 1980s, exhibiting expressionistic paintings and working within the international mail-art network before turning to noise, drone, and electroacoustic composition as PBK from 1986. He recorded the collaborative album *Unidentified Again* (2015) with [Jim O'Rourke](/library/research/jim-orourke/).

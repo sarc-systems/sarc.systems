@@ -24,4 +24,4 @@ related: []
 draft: false
 ---
 
-Originally released in 1991 on Alchemy Records, *Feedback of N.M.S.* documents [Incapacitants](/library/incapacitants/)'s Toshiji Mikawa and Fumio Kosakai across three tracks combining junk metal, modular synthesis, handmade noise objects, and real-time improvisation. Urashima's 2022 vinyl reissue, limited to 299 copies, reproduces original artwork by Takuya Sakaguchi, with a deluxe wooden-box edition of 99.
+Originally released in 1991 on Alchemy Records, *Feedback of N.M.S.* documents [Incapacitants](/library/research/incapacitants/)'s Toshiji Mikawa and Fumio Kosakai across three tracks combining junk metal, modular synthesis, handmade noise objects, and real-time improvisation. Urashima's 2022 vinyl reissue, limited to 299 copies, reproduces original artwork by Takuya Sakaguchi, with a deluxe wooden-box edition of 99.

@@ -26,4 +26,4 @@ related:
 draft: false
 ---
 
-Co-produced with [Conny Plank](/library/conny-plank/), *Autobahn* built its 22-minute title track around the image of driving West Germany's federal highway network, its synthesizers and vocoder-processed vocals rendering the hum of traffic as electronic pulse. An edited single became a Top 5 hit in the United States, establishing [Kraftwerk](/library/kraftwerk/)'s run of electronic concept albums voicing postwar German machine culture directly through synthesizer and rhythm.
+Co-produced with [Conny Plank](/library/research/conny-plank/), *Autobahn* built its 22-minute title track around the image of driving West Germany's federal highway network, its synthesizers and vocoder-processed vocals rendering the hum of traffic as electronic pulse. An edited single became a Top 5 hit in the United States, establishing [Kraftwerk](/library/research/kraftwerk/)'s run of electronic concept albums voicing postwar German machine culture directly through synthesizer and rhythm.

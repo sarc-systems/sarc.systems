@@ -22,4 +22,4 @@ related:
 draft: false
 ---
 
-Founded by Akifumi Nakajima to release his own recordings as [Aube](/library/aube/), G.R.O.S.S. Records also issued work by other artists, distributed in partnership with labels and distributors across Asia, North America, and Europe.
+Founded by Akifumi Nakajima to release his own recordings as [Aube](/library/research/aube/), G.R.O.S.S. Records also issued work by other artists, distributed in partnership with labels and distributors across Asia, North America, and Europe.

@@ -22,4 +22,4 @@ related:
 draft: false
 ---
 
-Founded by [Günter Müller](/library/gunter-muller/), For4Ears has released a wide network of free-improvisation and electroacoustic recordings, including several collaborations between Müller and [Voice Crack](/library/voice-crack/) and the 1996 quartet session pairing Müller with [Jim O'Rourke](/library/jim-orourke/), Andy Guhl, and Norbert Möslang.
+Founded by [Günter Müller](/library/research/gunter-muller/), For4Ears has released a wide network of free-improvisation and electroacoustic recordings, including several collaborations between Müller and [Voice Crack](/library/research/voice-crack/) and the 1996 quartet session pairing Müller with [Jim O'Rourke](/library/research/jim-orourke/), Andy Guhl, and Norbert Möslang.

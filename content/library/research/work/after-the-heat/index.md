@@ -28,4 +28,4 @@ related:
 draft: false
 ---
 
-Credited to Eno Moebius Roedelius rather than to [Cluster](/library/cluster/) directly, *After the Heat* was the second and final full studio album [Brian Eno](/library/brian-eno/) recorded with [Dieter Moebius](/library/dieter-moebius/) and [Hans-Joachim Roedelius](/library/hans-joachim-roedelius/), again at [Conny Plank](/library/conny-plank/)'s studio, and includes "By This River," a piece that also appeared, with lyrics, on Eno's own *[Before and After Science](/library/before-and-after-science/)* that same year.
+Credited to Eno Moebius Roedelius rather than to [Cluster](/library/research/cluster/) directly, *After the Heat* was the second and final full studio album [Brian Eno](/library/research/brian-eno/) recorded with [Dieter Moebius](/library/research/dieter-moebius/) and [Hans-Joachim Roedelius](/library/research/hans-joachim-roedelius/), again at [Conny Plank](/library/research/conny-plank/)'s studio, and includes "By This River," a piece that also appeared, with lyrics, on Eno's own *[Before and After Science](/library/research/before-and-after-science/)* that same year.

@@ -28,4 +28,4 @@ images:
 draft: false
 ---
 
-[Orwell](/library/george-orwell/)'s dystopia — included for its treatment of language as an instrument of control.
+[Orwell](/library/research/george-orwell/)'s dystopia — included for its treatment of language as an instrument of control.

@@ -32,4 +32,4 @@ related:
 draft: false
 ---
 
-A [Synthi A](/library/ems-synthi-a/) with a built-in digital sequencer and touch-sensitive keyboard added, for a self-contained, portable instrument built on the same VCS3 circuit.
+A [Synthi A](/library/research/ems-synthi-a/) with a built-in digital sequencer and touch-sensitive keyboard added, for a self-contained, portable instrument built on the same VCS3 circuit.

@@ -46,8 +46,8 @@ Built at the invitation of Salvador Allende's government, Project Cybersyn
 offices across Chile to a mainframe in Santiago, feeding production data into
 economic models that flagged variables needing attention — an attempt to run
 a national economy in something like real time, applying the [Viable System
-Model](/library/viable-system-model/) Stafford Beer had laid out in *[Brain
-of the Firm](/library/brain-of-the-firm/)* at the scale of a state. Gordon Pask contributed the
+Model](/library/research/viable-system-model/) Stafford Beer had laid out in *[Brain
+of the Firm](/library/research/brain-of-the-firm/)* at the scale of a state. Gordon Pask contributed the
 operations room's instrumentation, including an early "algedonic meter"
 meant to register public satisfaction directly into the system. The project
 reached an advanced prototype stage before the September 1973 coup ended it.

@@ -24,4 +24,4 @@ related: []
 draft: false
 ---
 
-Recorded at F23 Studio, Tokyo, in January 1994 and originally released on cassette that year, this [Government Alpha](/library/government-alpha/) album captures a pivotal stage in Yasutoshi Yoshida's development, transforming worn electronics, manipulated tape, feedback, and metallic objects into dense, meticulously structured noise. Reissued on vinyl by Urashima, mastered by Lasse Marhaug.
+Recorded at F23 Studio, Tokyo, in January 1994 and originally released on cassette that year, this [Government Alpha](/library/research/government-alpha/) album captures a pivotal stage in Yasutoshi Yoshida's development, transforming worn electronics, manipulated tape, feedback, and metallic objects into dense, meticulously structured noise. Reissued on vinyl by Urashima, mastered by Lasse Marhaug.

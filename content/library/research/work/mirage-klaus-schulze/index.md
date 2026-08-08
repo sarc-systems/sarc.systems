@@ -25,4 +25,4 @@ related:
 draft: false
 ---
 
-Released on Brain Records in 1977, *Mirage* found [Klaus Schulze](/library/klaus-schulze/) working in a darker, more textural register than the sequencer-driven momentum of albums like *Timewind* and *Moondawn* — its two side-long pieces built from synthesizer drones and layered choir-like voicings, continuing his run of solo Berlin School records through the late 1970s.
+Released on Brain Records in 1977, *Mirage* found [Klaus Schulze](/library/research/klaus-schulze/) working in a darker, more textural register than the sequencer-driven momentum of albums like *Timewind* and *Moondawn* — its two side-long pieces built from synthesizer drones and layered choir-like voicings, continuing his run of solo Berlin School records through the late 1970s.

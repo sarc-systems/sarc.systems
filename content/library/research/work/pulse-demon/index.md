@@ -23,4 +23,4 @@ related: []
 draft: false
 ---
 
-Released in 1996 on Release Entertainment, *Pulse Demon* is among the most widely cited albums by [Merzbow](/library/merzbow/), composed entirely from live noise concrète and a fuzz box with no overdubs or studio processing. Remastered by James Plotkin and reissued by Relapse Records in 2019 with the previously unreleased "Extract 1" added from the original sessions.
+Released in 1996 on Release Entertainment, *Pulse Demon* is among the most widely cited albums by [Merzbow](/library/research/merzbow/), composed entirely from live noise concrète and a fuzz box with no overdubs or studio processing. Remastered by James Plotkin and reissued by Relapse Records in 2019 with the previously unreleased "Extract 1" added from the original sessions.

@@ -22,4 +22,4 @@ access: []
 draft: false
 ---
 
-Recorded together in 1988 and released on Agaric Records, *Fish That Sparkling Bubble* pairs the New York free-jazz noise trio [Borbetomagus](/library/borbetomagus/) with the Swiss electroacoustic improvisers [Voice Crack](/library/voice-crack/), organized chaos built from "radical textures, timbres, colors, and tone fields."
+Recorded together in 1988 and released on Agaric Records, *Fish That Sparkling Bubble* pairs the New York free-jazz noise trio [Borbetomagus](/library/research/borbetomagus/) with the Swiss electroacoustic improvisers [Voice Crack](/library/research/voice-crack/), organized chaos built from "radical textures, timbres, colors, and tone fields."

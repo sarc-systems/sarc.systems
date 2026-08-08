@@ -27,4 +27,4 @@ related:
 draft: false
 ---
 
-Recorded at [Conny Plank](/library/conny-plank/)'s studio and released on Sky Records in 1977, *Cluster & Eno* was the first full album [Brian Eno](/library/brian-eno/) improvised directly with [Cluster](/library/cluster/), following his 1976 recording sessions with the duo's offshoot trio Harmonia — a meeting of Eno's emerging ambient vocabulary with Dieter Moebius and Hans-Joachim Roedelius's own synthesizer-and-tape-based sound, followed a year later by a second collaboration, *[After the Heat](/library/after-the-heat/)*.
+Recorded at [Conny Plank](/library/research/conny-plank/)'s studio and released on Sky Records in 1977, *Cluster & Eno* was the first full album [Brian Eno](/library/research/brian-eno/) improvised directly with [Cluster](/library/research/cluster/), following his 1976 recording sessions with the duo's offshoot trio Harmonia — a meeting of Eno's emerging ambient vocabulary with Dieter Moebius and Hans-Joachim Roedelius's own synthesizer-and-tape-based sound, followed a year later by a second collaboration, *[After the Heat](/library/research/after-the-heat/)*.

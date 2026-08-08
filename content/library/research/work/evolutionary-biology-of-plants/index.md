@@ -32,4 +32,4 @@ rights:
 draft: false
 ---
 
-[Karl Niklas](/library/karl-niklas/) on plant form, biomechanics, and the evolution of morphology.
+[Karl Niklas](/library/research/karl-niklas/) on plant form, biomechanics, and the evolution of morphology.

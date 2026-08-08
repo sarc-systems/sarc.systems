@@ -36,7 +36,7 @@ rights:
 draft: false
 ---
 
-[Georges Bataille](/library/georges-bataille/)'s theory of general economy — expenditure, excess, and the
+[Georges Bataille](/library/research/georges-bataille/)'s theory of general economy — expenditure, excess, and the
 necessary loss of surplus energy: every system produces more energy than its own
 subsistence requires, and the surplus must be spent, gloriously or catastrophically,
 rather than accumulated without limit.

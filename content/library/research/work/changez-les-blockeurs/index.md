@@ -24,4 +24,4 @@ related: []
 draft: false
 ---
 
-[The New Blockaders](/library/the-new-blockaders/)' 1982 debut, two extended tracks of disorienting junk-metal noise, scrapes, and found sound, has been called "the first true noise record of the modern era" (Ron Lessard, RRRecords) and directly influenced the emerging Japanese noise scene as well as Nurse With Wound and Sonic Youth. Urashima's 2021 vinyl reissue, remastered by Asmus Tietchens, marked the album's 40th anniversary.
+[The New Blockaders](/library/research/the-new-blockaders/)' 1982 debut, two extended tracks of disorienting junk-metal noise, scrapes, and found sound, has been called "the first true noise record of the modern era" (Ron Lessard, RRRecords) and directly influenced the emerging Japanese noise scene as well as Nurse With Wound and Sonic Youth. Urashima's 2021 vinyl reissue, remastered by Asmus Tietchens, marked the album's 40th anniversary.

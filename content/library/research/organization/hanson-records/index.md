@@ -21,4 +21,4 @@ access:
 draft: false
 ---
 
-[Aaron Dilloway](/library/aaron-dilloway/) started Hanson Records in Brighton, Michigan, in 1994, its first release a 7-inch EP by his band Galen. Now based in Oberlin, Ohio, and run together with Robert Turman, the label has released more than 200 titles of noise and experimental music and has expanded into distribution and, since 2013, a brick-and-mortar record shop.
+[Aaron Dilloway](/library/research/aaron-dilloway/) started Hanson Records in Brighton, Michigan, in 1994, its first release a 7-inch EP by his band Galen. Now based in Oberlin, Ohio, and run together with Robert Turman, the label has released more than 200 titles of noise and experimental music and has expanded into distribution and, since 2013, a brick-and-mortar record shop.

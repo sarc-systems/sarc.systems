@@ -27,4 +27,4 @@ related: []
 draft: false
 ---
 
-Recorded at Studio Rivbea in New York and remixed at Mills College's Center for Contemporary Music, *Chicago Slow Dance* (1981, Lovely Music) pairs [George Lewis](/library/george-lewis/)'s trombone and live electronics with Douglas Ewart (reeds, flutes, percussion), J.D. Parran (reeds), and [Richard Teitelbaum](/library/richard-teitelbaum/) on modular Moog synthesizer, across two side-length pieces.
+Recorded at Studio Rivbea in New York and remixed at Mills College's Center for Contemporary Music, *Chicago Slow Dance* (1981, Lovely Music) pairs [George Lewis](/library/research/george-lewis/)'s trombone and live electronics with Douglas Ewart (reeds, flutes, percussion), J.D. Parran (reeds), and [Richard Teitelbaum](/library/research/richard-teitelbaum/) on modular Moog synthesizer, across two side-length pieces.

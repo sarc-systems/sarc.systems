@@ -32,5 +32,5 @@ rights:
 draft: false
 ---
 
-[Gilbert Rouget](/library/gilbert-rouget/)'s cross-cultural study of how music relates to trance and
+[Gilbert Rouget](/library/research/gilbert-rouget/)'s cross-cultural study of how music relates to trance and
 possession.

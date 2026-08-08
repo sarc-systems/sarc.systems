@@ -25,4 +25,4 @@ related:
 draft: false
 ---
 
-[Klaus Schulze](/library/klaus-schulze/)'s second solo album, released on the Cosmic Couriers imprint, extended the heavily filtered organ-and-orchestra approach of *[Irrlicht](/library/irrlicht/)* with the addition of an EMS VCS3 synthesizer — a double album whose two side-long pieces moved Schulze's solo work further toward the electronic, sequencer-oriented direction that would define his mid-1970s records.
+[Klaus Schulze](/library/research/klaus-schulze/)'s second solo album, released on the Cosmic Couriers imprint, extended the heavily filtered organ-and-orchestra approach of *[Irrlicht](/library/research/irrlicht/)* with the addition of an EMS VCS3 synthesizer — a double album whose two side-long pieces moved Schulze's solo work further toward the electronic, sequencer-oriented direction that would define his mid-1970s records.

@@ -26,4 +26,4 @@ related: []
 draft: false
 ---
 
-Recorded on March 31, 1996, at Zack Studio in St. Gallen, Switzerland, and released the following year on [Günter Müller](/library/gunter-muller/)'s own For4Ears label, *Table Chair and Hatstand* brought the Swiss electroacoustic duo [Voice Crack](/library/voice-crack/) (Andy Guhl and Norbert Möslang, working with cracked everyday electronics) together with [Jim O'Rourke](/library/jim-orourke/) for an hour-long improvised session.
+Recorded on March 31, 1996, at Zack Studio in St. Gallen, Switzerland, and released the following year on [Günter Müller](/library/research/gunter-muller/)'s own For4Ears label, *Table Chair and Hatstand* brought the Swiss electroacoustic duo [Voice Crack](/library/research/voice-crack/) (Andy Guhl and Norbert Möslang, working with cracked everyday electronics) together with [Jim O'Rourke](/library/research/jim-orourke/) for an hour-long improvised session.

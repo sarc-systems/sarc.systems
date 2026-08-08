@@ -24,4 +24,4 @@ related: []
 draft: false
 ---
 
-Released in 1980 on Passport Records and recorded at his own Different Fur studio in San Francisco, *Rainbow Delta* is [Patrick Gleeson](/library/patrick-gleeson/)'s electronic-jazz solo album, extending the synthesizer language he had brought to [Herbie Hancock](/library/herbie-hancock/)'s Mwandishi band into his own studio composition.
+Released in 1980 on Passport Records and recorded at his own Different Fur studio in San Francisco, *Rainbow Delta* is [Patrick Gleeson](/library/research/patrick-gleeson/)'s electronic-jazz solo album, extending the synthesizer language he had brought to [Herbie Hancock](/library/research/herbie-hancock/)'s Mwandishi band into his own studio composition.

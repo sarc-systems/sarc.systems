@@ -25,4 +25,4 @@ related:
 draft: false
 ---
 
-[Kraftwerk](/library/kraftwerk/)'s third album, named for founders Ralf Hütter and Florian Schneider, was the group's first recording to use a vocoder and the clearest step yet from their earlier krautrock instrumentation toward the fully synthesizer-based sound that would define *Autobahn* the following year.
+[Kraftwerk](/library/research/kraftwerk/)'s third album, named for founders Ralf Hütter and Florian Schneider, was the group's first recording to use a vocoder and the clearest step yet from their earlier krautrock instrumentation toward the fully synthesizer-based sound that would define *Autobahn* the following year.

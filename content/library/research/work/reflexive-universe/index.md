@@ -24,4 +24,4 @@ related: []
 draft: false
 ---
 
-Recorded live at Maya in Kobe on September 15, 1991, with just two of [C.C.C.C.](/library/cccc/)'s members — Mayuko Hino on electronics and voice, Hiroshi Hasegawa on synthesizer and electronics — building from a hypersonic opening into a wall of noise, and originally released that year on Vanilla Records. Urashima's 2023 vinyl reissue adds a second, later live recording in Kyoto with all four members.
+Recorded live at Maya in Kobe on September 15, 1991, with just two of [C.C.C.C.](/library/research/cccc/)'s members — Mayuko Hino on electronics and voice, Hiroshi Hasegawa on synthesizer and electronics — building from a hypersonic opening into a wall of noise, and originally released that year on Vanilla Records. Urashima's 2023 vinyl reissue adds a second, later live recording in Kyoto with all four members.

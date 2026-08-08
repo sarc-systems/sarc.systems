@@ -22,4 +22,4 @@ related:
 draft: false
 ---
 
-Jean Schwarz is a French composer of electroacoustic music who worked at the Groupe de Recherches Musicales through the 1970s and 80s, including the 1977 duo recording *[Roundtrip](/library/roundtrip-1977/)* with [Don Cherry](/library/don-cherry/).
+Jean Schwarz is a French composer of electroacoustic music who worked at the Groupe de Recherches Musicales through the 1970s and 80s, including the 1977 duo recording *[Roundtrip](/library/research/roundtrip-1977/)* with [Don Cherry](/library/research/don-cherry/).

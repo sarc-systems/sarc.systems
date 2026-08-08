@@ -24,4 +24,4 @@ related: []
 draft: false
 ---
 
-Released in 1972 on Mainstream Records and recorded at the Rose Art Museum, Brandeis University, *Electric Sound* gathers one live-electronics piece from each member of the [Sonic Arts Union](/library/sonic-arts-union/): Alvin Lucier's "Vespers," Robert Ashley's "Purposeful Lady Slow Afternoon," David Behrman's "Runthrough," and Gordon Mumma's "Hornpipe" — a document of the individual practices the group's collaborative touring and performance work grew out of.
+Released in 1972 on Mainstream Records and recorded at the Rose Art Museum, Brandeis University, *Electric Sound* gathers one live-electronics piece from each member of the [Sonic Arts Union](/library/research/sonic-arts-union/): Alvin Lucier's "Vespers," Robert Ashley's "Purposeful Lady Slow Afternoon," David Behrman's "Runthrough," and Gordon Mumma's "Hornpipe" — a document of the individual practices the group's collaborative touring and performance work grew out of.

@@ -24,4 +24,4 @@ related: []
 draft: false
 ---
 
-Recorded and mixed in September 1986 and released that October on Fatagaga Tapes in an extremely limited cassette edition, *Highdrophobia* collects three [Solmania](/library/solmania/) pieces — "Corpuster," "Parapsycho-Extasy," and "T.C.D." — built from Masahiko Ohno's modified guitars, tape, radio, metal, and turntable into dense drone. Reissued on vinyl by Urashima in 2023.
+Recorded and mixed in September 1986 and released that October on Fatagaga Tapes in an extremely limited cassette edition, *Highdrophobia* collects three [Solmania](/library/research/solmania/) pieces — "Corpuster," "Parapsycho-Extasy," and "T.C.D." — built from Masahiko Ohno's modified guitars, tape, radio, metal, and turntable into dense drone. Reissued on vinyl by Urashima in 2023.

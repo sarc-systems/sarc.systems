@@ -46,9 +46,6 @@ rights:
   status: archival
   basis: "Documentation for a long-discontinued instrument (schematics dated 1984), hosted as an archival service."
 
-aliases:
-  - /library/manuals/krohn-hite-6880a/
-
 draft: false
 ---
 

@@ -24,4 +24,4 @@ related: []
 draft: false
 ---
 
-The first entry in [Brian Eno](/library/brian-eno/)'s Ambient series, built from tape loops of processed piano and voice running out of phase with one another, formally defined ambient music in the liner notes as sound that "must be able to accommodate many levels of listening attention without enforcing one in particular" — a statement of purpose for the minimalist, slowly evolving language Eno had already begun developing on *Discreet Music* (1975) and *[Before and After Science](/library/before-and-after-science/)* (1977).
+The first entry in [Brian Eno](/library/research/brian-eno/)'s Ambient series, built from tape loops of processed piano and voice running out of phase with one another, formally defined ambient music in the liner notes as sound that "must be able to accommodate many levels of listening attention without enforcing one in particular" — a statement of purpose for the minimalist, slowly evolving language Eno had already begun developing on *Discreet Music* (1975) and *[Before and After Science](/library/research/before-and-after-science/)* (1977).

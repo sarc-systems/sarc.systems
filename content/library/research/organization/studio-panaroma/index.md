@@ -27,4 +27,4 @@ access: []
 draft: false
 ---
 
-Founded by composer [Flo Menezes](/library/flo-menezes/) in July 1994 and modeled explicitly on Cologne's Studio für elektronische Musik, Studio PANaroma de Música Eletroacústica moved between institutions before settling at São Paulo State University (UNESP), where it became one of the world's most active electroacoustic music research and production centers, sponsoring São Paulo's international electroacoustic composition contest and biennial.
+Founded by composer [Flo Menezes](/library/research/flo-menezes/) in July 1994 and modeled explicitly on Cologne's Studio für elektronische Musik, Studio PANaroma de Música Eletroacústica moved between institutions before settling at São Paulo State University (UNESP), where it became one of the world's most active electroacoustic music research and production centers, sponsoring São Paulo's international electroacoustic composition contest and biennial.

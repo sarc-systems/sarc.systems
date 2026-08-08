@@ -30,4 +30,4 @@ related:
 draft: false
 ---
 
-Cluster — the Berlin duo of Dieter Moebius and Hans-Joachim Roedelius, formed in 1971 when [Conrad Schnitzler](/library/conrad-schnitzler/) left the earlier trio Kluster, which he had co-founded with the pair in 1969 — became central to krautrock and ambient electronics. Brian Eno, who had already sat in with their offshoot trio Harmonia in 1974, improvised two full albums with Cluster directly: *Cluster & Eno* (1977) and *After the Heat* (1978).
+Cluster — the Berlin duo of Dieter Moebius and Hans-Joachim Roedelius, formed in 1971 when [Conrad Schnitzler](/library/research/conrad-schnitzler/) left the earlier trio Kluster, which he had co-founded with the pair in 1969 — became central to krautrock and ambient electronics. Brian Eno, who had already sat in with their offshoot trio Harmonia in 1974, improvised two full albums with Cluster directly: *Cluster & Eno* (1977) and *After the Heat* (1978).
