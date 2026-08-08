@@ -2,6 +2,11 @@
 
 {{ define "main" }}
 {{- $lib := hugo.Data.library -}}
+{{- /* This entry's own Collection root (e.g. /library/research/) — never a
+       bare hardcoded /library/, which is the meta-Collection root, not any
+       one Collection's own catalog/filters. See docs/library-v2.md § 13. */ -}}
+{{- $coll := partial "library-resolve-collection.html" . -}}
+{{- $collRoot := printf "/library/%s/" $coll.id -}}
 {{- $type := .Params.library.type -}}
 {{- $typeLabel := "" }}{{ range $lib.types }}{{ if eq .type $type }}{{ $typeLabel = .label }}{{ end }}{{ end -}}
 {{- $sarc := .Params.library.sarc_work -}}
@@ -23,7 +28,7 @@
              nav at the foot of the page (see its own comment) — this
              breadcrumb is the more prominent of the two "Library" links on
              an entry page, so it gets the same treatment. */}}
-      <p class="eyebrow"><a href="{{ printf "/library/?view=map&select=%s" .Params.library.id | relURL }}">Library</a>{{ with $typeLabel }} <span class="dot" aria-hidden="true">·</span> {{ . }}{{ end }}</p>
+      <p class="eyebrow"><a href="{{ printf "%s?view=map&select=%s" $collRoot .Params.library.id | relURL }}">{{ $coll.title }}</a>{{ with $typeLabel }} <span class="dot" aria-hidden="true">·</span> {{ . }}{{ end }}</p>
       <h1 class="entry-full-title">{{ .Title }}</h1>
       {{- with .Params.summary }}<p class="entry-lede">{{ . }}</p>{{ end }}
     </header>
@@ -46,7 +51,7 @@
   <div class="wrap">
     {{- /* Core metadata — only rows that exist. */ -}}
     <dl class="entry-meta">
-      {{- with $typeLabel }}<div class="meta-row"><dt>Type</dt><dd><a href="{{ (printf "/library/?type=%s" $type) | relURL }}">{{ . }}</a></dd></div>{{ end }}
+      {{- with $typeLabel }}<div class="meta-row"><dt>Type</dt><dd><a href="{{ (printf "%s?type=%s" $collRoot $type) | relURL }}">{{ . }}</a></dd></div>{{ end }}
       {{- with $creatorsHTML }}<div class="meta-row"><dt>{{ $creatorLabel }}</dt><dd>{{ . | safeHTML }}</dd></div>{{ end }}
       {{- with $year }}<div class="meta-row"><dt>Year</dt><dd>{{ . }}</dd></div>{{ end }}
       {{- if not .Date.IsZero }}<div class="meta-row"><dt>Date</dt><dd><time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "02 January 2006" }}</time></dd></div>{{ end }}
@@ -61,9 +66,9 @@
       {{- with .Params.isbn }}<div class="meta-row"><dt>ISBN</dt><dd>{{ . }}</dd></div>{{ end }}
       {{- with .Params.doi }}<div class="meta-row"><dt>DOI</dt><dd>{{ . }}</dd></div>{{ end }}
       {{- with .Params.subjects }}
-      <div class="meta-row"><dt>Subjects</dt><dd class="meta-topics">{{ range $i, $s := . }}{{ if $i }}<span class="dot" aria-hidden="true">·</span> {{ end }}{{ $sl := $s }}{{ range $lib.subjects }}{{ if eq .subject $sl }}<a href="{{ (printf "/library/?subject=%s" $sl) | relURL }}">{{ .label }}</a>{{ end }}{{ end }}{{ end }}</dd></div>
+      <div class="meta-row"><dt>Subjects</dt><dd class="meta-topics">{{ range $i, $s := . }}{{ if $i }}<span class="dot" aria-hidden="true">·</span> {{ end }}{{ $sl := $s }}{{ range $lib.subjects }}{{ if eq .subject $sl }}<a href="{{ (printf "%s?subject=%s" $collRoot $sl) | relURL }}">{{ .label }}</a>{{ end }}{{ end }}{{ end }}</dd></div>
       {{- end }}
-      {{- if $sarc }}<div class="meta-row"><dt>Origin</dt><dd><a href="{{ "/library/?sarc=true" | relURL }}">SARC work</a></dd></div>{{ end }}
+      {{- if $sarc }}<div class="meta-row"><dt>Origin</dt><dd><a href="{{ (printf "%s?sarc=true" $collRoot) | relURL }}">SARC work</a></dd></div>{{ end }}
     </dl>
 
     {{- /* Access actions — all rendered as equal (filled) buttons. */ -}}
@@ -112,7 +117,7 @@
              on load (see CLAUDE.md § Library "Map view" — Selection-Centered
              Navigation). Explicit view=map even though Map is already the
              default, so this keeps working if that default ever changes. */}}
-      <a class="entry-nav-prev" href="{{ printf "/library/?view=map&select=%s" .Params.library.id | relURL }}"><span class="entry-nav-dir">← Library</span></a>
+      <a class="entry-nav-prev" href="{{ printf "%s?view=map&select=%s" $collRoot .Params.library.id | relURL }}"><span class="entry-nav-dir">← {{ $coll.title }}</span></a>
     </nav>
   </div>
 </article>

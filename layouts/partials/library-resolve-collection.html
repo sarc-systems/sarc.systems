@@ -4,13 +4,18 @@
        content-relative File.Path against each Collection's source.section
        (adapter: hugo only). One resolution mechanism used everywhere a
        Library template needs "which Collection is this" — see
-       docs/library-v2.md § 2.2/§ 3.
+       docs/library-v2.md § 2.2/§ 3/§ 11.
 
        Call: {{ $coll := partial "library-resolve-collection.html" . }}
 
        Returns the matched Collection dict (data/library/collections.yaml
-       shape), or fails the build if no Collection's source.section prefixes
-       this page's path. */ -}}
+       shape). The Library root itself (content/library/_index.md — depth 1
+       under content/library/, i.e. no Collection claims it) is not a row in
+       the registry — it's the implicit meta-Collection, not one of its own
+       children — so it resolves to a synthetic dict with
+       `source.adapter: "root"` instead. Fails the build for anything else
+       under the library section that no Collection's source.section
+       prefixes (a genuinely orphaned page). */ -}}
 {{- $page := . -}}
 {{- $registry := hugo.Data.library.collections -}}
 {{- $coll := dict -}}
@@ -20,5 +25,11 @@
     {{- $coll = . }}{{ $bestLen = len .source.section -}}
   {{- end -}}
 {{- end -}}
-{{- if not $coll.id }}{{ errorf "library-resolve-collection.html: no Collection in data/library/collections.yaml matches %q" $page.File.Path }}{{ end -}}
+{{- if not $coll.id -}}
+  {{- if eq $page.File.Path "library/_index.md" -}}
+    {{- $coll = dict "id" "library" "title" $page.Title "color" "" "source" (dict "adapter" "root" "section" "library") -}}
+  {{- else -}}
+    {{- errorf "library-resolve-collection.html: no Collection in data/library/collections.yaml matches %q" $page.File.Path -}}
+  {{- end -}}
+{{- end -}}
 {{- return $coll -}}

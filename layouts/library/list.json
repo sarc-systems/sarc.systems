@@ -15,6 +15,23 @@
        match today (research). */ -}}
 {{- $coll := partial "library-resolve-collection.html" . -}}
 
+{{- /* The Library root itself (the meta-Collection) has no gathered Hugo
+       Entries of its own to run through library-collect.html — its
+       "entries" are the registered child Collections. Full root rendering
+       (Collection-summary entries) lands in Phase 3; this is a safe,
+       non-erroring stub so Phase 4's route migration alone still builds
+       and serves valid (empty) JSON at /library/index.json. */ -}}
+{{- if eq $coll.source.adapter "root" -}}
+{{ dict
+    "collection" (dict "id" $coll.id "title" $coll.title "color" "" "description" "")
+    "count" 0
+    "entries" (slice)
+    "public_type_styles" (dict)
+    "relation_inverse" (dict)
+    "relation_category" (dict)
+  | jsonify (dict "indent" "  ") }}
+{{- else -}}
+
 {{- /* The one centralized specific-type -> public-type mapping (colors,
        shapes, labels) — see partials/library-public-types.html and
        data/library.yaml's public_types for the single canonical definition,
@@ -93,3 +110,4 @@
     "relation_inverse" $lib.relation_inverse
     "relation_category" $lib.relation_categories
   | jsonify (dict "indent" "  ") }}
+{{- end -}}

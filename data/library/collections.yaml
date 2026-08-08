@@ -12,9 +12,7 @@
 #
 # `source.section` is the content-relative directory (under content/) this
 # Collection's Hugo-adapter Entries live under — see docs/library-v2.md
-# § 2.2/§ 13. Today it is "library" because the pre-v2 corpus hasn't moved
-# yet (that's Phase 4); once it moves to content/library/research/, this
-# becomes "library/research".
+# § 2.2/§ 13.
 - id: research
   title: SARC Research
   description: >
@@ -22,7 +20,7 @@
   color: forest
   source:
     adapter: hugo
-    section: library
+    section: library/research
   views:
     enabled: [catalog, images, map]
     default: map

@@ -101,14 +101,17 @@ chance-selection eligibility/revalidation). Section colour is Forest.
 **Add an entry** (one archetype for everything):
 
 ```
-hugo new --kind library-entry library/person/some-slug/index.md
+hugo new --kind library-entry library/research/person/some-slug/index.md
 ```
 
-Entries are stored under a public-type directory —
-`content/library/<public-type>/<slug>/` (`person | group | organization |
-work | system | place | concept | event`) — but always publish flat at
-`/library/<slug>/`; the type folder is source organization only and never
-appears in the URL. Edit the front matter and set `draft: false`. Key fields:
+Entries are stored under their Collection, then a public-type directory —
+`content/library/<collection>/<public-type>/<slug>/` (`research` is the
+only Collection today; public types: `person | group | organization |
+work | system | place | concept | event`) — but always publish flat within
+their Collection at `/library/<collection>/<slug>/` (e.g.
+`/library/research/some-slug/`); neither the Collection nor the type folder
+appears past that in the URL. See `docs/library-v2.md` for the Library v2
+architecture this reflects. Edit the front matter and set `draft: false`. Key fields:
 
 - `library.id` — stable, **unique** id (not the title/URL); relationships resolve
   through it. `library.type` — one controlled type (`book | person | group |
@@ -149,7 +152,9 @@ appears in the URL. Edit the front matter and set `draft: false`. Key fields:
 catalog with `library: { include: true, id: … }` — no copying, canonical URL
 stays put. **Moving a URL:** add the old path under `aliases:`.
 
-The catalog is also emitted as `/library/index.json`. See `data/library.yaml`
+The research catalog is also emitted as `/library/research/index.json`
+(`/library/index.json` is the Library root — currently a placeholder until
+Phase 3 of the Library v2 migration lands, see `docs/library-v2.md`). See `data/library.yaml`
 for the vocabularies and `CLAUDE.md` § Library for full conventions (graph,
 images, random, filtering, rights, the private iCloud policy, why no database).
 
