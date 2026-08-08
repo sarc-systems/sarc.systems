@@ -1,0 +1,29 @@
+{{- /* Resolve a Collection's vocabulary — the data/library.yaml-shaped dict
+       (types, public_types, subjects, creator_roles, relation_types,
+       relation_inverse, relation_categories, access_kinds, image_roles,
+       rights_status, rights_hosted_ok, image_rights_status,
+       image_use_basis) this Collection's Facets are drawn from — see
+       docs/library-v2.md § 6.1/§ 14.
+
+       A Collection with no `vocabulary` field, or `vocabulary: library`,
+       shares the one at data/library.yaml (hugo.Data.library) — today's
+       default, and research's, with zero behavior change from pre-v2. A
+       Collection declaring e.g. `vocabulary: field-kit` gets its own
+       independent vocabulary from data/library/vocabularies/field-kit.yaml
+       instead, completely uncoupled from SARC Research's types/subjects/
+       roles/relations.
+
+       Call: {{ $lib := partial "library-vocab.html" $coll }}
+       ($coll — a Collection dict from library-resolve-collection.html)
+
+       Callers needing library-public-types.html's {styles, typeOf} for
+       THIS vocabulary must vary partialCached's cache key by vocabulary
+       name (see that file's own header) — a fixed key would silently
+       serve one Collection's resolved styles to another. */ -}}
+{{- $name := .vocabulary | default "library" -}}
+{{- $lib := hugo.Data.library -}}
+{{- if ne $name "library" -}}
+  {{- $lib = index hugo.Data.library.vocabularies $name -}}
+  {{- if not $lib }}{{ errorf "library-vocab.html: Collection %q declares vocabulary %q, which has no data at data/library/vocabularies/%s.yaml" .id $name $name }}{{ end -}}
+{{- end -}}
+{{- return $lib -}}

@@ -9,10 +9,12 @@
        Call: {{ partial "library-works.html" (dict "page" .) }} */ -}}
 {{- $id := .page.Params.library.id -}}
 {{- with $id -}}
-  {{- $pt := partialCached "library-public-types.html" . "library-public-types" -}}
+  {{- $coll := partial "library-resolve-collection.html" $.page -}}
+  {{- $lib := partial "library-vocab.html" $coll -}}
+  {{- $vocabName := $coll.vocabulary | default "library" -}}
+  {{- $pt := partialCached "library-public-types.html" $lib (printf "library-public-types-%s" $vocabName) -}}
   {{- $works := slice -}}
   {{- $groups := slice -}}
-  {{- $coll := partial "library-resolve-collection.html" $.page -}}
   {{- range (partial "library-collect.html" (dict "ctx" $.page "sectionPath" $coll.source.section "collection" $coll.id)) -}}
     {{- $p := . -}}
     {{- $credited := false -}}

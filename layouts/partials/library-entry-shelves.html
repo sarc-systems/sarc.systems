@@ -13,17 +13,21 @@
        callers agree without duplicating the matching logic itself.
 
        Call: {{ $shelves := partial "library-entry-shelves.html"
-                  (dict "page" . "collection" $coll.id) }}
+                  (dict "page" . "coll" $ctx.coll) }}
+       ($coll — from library-page-context.html/library-resolve-collection.html;
+       passed in rather than re-resolved, since every caller already has it.)
 
        Returns a slice of shelf ids — empty for the Library root or any
        Collection with no Shelves configured (research has none yet; see
        data/library/shelves/research.yaml). */ -}}
 {{- $page := .page -}}
-{{- $collId := .collection -}}
-{{- $shelvesData := index (index hugo.Data.library.shelves | default dict) $collId | default slice -}}
+{{- $coll := .coll -}}
+{{- $shelvesData := index (index hugo.Data.library.shelves | default dict) $coll.id | default slice -}}
 {{- $out := slice -}}
 {{- if $shelvesData -}}
-  {{- $pt := partialCached "library-public-types.html" $page "library-public-types" -}}
+  {{- $vocabLib := partial "library-vocab.html" $coll -}}
+  {{- $vocabName := $coll.vocabulary | default "library" -}}
+  {{- $pt := partialCached "library-public-types.html" $vocabLib (printf "library-public-types-%s" $vocabName) -}}
   {{- $eid := $page.Params.library.id -}}
   {{- $etype := "" }}{{ with $page.Params.library }}{{ $etype = .type }}{{ end -}}
   {{- $epublic := index $pt.typeOf $etype -}}

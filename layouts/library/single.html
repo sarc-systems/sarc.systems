@@ -1,12 +1,15 @@
 {{ define "body-class" }}library library-single{{ end }}
 
 {{ define "main" }}
-{{- $lib := hugo.Data.library -}}
 {{- /* This entry's own Collection root (e.g. /library/research/) — never a
        bare hardcoded /library/, which is the meta-Collection root, not any
        one Collection's own catalog/filters. See docs/library-v2.md § 13. */ -}}
 {{- $coll := partial "library-resolve-collection.html" . -}}
 {{- $collRoot := printf "/library/%s/" $coll.id -}}
+{{- /* This Collection's own vocabulary (docs/library-v2.md § 6.1/§ 14) —
+       never assume data/library.yaml, a future Collection may have its
+       own types/subjects entirely. */ -}}
+{{- $lib := partial "library-vocab.html" $coll -}}
 {{- $type := .Params.library.type -}}
 {{- $typeLabel := "" }}{{ range $lib.types }}{{ if eq .type $type }}{{ $typeLabel = .label }}{{ end }}{{ end -}}
 {{- $sarc := .Params.library.sarc_work -}}

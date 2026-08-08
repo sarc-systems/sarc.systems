@@ -7,9 +7,16 @@
        Carries the same data-* the filter script reads on .library-record, so
        one filter pass can hide/show both views identically. Hidden by default;
        shown only when JS switches to Images view (see library-filter.js).
-       Call: {{ partial "library-image-index.html" (dict "pages" $entries) }} */ -}}
+       Every page in $pages belongs to the SAME Collection (list.html
+       passes one Collection's own $entries plus $coll itself), so its
+       vocabulary/public-type mapping is resolved once here, not once per
+       item.
+       Call: {{ partial "library-image-index.html" (dict "pages" $entries "coll" $coll) }} */ -}}
 {{- $pages := .pages -}}
-{{- $pt := partialCached "library-public-types.html" . "library-public-types" -}}
+{{- $coll := .coll -}}
+{{- $lib := partial "library-vocab.html" $coll -}}
+{{- $vocabName := $coll.vocabulary | default "library" -}}
+{{- $pt := partialCached "library-public-types.html" $lib (printf "library-public-types-%s" $vocabName) -}}
 <div class="library-image-index" id="library-image-index" hidden>
   {{- range $pages -}}
     {{- $page := . -}}
@@ -17,8 +24,7 @@
     {{- $type := $page.Params.library.type -}}
     {{- $publicType := index $pt.typeOf $type -}}
     {{- $subs := $page.Params.subjects | default slice -}}
-    {{- $coll := partial "library-resolve-collection.html" $page -}}
-    {{- $shelves := partial "library-entry-shelves.html" (dict "page" $page "collection" $coll.id) -}}
+    {{- $shelves := partial "library-entry-shelves.html" (dict "page" $page "coll" $coll) -}}
     {{- $thumb := partial "library-thumbnail.html" $page -}}
     {{- if $thumb.has }}
   <a class="library-image-index__item" href="{{ $page.RelPermalink }}" aria-label="View {{ $page.Title }}"

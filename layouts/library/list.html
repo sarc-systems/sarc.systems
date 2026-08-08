@@ -27,7 +27,7 @@
   <ul class="library-records" id="library-list">
     {{ range . }}{{ partial "library-record.html" . }}{{ end }}
   </ul>
-  {{ partial "library-image-index.html" (dict "pages" $entries) }}
+  {{ partial "library-image-index.html" (dict "pages" $entries "coll" $coll) }}
   {{ partial "library-map-view.html" . }}
   {{- else }}
   <p class="library-empty">No entries yet.</p>

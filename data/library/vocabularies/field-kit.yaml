@@ -1,0 +1,65 @@
+# Vocabulary for the "field-kit" Collection — the Library v2 genericity
+# fixture (docs/library-v2.md § 14, todo_libv2.txt "Genericity proof").
+# Non-production, dev-only test data — see content/library/field-kit/_index.md.
+#
+# Deliberately independent of data/library.yaml (the "research" Collection's
+# vocabulary): different public_types (3, not 8), different specific types,
+# different subjects, different creator_roles, different relation_types —
+# proving the shared engine (library-public-types.html, list.json,
+# library-record.html, library-filters.html, library-validate.html,
+# library-map.js, ...) carries no SARC-Research-specific assumptions. Same
+# shape as data/library.yaml; resolved per-Collection by library-vocab.html
+# via this Collection's `vocabulary: field-kit` in data/library/collections.yaml.
+
+public_types:
+  - {public_type: object, label: "Object", order: 10, color: turquoise,  shape: square}
+  - {public_type: place,  label: "Place",  order: 20, color: harvest,    shape: triangle}
+  - {public_type: person, label: "Person", order: 30, color: royal-blue, shape: circle, hub: true}
+
+types:
+  - {type: tool,        label: "Tool",        order: 10, public_type: object}
+  - {type: material,     label: "Material",    order: 20, public_type: object}
+  - {type: container,    label: "Container",   order: 30, public_type: object}
+  - {type: workshop,     label: "Workshop",    order: 40, public_type: place}
+  - {type: technician,   label: "Technician",  order: 50, public_type: person}
+
+subjects:
+  - {subject: portable,     label: "Portable"}
+  - {subject: fragile,      label: "Fragile"}
+  - {subject: weatherproof, label: "Weatherproof"}
+  - {subject: vintage,      label: "Vintage"}
+
+creator_roles:
+  - maker
+  - restorer
+
+relation_types:
+  - part-of
+  - stored-in
+  - used-by
+  - based-at
+
+relation_inverse:
+  part-of: contains
+  stored-in: stores
+  used-by: uses
+  based-at: hosts
+
+relation_categories:
+  part-of: structural
+  stored-in: structural
+  based-at: structural
+  used-by: contextual
+
+access_kinds:
+  - {kind: catalog-record, verb: "Catalog record", external: true}
+  - {kind: other,          verb: "Link",           external: true}
+  - {kind: hosted-file,    verb: "Download",        external: false}
+
+image_roles:
+  - photo
+
+rights_status: [sarc-owned, public-domain, licensed, permitted, review, external-link-only, archival]
+rights_hosted_ok: [sarc-owned, public-domain, licensed, permitted, archival]
+image_rights_status: [sarc-owned, public-domain, licensed, permitted, unknown]
+image_use_basis: [identification, editorial, promotional, fair-use, archival]

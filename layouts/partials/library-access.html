@@ -14,8 +14,10 @@
        Call: {{ partial "library-access.html" . }} */ -}}
 {{- $page := . -}}
 {{- $max := 1 -}}
+{{- $coll := partial "library-resolve-collection.html" $page -}}
+{{- $lib := partial "library-vocab.html" $coll -}}
 {{- $ext := dict -}}{{ $verbs := dict -}}
-{{- range hugo.Data.library.access_kinds }}{{ $ext = merge $ext (dict .kind .external) }}{{ $verbs = merge $verbs (dict .kind .verb) }}{{ end -}}
+{{- range $lib.access_kinds }}{{ $ext = merge $ext (dict .kind .external) }}{{ $verbs = merge $verbs (dict .kind .verb) }}{{ end -}}
 {{- with $page.Params.access -}}
 {{- $items := . -}}
 {{- $total := len $items -}}

@@ -21,10 +21,11 @@
        outlined buttons, never fully-colored pills, and the swatch is
        decorative (aria-hidden) — the chip's own text is still the only thing
        that matters for state/accessibility. */ -}}
-{{- $lib := hugo.Data.library -}}
 {{- $pages := .pages -}}
 {{- $coll := .coll -}}
-{{- $pt := partialCached "library-public-types.html" . "library-public-types" -}}
+{{- $lib := partial "library-vocab.html" $coll -}}
+{{- $vocabName := $coll.vocabulary | default "library" -}}
+{{- $pt := partialCached "library-public-types.html" $lib (printf "library-public-types-%s" $vocabName) -}}
 {{- $haveType := slice }}{{ $haveSub := slice -}}
 {{- range $pages -}}
   {{- with .Params.library.type }}{{ $haveType = $haveType | append (index $pt.typeOf .) }}{{ end -}}

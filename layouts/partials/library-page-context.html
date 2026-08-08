@@ -1,0 +1,20 @@
+{{- /* Resolve everything a Library template commonly needs about the page
+       it's rendering: which Collection it belongs to, that Collection's
+       vocabulary, and the vocabulary's public-type mapping — one call
+       instead of separately calling library-resolve-collection.html +
+       library-vocab.html + a correctly-cache-keyed library-public-types.html
+       at every call site. See docs/library-v2.md § 6.1/§ 14.
+
+       Call: {{ $ctx := partial "library-page-context.html" . }}
+       ($page — an Entry page, or a Collection's own section index page)
+
+       Returns {coll, lib, pt}:
+         coll — the Collection dict (library-resolve-collection.html)
+         lib  — that Collection's vocabulary (library-vocab.html)
+         pt   — {styles, typeOf} for that vocabulary (library-public-types.html) */ -}}
+{{- $page := . -}}
+{{- $coll := partial "library-resolve-collection.html" $page -}}
+{{- $lib := partial "library-vocab.html" $coll -}}
+{{- $vocabName := $coll.vocabulary | default "library" -}}
+{{- $pt := partialCached "library-public-types.html" $lib (printf "library-public-types-%s" $vocabName) -}}
+{{- return (dict "coll" $coll "lib" $lib "pt" $pt) -}}

@@ -6,10 +6,12 @@
        what the Type filter actually matches against — while the visible
        kicker text below still names the SPECIFIC type (Release, Composition,
        …); see CLAUDE.md § Library "Public Type vs Specific Type". */ -}}
-{{- $lib := hugo.Data.library -}}
+{{- $ctx := partial "library-page-context.html" . -}}
+{{- $coll := $ctx.coll -}}
+{{- $lib := $ctx.lib -}}
+{{- $pt := $ctx.pt -}}
 {{- $id := .Params.library.id -}}
 {{- $type := .Params.library.type -}}
-{{- $pt := partialCached "library-public-types.html" . "library-public-types" -}}
 {{- $publicType := index $pt.typeOf $type -}}
 
 {{- $typeLabel := "" -}}{{ range $lib.types }}{{ if eq .type $type }}{{ $typeLabel = .label }}{{ end }}{{ end -}}
@@ -39,8 +41,7 @@
 {{- $collColor := .Params.library.color -}}
 {{- /* Shelf membership (docs/library-v2.md § 5) — data-shelves mirrors
        data-type/data-subjects exactly, read by the same client filter. */ -}}
-{{- $coll := partial "library-resolve-collection.html" . -}}
-{{- $shelves := partial "library-entry-shelves.html" (dict "page" . "collection" $coll.id) -}}
+{{- $shelves := partial "library-entry-shelves.html" (dict "page" . "coll" $coll) -}}
 <li class="library-record{{ if $thumb.has }} has-thumb{{ end }}{{ if $collColor }} has-collection-color{{ end }}" data-library-id="{{ $id }}" data-type="{{ $publicType }}" data-subjects="{{ delimit $subs " " }}" data-shelves="{{ delimit $shelves " " }}" data-has-image="{{ if $thumb.has }}true{{ else }}false{{ end }}"{{ with $collColor }} style="--collection-color: var(--colorplan-{{ . }});"{{ end }}>
   {{- with $thumb.has }}
   <a class="library-record-thumb" href="{{ $.RelPermalink }}" tabindex="-1" aria-hidden="true">

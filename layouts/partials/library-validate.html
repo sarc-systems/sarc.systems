@@ -1,21 +1,15 @@
 {{- /* Build-time Library validation (invoked once via partialCached from head).
        Fails a production build clearly on the problems listed below; draft
        entries are exempt from vocabulary checks but the hosted-rights guard
-       still forces review/unset hosted files to stay drafts. */ -}}
-{{- $lib := hugo.Data.library -}}
-{{- /* Triggers library-public-types.html's own build-time checks: every
-       specific type maps to a public type, and every public type has a
-       color + shape (data/library.yaml). See CLAUDE.md § Library "Public
-       Type vs Specific Type". */ -}}
-{{- $pt := partialCached "library-public-types.html" . "library-public-types" -}}
-{{- $types := slice }}{{ range $lib.types }}{{ $types = $types | append .type }}{{ end -}}
-{{- $subjects := slice }}{{ range $lib.subjects }}{{ $subjects = $subjects | append .subject }}{{ end -}}
-{{- $roles := $lib.creator_roles -}}
-{{- $relations := $lib.relation_types -}}
-{{- $kinds := slice }}{{ range $lib.access_kinds }}{{ $kinds = $kinds | append .kind }}{{ end -}}
-{{- $okRights := $lib.rights_hosted_ok -}}
-{{- $imgRights := $lib.image_rights_status -}}
-{{- $imgUseBasis := $lib.image_use_basis -}}
+       still forces review/unset hosted files to stay drafts.
+
+       Per-Collection vocabularies (docs/library-v2.md § 6.1/§ 14): every
+       check below that depends on a controlled vocabulary (type, subject,
+       creator role, relation, access kind, rights) resolves EACH entry's
+       OWN Collection's vocabulary (library-vocab.html) rather than
+       assuming data/library.yaml globally — a future Collection with a
+       completely different vocabulary (e.g. the field-kit fixture) is
+       validated against its own rules, never SARC Research's. */ -}}
 
 {{- /* Known platform/host names that identify WHERE an image was found, not
        WHO made it — a `credit` equal to one of these (case-insensitive) is a
@@ -35,6 +29,7 @@
 {{- $registry := hugo.Data.library.collections -}}
 {{- $colorplanSlugs := slice }}{{ range hugo.Data.colorplan.colors }}{{ $colorplanSlugs = $colorplanSlugs | append .slug }}{{ end -}}
 {{- $collIds := slice -}}
+{{- $vocabByCollection := dict -}}
 {{- range $registry -}}
   {{- if not .id }}{{ errorf "Library: a Collection in data/library/collections.yaml has no id" }}{{ end -}}
   {{- if in $collIds .id }}{{ errorf "Library: duplicate Collection id %q in data/library/collections.yaml" .id }}{{ end -}}
@@ -49,32 +44,66 @@
   {{- range $enabled }}{{ if not (in (slice "catalog" "images" "map") .) }}{{ errorf "Library: Collection %q enables unknown view %q" $collId . }}{{ end }}{{ end -}}
   {{- if and .views.default (not (in $enabled .views.default)) }}{{ errorf "Library: Collection %q views.default %q is not in its own views.enabled" $collId .views.default }}{{ end -}}
 
+  {{- /* Resolve + validate this Collection's own vocabulary — a pure data
+         check (data/library/vocabularies/*.yaml is always present
+         regardless of environment, unlike content), so it runs
+         unconditionally, in every build. Triggers
+         library-public-types.html's own checks (every specific type maps
+         to a public type; every public type has a color + shape). Cached
+         once per DISTINCT vocabulary — see that file's own header on why
+         a fixed cache key would be wrong once more than one vocabulary
+         exists. */ -}}
+  {{- $vocabLib := partial "library-vocab.html" . -}}
+  {{- $vocabName := .vocabulary | default "library" -}}
+  {{- $collPT := partialCached "library-public-types.html" $vocabLib (printf "library-public-types-%s" $vocabName) -}}
+  {{- $collTypes := slice }}{{ range $vocabLib.types }}{{ $collTypes = $collTypes | append .type }}{{ end -}}
+  {{- $collSubjects := slice }}{{ range $vocabLib.subjects }}{{ $collSubjects = $collSubjects | append .subject }}{{ end -}}
+  {{- $collKinds := slice }}{{ range $vocabLib.access_kinds }}{{ $collKinds = $collKinds | append .kind }}{{ end -}}
+  {{- $vocabByCollection = merge $vocabByCollection (dict $collId (dict
+      "lib" $vocabLib
+      "pt" $collPT
+      "types" $collTypes
+      "subjects" $collSubjects
+      "roles" $vocabLib.creator_roles
+      "relations" $vocabLib.relation_types
+      "kinds" $collKinds
+      "okRights" $vocabLib.rights_hosted_ok
+      "imgRights" $vocabLib.image_rights_status
+      "imgUseBasis" $vocabLib.image_use_basis)) -}}
+
   {{- /* An adapter:hugo Collection's own section page doubles as its
          Collection-summary Entry at the Library root (docs/library-v2.md
          § 11) — its library.id/library.color front matter must exist and
          match this registry row, or the root would silently show the
          wrong id/color, or root's Catalog rendering (library-record.html,
          which reads these directly off the page) would break. See the
-         comment in content/library/research/_index.md. */ -}}
-  {{- if eq .source.adapter "hugo" -}}
-    {{- $collColor := .color -}}
-    {{- $collSection := .source.section -}}
-    {{- with site.GetPage (printf "/%s" $collSection) -}}
-      {{- $pageId := "" }}{{ $pageColor := "" }}{{ with .Params.library }}{{ $pageId = .id }}{{ $pageColor = .color }}{{ end -}}
-      {{- if ne $pageId $collId }}{{ errorf "Library: Collection %q's section page (%s) has library.id %q, which doesn't match the registry" $collId .Path $pageId }}{{ end -}}
-      {{- if ne $pageColor $collColor }}{{ errorf "Library: Collection %q's section page (%s) has library.color %q, which doesn't match the registry's %q" $collId .Path $pageColor $collColor }}{{ end -}}
-    {{- else -}}
-      {{- errorf "Library: Collection %q's source.section %q has no section page (expected content/%s/_index.md)" $collId $collSection $collSection -}}
+         comment in content/library/research/_index.md.
+         Content-dependent (unlike the checks above), so a
+         build.production: false Collection (e.g. the field-kit fixture)
+         is skipped here during an actual production build, where its
+         content is legitimately absent (draft-excluded) — checking it
+         then would only ever fail on "no section page found." */ -}}
+  {{- if or .build.production (not hugo.IsProduction) -}}
+    {{- if eq .source.adapter "hugo" -}}
+      {{- $collColor := .color -}}
+      {{- $collSection := .source.section -}}
+      {{- with site.GetPage (printf "/%s" $collSection) -}}
+        {{- $pageId := "" }}{{ $pageColor := "" }}{{ with .Params.library }}{{ $pageId = .id }}{{ $pageColor = .color }}{{ end -}}
+        {{- if ne $pageId $collId }}{{ errorf "Library: Collection %q's section page (%s) has library.id %q, which doesn't match the registry" $collId .Path $pageId }}{{ end -}}
+        {{- if ne $pageColor $collColor }}{{ errorf "Library: Collection %q's section page (%s) has library.color %q, which doesn't match the registry's %q" $collId .Path $pageColor $collColor }}{{ end -}}
+      {{- else -}}
+        {{- errorf "Library: Collection %q's source.section %q has no section page (expected content/%s/_index.md)" $collId $collSection $collSection -}}
+      {{- end -}}
     {{- end -}}
   {{- end -}}
 
-  {{- /* Projections (docs/library-v2.md § 6.2/§ 6.4). Every Projection's
-         own `views` must be a subset of the Collection's views.enabled —
-         a Projection can never claim a View its Collection's data doesn't
-         support at all — and its `default_view` must be one of its own
-         `views`. `projections.default` must name a real Projection id;
-         the implicit `all` Projection always counts as real even when
-         not listed explicitly. */ -}}
+  {{- /* Projections (docs/library-v2.md § 6.2/§ 6.4) — pure data, always.
+         Every Projection's own `views` must be a subset of the
+         Collection's views.enabled — a Projection can never claim a View
+         its Collection's data doesn't support at all — and its
+         `default_view` must be one of its own `views`. `projections.default`
+         must name a real Projection id; the implicit `all` Projection
+         always counts as real even when not listed explicitly. */ -}}
   {{- $projIds := slice "all" -}}
   {{- range .projections.list -}}
     {{- $projId := .id -}}
@@ -115,13 +144,16 @@
        Collection; include/exclude reference this Collection's own
        (bare, not namespaced) library.id values; a rule-based filter only
        names recognized facet keys (type, subjects — the only two Facets
-       `research` currently has; see docs/library-v2.md § 6.1 on Facets
-       being Collection-specific). An unresolved include/exclude ref fails
-       the build — unlike a cross-Collection related.ref, a Shelf can only
-       ever point within its own Collection, so there's no "target
-       Collection doesn't exist yet" excuse for a broken one. */ -}}
+       any Collection currently has). An unresolved include/exclude ref
+       fails the build — unlike a cross-Collection related.ref, a Shelf can
+       only ever point within its own Collection, so there's no "target
+       Collection doesn't exist yet" excuse for a broken one.
+       Content-dependent (needs $collectionOf, built from $entries, which
+       excludes a build.production: false Collection's content during an
+       actual production build) — same guard as the section-page check
+       above, for the same reason. */ -}}
 {{- range $registry -}}
-  {{- if eq .source.adapter "hugo" -}}
+  {{- if and (eq .source.adapter "hugo") (or .build.production (not hugo.IsProduction)) -}}
     {{- $collId := .id -}}
     {{- $shelvesData := index (index hugo.Data.library.shelves | default dict) $collId | default slice -}}
     {{- $collIdsInThisCollection := slice -}}
@@ -154,10 +186,11 @@
 {{- /* Pre-pass: reference_id must be gone; collect library.id, detect dups
        WITHIN each Collection (library.id is collection-local in v2, not
        site-wide — see docs/library-v2.md § 4.1/§ 13). $ids stays a flat,
-       site-wide set for ref resolution below: with exactly one Collection
-       registered today, bare refs are unambiguous; namespaced
+       site-wide set for ref resolution below: explicit namespaced
        cross-Collection refs (§ 4.3) aren't yet exercised by any real
-       content, so full compound-key ref resolution is deferred. */ -}}
+       content, so full compound-key ref resolution is deferred — bare
+       refs are unambiguous as long as no two Collections happen to reuse
+       the same bare id, which the fixture's ids are chosen to avoid. */ -}}
 {{- $counts := dict }}{{ $ids := slice -}}
 {{- range $entries -}}
   {{- if .Params.reference_id }}{{ errorf "Library: %q still uses reference_id — migrate to library.id" .Path }}{{ end -}}
@@ -175,6 +208,9 @@
 
 {{- range $entries -}}
   {{- $page := . -}}
+  {{- $v := index $vocabByCollection (index $collectionOf $page.Path) -}}
+  {{- $types := $v.types }}{{ $subjects := $v.subjects }}{{ $roles := $v.roles }}{{ $relations := $v.relations -}}
+  {{- $kinds := $v.kinds }}{{ $okRights := $v.okRights }}{{ $imgRights := $v.imgRights }}{{ $imgUseBasis := $v.imgUseBasis -}}
   {{- $type := "" }}{{ with .Params.library }}{{ $type = .type }}{{ end -}}
 
   {{- /* type */ -}}
@@ -237,7 +273,7 @@
     {{- if and (eq $rstatus "public-domain") (not $src) }}{{ errorf "Library: %q image %q claims public-domain with no source to verify it against" $page.Path $im.file }}{{ end -}}
 
     {{- /* use.basis, if set, must be from the editorial-rationale vocabulary
-           (separate from rights.status — see data/library.yaml) */ -}}
+           (separate from rights.status — see this Collection's vocabulary) */ -}}
     {{- $ubasis := "" }}{{ $unote := "" }}{{ with $im.use }}{{ $ubasis = .basis }}{{ $unote = .note }}{{ end -}}
     {{- if and $ubasis (not (in $imgUseBasis $ubasis)) }}{{ errorf "Library: %q image %q has invalid use.basis %q (allowed: %s)" $page.Path $im.file $ubasis (delimit $imgUseBasis ", ") }}{{ end -}}
 
@@ -265,24 +301,23 @@
 {{- /* Storage-folder / public-type check — Library-owned entries (physically
        under content/library/, not a cross-included page elsewhere) must sit
        under content/<collection's source.section>/<public-type>/<slug>/index.md,
-       where <public-type> is the entry's OWN derived public type (never
-       parsed back to override the metadata — this only ever compares the
-       folder name to $pt.typeOf, computed purely from library.type above).
-       The public-type folder's position in the path depends on how many
-       segments the entry's own Collection's source.section occupies — 1
-       today ("library"), 2 once research moves to "library/research" in
-       Phase 4 — so this generalizes across that migration with no further
-       change needed here. Also catches an unknown top-level folder under a
-       Collection's own root (a typo, a stray non-entry directory) since any
-       entry inside one fails the "known public-type folder" check below.
-       See CLAUDE.md § Library "reorganize Library bundles by public type"
-       and docs/library-v2.md § 2.2/§ 9/§ 13. */ -}}
-{{- $permittedFolders := slice }}{{ range $lib.public_types }}{{ $permittedFolders = $permittedFolders | append .public_type }}{{ end -}}
+       where <public-type> is the entry's OWN derived public type per its
+       OWN Collection's vocabulary (never parsed back to override the
+       metadata — this only ever compares the folder name to that
+       Collection's own $pt.typeOf). The public-type folder's position in
+       the path depends on how many segments the entry's own Collection's
+       source.section occupies. Also catches an unknown top-level folder
+       under a Collection's own root (a typo, a stray non-entry directory)
+       since any entry inside one fails the "known public-type folder"
+       check below. See CLAUDE.md § Library "reorganize Library bundles by
+       public type" and docs/library-v2.md § 2.2/§ 9/§ 13. */ -}}
 {{- $sectionDepth := dict -}}
 {{- range $registry }}{{ if eq .source.adapter "hugo" }}{{ $sectionDepth = merge $sectionDepth (dict .id (len (split .source.section "/"))) }}{{ end }}{{ end -}}
 {{- range (where $entries "Section" "library") -}}
   {{- $page := . -}}
   {{- $cid := index $collectionOf $page.Path -}}
+  {{- $v := index $vocabByCollection $cid -}}
+  {{- $permittedFolders := slice }}{{ range $v.lib.public_types }}{{ $permittedFolders = $permittedFolders | append .public_type }}{{ end -}}
   {{- $depth := index $sectionDepth $cid | default 1 -}}
   {{- $section := "library" }}{{ range $registry }}{{ if eq .id $cid }}{{ $section = .source.section }}{{ end }}{{ end -}}
   {{- $parts := split $page.File.Path "/" -}}
@@ -294,7 +329,7 @@
       {{- errorf "Library: %q is stored under unknown top-level folder %q (allowed: %s)" $page.Path $folder (delimit $permittedFolders ", ") -}}
     {{- else -}}
       {{- $type := "" }}{{ with .Params.library }}{{ $type = .type }}{{ end -}}
-      {{- $derivedPublic := index $pt.typeOf $type -}}
+      {{- $derivedPublic := index $v.pt.typeOf $type -}}
       {{- if and $derivedPublic (ne $derivedPublic $folder) -}}
         {{- errorf "Library: %q has library.type %q (derives to public type %q) but is stored under %q" $page.Path $type $derivedPublic $folder -}}
       {{- end -}}
@@ -303,38 +338,47 @@
 {{- end -}}
 
 {{- /* Public/specific type audit — dev server only (hugo.IsServer), so
-       production build logs stay quiet. Counts every published entry by its
-       public type, then breaks down the specific types within any public
-       type that has more than one mapped specific type (today, only Work —
-       Person/Group/Organization map 1:1, and Event/Place/Concept have no
-       specific types yet). See CLAUDE.md § Library "Public Type vs Specific
-       Type" — this is the audit summary that section describes. */ -}}
+       production build logs stay quiet. Per Collection (each with its own
+       vocabulary): counts every published entry by its public type, then
+       breaks down the specific types within any public type that has more
+       than one mapped specific type. See CLAUDE.md § Library "Public Type
+       vs Specific Type" — this is the audit summary that section
+       describes, for the research Collection; a Collection with its own
+       vocabulary gets its own equivalent summary. */ -}}
 {{- if hugo.IsServer -}}
-  {{- $publicCounts := dict -}}
-  {{- $specificCounts := dict -}}
-  {{- range $entries -}}
-    {{- $t := "" }}{{ with .Params.library }}{{ $t = .type }}{{ end -}}
-    {{- $p := index $pt.typeOf $t -}}
-    {{- $publicCounts = merge $publicCounts (dict $p (add (int (index $publicCounts $p | default 0)) 1)) -}}
-    {{- $specificCounts = merge $specificCounts (dict $t (add (int (index $specificCounts $t | default 0)) 1)) -}}
-  {{- end -}}
-  {{- $publicTypesOrdered := sort $lib.public_types "order" -}}
-  {{- $lines := slice "Library public/specific type audit —" -}}
-  {{- $lines = $lines | append "  Public Types" -}}
-  {{- range $publicTypesOrdered -}}
-    {{- $n := index $publicCounts .public_type | default 0 -}}
-    {{- $lines = $lines | append (printf "    %s: %d" .label $n) -}}
-  {{- end -}}
-  {{- range $publicTypesOrdered -}}
-    {{- $pub := . -}}
-    {{- $subtypes := where $lib.types "public_type" $pub.public_type -}}
-    {{- if gt (len $subtypes) 1 -}}
-      {{- $lines = $lines | append (printf "  %s Subtypes" $pub.label) -}}
-      {{- range $subtypes -}}
-        {{- $n := index $specificCounts .type | default 0 -}}
-        {{- if gt $n 0 }}{{ $lines = $lines | append (printf "    %s: %d" .label $n) }}{{ end -}}
+  {{- range $registry -}}
+    {{- if eq .source.adapter "hugo" -}}
+      {{- $collId := .id -}}
+      {{- $v := index $vocabByCollection $collId -}}
+      {{- $publicCounts := dict -}}
+      {{- $specificCounts := dict -}}
+      {{- range $entries -}}
+        {{- if eq (index $collectionOf .Path) $collId -}}
+          {{- $t := "" }}{{ with .Params.library }}{{ $t = .type }}{{ end -}}
+          {{- $p := index $v.pt.typeOf $t -}}
+          {{- $publicCounts = merge $publicCounts (dict $p (add (int (index $publicCounts $p | default 0)) 1)) -}}
+          {{- $specificCounts = merge $specificCounts (dict $t (add (int (index $specificCounts $t | default 0)) 1)) -}}
+        {{- end -}}
       {{- end -}}
+      {{- $publicTypesOrdered := sort $v.lib.public_types "order" -}}
+      {{- $lines := slice (printf "Library public/specific type audit — Collection %q —" $collId) -}}
+      {{- $lines = $lines | append "  Public Types" -}}
+      {{- range $publicTypesOrdered -}}
+        {{- $n := index $publicCounts .public_type | default 0 -}}
+        {{- $lines = $lines | append (printf "    %s: %d" .label $n) -}}
+      {{- end -}}
+      {{- range $publicTypesOrdered -}}
+        {{- $pub := . -}}
+        {{- $subtypes := where $v.lib.types "public_type" $pub.public_type -}}
+        {{- if gt (len $subtypes) 1 -}}
+          {{- $lines = $lines | append (printf "  %s Subtypes" $pub.label) -}}
+          {{- range $subtypes -}}
+            {{- $n := index $specificCounts .type | default 0 -}}
+            {{- if gt $n 0 }}{{ $lines = $lines | append (printf "    %s: %d" .label $n) }}{{ end -}}
+          {{- end -}}
+        {{- end -}}
+      {{- end -}}
+      {{- warnf "%s" (delimit $lines "\n") -}}
     {{- end -}}
   {{- end -}}
-  {{- warnf "%s" (delimit $lines "\n") -}}
 {{- end -}}
