@@ -48,6 +48,24 @@
   var viewSwitch = document.querySelector("[data-view-switch]");
   var viewButtons = viewSwitch ? Array.prototype.slice.call(viewSwitch.querySelectorAll("[data-library-view]")) : [];
 
+  // Which Views this Collection offers, and which loads by default — PER-
+  // COLLECTION (data/library/collections.yaml `views:`, resolved server-side
+  // and carried on the [data-view-switch] element by
+  // library-view-switch.html). A Collection can restrict the switch: the
+  // Library root offers Catalog only, so viewsEnabled is ["catalog"] and no
+  // View buttons are rendered at all. Falls back to all three / "map" only if
+  // the attributes are somehow absent, preserving the pre-per-Collection
+  // behaviour. Everything below clamps the current View to this set, so an
+  // absent/invalid ?view= (or a Projection that would allow more) can never
+  // select a View this Collection doesn't actually offer.
+  var viewsEnabled = ["catalog", "images", "map"];
+  var viewsDefault = "map";
+  if (viewSwitch) {
+    try { var parsed = JSON.parse(viewSwitch.dataset.viewsEnabled || "null"); if (parsed && parsed.length) viewsEnabled = parsed; } catch (e) {}
+    if (viewSwitch.dataset.viewsDefault) viewsDefault = viewSwitch.dataset.viewsDefault;
+  }
+  if (viewsEnabled.indexOf(viewsDefault) === -1) viewsDefault = viewsEnabled[0] || "catalog";
+
   // Projections (docs/library-v2.md § 6.2/§ 6.4) — every Collection has at
   // least the implicit "all" Projection; library-view-switch.html always
   // emits `data-projections` (a JSON array of {id, title, views,
@@ -75,11 +93,18 @@
   // case to exercise yet; see docs/library-v2.md § 6.4/§ 15 and the Phase 6
   // fixture, which is where an actual view-restricting Projection first
   // exists to click through).
+  // Effective Views = Collection.views.enabled ∩ Projection.views, preserving
+  // the Collection's enabled order (so the fallback below is deterministic).
+  function effectiveViews(projection) {
+    var pv = (projection && projection.views) || viewsEnabled;
+    return viewsEnabled.filter(function (v) { return pv.indexOf(v) !== -1; });
+  }
   function resolveProjectionView(currentView, projection) {
-    var views = (projection && projection.views) || ["catalog", "images", "map"];
+    var views = effectiveViews(projection);
     if (views.indexOf(currentView) !== -1) return currentView;
     if (projection && projection.default_view && views.indexOf(projection.default_view) !== -1) return projection.default_view;
-    return views[0] || "map";
+    if (views.indexOf(viewsDefault) !== -1) return viewsDefault;
+    return views[0] || viewsDefault;
   }
   window.__libraryResolveProjectionView = resolveProjectionView; // exposed for direct verification (see above)
 
@@ -143,16 +168,25 @@
   // Active state: multi sets for type + subject + shelf (docs/library-v2.md
   // § 5 — Shelves are a distinct concept from Facets but share this exact
   // toggleable-chip mechanism, so they're just a third entry here), plus
-  // the presentation view ("catalog" | "images" | "map"). Map is the
-  // default — an absent or invalid ?view= resolves to "map" (see
-  // fromURL/toURL below, which only ever add view=catalog or view=images
-  // to the URL).
+  // the presentation view ("catalog" | "images" | "map"). The default View
+  // is the Collection's own (viewsDefault above) — map for research, catalog
+  // for a Catalog-only Collection like the Library root; an absent, invalid,
+  // or disallowed ?view= resolves to it (see setView/fromURL), and toURL only
+  // writes ?view= when it differs from that default.
   var sel = { type: [], subject: [], shelf: [] };
-  var view = "map";
+  var view = viewsDefault;
   var projection = defaultProjectionId;
 
   function setView(v) {
-    view = (v === "catalog" || v === "images") ? v : "map";
+    // Clamp to what this Collection + Projection actually offer: an absent,
+    // invalid, or no-longer-compatible View resolves to the Collection's
+    // default (else the first effective View). This is what makes a
+    // Catalog-only Collection like the Library root immune to a stray
+    // ?view=map in the URL.
+    var allowed = effectiveViews(projectionsById[projection]);
+    view = allowed.indexOf(v) !== -1 ? v
+      : allowed.indexOf(viewsDefault) !== -1 ? viewsDefault
+      : (allowed[0] || viewsDefault);
     document.documentElement.dataset.libraryView = view;
     list.hidden = view !== "catalog";
     if (imageIndex) imageIndex.hidden = view !== "images";
@@ -165,7 +199,7 @@
     // that content, only on whether Map's own elements should be visible
     // at all under a different view.
     if (mapEmpty && view !== "map") mapEmpty.hidden = true;
-    var effectiveViews = (projectionsById[projection] && projectionsById[projection].views) || ["catalog", "images", "map"];
+    var allowedViews = effectiveViews(projectionsById[projection]);
     viewButtons.forEach(function (b) {
       var on = b.dataset.libraryView === view;
       b.setAttribute("aria-pressed", on ? "true" : "false");
@@ -176,7 +210,7 @@
       // (its one Projection allows every View); ready for Phase 6's
       // fixture, whose "table"-only-style Projection would actually
       // exercise this.
-      b.hidden = effectiveViews.indexOf(b.dataset.libraryView) === -1;
+      b.hidden = allowedViews.indexOf(b.dataset.libraryView) === -1;
     });
   }
 
@@ -290,7 +324,11 @@
     if (sel.subject.length) params.set("subject", sel.subject.join(","));
     if (sel.shelf.length) params.set("shelf", sel.shelf.join(","));
     if (projection !== defaultProjectionId) params.set("projection", projection);
-    if (view === "catalog" || view === "images") params.set("view", view);
+    // Write ?view= only when it differs from the Collection's default View —
+    // the default stays implicit (a clean URL), and it's whichever View the
+    // Collection declares (map for research, catalog for a Catalog-only
+    // Collection), not a hardcoded one.
+    if (view !== viewsDefault) params.set("view", view);
     // `select` (the Map view's node selection) is owned entirely by
     // library-map.js — never read into `sel` here — but this rewrite must
     // still carry it forward, or toggling a filter chip / view button would
@@ -311,8 +349,9 @@
     sel.subject = (params.get("subject") || "").split(",").filter(function (v) { return valid.subject[v]; });
     sel.shelf = (params.get("shelf") || "").split(",").filter(function (v) { return valid.shelf[v]; });
     setProjection(params.get("projection") || defaultProjectionId);
-    var v = params.get("view") || "";
-    setView(v === "catalog" ? "catalog" : v === "images" ? "images" : "map");
+    // setView clamps to the effective View set, so an absent/invalid/
+    // disallowed ?view= falls back to the Collection default here.
+    setView(params.get("view") || "");
   }
 
   chips.forEach(function (c) {

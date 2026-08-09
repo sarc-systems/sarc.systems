@@ -27,8 +27,14 @@
   <ul class="library-records" id="library-list">
     {{ range . }}{{ partial "library-record.html" . }}{{ end }}
   </ul>
-  {{ partial "library-image-index.html" (dict "pages" $entries "coll" $coll) }}
-  {{ partial "library-map-view.html" . }}
+  {{- /* Images/Map DOM is only emitted for Collections that enable those
+         Views (data/library/collections.yaml `views.enabled`) — the Library
+         root offers Catalog only, so it renders neither. library-map.js
+         no-ops cleanly when #library-map is absent. */ -}}
+  {{- $enabledViews := slice "catalog" "images" "map" -}}
+  {{- with $coll.views }}{{ with .enabled }}{{ $enabledViews = . }}{{ end }}{{ end -}}
+  {{ if in $enabledViews "images" }}{{ partial "library-image-index.html" (dict "pages" $entries "coll" $coll) }}{{ end }}
+  {{ if in $enabledViews "map" }}{{ partial "library-map-view.html" . }}{{ end }}
   {{- else }}
   <p class="library-empty">No entries yet.</p>
   {{- end }}

@@ -27,7 +27,11 @@
 {{- end -}}
 {{- if not $coll.id -}}
   {{- if eq $page.File.Path "library/_index.md" -}}
-    {{- $coll = dict "id" "library" "title" $page.Title "color" "" "source" (dict "adapter" "root" "section" "library") -}}
+    {{- /* The meta-Collection offers Catalog only for now — no Map or
+           Images at the Library root. This is the same per-Collection
+           `views` shape a registry row carries (data/library/collections.yaml),
+           supplied here because the root is not a registry row. */ -}}
+    {{- $coll = dict "id" "library" "title" $page.Title "color" "" "source" (dict "adapter" "root" "section" "library") "views" (dict "enabled" (slice "catalog") "default" "catalog") -}}
   {{- else -}}
     {{- errorf "library-resolve-collection.html: no Collection in data/library/collections.yaml matches %q" $page.File.Path -}}
   {{- end -}}

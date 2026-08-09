@@ -1,17 +1,36 @@
 {{- /* Catalog/Images/Map presentation switch. Same records, same filters —
-       this only toggles how the currently matching entries are shown. Map
-       is the default view (library-filter.js resolves an absent/invalid
-       ?view= to "map", not "catalog" or "images"), so it's listed first here
-       and server-rendered as the pressed/active button — JS corrects this
-       instantly from the URL on load, but this avoids a flash of the wrong
-       state before it runs. Map is experimental (see CLAUDE.md § Library map
-       view) — a force-directed diagram of explicit editorial relationships
-       (creators, related), not a generic graph visualization. Reuses
-       .rf-facet/.rf-chip styling so it reads as one more control among the
-       others, not a new visual theme. Requires JS to do anything (there's no
-       server-rendered Images or Map view), so it's hidden under data-nojs
+       this only toggles how the currently matching entries are shown.
+       Reuses .rf-facet/.rf-chip styling so it reads as one more control among
+       the others, not a new visual theme. Requires JS to do anything (there's
+       no server-rendered Images or Map view), so it's hidden under data-nojs
        like the filter form.
+
+       Which Views exist is PER-COLLECTION (data/library/collections.yaml
+       `views:` — enabled list + default), resolved through
+       library-resolve-collection.html so it's the one source of truth. A
+       Collection can therefore restrict the switch: the Library root (the
+       meta-Collection) offers Catalog only for now, so its View switch
+       renders no visible buttons at all. Only the enabled Views get a button,
+       in a fixed canonical order (Map, Images, Catalog), and the Collection's
+       own default View is the server-rendered pressed/active one —
+       library-filter.js corrects the live state from the URL on load (an
+       absent/invalid ?view= resolves to that same default), but this avoids a
+       flash of the wrong state before it runs. Map is experimental (see
+       CLAUDE.md § Library map view) — a force-directed diagram of explicit
+       editorial relationships (creators, related), not a generic graph
+       visualization. `data-views-enabled`/`data-views-default` carry the
+       Collection's View config to library-filter.js so it can clamp the
+       current View to what this Collection actually offers, without a second
+       lookup.
        Call: {{ partial "library-view-switch.html" . }} */ -}}
+{{- $coll := partial "library-resolve-collection.html" . -}}
+{{- $enabled := slice "catalog" "images" "map" -}}
+{{- $defaultView := "map" -}}
+{{- with $coll.views -}}
+  {{- with .enabled }}{{ $enabled = . }}{{ end -}}
+  {{- with .default }}{{ $defaultView = . }}{{ end -}}
+{{- end -}}
+{{- $defs := slice (dict "id" "map" "label" "Map") (dict "id" "images" "label" "Images") (dict "id" "catalog" "label" "Catalog") -}}
 {{- /* Projections (docs/library-v2.md § 6.2/§ 6.4) — every Collection has
        at least the implicit `all` Projection; the chip row (and the whole
        mechanism client-side) only matters once a second one exists, so it
@@ -20,20 +39,28 @@
        today — see data/library/collections.yaml). `data-projections`
        carries every Projection's {id, views, default_view} as JSON so
        library-filter.js can resolve Projection/View compatibility
-       (docs/library-v2.md § 6.4) without a second fetch. */ -}}
-{{- $coll := partial "library-resolve-collection.html" . -}}
+       (docs/library-v2.md § 6.4) without a second fetch. The effective Views
+       at any moment are Collection.views.enabled ∩ Projection.views, computed
+       client-side from these two attributes together. */ -}}
 {{- $projList := slice -}}
 {{- $projDefault := "all" -}}
 {{- if eq $coll.source.adapter "hugo" -}}
   {{- range hugo.Data.library.collections }}{{ if eq .id $coll.id }}{{ $projList = .projections.list }}{{ with .projections.default }}{{ $projDefault = . }}{{ end }}{{ end }}{{ end -}}
 {{- end -}}
 {{- if not $projList }}{{ $projList = slice (dict "id" "all" "title" "All Entries" "views" (slice "catalog" "images" "map") "default_view" "catalog") }}{{ $projDefault = "all" }}{{ end -}}
-<fieldset class="rf-facet library-view-switch" data-view-switch>
+{{- if gt (len $enabled) 1 }}
+<fieldset class="rf-facet library-view-switch" data-view-switch data-views-enabled='{{ jsonify $enabled }}' data-views-default="{{ $defaultView }}">
   <legend>View</legend>
-  <button type="button" class="rf-chip is-active" data-library-view="map" aria-pressed="true">Map</button>
-  <button type="button" class="rf-chip" data-library-view="images" aria-pressed="false">Images</button>
-  <button type="button" class="rf-chip" data-library-view="catalog" aria-pressed="false">Catalog</button>
+  {{- range $defs }}{{ if in $enabled .id }}
+  <button type="button" class="rf-chip{{ if eq .id $defaultView }} is-active{{ end }}" data-library-view="{{ .id }}" aria-pressed="{{ if eq .id $defaultView }}true{{ else }}false{{ end }}">{{ .label }}</button>
+  {{- end }}{{ end }}
 </fieldset>
+{{- else }}
+{{- /* One (or zero) View: no useful switch to show — same "don't show useless
+       UI" rule as a single-Projection Collection. Still emit the config for
+       library-filter.js on a hidden marker so it applies the sole View. */ -}}
+<span hidden data-view-switch data-views-enabled='{{ jsonify $enabled }}' data-views-default="{{ $defaultView }}"></span>
+{{- end }}
 {{- if gt (len $projList) 1 }}
 <fieldset class="rf-facet library-projection-switch" data-projection-switch data-projections='{{ jsonify $projList }}' data-projection-default="{{ $projDefault }}">
   <legend>Projection</legend>
