@@ -164,8 +164,9 @@
 }
 .access-link:hover { color: var(--signal); border-bottom-color: var(--signal); }
 .access-link .ext { color: var(--gray-2); }
-/* Tighten the catalog landing head (no eyebrow) so the View/Filter controls
-   sit close under the intro. */
+/* Tighten the catalog landing head's own bottom padding (independent of
+   whether it also has an eyebrow breadcrumb above the title — see
+   list.html) so the View/Filter controls sit close under the intro. */
 .library-head { padding-bottom: 0.6rem; }
 
 .library-all-head { font-size: var(--t-sm); margin: 2rem 0 0.4rem; }

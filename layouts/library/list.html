@@ -13,6 +13,16 @@
 {{- end -}}
 <div class="wrap">
   <header class="page-head library-head">
+    {{- /* Breadcrumb back to the Library root — every Collection is one
+           level under it, so this is the one link a visitor deep in a
+           Collection's own Catalog/Images/Map needs to climb back out.
+           Never shown on the root's own page (nothing above it to link
+           to). Deep-links to ?view=map&select=<id> so the root lands with
+           this Collection already selected — the same pattern (and the
+           same rationale) as the entry-page breadcrumb in single.html. */ -}}
+    {{- if ne $coll.source.adapter "root" }}
+    <p class="eyebrow"><a href="{{ printf "/library/?view=map&select=%s" $coll.id | relURL }}">Library</a></p>
+    {{- end }}
     <h1 class="page-title">{{ .Title }}</h1>
     {{- with .Content }}<div class="page-intro">{{ . }}</div>{{ end }}
   </header>
