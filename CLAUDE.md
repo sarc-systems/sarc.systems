@@ -1274,7 +1274,16 @@ responsive SVG system:
   Every one of the sixteen letters is an independently transformable SVG group;
   the rows are not coupled.
 - Animation: one letter, chosen at random from any row, turns at a time, on a
-  fixed cadence (currently every 2.26s).
+  fixed cadence (currently every 2.26s). This cadence is not an independent
+  timer — `mark.js` subscribes to the SARC Eternal Clock's own shared
+  boundary scheduler (`assets/js/clock-runtime.js` + `clock-init.js`,
+  concatenated into a small global bundle loaded on every page before
+  `mark.js` — see `todo_clock.txt` for the clock's full design) and mutates
+  one letter exactly when a real clock bar boundary fires.
+  This keeps the homepage mark permanently phase-locked with the header
+  clock and `/clock/`, with the same self-correcting, non-drifting timing,
+  rather than two unrelated 2260ms timers that merely share a period.
+  Manual click interaction stays immediate and independent of the clock.
 - Permitted transform: a 90° rotation in a random direction and restoration to
   canonical (a readable letter turns ±90°, then turns back — never a 180° jump).
   (Reflections and position swaps — removed.)

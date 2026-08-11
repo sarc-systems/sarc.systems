@@ -1,10 +1,17 @@
 // Live landing mark — all sixteen letters (four rows) animate independently:
 // one letter, chosen at random from any row, turns 90° on a fixed cadence, with
 // no coupling between rows. Respects prefers-reduced-motion (stays canonical).
+//
+// The autonomous cadence is driven by the SARC Eternal Clock's own shared
+// boundary scheduler (assets/js/clock-runtime.js, loaded globally before this
+// file — see baseof.html) rather than an independent setInterval: the mark
+// mutates exactly when the clock's own 2.26s wall-clock-aligned bar boundary
+// fires, so the homepage mark and the clock (compact header + /clock/) are
+// always in the same phase, with the same self-correcting, non-drifting
+// timing — never two unrelated 2260ms timers that happen to share a period.
+// Manual interaction (click) stays immediate and independent of the clock.
 (function () {
   "use strict";
-
-  var INTERVAL = 2260; // ms between changes — one letter turns every 2.26s
 
   var root = document.querySelector("[data-mark]");
   if (!root) return;
@@ -15,7 +22,6 @@
 
   var reduce = window.matchMedia("(prefers-reduced-motion: reduce)");
   var paused = false;
-  var timer = null;
 
   function glyph(l) { return l.querySelector(".mk-glyph"); }
   function currentState(l) { return glyph(l).style.transform || ""; }
@@ -34,15 +40,8 @@
   function mutate(l) { setState(l, nextState(currentState(l))); }
   function mutateOne() { mutate(letters[Math.floor(Math.random() * letters.length)]); }
 
-  function start() {
-    stop();
-    if (paused || reduce.matches) return;
-    timer = setInterval(mutateOne, INTERVAL);
-  }
-  function stop() { clearInterval(timer); timer = null; }
-
   // Interaction: click a letter -> transform it; click elsewhere on the mark ->
-  // mutate one at random.
+  // mutate one at random. Always immediate, regardless of the clock.
   letters.forEach(function (l) {
     l.style.cursor = "pointer";
     l.addEventListener("click", function (ev) {
@@ -51,13 +50,30 @@
     });
   });
   root.addEventListener("click", function () { mutateOne(); });
-  root.addEventListener("pointerenter", function () { paused = true; stop(); });
-  root.addEventListener("pointerleave", function () { paused = false; start(); });
+  root.addEventListener("pointerenter", function () { paused = true; });
+  root.addEventListener("pointerleave", function () { paused = false; });
 
   function onReduceChange() {
-    if (reduce.matches) { stop(); restoreAll(); } else { start(); }
+    if (reduce.matches) restoreAll();
   }
   if (reduce.addEventListener) reduce.addEventListener("change", onReduceChange);
 
-  if (!reduce.matches) start();
+  // Subscribe to the same shared boundary scheduler the clock itself uses
+  // (see clock-runtime.js) so every autonomous mutation lands exactly on a
+  // real clock boundary. The scheduler replays the current snapshot to a new
+  // subscriber immediately on subscribe — that first call is the state that
+  // was already true when the page loaded, not a new boundary, so it's
+  // skipped; only a snapshot with a genuinely new barIndex triggers a mutation.
+  var NS = window.SARCClock;
+  var runtime = NS && NS.runtime && NS.runtime.getSharedRuntime();
+  if (runtime) {
+    var lastBarIndex = null;
+    runtime.subscribe(function (snapshot) {
+      if (!snapshot) return;
+      var isFirst = lastBarIndex === null;
+      lastBarIndex = snapshot.barIndex;
+      if (isFirst || paused || reduce.matches) return;
+      mutateOne();
+    });
+  }
 })();

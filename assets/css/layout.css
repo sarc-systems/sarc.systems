@@ -21,6 +21,14 @@
   justify-content: space-between;
   gap: 1rem;
 }
+/* Groups the compact clock immediately left of the wordmark (see
+   header.html) — its own flex item so .site-header-inner's space-between
+   still only splits brand-group vs. nav, not three loose items. */
+.site-header-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+}
 /* Wordmark — the actual Nasalization "SARC" logotype, baked to SVG outlines
    (see scripts/generate-mark.py). Monochrome, inherits colour via currentColor. */
 .wordmark {
@@ -69,18 +77,15 @@
 }
 
 /* Journal pages carry a faint wash of the Journal's section colour, so the
-   reading area reads as distinct from the neutral (paper) header/footer bands.
-   Kept very low (a coded signal, not a saturated colour field); the header and
-   footer stay on solid paper to frame it. */
+   reading area reads as distinct from the header/footer bands. Kept very low
+   (a coded signal, not a saturated colour field). Header/footer background is
+   no longer forced back to paper here — the SARC Eternal Clock is the sole
+   authority on header/footer colour site-wide now (see clock.css). */
 body.journal { background: color-mix(in srgb, var(--signal) 10%, var(--paper)); }
-body.journal .site-header,
-body.journal .site-footer { background: var(--paper); }
 
-/* Library pages carry the same faint section-colour wash (Forest), framed by
-   solid-paper header/footer. Same restraint as the Journal — a coded signal. */
+/* Library pages carry the same faint section-colour wash (Forest). Same
+   restraint as the Journal — a coded signal, not a saturated field. */
 body.library { background: color-mix(in srgb, var(--signal) 8%, var(--paper)); }
-body.library .site-header,
-body.library .site-footer { background: var(--paper); }
 
 /* --- Generic page head --------------------------------------------------- */
 .page-head { padding: clamp(2rem, 6vw, 4rem) 0 1.6rem; }

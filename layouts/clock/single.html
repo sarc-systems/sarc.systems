@@ -1,0 +1,68 @@
+{{- /* /clock/ — the SARC Eternal Clock (see todo_clock.txt). Deliberately
+       bare: no visible title, no explanation, no legend, no readouts. The
+       large clock and the sound control are the entire page. The compact
+       header clock (in the normal site header, rendered by header.html on
+       every page) and this large clock are driven by the exact same shared
+       runtime — see clock-init.js, which auto-discovers every [data-clock]
+       element on the page and subscribes them all to one scheduler. */ -}}
+{{ define "body-class" }}clock{{ end }}
+
+{{ define "main" }}
+{{- $tone := resources.Get "js/vendor/tone.15.0.4.min.js" -}}
+{{- /* Already minified upstream (see the file's own header comment) — not
+       re-minified, just fingerprinted for cache-busting like every other
+       pipeline asset. */ -}}
+{{- $tone = $tone | fingerprint -}}
+<section class="clock-page">
+  {{- /* Visually hidden — document structure only, per the brief. */ -}}
+  <h1 class="visually-hidden">{{ .Title }}</h1>
+
+  {{- /* Tiled — a repeating field of the same clock rather than one large
+         centered instance, all driven by the exact same shared runtime so
+         every tile always shows the identical state (clock-init.js
+         subscribes every [data-clock] element it finds to one scheduler).
+         Tile size AND the wrap's own height (a SQUARE field — as many rows
+         as columns, deliberately taller than one viewport on most screens
+         so the page scrolls and the header/footer aren't pinned in view)
+         are both computed in real pixels by clock-tile-layout.js from the
+         wrap's own measured width — see that file for why a CSS-only size
+         (vw/vh guess, or auto-fit/1fr) wasn't enough. 100 = clock-tile-
+         layout.js's own MAX_COLUMNS(10) squared — enough DOM tiles for the
+         largest square that script will ever lay out; CSS grid +
+         overflow:hidden clips whatever doesn't fit rather than trying to
+         compute an exact count in JS. Only the first tile carries the
+         accessible role/label (clock-init.js) — the rest are identical
+         decorative repeats, not 100 separate "clock" announcements to a
+         screen reader. Grain is skipped on every tile here
+         (data-clock-grain="false") — one feTurbulence filter per tile many
+         times over is real, needless render cost; see clock-svg.js. */ -}}
+  <div class="clock-large-wrap">
+    {{- range (seq 100) }}
+    <div class="clock-large-frame" data-clock="large" data-clock-grain="false" data-clock-label="SARC Eternal Clock — current state"></div>
+    {{- end }}
+  </div>
+
+  <div class="clock-sound-wrap">
+    {{- /* No visible words — icon only (a speaker, crossed out when off).
+           clock-audio.js swaps the icon and the visually-hidden label
+           together as sound state changes; this is just the pre-JS/initial
+           OFF state so there's no flash of missing content. */ -}}
+    <button type="button" class="clock-sound-control" data-clock-sound data-state="off" aria-pressed="false"
+            data-tone-src="{{ $tone.RelPermalink }}"
+            {{- if hugo.IsProduction }} data-tone-integrity="{{ $tone.Data.Integrity }}"{{ end }}>
+      {{ partial "icon.html" "volume-off" }}<span class="visually-hidden">Sound off</span>
+    </button>
+  </div>
+</section>
+{{ end }}
+
+{{ define "scripts" }}
+{{- range (slice "js/clock-tile-layout.js" "js/clock-audio.js") -}}
+  {{- with resources.Get . -}}
+    {{- $js := . -}}
+    {{- if hugo.IsProduction }}{{ $js = $js | minify }}{{ end -}}
+    {{- $js = $js | fingerprint -}}
+    <script src="{{ $js.RelPermalink }}"{{ if hugo.IsProduction }} integrity="{{ $js.Data.Integrity }}"{{ end }} defer></script>
+  {{- end -}}
+{{- end -}}
+{{ end }}

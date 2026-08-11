@@ -1,0 +1,848 @@
+SARC ETERNAL CLOCK — IMPLEMENTATION BRIEF
+Version: 0.2
+Status: replaces the previous homepage-clock brief
+
+OBJECTIVE
+
+Replace the current random 4×4 letter mark with a deterministic geometric
+clock that appears as a small mark in the site header on every page.
+
+Clicking the header clock opens a dedicated page at:
+
+/clock/
+
+The clock page contains:
+
+- a much larger rendering of the same clock;
+- the clock’s two-voice generative audio;
+- a restrained sound on/off control;
+- a subtle visual emphasis on each active rune when its tone is played.
+
+The clock page contains no visible explanation, legend, technical readout,
+article copy, or sequencer interface. A visually hidden page title or
+accessible label is acceptable where needed for document structure.
+
+The site remains an ordinary Hugo static site. Do not add SPA navigation,
+partial-page navigation, a persistent application shell, or continuous audio
+across page changes. Audio exists only while the dedicated clock page is open.
+
+The small header clock and the large clock-page rendering must visibly show
+the same state and theme at the same time.
+
+
+CORE CONCEPT
+
+absolute time since fixed SARC epoch
+    ↓
+bar index
+    ↓
+32-bit binary-reflected Gray code
+    ↓
+sixteen pairs of gate bits
+    ↓
+4×4 field of diagonal half-sine runes
+    ↓
+sixteen-step, two-voice musical scan on /clock/
+
+
+TIMING CONSTANTS
+
+Use these exact internal values:
+
+const CLOCK_SECONDS = 2.26;
+const CLOCK_MS = 2260;
+
+const STEPS_PER_BAR = 16;
+const STEP_SECONDS = CLOCK_SECONDS / STEPS_PER_BAR;
+// 0.14125 seconds
+
+const BPM = 240 / CLOCK_SECONDS;
+// 106.19469026548673 BPM
+
+const REFERENCE_FREQUENCY = 512 / CLOCK_SECONDS;
+// 226.54867256637168 Hz
+
+The reference frequency is exactly nine octaves above the clock frequency:
+
+clock frequency = 1 / 2.26 Hz
+reference       = 512 / 2.26 Hz
+
+Do not round internally or retune the reference to concert pitch.
+
+
+ABSOLUTE CLOCK STATE
+
+Wall-clock time is the sole source of truth.
+
+Do not derive the clock from:
+
+- animation-frame counts;
+- a locally incremented bar counter;
+- Tone.Transport position;
+- cookies;
+- localStorage;
+- server state;
+- elapsed time since page load.
+
+Define one fixed UTC epoch in central configuration:
+
+const SARC_EPOCH_MS = Date.parse("YYYY-MM-DDTHH:mm:ss.sssZ");
+
+The exact epoch must remain easy to replace before release.
+
+Calculate the current bar:
+
+const barIndex =
+  BigInt(Math.floor((Date.now() - SARC_EPOCH_MS) / CLOCK_MS));
+
+Calculate the 32-bit binary-reflected Gray state:
+
+const gray = barIndex ^ (barIndex >> 1n);
+const state = gray & 0xffffffffn;
+
+Use BigInt. Do not use ordinary JavaScript bitwise operators for the full
+32-bit state, because signed conversion can corrupt the upper bit.
+
+Split the state into sixteen two-bit cells in one documented, stable order:
+
+cell 0  = upper-left / musical step 1
+cell 1  = next cell to the right / musical step 2
+...
+cell 15 = lower-right / musical step 16
+
+Use row-major visual and musical order unless the existing implementation has
+a compelling reason not to.
+
+Within every pair:
+
+A = first bit
+B = second bit
+
+State mapping:
+
+11 = BOTH
+10 = A
+00 = REST
+01 = B
+
+Because binary-reflected Gray code changes exactly one bit per bar, one and
+only one A-or-B component changes at each 2.26-second boundary.
+
+The 32-bit cycle lasts approximately 308 years.
+
+
+RUNE GEOMETRY
+
+Use SVG.
+
+Each cell contains two independently visible diagonal half-sine components.
+
+Component A — rising rune:
+
+lower-left corner → upper-right corner
+
+Component B — falling rune:
+
+upper-left corner → lower-right corner
+
+The path must be a true half-sine deformation of a straight diagonal, not an
+arbitrarily hand-drawn decorative curve.
+
+A suitable normalized construction is:
+
+path(t) = diagonal(t) + normal × amplitude × sin(pi × t)
+0 ≤ t ≤ 1
+
+This guarantees:
+
+- exact corner endpoints;
+- one half-wave per component;
+- a restrained single lobe;
+- consistent geometry in all cells;
+- scalable generation from one shared path definition.
+
+Choose complementary normal directions for A and B so that BOTH reads as a
+balanced interlocking rune rather than two curves bowing awkwardly in the
+same visual direction. Keep the handedness configurable while prototyping.
+
+Four cell states:
+
+REST    neither rune visible
+A       rising half-sine visible
+B       falling half-sine visible
+BOTH    both half-sines visible
+
+Do not use:
+
+- horizontal or vertical sine paths;
+- letters;
+- arrows;
+- rotated letterforms;
+- sixteen separately invented glyphs;
+- cell borders;
+- a permanent REST carrier mark;
+- visible binary digits.
+
+All cells must use the same two base geometries.
+
+Paths should meet at shared cell corners without visible seams. Avoid
+per-cell clipping that cuts stroke endpoints. Allow enough outer SVG padding
+or viewBox overscan to prevent strokes at the outside boundary from being
+cropped.
+
+
+VISUAL TREATMENT
+
+Initial treatment:
+
+- no visible cell borders;
+- restrained half-sine amplitude;
+- identical base stroke treatment for A and B;
+- carefully selected round or connecting line caps;
+- crisp SVG rendering at compact and large sizes;
+- `mix-blend-mode: darken` for the rune layer, matching the existing mark
+  treatment, at least for the first implementation;
+- no shadows, glows, gradients, bevels, or ornamental framing;
+- no visible cell numbers or playhead.
+
+The darken blend is a starting point, not permission to build a complex
+contrast-management system. Test it across the six selected ColorPlan
+backgrounds and adjust only if actual legibility requires it.
+
+Use the same generated rune geometry for both renderers. Differences between
+compact and large variants should be limited to size, stroke width, spacing,
+and responsive layout—not different glyphs.
+
+
+BAR-BOUNDARY TRANSITION
+
+At a bar boundary, only the one changed component should transition.
+
+Use a brief appearance/disappearance treatment such as:
+
+- opacity fade;
+- restrained stroke draw/erase;
+- or a combination that does not obscure the resulting state.
+
+Recommended initial duration:
+
+150–300 ms
+
+Do not rotate or morph the cell as a whole.
+
+The header clock and large clock must update from the same calculated state
+at the same boundary.
+
+Respect `prefers-reduced-motion`. In reduced-motion mode, change state
+immediately without draw/erase animation.
+
+
+GLOBAL HEADER CLOCK
+
+Render a compact 4×4 clock in the site header on every page.
+
+Requirements:
+
+- approximately 28–44 px square depending on breakpoint;
+- visually legible at the smallest supported header size;
+- links to `/clock/`;
+- keyboard accessible;
+- accessible label such as “Open SARC clock”;
+- does not itself start or control audio;
+- does not load Tone.js;
+- reconstructs the correct current state immediately on every page load;
+- continues to update every 2.26 seconds while the page remains open;
+- uses the current time-derived ColorPlan theme;
+- replaces the current random mark rather than running alongside it.
+
+The site title or existing institutional wordmark should remain the home link.
+The clock is the link to the clock page.
+
+Do not make clicking the small clock toggle sound. It has one clear function:
+open `/clock/`.
+
+The compact clock does not need the sixteen-step audio scan indicator. It
+shows the parallel clock state only. On the clock page, it must still match
+the unaccented base state of the large display.
+
+
+DEDICATED CLOCK PAGE
+
+Create a dedicated Hugo page at `/clock/`.
+
+The page should be visually minimal:
+
+- normal site header, including the compact clock;
+- a centered, substantially larger 4×4 clock;
+- a restrained sound control;
+- normal site footer only if it does not compromise the display;
+- no visible title;
+- no visible explanation;
+- no legend;
+- no timestamps;
+- no bit display;
+- no BPM or pitch readout;
+- no technical diagnostics in production.
+
+The large clock should use available viewport space without becoming
+uncomfortably edge-to-edge. It should remain square and responsive on desktop
+and mobile.
+
+The large display and compact header clock must be driven by the exact same
+state engine. On `/clock/`, instantiate one boundary scheduler and publish
+state changes to both renderers rather than running independent drifting
+timers.
+
+At any instant, ignoring the temporary audio-trigger emphasis, the two
+renderings must show:
+
+- the same sixteen gate states;
+- the same changed component;
+- the same theme;
+- the same bar boundary.
+
+
+AUDIO SCOPE
+
+Tone.js audio exists only on `/clock/`.
+
+Do not implement:
+
+- persistent audio across ordinary Hugo navigation;
+- intercepted links;
+- dynamic `<main>` replacement;
+- SPA behavior;
+- an iframe shell;
+- audio on article, Library, journal, store, or home pages.
+
+Ordinary full-page navigation away from `/clock/` may stop the audio. This is
+intentional and preserves the site’s simple static architecture.
+
+A visitor who wants the clock to keep sounding can leave `/clock/` open in a
+tab.
+
+
+AUDIO ARCHITECTURE
+
+Use a pinned Tone.js dependency through the project’s normal dependency
+system. Do not load an unversioned CDN script.
+
+Conceptual signal path:
+
+Tone.Oscillator A, sine
+    → Tone.AmplitudeEnvelope A ─┐
+                               ├→ conservative master gain
+Tone.Oscillator B, sine         │   → limiter → output
+    → Tone.AmplitudeEnvelope B ─┘
+
+Requirements:
+
+- two continuously running sine oscillators while audio is active;
+- one amplitude envelope per oscillator;
+- click-free pitch changes;
+- conservative output gain;
+- limiter before destination;
+- no samples;
+- no additional oscillator waveforms;
+- no filters, reverb, distortion, delay, or decorative effects in v1.
+
+
+SOUND CONTROL AND AUTOPLAY
+
+Sound begins muted.
+
+Provide a minimal keyboard-accessible control with states such as:
+
+SOUND OFF
+SOUND ARMED
+SOUND ON
+
+On activation:
+
+1. call `Tone.start()` from the user gesture;
+2. calculate the next absolute 2.26-second boundary;
+3. arm the scheduler;
+4. begin at that boundary with a complete sixteen-step scan;
+5. remain aligned to absolute clock time thereafter.
+
+Do not begin halfway through a bar in v1.
+
+Maximum initial wait:
+
+2.26 seconds
+
+A second activation should stop and cleanly dispose, suspend, or silence the
+audio system without changing the visual clock state.
+
+Sound state does not need to persist across navigation, reload, or return to
+the page. Do not add cookies or localStorage merely to remember sound state.
+
+
+MUSICAL SCAN
+
+One 2.26-second clock state is scanned as sixteen musical steps:
+
+one bar       = 2.26 seconds
+one step      = 0.14125 seconds
+sixteen steps = one complete state scan
+tempo         = approximately 106.19469026548673 BPM
+
+At step i:
+
+1. read latent pitch A for step i from the active authored score;
+2. read latent pitch B for step i;
+3. set oscillator frequencies;
+4. read gate state from cell i;
+5. trigger A, B, both, or neither.
+
+Gate behavior:
+
+BOTH → trigger envelope A and envelope B
+A    → trigger envelope A
+REST → trigger neither
+B    → trigger envelope B
+
+Every active step is a trigger, not a held gate. Consecutive active states
+must retrigger their envelopes.
+
+Initial envelope range:
+
+attack:  3–10 ms
+decay:   90–125 ms
+sustain: 0
+release: short and click-free
+
+The envelope should complete within one 141.25 ms step.
+
+Keep gain conservative because BOTH sums two oscillators.
+
+
+AUDIO-TRIGGER VISUAL EMPHASIS
+
+On `/clock/`, briefly emphasize the exact rune component whose tone is being
+triggered.
+
+At each musical step:
+
+- A gate: emphasize the rising half-sine only;
+- B gate: emphasize the falling half-sine only;
+- BOTH: emphasize both components simultaneously;
+- REST: emphasize nothing.
+
+This is not a separate moving playhead and should not create a visible marker
+on silent cells.
+
+The emphasis should be subtle. Suitable treatments include a brief change in:
+
+- opacity;
+- stroke width;
+- foreground intensity;
+- or a restrained combination of these.
+
+Avoid:
+
+- moving or displacing the rune;
+- flashing the entire cell background;
+- a persistent glow;
+- a numbered cursor;
+- a box around the current cell;
+- any effect that makes the display resemble a conventional sequencer.
+
+Recommended emphasis duration:
+
+approximately 70–120 ms, completing within the step.
+
+Schedule the visual emphasis from the same audio event time. With Tone.js,
+use `Tone.Draw.schedule()` or the pinned version’s equivalent so the visible
+accent follows the scheduled Web Audio event rather than an unrelated
+`setInterval`.
+
+The emphasis is an additional transient class layered over the stable clock
+state. It must never alter the stored or rendered gate state.
+
+Under `prefers-reduced-motion`, disable the transient scan emphasis or replace
+it with an immediate, non-moving state treatment that does not pulse.
+
+
+PITCH SCORES
+
+The Gray clock generates gates, not pitches.
+
+Pitch material is explicitly authored.
+
+Use six ColorPlan themes. Each theme has one sixteen-step, two-lane pitch
+score:
+
+const SCORES = {
+  "color-token-1": {
+    a: [/* 16 positive ratios */],
+    b: [/* 16 positive ratios */],
+  },
+
+  // five more themes
+};
+
+Store pitches as ratios relative to the exact clock-derived reference:
+
+frequencyA = REFERENCE_FREQUENCY * score.a[stepIndex];
+frequencyB = REFERENCE_FREQUENCY * score.b[stepIndex];
+
+Do not quantize the reference to conventional tuning.
+
+Placeholder ratios are acceptable only if:
+
+- they are clearly marked;
+- each array contains exactly sixteen positive finite values;
+- score data is centralized;
+- replacing the composition does not require changing clock, visual, or
+  audio scheduling logic.
+
+Every score contains sixteen latent dyads. The gate state determines whether
+a dyad is heard as both pitches, A only, B only, or silence.
+
+
+COLORPLAN THEMES
+
+Retain the six-theme concept from the previous brief.
+
+Select six existing ColorPlan tokens and store token names, not raw colors.
+
+Each selected background must use its existing paired foreground token:
+
+--colorplan-<slug>
+--colorplan-<slug>-fg
+
+The active theme should control:
+
+- compact header clock background/foreground context;
+- site header;
+- site footer where appropriate;
+- clock-page background;
+- large clock strokes;
+- selection of the corresponding pitch score.
+
+Do not recolor ordinary article body content in v1.
+
+Keep theme selection behind a pure function:
+
+themeIndexForBar(barIndex, clockState)
+
+The final higher-order rule is still undecided.
+
+For the prototype, use one deterministic, documented, configurable rule that
+makes all six themes observable in a practical testing period, such as
+advancing every configurable number of bars.
+
+Theme and pitch score must change together at a bar boundary, never midway
+through the sixteen-step scan.
+
+The compact and large clocks must always use the same active theme.
+
+
+HUGO ARCHITECTURE
+
+Preserve Hugo’s ordinary full-document navigation.
+
+Use a shared clock partial/component with render variants:
+
+clock partial
+    ├── compact header variant
+    └── large clock-page variant
+
+Suggested conceptual modules:
+
+clock-config
+    epoch, timing, themes, scores, envelope settings
+
+clock-state
+    pure timestamp, Gray-code, cell-state, boundary, and theme functions
+
+clock-runtime
+    one wall-clock boundary scheduler and subscriber mechanism
+
+clock-visual
+    SVG construction, compact/large renderers, state transitions,
+    reduced-motion handling, and transient audio emphasis
+
+clock-theme
+    ColorPlan application to header, footer, and clock page
+
+clock-audio
+    /clock/-only Tone.js initialization, scheduling, score selection,
+    resynchronization, sound control, and shutdown
+
+Adapt exact paths and names to the repository’s current Hugo asset
+conventions. Do not impose a new framework or build architecture.
+
+The globally loaded clock code should remain lightweight. Tone.js and
+clock-audio must not load on pages other than `/clock/`, and should preferably
+be deferred until sound activation if that fits the existing asset pipeline.
+
+
+SYNCHRONIZATION AND RECOVERY
+
+Wall-clock time remains authoritative for both visuals and audio.
+
+At every bar boundary:
+
+- recompute barIndex from Date.now();
+- compute the correct Gray state;
+- compute the active theme;
+- update both renderers;
+- schedule or confirm the current audio bar when audio is active.
+
+Do not rely solely on incrementing an in-memory counter.
+
+On:
+
+- `visibilitychange`;
+- audio-context resume;
+- device wake;
+- significant scheduler delay;
+- system clock discontinuity;
+
+recalculate current absolute time and realign at the next bar boundary.
+
+Do not replay missed bars after suspension.
+
+Skip directly to the current state.
+
+Tone.Transport or another Tone scheduler is an audio renderer, not the clock
+source.
+
+
+SCHEDULING
+
+Do not trigger musical events directly from a plain `setInterval`.
+
+Use Tone.js scheduling against Web Audio time. Tone.Sequence,
+Tone.Transport scheduling, or a short look-ahead scheduler is acceptable,
+provided final events are scheduled with audio timestamps.
+
+The global visual clock may use a boundary-aligned timeout, but it must
+recalculate the next absolute boundary after every update rather than trusting
+a drifting interval.
+
+On `/clock/`, use the shared runtime for base visual updates and audio-time
+callbacks for transient rune emphasis.
+
+
+CURRENT MARK REPLACEMENT
+
+Before implementation, inspect:
+
+- the current header;
+- homepage mark partial;
+- current random mark JavaScript;
+- current mark CSS;
+- base layout;
+- generated ColorPlan CSS;
+- asset pipeline;
+- dependency setup;
+- testing setup.
+
+Remove or disable obsolete random letter mutation behavior.
+
+Do not leave both systems active.
+
+The old large random homepage mark should not become a second clock. The
+eternal clock now has:
+
+- one compact presence in the global header;
+- one expanded audiovisual presence on `/clock/`.
+
+Adjust the homepage minimally so removal of the old mark does not leave a
+broken layout, while preserving the site’s current simplicity and
+institutional text.
+
+
+DEBUG MODE
+
+Provide an optional development-only diagnostic mode capable of showing:
+
+- current UTC time;
+- bar index;
+- 32-bit Gray value;
+- sixteen A/B states;
+- current theme;
+- current score;
+- current audio step;
+- milliseconds to next boundary.
+
+Diagnostics must never appear in production.
+
+Allow a compressed development clock for rapid testing, but production
+constants must remain isolated and unchanged.
+
+
+TESTING
+
+Add unit tests for pure clock logic.
+
+At minimum verify:
+
+1. identical timestamps produce identical states;
+2. adjacent bars have Gray-code Hamming distance exactly one;
+3. exactly one A-or-B component changes between adjacent bars;
+4. sixteen two-bit cells reconstruct the original 32-bit state;
+5. 11, 10, 00, and 01 map to BOTH, A, REST, and B;
+6. row-major cell/step ordering is stable;
+7. bar and step timing calculations are correct;
+8. next-boundary calculation works before, on, and after a boundary;
+9. theme selection is deterministic;
+10. every theme has exactly sixteen A ratios and sixteen B ratios;
+11. every pitch ratio is positive and finite;
+12. every configured ColorPlan token exists;
+13. compact and large renderers produce the same base state for one
+    timestamp;
+14. only the changed rune component receives a bar transition;
+15. audio emphasis targets the correct A/B component for every gate state.
+
+Test Gray code around:
+
+- cycle beginning;
+- arbitrary middle values;
+- signed 32-bit boundaries;
+- final value before wrap;
+- wrap to the first state.
+
+
+PERFORMANCE
+
+- No continuous canvas loop.
+- No per-frame work while the base state is static.
+- Reuse sixteen cells and their two SVG paths.
+- Update base state only at bar boundaries.
+- On the clock page, transient emphasis occurs only for active audio events.
+- Avoid reconstructing the entire SVG on every update.
+- Do not load Tone.js globally.
+- Do not add a client-side router.
+- Do not add a general-purpose frontend framework for this feature.
+
+
+ACCESSIBILITY AND SAFETY
+
+- Sound begins muted.
+- Explicit user activation is required.
+- Provide an obvious keyboard-accessible stop control.
+- Preserve focus indicators.
+- Use conservative gain and a limiter.
+- Do not emit sudden full-amplitude sound on resume.
+- Give both SVGs useful accessible names.
+- The header link must have an accessible destination label.
+- Do not rely on color alone for sound-control state.
+- Respect reduced-motion preferences.
+- Ensure the compact header clock does not enlarge or destabilize the header
+  on mobile.
+
+
+V1 ACCEPTANCE CRITERIA
+
+The implementation is complete when:
+
+1. the current random letter mark has been removed or disabled;
+2. every normal site page shows a compact 4×4 clock in the header;
+3. clicking it opens `/clock/`;
+4. every cell uses only the two approved diagonal half-sine components;
+5. the state is derived from a fixed UTC epoch and current wall time;
+6. it changes once every 2.26 seconds;
+7. adjacent states differ by exactly one A-or-B bit;
+8. reload reconstructs the correct state without persisted state;
+9. `/clock/` contains a large responsive rendering and no visible
+   explanatory copy;
+10. the compact and large clocks visibly match in state and theme;
+11. `mix-blend-mode: darken` is used for the initial rune treatment;
+12. Tone.js loads only on `/clock/`;
+13. sound begins only after explicit activation;
+14. sound starts at the next absolute bar boundary;
+15. every bar scans all sixteen cells once;
+16. A, B, BOTH, and REST trigger the correct envelopes;
+17. active A/B rune components receive a subtle synchronized emphasis;
+18. theme and score change only at bar boundaries;
+19. suspension and resume do not permanently desynchronize the clock;
+20. leaving `/clock/` may stop audio without affecting visual clock state;
+21. reduced-motion behavior works;
+22. all pure state tests pass;
+23. ordinary Hugo navigation remains unchanged;
+24. no cookies, localStorage, server state, SPA shell, or intercepted
+   navigation are introduced.
+
+
+NON-GOALS FOR V1
+
+Do not implement:
+
+- continuous audio across page navigation;
+- a persistent outer application frame;
+- SPA behavior;
+- partial-page loading;
+- iframe navigation;
+- audio outside `/clock/`;
+- explanatory prose on `/clock/`;
+- a visible sequencer or playhead;
+- per-tile tonal transformations;
+- tile-specific colors;
+- user composition tools;
+- editable scores;
+- samples;
+- additional oscillators;
+- effects chains;
+- MIDI;
+- server synchronization;
+- multiplayer synchronization;
+- cookies or database state;
+- random musical behavior;
+- user manipulation of the eternal state;
+- automatic pitch generation;
+- finalized symmetry-based theme logic unless separately specified.
+
+
+DESIGN VALUES STILL TO FINALIZE
+
+Keep these centralized and easy to tune:
+
+1. exact UTC epoch;
+2. exact six ColorPlan tokens;
+3. exact six authored A/B scores;
+4. final theme-change rule;
+5. half-sine amplitude;
+6. complementary A/B handedness;
+7. compact and large stroke widths;
+8. bar-transition duration and style;
+9. audio-emphasis duration and strength;
+10. envelope timings;
+11. master output level;
+12. wording and placement of the sound control;
+13. exact clock-page maximum size.
+
+
+IMPLEMENTATION ORDER
+
+1. Inspect the current Hugo mark, header, layouts, ColorPlan assets,
+   dependency system, and tests.
+2. Implement pure clock state and boundary functions with tests.
+3. Implement the reusable diagonal half-sine SVG renderer.
+4. Replace the random mark with the compact global header clock.
+5. Add deterministic ColorPlan theme application.
+6. Add the minimal `/clock/` page and large synchronized renderer.
+7. Add page-scoped Tone.js audio activation and scheduling.
+8. Add audio-time rune emphasis.
+9. Add suspension recovery, reduced-motion handling, and cleanup.
+10. Verify desktop, mobile, reload, navigation, tab suspension, and
+    accessibility.
+11. Run the project’s full validation suite.
+12. Present the diff for review before committing unless explicitly asked to
+    commit.
+
+
+FINAL RESULT
+
+The clock is not a homepage animation and not a persistent site soundtrack.
+
+It is the site’s living geometric mark:
+
+- always present in compact form in the header;
+- reconstructed from absolute time on every page;
+- expanded into an audiovisual instrument only on `/clock/`;
+- visually identical in state wherever it appears;
+- simple enough to preserve the existing Hugo site architecture.

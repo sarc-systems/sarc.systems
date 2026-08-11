@@ -1,0 +1,255 @@
+/* clock.css — the SARC Eternal Clock: compact header clock (every page) +
+   the large /clock/-page rendering. See todo_clock.txt and assets/js/clock-*.js.
+
+   Colour: the current Colorplan theme (--clock-theme-bg/-fg, set on <body>
+   by clock-theme.js, which runs on every page — the compact header clock is
+   everywhere) drives the SITE-WIDE header and footer: background, wordmark,
+   nav links, footer links/text all follow the clock's current colour on
+   every page, all the time — this is the site's one deliberate departure
+   from "otherwise monochrome, colour only as a restrained signal" (see
+   layout.css, where the old per-section .site-header/.site-footer ->
+   var(--paper) overrides for body.journal/body.library were removed for
+   this reason: the clock is now the sole authority on header/footer colour).
+   On /clock/ specifically, the large-clock plate ALSO picks up the same
+   colour, so that one page reads as one solid field top to bottom; everyone
+   else just gets a coloured header/footer bar framing ordinary content. */
+
+/* --- Shared rune geometry (compact + large — same glyphs, different size) - */
+/* Two-ink "overprint" treatment — a restrained risograph/print feel, not a
+   UI effect. .clock-rune-stack holds two (compact) or three (large)
+   identical copies of the same sixteen-cell geometry (assets/js/clock-svg.js
+   builds the exact same buildCellsInto() output into each layer, so they
+   can never drift apart into different states):
+     .clock-svg--accent  — bottom. Coloured with --clock-accent-ink (the
+                            NEXT theme in rotation, set by clock-theme.js —
+                            a genuine palette colour, not an invented one),
+                            offset a couple of physical pixels and very
+                            slightly blurred.
+     .clock-svg--ink      — top. The primary, crisp, currentColor layer
+                            (unchanged from before this pass). Blends against
+                            the accent layer with `multiply` — where the two
+                            overlap the ink dominates (multiply-by-ink is
+                            still ink), so the accent only ever peeks out as
+                            a thin fringe at the offset edge: a misregistered
+                            second plate, not a duplicate glyph.
+     .clock-svg--grain    — large only (see the JS comment on
+                            createGrainLayer for why compact skips it): a
+                            static, colourless feTurbulence noise field at
+                            very low opacity, multiplied on top for a hint of
+                            paper/ink texture.
+   isolation:isolate on the wrapper scopes all of this blending to just these
+   layers — it never reaches through to the page background behind the
+   clock, so it reads correctly on every Colorplan theme including black. */
+.clock-rune-stack {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  isolation: isolate;
+}
+.clock-rune-stack .clock-svg {
+  display: block;
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+.clock-svg--ink { isolation: isolate; /* darken-blend applies among its own A/B runes only */ }
+.clock-svg--accent { isolation: isolate; }
+
+.clock-component {
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  mix-blend-mode: darken;
+  opacity: 0;
+  transition: opacity 220ms ease, stroke-width 90ms ease;
+}
+.clock-component.is-on { opacity: 1; }
+.clock-component.is-on.is-emphasized {
+  opacity: 1;
+  stroke-width: var(--clock-emphasis-stroke, 20);
+}
+@media (prefers-reduced-motion: reduce) {
+  .clock-component { transition: none; }
+}
+
+.clock-svg--compact .clock-component { stroke-width: 15; }
+.clock-svg--large .clock-component { stroke-width: 6; }
+.clock-svg--large .clock-component.is-on.is-emphasized { --clock-emphasis-stroke: 9; }
+
+/* Second-ink accent layer. Every value here is a single named custom
+   property — tune freely, independently per size (compact vs large need
+   very different absolute pixel offsets to both read as "subtle"). */
+.clock-svg--accent {
+  color: var(--clock-accent-ink, var(--gray-1));
+  opacity: var(--clock-accent-opacity, 0.8);
+  transform: translate(var(--clock-accent-offset-x), var(--clock-accent-offset-y));
+  filter: blur(var(--clock-accent-blur));
+  pointer-events: none;
+}
+.clock-svg--compact.clock-svg--accent {
+  --clock-accent-offset-x: 0.6px;
+  --clock-accent-offset-y: 0.4px;
+  --clock-accent-blur: 0.25px;
+}
+.clock-svg--large.clock-svg--accent {
+  --clock-accent-offset-x: 2px;
+  --clock-accent-offset-y: 1.25px;
+  --clock-accent-blur: 0.6px;
+}
+
+/* Primary ink layer overprints the accent layer beneath it. */
+.clock-svg--ink { mix-blend-mode: multiply; }
+
+/* Faint paper-grain texture — large clock only (see clock-svg.js). A single
+   opacity knob; if it ever reads as noisy rather than subtle, drop the
+   number rather than reworking the filter. */
+.clock-svg--grain {
+  opacity: var(--clock-grain-opacity, 0.05);
+  mix-blend-mode: multiply;
+  pointer-events: none;
+}
+
+/* --- Compact header clock ------------------------------------------------- */
+.clock-compact {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  text-decoration: none;
+}
+.clock-compact-frame {
+  display: block;
+  width: clamp(28px, 3.4vw, 40px);
+  aspect-ratio: 1 / 1;
+  box-sizing: border-box;
+  border: 1px solid var(--rule);
+  background: var(--clock-theme-bg, var(--paper-2));
+  color: var(--clock-theme-fg, var(--ink));
+}
+.clock-compact:hover .clock-compact-frame,
+.clock-compact:focus-visible .clock-compact-frame { border-color: var(--gray-1); }
+
+/* --- Site-wide header/footer colour (every page) --------------------------- */
+.site-header,
+.site-footer {
+  background: var(--clock-theme-bg, var(--paper));
+  border-color: transparent;
+  transition: background 600ms ease, border-color 600ms ease;
+}
+.wordmark,
+.nav-menu a,
+.footer-inst,
+.footer-nav a,
+.footer-meta,
+.footer-meta a {
+  color: var(--clock-theme-fg, var(--ink));
+  transition: color 600ms ease;
+}
+.wordmark:hover,
+.nav-menu a:hover,
+.nav-menu a:focus-visible,
+.footer-nav a:hover,
+.footer-meta a:hover {
+  color: var(--clock-theme-fg, var(--ink));
+  opacity: 0.7;
+}
+@media (prefers-reduced-motion: reduce) {
+  .site-header,
+  .site-footer,
+  .wordmark,
+  .nav-menu a,
+  .footer-inst,
+  .footer-nav a,
+  .footer-meta,
+  .footer-meta a { transition: none; }
+}
+
+/* --- /clock/ page ---------------------------------------------------------- */
+/* .site-footer normally carries a 5rem top margin to separate it from
+   ordinary page content — on /clock/ that gap is a bare stretch of the
+   default page background between two themed regions, breaking the
+   one-solid-colour effect, so it's removed here (only here — everywhere
+   else the footer still wants its normal separation from page content). */
+body.clock .site-footer { margin-top: 0; }
+
+.clock-page {
+  flex: 1 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-start;
+  gap: clamp(1.5rem, 4vw, 2.5rem);
+  padding: clamp(2rem, 6vw, 4rem) clamp(1.2rem, 5vw, 3rem);
+  background: var(--clock-theme-bg, var(--paper));
+  color: var(--clock-theme-fg, var(--ink));
+  transition: background 600ms ease, color 600ms ease;
+}
+@media (prefers-reduced-motion: reduce) {
+  .clock-page { transition: none; }
+}
+
+/* Tiled — a repeating field of the same clock rather than one large centered
+   instance. Every tile is a separate [data-clock="large"] element (see
+   layouts/clock/single.html) driven by the same shared runtime, so they're
+   always in lockstep — this is layout only, not a second rendering path.
+   --clock-tile-size (px) and this element's own explicit height are both set
+   by JS (clock-tile-layout.js) from its measured width — not a vw/vh guess,
+   not CSS-only auto-fit/1fr. Height is deliberately set to MATCH width (a
+   square field: as many rows as there are columns), which is what makes the
+   tiled area taller than one viewport on most screens — the page scrolls,
+   and the header ends up above the fold exactly as an ordinary (non-sticky)
+   header would on any tall page. overflow:hidden is a safety net in case
+   the actual DOM tile count (layouts/clock/single.html) ever falls short of
+   a full columns x columns square; it should never need to clip anything
+   in the normal case. */
+.clock-large-wrap {
+  --clock-tile-size: 27rem;
+  width: 100%;
+  height: var(--clock-tile-size);
+  display: grid;
+  grid-template-columns: repeat(auto-fill, var(--clock-tile-size));
+  grid-auto-rows: var(--clock-tile-size);
+  justify-content: center;
+  overflow: hidden;
+}
+.clock-large-frame { width: 100%; height: 100%; }
+/* Every tile's own SVG viewBox carries a small overscan margin (so a
+   standalone clock's outermost strokes never clip — see clock-svg.js PAD) —
+   tiled edge to edge, that margin reads as a visible gap between tiles.
+   Scaling each tile's whole rune stack up slightly (matching the viewBox's
+   own overscan ratio) lets that margin bleed into the NEIGHBOURING tile
+   instead of sitting empty, closing the gap without touching the geometry
+   itself or clipping any stroke — .clock-large-frame deliberately does NOT
+   clip its own overflow, so this can actually spill into the next cell;
+   only .clock-large-wrap's outer overflow:hidden clips the tiled field's
+   own outer edge. */
+.clock-large-frame .clock-rune-stack { transform: scale(1.1); }
+
+/* --- Sound control — icon only, no words (layouts/partials/icon.html
+   volume-off/-armed/-on; clock-audio.js swaps it per state). Shape carries
+   the state (crossed speaker / bare speaker / speaker with waves), never
+   colour alone. */
+.clock-sound-wrap { display: flex; justify-content: center; }
+.clock-sound-control {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  padding: 0;
+  background: transparent;
+  color: inherit;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+  cursor: pointer;
+}
+.clock-sound-control svg { width: 1.2em; height: 1.2em; }
+.clock-sound-control:hover { opacity: 0.8; }
+.clock-sound-control:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
+.clock-sound-control[data-state="on"] { background: color-mix(in srgb, currentColor 15%, transparent); }

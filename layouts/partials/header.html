@@ -3,7 +3,26 @@
        few short items) it simply wraps on narrow screens. */ -}}
 <header class="site-header">
   <div class="site-header-inner">
-    <a class="wordmark" href="{{ "/" | relURL }}" aria-label="SARC — home">{{ partial "wordmark.html" . }}</a>
+    {{- /* Grouped so the clock sits immediately left of the wordmark (not
+           spread across the header by .site-header-inner's own
+           space-between) while the wordmark itself stays the unmoved home
+           link. */ -}}
+    <div class="site-header-brand">
+      {{- /* Compact 4x4 clock — the SARC Eternal Clock (see todo_clock.txt).
+             The link itself (-> /clock/) is ordinary navigation and always
+             present, even with JS disabled; clock-init.js fills the empty
+             frame with the live rune SVG as a progressive enhancement
+             (clock.css reserves the frame's box size either way, so nothing
+             shifts when it loads). The SVG itself is aria-hidden — the
+             accessible name lives on the link, matching icon.html's
+             convention. */ -}}
+      <a class="clock-compact" href="{{ "/clock/" | relURL }}">
+        <span class="clock-compact-frame" data-clock="compact"></span>
+        <span class="visually-hidden">Open SARC clock</span>
+      </a>
+
+      <a class="wordmark" href="{{ "/" | relURL }}" aria-label="SARC — home">{{ partial "wordmark.html" . }}</a>
+    </div>
 
     <nav class="nav-menu" aria-label="Primary">
       <ul>

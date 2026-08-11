@@ -3,7 +3,7 @@
 
 HUGO ?= hugo
 
-.PHONY: dev build check new-post deploy clean colorplan mark library-image-audit library-structural-report library-covers
+.PHONY: dev build check new-post deploy clean colorplan mark library-image-audit library-structural-report library-covers test-clock clock-pattern-events
 
 ## dev — local server with drafts and future-dated posts
 dev:
@@ -13,13 +13,26 @@ dev:
 build:
 	$(HUGO) --gc --minify
 
+## test-clock — pure-logic unit tests for the SARC Eternal Clock
+## (scripts/test-clock.js). No test runner, no npm dependency.
+test-clock:
+	node scripts/test-clock.js
+
+## clock-pattern-events — regenerate the PATTERN_EVENTS table embedded in
+## assets/js/clock-config.js (scripts/generate-clock-pattern-events.js).
+## Committed output; re-run only if PATTERN_WATCH_CELLS or the left/right
+## mapping in that script ever changes. Prints the array to paste in by hand.
+clock-pattern-events:
+	node scripts/generate-clock-pattern-events.js
+
 ## check — production build plus validation and link checks
-check: build
+check: build test-clock
 	@echo "==> Checking internal links and required outputs"
 	@test -f public/index.html        || { echo "FAIL: no index.html"; exit 1; }
 	@test -f public/index.xml         || { echo "FAIL: no RSS feed"; exit 1; }
 	@test -f public/sitemap.xml       || { echo "FAIL: no sitemap"; exit 1; }
 	@test -f public/journal/index.html|| { echo "FAIL: no journal index"; exit 1; }
+	@test -f public/clock/index.html  || { echo "FAIL: no clock page"; exit 1; }
 	@# Flag any relref/ref failures Hugo left in the HTML, plus obvious broken hrefs.
 	@! grep -rl "ZgotmplZ\|HAHAHUGO" public >/dev/null 2>&1 || { echo "FAIL: template error markers in output"; exit 1; }
 	@echo "OK: build and basic checks passed"

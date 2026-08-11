@@ -11,6 +11,21 @@
     {{ block "main" . }}{{ end }}
   </main>
   {{ partial "footer.html" . }}
+
+  {{- /* SARC Eternal Clock — global, lightweight (pure math + SVG, no
+         Tone.js), loaded on every page because the compact header clock is
+         on every page. Concatenated the same way the CSS bundle in head.html
+         is, so it stays five short, legible files instead of one. */ -}}
+  {{- $clockOrder := slice "js/clock-config.js" "js/clock-state.js" "js/clock-svg.js" "js/clock-theme.js" "js/clock-runtime.js" "js/clock-init.js" -}}
+  {{- $clockParts := slice -}}
+  {{- range $clockOrder -}}
+    {{- with resources.Get . -}}{{ $clockParts = $clockParts | append . }}{{- end -}}
+  {{- end -}}
+  {{- $clockJS := $clockParts | resources.Concat "js/clock-core.js" -}}
+  {{- if hugo.IsProduction }}{{ $clockJS = $clockJS | minify }}{{ end -}}
+  {{- $clockJS = $clockJS | fingerprint -}}
+  <script src="{{ $clockJS.RelPermalink }}"{{ if hugo.IsProduction }} integrity="{{ $clockJS.Data.Integrity }}"{{ end }} defer></script>
+
   {{ block "scripts" . }}{{ end }}
   <script>
     (function () {
