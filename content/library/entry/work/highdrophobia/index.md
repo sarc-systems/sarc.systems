@@ -7,7 +7,7 @@ library:
   id: "highdrophobia"
   type: album
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - {name: "Solmania", role: artist, ref: solmania}

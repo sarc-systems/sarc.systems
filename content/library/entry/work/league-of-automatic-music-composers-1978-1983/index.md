@@ -7,7 +7,7 @@ library:
   id: league-of-automatic-music-composers-1978-1983
   type: album
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - name: "League of Automatic Music Composers"

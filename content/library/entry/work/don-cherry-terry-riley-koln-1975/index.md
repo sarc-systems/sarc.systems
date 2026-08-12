@@ -7,7 +7,7 @@ library:
   id: don-cherry-terry-riley-koln-1975
   type: album
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - name: "Terry Riley"

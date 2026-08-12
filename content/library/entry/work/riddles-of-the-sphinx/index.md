@@ -7,7 +7,7 @@ library:
   id: riddles-of-the-sphinx
   type: album
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - name: "Mike Ratledge"

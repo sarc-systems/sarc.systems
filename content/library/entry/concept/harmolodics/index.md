@@ -6,7 +6,7 @@ library:
   id: harmolodics
   type: concept
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - {name: "Ornette Coleman", role: researcher, ref: ornette-coleman}

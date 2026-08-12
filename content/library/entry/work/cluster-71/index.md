@@ -7,7 +7,7 @@ library:
   id: cluster-71
   type: album
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - {name: "Cluster", role: artist, ref: cluster}

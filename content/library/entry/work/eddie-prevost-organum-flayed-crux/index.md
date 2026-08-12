@@ -7,7 +7,7 @@ library:
   id: eddie-prevost-organum-flayed-crux
   type: album
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - name: "Eddie Prévost"

@@ -6,7 +6,7 @@ library:
   id: mother-mallard
   type: group
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - {name: "David Borden", role: founder, ref: david-borden}

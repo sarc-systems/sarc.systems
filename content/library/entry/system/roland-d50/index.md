@@ -6,7 +6,7 @@ library:
   id: roland-d50
   type: instrument
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - name: "Roland Corporation"

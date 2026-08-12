@@ -6,7 +6,7 @@ library:
   id: ipem
   type: organization
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - name: "Louis De Meester"

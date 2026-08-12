@@ -6,7 +6,7 @@ library:
   id: ikutaro-kakehashi
   type: person
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 subjects: [instruments, language]
 

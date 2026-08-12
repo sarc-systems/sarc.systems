@@ -6,7 +6,7 @@ library:
   id: free-improvisation
   type: concept
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 subjects: [time]
 

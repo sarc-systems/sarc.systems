@@ -7,7 +7,7 @@ library:
   id: silence
   type: book
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - name: "John Cage"

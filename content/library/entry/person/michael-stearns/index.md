@@ -6,7 +6,7 @@ library:
   id: michael-stearns
   type: person
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 subjects: [space, time]
 

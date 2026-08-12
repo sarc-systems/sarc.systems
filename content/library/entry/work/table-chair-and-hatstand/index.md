@@ -7,7 +7,7 @@ library:
   id: table-chair-and-hatstand
   type: album
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - {name: "Günter Müller", role: artist, ref: gunter-muller}

@@ -6,7 +6,7 @@ library:
   id: mills-center-for-contemporary-music
   type: organization
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - name: "Pauline Oliveros"

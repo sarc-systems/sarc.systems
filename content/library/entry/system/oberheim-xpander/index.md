@@ -6,7 +6,7 @@ library:
   id: oberheim-xpander
   type: instrument
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - name: "Oberheim Electronics"

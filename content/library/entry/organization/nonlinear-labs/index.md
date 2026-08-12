@@ -6,7 +6,7 @@ library:
   id: nonlinear-labs
   type: organization
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 subjects: [instruments]
 

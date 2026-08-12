@@ -6,7 +6,7 @@ library:
   id: hanson-records
   type: organization
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - {name: "Aaron Dilloway", role: founder, ref: aaron-dilloway}

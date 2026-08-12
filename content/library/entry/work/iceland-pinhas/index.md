@@ -7,7 +7,7 @@ library:
   id: iceland-pinhas
   type: album
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - name: "Richard Pinhas"

@@ -7,7 +7,7 @@ library:
   id: die-mensch-maschine
   type: album
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - name: "Kraftwerk"

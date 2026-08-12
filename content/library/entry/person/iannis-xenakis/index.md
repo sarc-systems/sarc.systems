@@ -6,7 +6,7 @@ library:
   id: iannis-xenakis
   type: person
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 subjects: [number, form, computation, space]
 

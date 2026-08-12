@@ -6,7 +6,7 @@ library:
   id: university-of-iowa-electronic-music-studios
   type: organization
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - name: "Philip Bezanson"

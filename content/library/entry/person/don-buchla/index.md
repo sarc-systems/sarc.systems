@@ -6,7 +6,7 @@ library:
   id: don-buchla
   type: person
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 subjects: [instruments]
 

@@ -6,7 +6,7 @@ library:
   id: fairlight-cmi
   type: instrument
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - name: "Peter Vogel"

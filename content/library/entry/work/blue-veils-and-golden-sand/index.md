@@ -7,7 +7,7 @@ library:
   id: blue-veils-and-golden-sand
   type: composition
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - name: "Delia Derbyshire"

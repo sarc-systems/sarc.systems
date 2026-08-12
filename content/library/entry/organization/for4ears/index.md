@@ -6,7 +6,7 @@ library:
   id: for4ears
   type: organization
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - {name: "Günter Müller", role: founder, ref: gunter-muller}

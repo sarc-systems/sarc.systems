@@ -6,7 +6,7 @@ library:
   id: omit
   type: group
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 subjects: [instruments]
 

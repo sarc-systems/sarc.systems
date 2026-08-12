@@ -7,7 +7,7 @@ library:
   id: music-improvisation-company
   type: group
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - {name: "Derek Bailey", role: performer, ref: derek-bailey}

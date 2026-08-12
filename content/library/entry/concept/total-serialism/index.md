@@ -6,7 +6,7 @@ library:
   id: total-serialism
   type: concept
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - {name: "Olivier Messiaen", role: researcher}

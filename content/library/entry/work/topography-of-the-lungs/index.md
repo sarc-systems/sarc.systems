@@ -7,7 +7,7 @@ library:
   id: topography-of-the-lungs
   type: album
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - {name: "Evan Parker", role: performer, ref: evan-parker}

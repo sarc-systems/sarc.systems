@@ -6,7 +6,7 @@ library:
   id: vanilla-records
   type: organization
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - {name: "Michio Teshima", role: founder}

@@ -6,7 +6,7 @@ library:
   id: a-little-noise-in-the-system
   type: composition
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - name: "Pauline Oliveros"

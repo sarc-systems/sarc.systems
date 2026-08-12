@@ -7,7 +7,7 @@ library:
   id: weather-sky
   type: album
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - {name: "Keith Rowe", role: artist, ref: keith-rowe}

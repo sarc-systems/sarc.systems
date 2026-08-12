@@ -6,7 +6,7 @@ library:
   id: theatre-of-eternal-music
   type: group
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - name: "La Monte Young"

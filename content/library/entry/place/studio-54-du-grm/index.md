@@ -6,7 +6,7 @@ library:
   id: studio-54-du-grm
   type: place
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 subjects: []
 

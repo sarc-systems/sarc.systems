@@ -6,7 +6,7 @@ library:
   id: granular-synthesis
   type: concept
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - {name: "Curtis Roads", role: researcher, ref: curtis-roads}

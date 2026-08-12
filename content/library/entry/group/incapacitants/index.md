@@ -6,7 +6,7 @@ library:
   id: incapacitants
   type: group
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - {name: "Toshiji Mikawa", role: performer}

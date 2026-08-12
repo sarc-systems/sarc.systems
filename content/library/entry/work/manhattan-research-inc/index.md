@@ -7,7 +7,7 @@ library:
   id: manhattan-research-inc
   type: album
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - {name: "Raymond Scott", role: composer, ref: raymond-scott}

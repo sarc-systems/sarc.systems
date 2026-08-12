@@ -7,7 +7,7 @@ library:
   id: la-jolla-good-friday
   type: album
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - name: "Thorkell Sigurbjörnsson"

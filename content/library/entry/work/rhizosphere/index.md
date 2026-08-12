@@ -7,7 +7,7 @@ library:
   id: rhizosphere
   type: album
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - name: "Richard Pinhas"

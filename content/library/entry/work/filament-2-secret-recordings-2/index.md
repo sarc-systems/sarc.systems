@@ -7,7 +7,7 @@ library:
   id: filament-2-secret-recordings-2
   type: album
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - {name: "Sachiko M", role: artist, ref: sachiko-m}

@@ -7,7 +7,7 @@ library:
   id: spiritual-unity
   type: album
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - name: "Albert Ayler"

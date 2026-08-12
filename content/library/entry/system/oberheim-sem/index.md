@@ -6,7 +6,7 @@ library:
   id: oberheim-sem
   type: instrument
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - name: "Tom Oberheim"

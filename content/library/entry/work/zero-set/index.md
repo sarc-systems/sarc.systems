@@ -7,7 +7,7 @@ library:
   id: zero-set
   type: album
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - {name: "Dieter Moebius", role: artist, ref: dieter-moebius}

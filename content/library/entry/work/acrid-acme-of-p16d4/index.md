@@ -7,7 +7,7 @@ library:
   id: "acrid-acme-of-p16d4"
   type: album
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - {name: "P16.D4", role: artist, ref: p16d4}

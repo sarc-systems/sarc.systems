@@ -7,7 +7,7 @@ library:
   id: warren-burt
   type: person
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators: []
 

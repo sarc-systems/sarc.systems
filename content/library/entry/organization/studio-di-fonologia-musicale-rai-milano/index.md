@@ -6,7 +6,7 @@ library:
   id: studio-di-fonologia-musicale-rai-milano
   type: organization
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - name: "Luciano Berio"

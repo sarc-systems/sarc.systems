@@ -7,7 +7,7 @@ library:
   id: hands-to
   type: group
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - {name: "Jeph Jerman", role: artist, ref: jeph-jerman}

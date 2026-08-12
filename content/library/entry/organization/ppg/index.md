@@ -6,7 +6,7 @@ library:
   id: ppg
   type: organization
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - {name: "Wolfgang Palm", role: founder, ref: wolfgang-palm}

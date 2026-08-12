@@ -7,7 +7,7 @@ library:
   id: "changez-les-blockeurs"
   type: album
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - {name: "The New Blockaders", role: artist, ref: the-new-blockaders}

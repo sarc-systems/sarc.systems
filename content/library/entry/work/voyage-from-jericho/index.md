@@ -7,7 +7,7 @@ library:
   id: voyage-from-jericho
   type: album
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - name: "Charles Tyler Ensemble"

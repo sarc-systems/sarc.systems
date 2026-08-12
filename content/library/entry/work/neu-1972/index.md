@@ -7,7 +7,7 @@ library:
   id: neu-1972
   type: album
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - {name: "Neu!", role: artist, ref: neu}

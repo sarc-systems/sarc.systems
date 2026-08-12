@@ -6,7 +6,7 @@ library:
   id: tetsu-inoue
   type: person
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 subjects: [perception]
 

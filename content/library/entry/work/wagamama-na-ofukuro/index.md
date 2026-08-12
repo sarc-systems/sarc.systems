@@ -7,7 +7,7 @@ library:
   id: "wagamama-na-ofukuro"
   type: album
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - {name: "Violent Onsen Geisha", role: artist, ref: violent-onsen-geisha}

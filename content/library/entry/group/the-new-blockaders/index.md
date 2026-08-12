@@ -7,7 +7,7 @@ library:
   id: "the-new-blockaders"
   type: group
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - {name: "Richard Rupenus", role: founder}

@@ -6,7 +6,7 @@ library:
   id: sonic-arts-union
   type: group
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - name: "Robert Ashley"

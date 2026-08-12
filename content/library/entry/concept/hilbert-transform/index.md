@@ -7,7 +7,7 @@ library:
   id: "hilbert-transform"
   type: concept
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - {name: "David Hilbert", role: researcher, ref: david-hilbert}

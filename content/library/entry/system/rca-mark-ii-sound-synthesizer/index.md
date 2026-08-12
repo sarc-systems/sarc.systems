@@ -6,7 +6,7 @@ library:
   id: rca-mark-ii-sound-synthesizer
   type: instrument
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - name: "Harry F. Olson"

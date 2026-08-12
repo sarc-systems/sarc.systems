@@ -6,7 +6,7 @@ library:
   id: pan-sonic
   type: group
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - {name: "Mika Vainio", role: founder, ref: mika-vainio}

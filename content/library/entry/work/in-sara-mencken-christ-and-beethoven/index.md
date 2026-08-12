@@ -7,7 +7,7 @@ library:
   id: in-sara-mencken-christ-and-beethoven
   type: album
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - name: "Robert Ashley"

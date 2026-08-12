@@ -6,7 +6,7 @@ library:
   id: arp-2600
   type: instrument
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - name: "Alan R. Pearlman"

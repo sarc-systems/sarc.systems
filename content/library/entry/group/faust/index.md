@@ -7,7 +7,7 @@ library:
   id: faust
   type: group
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - {name: "Werner \"Zappi\" Diermaier", role: performer}

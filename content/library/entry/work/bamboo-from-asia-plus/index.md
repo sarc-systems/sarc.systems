@@ -6,7 +6,7 @@ library:
   id: bamboo-from-asia-plus
   type: album
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - name: "Takashi Sekiguchi"

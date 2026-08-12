@@ -6,7 +6,7 @@ library:
   id: violent-onsen-geisha
   type: group
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - {name: "Masaya Nakahara", role: artist}

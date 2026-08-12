@@ -6,7 +6,7 @@ library:
   id: ornette-coleman
   type: person
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 subjects: [time, form]
 

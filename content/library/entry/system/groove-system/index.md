@@ -6,7 +6,7 @@ library:
   id: groove-system
   type: software
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - name: "Max Mathews"

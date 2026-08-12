@@ -6,7 +6,7 @@ library:
   id: satoshi-ashikawa
   type: person
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 subjects: [space, perception]
 

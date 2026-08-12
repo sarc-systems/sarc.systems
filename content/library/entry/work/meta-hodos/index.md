@@ -8,7 +8,7 @@ library:
   id: meta-hodos
   type: book
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - name: "James Tenney"

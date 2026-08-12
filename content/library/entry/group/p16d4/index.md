@@ -7,7 +7,7 @@ library:
   id: "p16d4"
   type: group
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - {name: "Roger Schönauer", role: founder}

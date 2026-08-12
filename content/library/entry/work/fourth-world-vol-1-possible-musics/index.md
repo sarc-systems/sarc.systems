@@ -7,7 +7,7 @@ library:
   id: fourth-world-vol-1-possible-musics
   type: album
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - name: "Jon Hassell"

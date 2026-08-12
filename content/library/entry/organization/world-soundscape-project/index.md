@@ -7,7 +7,7 @@ library:
   id: world-soundscape-project
   type: organization
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - {name: "R. Murray Schafer", role: founder, ref: r-murray-schafer}

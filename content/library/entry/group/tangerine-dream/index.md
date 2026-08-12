@@ -6,7 +6,7 @@ library:
   id: tangerine-dream
   type: group
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - {name: "Edgar Froese", role: founder}

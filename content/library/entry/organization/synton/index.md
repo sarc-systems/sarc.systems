@@ -6,7 +6,7 @@ library:
   id: synton
   type: organization
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 subjects: [instruments]
 

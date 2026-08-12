@@ -7,7 +7,7 @@ library:
   id: otto-luening
   type: person
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators: []
 

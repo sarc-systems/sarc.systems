@@ -7,7 +7,7 @@ library:
   id: illusion-of-safety
   type: group
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - {name: "Daniel Burke", role: founder}

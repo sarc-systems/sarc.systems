@@ -7,7 +7,7 @@ library:
   id: a-selection-of-improvisations
   type: album
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - name: "Hans Kulk"

@@ -6,7 +6,7 @@ library:
   id: cluster
   type: group
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - {name: "Dieter Moebius", role: performer, ref: dieter-moebius}

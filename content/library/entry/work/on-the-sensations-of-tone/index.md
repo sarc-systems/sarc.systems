@@ -7,7 +7,7 @@ library:
   id: on-the-sensations-of-tone
   type: book
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - name: "Hermann von Helmholtz"

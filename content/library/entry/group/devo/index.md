@@ -7,7 +7,7 @@ library:
   id: devo
   type: group
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - {name: "Mark Mothersbaugh", role: founder}

@@ -6,7 +6,7 @@ library:
   id: roger-linn
   type: person
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 subjects: [computation, memory, instruments]
 

@@ -6,7 +6,7 @@ library:
   id: chu-ishikawa
   type: person
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 subjects: []
 

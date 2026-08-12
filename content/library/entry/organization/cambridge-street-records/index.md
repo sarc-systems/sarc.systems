@@ -6,7 +6,7 @@ library:
   id: cambridge-street-records
   type: organization
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - {name: "Barry Truax", role: founder, ref: barry-truax}

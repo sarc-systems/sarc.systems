@@ -6,7 +6,7 @@ library:
   id: morphogenesis-band
   type: group
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - name: "Roger Sutherland"

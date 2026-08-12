@@ -6,7 +6,7 @@ library:
   id: kurzweil
   type: organization
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - {name: "Ray Kurzweil", role: founder, ref: ray-kurzweil}

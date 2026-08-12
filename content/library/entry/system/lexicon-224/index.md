@@ -6,7 +6,7 @@ library:
   id: lexicon-224
   type: hardware
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - name: "David Griesinger"

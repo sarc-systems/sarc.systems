@@ -7,7 +7,7 @@ library:
   id: brainwave-music
   type: album
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - name: "David Rosenboom"

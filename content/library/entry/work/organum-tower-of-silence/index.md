@@ -7,7 +7,7 @@ library:
   id: organum-tower-of-silence
   type: album
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - name: "Organum"

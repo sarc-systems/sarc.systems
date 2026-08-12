@@ -6,7 +6,7 @@ library:
   id: valley-of-the-birds-remastered
   type: album
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - name: "Emerald Web"

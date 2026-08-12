@@ -7,7 +7,7 @@ library:
   id: the-expanding-universe
   type: album
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - name: "Laurie Spiegel"

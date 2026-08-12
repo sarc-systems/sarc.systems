@@ -6,7 +6,7 @@ library:
   id: bregman-electronic-music-studio
   type: place
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 subjects: []
 

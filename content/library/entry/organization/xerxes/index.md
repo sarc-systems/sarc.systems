@@ -6,7 +6,7 @@ library:
   id: xerxes
   type: organization
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - {name: "Yasutoshi Yoshida", role: founder}

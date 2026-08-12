@@ -7,7 +7,7 @@ library:
   id: roundtrip-1977
   type: album
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - name: "Don Cherry"

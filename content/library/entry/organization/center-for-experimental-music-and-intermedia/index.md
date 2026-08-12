@@ -6,7 +6,7 @@ library:
   id: center-for-experimental-music-and-intermedia
   type: organization
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - name: "Merrill Ellis"

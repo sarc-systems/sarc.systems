@@ -6,7 +6,7 @@ library:
   id: aube
   type: group
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - {name: "Akifumi Nakajima", role: artist}

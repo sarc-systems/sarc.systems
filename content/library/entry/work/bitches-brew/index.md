@@ -7,7 +7,7 @@ library:
   id: bitches-brew
   type: album
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - name: "Miles Davis"

@@ -6,7 +6,7 @@ library:
   id: additive-synthesis
   type: concept
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 subjects: [number, computation]
 

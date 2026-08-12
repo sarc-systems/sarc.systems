@@ -7,7 +7,7 @@ library:
   id: departure-from-the-northern-wasteland
   type: album
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - {name: "Michael Hoenig", role: artist, ref: michael-hoenig}

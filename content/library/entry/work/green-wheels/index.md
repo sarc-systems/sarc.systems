@@ -7,7 +7,7 @@ library:
   id: "green-wheels"
   type: album
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - {name: "Merzbow", role: artist, ref: merzbow}

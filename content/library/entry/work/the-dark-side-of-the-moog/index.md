@@ -7,7 +7,7 @@ library:
   id: the-dark-side-of-the-moog
   type: album
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - {name: "Klaus Schulze", role: artist, ref: klaus-schulze}

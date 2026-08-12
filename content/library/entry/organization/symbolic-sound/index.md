@@ -6,7 +6,7 @@ library:
   id: symbolic-sound
   type: organization
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 subjects: [computation]
 

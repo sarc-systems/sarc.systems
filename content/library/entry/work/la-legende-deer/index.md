@@ -7,7 +7,7 @@ library:
   id: la-legende-deer
   type: composition
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - name: "Iannis Xenakis"

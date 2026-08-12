@@ -6,7 +6,7 @@ library:
   id: monde-bruits
   type: group
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - {name: "Shohei Iwasaki", role: artist}

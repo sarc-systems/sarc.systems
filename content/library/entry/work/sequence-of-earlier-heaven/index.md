@@ -7,7 +7,7 @@ library:
   id: sequence-of-earlier-heaven
   type: album
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - {name: "Barry Truax", role: composer, ref: barry-truax}

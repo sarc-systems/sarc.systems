@@ -7,7 +7,7 @@ library:
   id: "the-mighty-warriors-live-in-antwerp"
   type: album
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - {name: "Mal Waldron", role: performer, ref: mal-waldron}

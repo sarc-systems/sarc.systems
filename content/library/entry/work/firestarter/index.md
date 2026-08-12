@@ -7,7 +7,7 @@ library:
   id: firestarter
   type: album
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - {name: "Tangerine Dream", role: artist, ref: tangerine-dream}

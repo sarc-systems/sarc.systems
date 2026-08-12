@@ -7,7 +7,7 @@ library:
   id: "the-human-race-was-restored-to-life-repeatedly"
   type: album
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - {name: "Government Alpha", role: artist, ref: government-alpha}

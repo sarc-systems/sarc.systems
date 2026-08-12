@@ -7,7 +7,7 @@ library:
   id: beauty-in-the-beast
   type: album
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - name: "Wendy Carlos"

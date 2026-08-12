@@ -7,7 +7,7 @@ library:
   id: pepsi-pavilion
   type: installation
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - {name: "Robert Breer", role: artist}

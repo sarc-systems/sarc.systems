@@ -6,7 +6,7 @@ library:
   id: arp-instruments
   type: organization
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - {name: "Alan R. Pearlman", role: founder, ref: alan-pearlman}

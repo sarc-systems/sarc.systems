@@ -6,7 +6,7 @@ library:
   id: minimoog-model-d
   type: instrument
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - name: "Robert Moog"

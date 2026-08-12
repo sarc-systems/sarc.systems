@@ -6,7 +6,7 @@ library:
   id: studio-panaroma
   type: organization
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - {name: "Flo Menezes", role: founder, ref: flo-menezes}

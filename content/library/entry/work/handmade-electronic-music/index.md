@@ -7,7 +7,7 @@ library:
   id: handmade-electronic-music
   type: book
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - name: "Nicolas Collins"

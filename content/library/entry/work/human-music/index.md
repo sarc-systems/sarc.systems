@@ -7,7 +7,7 @@ library:
   id: human-music
   type: album
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - name: "Jon Appleton"

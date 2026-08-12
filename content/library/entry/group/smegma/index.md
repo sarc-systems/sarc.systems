@@ -6,7 +6,7 @@ library:
   id: smegma
   type: group
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - {name: "Ju Suk Reet Meate", role: performer}

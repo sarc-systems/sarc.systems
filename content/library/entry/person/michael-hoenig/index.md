@@ -7,7 +7,7 @@ library:
   id: michael-hoenig
   type: person
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators: []
 

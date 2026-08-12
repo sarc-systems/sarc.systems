@@ -7,7 +7,7 @@ library:
   id: "station-70"
   type: album
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - {name: "Masayuki Takayanagi", role: performer, ref: masayuki-takayanagi}

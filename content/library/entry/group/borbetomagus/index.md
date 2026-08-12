@@ -7,7 +7,7 @@ library:
   id: borbetomagus
   type: group
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - {name: "Don Dietrich", role: performer}

@@ -6,7 +6,7 @@ library:
   id: american-tapes
   type: organization
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - {name: "John Olson", role: founder}

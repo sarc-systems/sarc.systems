@@ -7,7 +7,7 @@ library:
   id: "ppg-waveterm"
   type: hardware
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - {name: "Wolfgang Palm", role: designer, ref: wolfgang-palm}

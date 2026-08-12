@@ -7,7 +7,7 @@ library:
   id: music-and-trance
   type: book
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - name: "Gilbert Rouget"

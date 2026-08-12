@@ -6,7 +6,7 @@ library:
   id: open-sound-control
   type: protocol
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 subjects: [computation, language]
 

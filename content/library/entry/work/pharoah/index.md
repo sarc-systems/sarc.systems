@@ -7,7 +7,7 @@ library:
   id: pharoah
   type: album
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - name: "Pharoah Sanders"

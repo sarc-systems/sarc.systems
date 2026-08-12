@@ -6,7 +6,7 @@ library:
   id: gruppo-di-improvvisazione-nuova-consonanza
   type: group
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - name: "Franco Evangelisti"

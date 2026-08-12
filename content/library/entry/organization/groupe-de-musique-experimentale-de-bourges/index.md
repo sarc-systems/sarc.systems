@@ -6,7 +6,7 @@ library:
   id: groupe-de-musique-experimentale-de-bourges
   type: organization
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - name: "Françoise Barrière"

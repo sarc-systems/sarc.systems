@@ -7,7 +7,7 @@ library:
   id: "eclipse-takayanagi"
   type: album
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - {name: "Masayuki Takayanagi", role: performer, ref: masayuki-takayanagi}

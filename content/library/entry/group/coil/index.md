@@ -6,7 +6,7 @@ library:
   id: coil
   type: group
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - {name: "John Balance", role: performer}

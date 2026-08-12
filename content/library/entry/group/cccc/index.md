@@ -6,7 +6,7 @@ library:
   id: cccc
   type: group
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - {name: "Mayuko Hino", role: performer}

@@ -6,7 +6,7 @@ library:
   id: wave-notation
   type: organization
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 subjects: [space, perception]
 

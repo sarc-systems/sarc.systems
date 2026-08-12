@@ -7,7 +7,7 @@ library:
   id: le-triedre-fertile
   type: album
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - name: "Pierre Schaeffer"

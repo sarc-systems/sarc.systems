@@ -4,12 +4,16 @@
 {{- /* An Entry's canonical page is Collection-independent — it may belong
        to several Collections at once (CLAUDE.md § Library "Collection
        membership"), so there is no single "this entry's Collection" to
-       breadcrumb into. $memberships is every registered Collection this
-       Entry actually belongs to (registry order); $filterRoot is a
-       pragmatic (not editorially "primary") choice of where the Type/
-       Subject/Origin metadata links below should point — the entry's
-       first listed membership's own Catalog, or nothing if it somehow has
-       none. */ -}}
+       breadcrumb into exclusively. $memberships is every registered
+       Collection this Entry actually belongs to (registry order) — the
+       eyebrow below renders ALL of them as a real breadcrumb trail
+       (Library / Research / Music / …), never guessing at "the" one the
+       visitor arrived from (that would be exactly the query-string/JS
+       trick CLAUDE.md rules out) — same trail for every visitor,
+       regardless of path in. $filterRoot is a pragmatic (not editorially
+       "primary") choice of where the Type/Subject/Origin metadata links
+       further down should point — the entry's first listed membership's
+       own Catalog, or nothing if it somehow has none. */ -}}
 {{- $ctx := partial "library-page-context.html" . -}}
 {{- $lib := $ctx.lib -}}
 {{- $memberships := partial "library-entry-collections.html" . -}}
@@ -32,10 +36,13 @@
 <article class="entry-full library-single" data-library-id="{{ .Params.library.id }}">
   <div class="wrap">
     <header class="entry-header">
-      {{- /* A plain link to the meta-Collection root — never a deep link
-             into any one membership, since a canonical Entry page stays
-             context-independent (CLAUDE.md § Library "Entry page"). */}}
-      <p class="eyebrow"><a href="{{ "/library/" | relURL }}">Library</a>{{ with $typeLabel }} <span class="dot" aria-hidden="true">·</span> {{ . }}{{ end }}</p>
+      {{- /* Real breadcrumb trail: Library, then every Collection this
+             Entry belongs to (each a link to that Collection's own root),
+             then the type label. Not a contextual "where you came from"
+             guess — the same trail for every visitor, built from the
+             Entry's own real membership data (the same list the
+             "Collections" metadata row below shows). */}}
+      <p class="eyebrow"><a href="{{ "/library/" | relURL }}">Library</a>{{ range $memberships }} <span class="dot" aria-hidden="true">·</span> <a href="{{ printf "/library/%s/" .id | relURL }}">{{ .title }}</a>{{ end }}{{ with $typeLabel }} <span class="dot" aria-hidden="true">·</span> {{ . }}{{ end }}</p>
       <h1 class="entry-full-title">{{ .Title }}</h1>
       {{- with .Params.summary }}<p class="entry-lede">{{ . }}</p>{{ end }}
     </header>

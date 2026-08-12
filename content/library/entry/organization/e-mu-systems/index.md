@@ -6,7 +6,7 @@ library:
   id: e-mu-systems
   type: organization
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - {name: "Dave Rossum", role: founder, ref: dave-rossum}

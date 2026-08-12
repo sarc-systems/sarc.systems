@@ -6,7 +6,7 @@ library:
   id: openmusic
   type: software
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - {name: "IRCAM", role: developer, ref: ircam}

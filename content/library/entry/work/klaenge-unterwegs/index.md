@@ -7,7 +7,7 @@ library:
   id: klaenge-unterwegs
   type: composition
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - name: "Herbert Brün"

@@ -6,7 +6,7 @@ library:
   id: ems-vcs3
   type: instrument
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - name: "Peter Zinovieff"

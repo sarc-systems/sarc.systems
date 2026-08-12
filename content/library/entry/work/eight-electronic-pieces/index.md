@@ -7,7 +7,7 @@ library:
   id: eight-electronic-pieces
   type: album
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - name: "Tod Dockstader"

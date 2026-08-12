@@ -6,7 +6,7 @@ library:
   id: line-imprint
   type: organization
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - {name: "Richard Chartier", role: founder, ref: richard-chartier}

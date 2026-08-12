@@ -6,7 +6,7 @@ library:
   id: serge-modular-music-systems
   type: organization
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 subjects: [instruments]
 

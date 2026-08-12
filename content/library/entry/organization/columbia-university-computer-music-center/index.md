@@ -6,7 +6,7 @@ library:
   id: columbia-university-computer-music-center
   type: organization
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - name: "Brad Garton"

@@ -6,7 +6,7 @@ library:
   id: upic
   type: instrument
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - name: "Patrick Saint-Jean"

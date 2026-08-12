@@ -6,7 +6,7 @@ library:
   id: espace-de-projection
   type: place
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 subjects: [space]
 

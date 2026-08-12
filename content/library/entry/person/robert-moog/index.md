@@ -6,7 +6,7 @@ library:
   id: robert-moog
   type: person
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 subjects: [instruments]
 

@@ -7,7 +7,7 @@ library:
   id: fish-that-sparkling-bubble
   type: album
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - {name: "Borbetomagus", role: performer, ref: borbetomagus}

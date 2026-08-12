@@ -6,7 +6,7 @@ library:
   id: throbbing-gristle
   type: group
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - {name: "Genesis P-Orridge", role: performer, ref: genesis-p-orridge}

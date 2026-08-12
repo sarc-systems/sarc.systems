@@ -7,7 +7,7 @@ library:
   id: "hepatopolitika"
   type: album
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - {name: "K2", role: artist, ref: k2}

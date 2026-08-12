@@ -6,7 +6,7 @@ library:
   id: roland-kayn
   type: person
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 subjects: [morphogenesis, dynamics, cybernetics]
 

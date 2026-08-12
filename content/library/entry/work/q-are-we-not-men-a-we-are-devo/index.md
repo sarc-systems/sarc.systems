@@ -7,7 +7,7 @@ library:
   id: q-are-we-not-men-a-we-are-devo
   type: album
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - {name: "Devo", role: artist, ref: devo}

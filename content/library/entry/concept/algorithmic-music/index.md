@@ -6,7 +6,7 @@ library:
   id: algorithmic-music
   type: concept
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - {name: "Lejaren Hiller", role: researcher, ref: lejaren-hiller}

@@ -7,7 +7,7 @@ library:
   id: pulsation
   type: album
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - name: "Masahiko Togashi"

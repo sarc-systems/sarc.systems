@@ -6,7 +6,7 @@ library:
   id: danish-radio-electronic-music-studio
   type: organization
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - name: "Else Marie Pade"

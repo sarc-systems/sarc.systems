@@ -7,7 +7,7 @@ library:
   id: trio-for-strings
   type: composition
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - name: "La Monte Young"

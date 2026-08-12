@@ -6,7 +6,7 @@ library:
   id: eventide-h910
   type: hardware
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - name: "Tony Agnello"

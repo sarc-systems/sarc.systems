@@ -7,7 +7,7 @@ library:
   id: on-land
   type: album
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - name: "Brian Eno"

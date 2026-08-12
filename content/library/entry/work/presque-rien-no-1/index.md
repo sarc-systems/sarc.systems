@@ -7,7 +7,7 @@ library:
   id: presque-rien-no-1
   type: composition
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - name: "Luc Ferrari"

@@ -6,7 +6,7 @@ library:
   id: synclavier-regen
   type: instrument
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - name: "Synclavier Digital"

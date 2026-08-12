@@ -7,7 +7,7 @@ library:
   id: deluxe-harmonia
   type: album
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - {name: "Harmonia", role: artist, ref: harmonia}

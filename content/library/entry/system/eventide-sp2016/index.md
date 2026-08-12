@@ -6,7 +6,7 @@ library:
   id: eventide-sp2016
   type: hardware
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - name: "Eventide"

@@ -6,7 +6,7 @@ library:
   id: albert-ayler
   type: person
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 subjects: [perception]
 

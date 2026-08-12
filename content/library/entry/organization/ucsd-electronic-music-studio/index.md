@@ -6,7 +6,7 @@ library:
   id: ucsd-electronic-music-studio
   type: organization
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - name: "Pauline Oliveros"

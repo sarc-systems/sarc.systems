@@ -6,7 +6,7 @@ library:
   id: yamaha-dx1
   type: instrument
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - {name: "John Chowning", role: researcher, ref: john-chowning}

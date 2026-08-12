@@ -6,7 +6,7 @@ library:
   id: erkki-kurenniemi
   type: person
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 subjects: [cybernetics, computation, instruments, feedback]
 

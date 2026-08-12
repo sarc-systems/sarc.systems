@@ -7,7 +7,7 @@ library:
   id: silver-apples-of-the-moon
   type: album
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - name: "Morton Subotnick"

@@ -6,7 +6,7 @@ library:
   id: polish-radio-experimental-studio
   type: organization
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - name: "Józef Patkowski"

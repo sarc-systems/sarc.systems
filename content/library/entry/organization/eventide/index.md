@@ -6,7 +6,7 @@ library:
   id: eventide
   type: organization
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 subjects: [instruments]
 

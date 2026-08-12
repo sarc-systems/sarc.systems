@@ -7,7 +7,7 @@ library:
   id: improvisation-its-nature-and-practice
   type: book
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - {name: "Derek Bailey", role: author, ref: derek-bailey}

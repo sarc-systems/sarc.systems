@@ -6,7 +6,7 @@ library:
   id: macronympha
   type: group
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - {name: "Joseph Roemer", role: artist}

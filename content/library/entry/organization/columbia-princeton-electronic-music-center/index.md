@@ -6,7 +6,7 @@ library:
   id: columbia-princeton-electronic-music-center
   type: organization
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - name: "Vladimir Ussachevsky"

@@ -7,7 +7,7 @@ library:
   id: music-for-nine-post-cards
   type: album
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - name: "Hiroshi Yoshimura"

@@ -6,7 +6,7 @@ library:
   id: wavetable-synthesis
   type: concept
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 subjects: [time, computation, memory]
 

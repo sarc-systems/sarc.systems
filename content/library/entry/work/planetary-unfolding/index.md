@@ -7,7 +7,7 @@ library:
   id: planetary-unfolding
   type: album
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - name: "Michael Stearns"

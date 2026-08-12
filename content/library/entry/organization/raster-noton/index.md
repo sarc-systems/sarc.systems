@@ -6,7 +6,7 @@ library:
   id: raster-noton
   type: organization
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - name: "Olaf Bender"

@@ -7,7 +7,7 @@ library:
   id: "cosmos-from-diode-ladder-filter"
   type: album
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - {name: "Space Machine", role: artist, ref: space-machine}

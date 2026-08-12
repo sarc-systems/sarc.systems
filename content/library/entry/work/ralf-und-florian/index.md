@@ -7,7 +7,7 @@ library:
   id: ralf-und-florian
   type: album
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - {name: "Kraftwerk", role: artist, ref: kraftwerk}

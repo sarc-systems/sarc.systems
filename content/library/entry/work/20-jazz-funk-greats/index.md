@@ -7,7 +7,7 @@ library:
   id: 20-jazz-funk-greats
   type: album
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - name: "Throbbing Gristle"

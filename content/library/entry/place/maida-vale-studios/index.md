@@ -6,7 +6,7 @@ library:
   id: maida-vale-studios
   type: place
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 subjects: []
 

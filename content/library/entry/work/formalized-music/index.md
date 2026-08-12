@@ -7,7 +7,7 @@ library:
   id: formalized-music
   type: book
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - name: "Iannis Xenakis"

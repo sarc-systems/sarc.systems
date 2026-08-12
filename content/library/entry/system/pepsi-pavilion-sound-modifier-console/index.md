@@ -7,7 +7,7 @@ library:
   id: pepsi-pavilion-sound-modifier-console
   type: interface
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - {name: "David Tudor", role: designer, ref: david-tudor}

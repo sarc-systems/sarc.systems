@@ -6,7 +6,7 @@ library:
   id: wolf-eyes
   type: group
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - {name: "Nate Young", role: founder}

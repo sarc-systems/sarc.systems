@@ -7,7 +7,7 @@ library:
   id: trilogie-de-la-mort
   type: album
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - name: "Éliane Radigue"

@@ -6,7 +6,7 @@ library:
   id: ems-putney
   type: place
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 subjects: [computation, instruments]
 

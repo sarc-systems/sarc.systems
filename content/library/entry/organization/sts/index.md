@@ -6,7 +6,7 @@ library:
   id: sts
   type: organization
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - name: "Rex Probe"

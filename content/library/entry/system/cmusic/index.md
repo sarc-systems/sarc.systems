@@ -6,7 +6,7 @@ library:
   id: cmusic
   type: language
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - name: "F. Richard Moore"

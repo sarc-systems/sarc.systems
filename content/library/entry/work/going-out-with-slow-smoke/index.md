@@ -7,7 +7,7 @@ library:
   id: going-out-with-slow-smoke
   type: album
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - name: "Ron Kuivila"

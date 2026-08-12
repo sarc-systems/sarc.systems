@@ -7,7 +7,7 @@ library:
   id: gaku-no-michi
   type: album
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - name: "Jean-Claude Eloy"

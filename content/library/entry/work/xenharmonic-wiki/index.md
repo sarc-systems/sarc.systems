@@ -6,7 +6,7 @@ library:
   id: xenharmonic-wiki
   type: website
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - name: "Xenharmonic community"

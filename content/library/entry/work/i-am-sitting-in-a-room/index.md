@@ -7,7 +7,7 @@ library:
   id: i-am-sitting-in-a-room
   type: composition
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - name: "Alvin Lucier"

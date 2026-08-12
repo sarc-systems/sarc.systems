@@ -7,7 +7,7 @@ library:
   id: erstwhile-records
   type: organization
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - {name: "Jon Abbey", role: founder}

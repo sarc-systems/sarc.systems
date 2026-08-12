@@ -6,7 +6,7 @@ library:
   id: bela-gem-multi
   type: hardware
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - name: "Augmented Instruments"

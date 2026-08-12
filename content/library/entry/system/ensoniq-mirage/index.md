@@ -6,7 +6,7 @@ library:
   id: ensoniq-mirage
   type: instrument
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - {name: "Ensoniq", role: manufacturer, ref: ensoniq}

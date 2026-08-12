@@ -7,7 +7,7 @@ library:
   id: "school-days-1963"
   type: album
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - {name: "Steve Lacy", role: performer, ref: steve-lacy}

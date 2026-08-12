@@ -6,7 +6,7 @@ library:
   id: laurie-spiegel
   type: person
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 subjects: [time, computation, instruments]
 

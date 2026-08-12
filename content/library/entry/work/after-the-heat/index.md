@@ -7,7 +7,7 @@ library:
   id: after-the-heat
   type: album
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - {name: "Brian Eno", role: artist, ref: brian-eno}

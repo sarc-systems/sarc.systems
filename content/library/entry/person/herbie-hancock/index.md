@@ -6,7 +6,7 @@ library:
   id: herbie-hancock
   type: person
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 subjects: [computation, instruments]
 

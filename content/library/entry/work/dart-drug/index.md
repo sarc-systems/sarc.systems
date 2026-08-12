@@ -7,7 +7,7 @@ library:
   id: dart-drug
   type: album
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - {name: "Derek Bailey", role: performer, ref: derek-bailey}

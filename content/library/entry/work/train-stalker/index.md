@@ -7,7 +7,7 @@ library:
   id: train-stalker
   type: composition
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - name: "Eduard Artemyev"

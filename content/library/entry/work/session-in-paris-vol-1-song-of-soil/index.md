@@ -7,7 +7,7 @@ library:
   id: session-in-paris-vol-1-song-of-soil
   type: album
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - {name: "Masahiko Togashi", role: artist, ref: masahiko-togashi}

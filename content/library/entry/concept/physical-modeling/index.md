@@ -6,7 +6,7 @@ library:
   id: physical-modeling
   type: concept
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 subjects: [dynamics, computation, instruments]
 

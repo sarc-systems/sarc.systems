@@ -6,7 +6,7 @@ library:
   id: incus-records
   type: organization
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - {name: "Derek Bailey", role: founder, ref: derek-bailey}

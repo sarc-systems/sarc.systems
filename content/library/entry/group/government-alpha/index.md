@@ -6,7 +6,7 @@ library:
   id: government-alpha
   type: group
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - {name: "Yasutoshi Yoshida", role: artist}

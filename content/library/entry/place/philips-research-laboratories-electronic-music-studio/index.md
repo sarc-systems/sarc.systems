@@ -6,7 +6,7 @@ library:
   id: philips-research-laboratories-electronic-music-studio
   type: place
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 subjects: []
 

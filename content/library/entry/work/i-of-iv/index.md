@@ -7,7 +7,7 @@ library:
   id: i-of-iv
   type: composition
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - name: "Pauline Oliveros"

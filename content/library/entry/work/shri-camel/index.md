@@ -7,7 +7,7 @@ library:
   id: shri-camel
   type: album
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - name: "Terry Riley"

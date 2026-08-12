@@ -6,7 +6,7 @@ library:
   id: eventide-h3000
   type: hardware
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - name: "Eventide"

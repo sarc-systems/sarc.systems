@@ -6,7 +6,7 @@ library:
   id: waldorf-microwave-xt
   type: instrument
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - name: "Waldorf Music"

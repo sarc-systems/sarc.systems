@@ -7,7 +7,7 @@ library:
   id: reminded-by-the-instruments
   type: book
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - name: "You Nakai"

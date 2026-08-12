@@ -7,7 +7,7 @@ library:
   id: mu-first-part
   type: album
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - name: "Don Cherry"

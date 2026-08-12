@@ -6,7 +6,7 @@ library:
   id: ems-synthi-aks
   type: instrument
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - name: "EMS"

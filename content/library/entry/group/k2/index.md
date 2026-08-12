@@ -6,7 +6,7 @@ library:
   id: k2
   type: group
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - {name: "Kimihide Kusafuka", role: artist}

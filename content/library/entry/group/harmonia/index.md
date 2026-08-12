@@ -6,7 +6,7 @@ library:
   id: harmonia
   type: group
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - {name: "Michael Rother", role: performer}

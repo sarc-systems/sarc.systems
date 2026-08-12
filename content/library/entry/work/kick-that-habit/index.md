@@ -7,7 +7,7 @@ library:
   id: kick-that-habit
   type: film
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - name: "Peter Liechti"

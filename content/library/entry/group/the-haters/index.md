@@ -6,7 +6,7 @@ library:
   id: the-haters
   type: group
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - {name: "GX Jupitter-Larsen", role: artist, ref: gx-jupitter-larsen}

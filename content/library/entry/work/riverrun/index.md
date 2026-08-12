@@ -7,7 +7,7 @@ library:
   id: riverrun
   type: composition
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - name: "Barry Truax"

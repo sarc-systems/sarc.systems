@@ -7,7 +7,7 @@ library:
   id: "neurotten"
   type: album
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - {name: "Pain Jerk", role: artist, ref: painjerk}

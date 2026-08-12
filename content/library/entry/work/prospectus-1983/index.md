@@ -7,7 +7,7 @@ library:
   id: "prospectus-1983"
   type: album
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - {name: "Steve Lacy", role: composer, ref: steve-lacy}

@@ -6,7 +6,7 @@ library:
   id: san-francisco-tape-music-center
   type: organization
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - name: "Ramon Sender"

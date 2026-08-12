@@ -6,7 +6,7 @@ library:
   id: gastr-del-sol
   type: group
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - {name: "David Grubbs", role: composer}

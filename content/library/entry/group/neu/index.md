@@ -7,7 +7,7 @@ library:
   id: neu
   type: group
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - {name: "Klaus Dinger", role: founder}

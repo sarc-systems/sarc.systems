@@ -6,7 +6,7 @@ library:
   id: studio-d-essai
   type: organization
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - name: "Pierre Schaeffer"

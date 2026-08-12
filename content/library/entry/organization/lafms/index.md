@@ -6,7 +6,7 @@ library:
   id: lafms
   type: organization
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - {name: "Chip Chapman", role: founder}

@@ -6,7 +6,7 @@ library:
   id: tonto
   type: instrument
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - {name: "Malcolm Cecil", role: designer}

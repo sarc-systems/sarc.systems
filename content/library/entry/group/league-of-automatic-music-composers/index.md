@@ -6,7 +6,7 @@ library:
   id: league-of-automatic-music-composers
   type: group
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - {name: "John Bischoff", role: founder}

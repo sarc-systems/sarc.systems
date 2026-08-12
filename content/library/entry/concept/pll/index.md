@@ -6,7 +6,7 @@ library:
   id: pll
   type: concept
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - {name: "Henri de Bellescize", role: researcher}

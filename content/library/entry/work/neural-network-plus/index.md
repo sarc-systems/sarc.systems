@@ -7,7 +7,7 @@ library:
   id: neural-network-plus
   type: composition
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - name: "David Tudor"

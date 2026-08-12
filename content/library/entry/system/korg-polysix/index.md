@@ -6,7 +6,7 @@ library:
   id: korg-polysix
   type: instrument
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - {name: "Korg", role: manufacturer, ref: korg}

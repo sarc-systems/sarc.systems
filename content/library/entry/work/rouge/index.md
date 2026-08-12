@@ -7,7 +7,7 @@ library:
   id: rouge
   type: composition
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - name: "Jean Piché"

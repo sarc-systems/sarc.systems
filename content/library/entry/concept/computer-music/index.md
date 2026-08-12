@@ -6,7 +6,7 @@ library:
   id: computer-music
   type: concept
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 subjects: [computation]
 

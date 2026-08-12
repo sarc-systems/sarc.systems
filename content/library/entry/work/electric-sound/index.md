@@ -7,7 +7,7 @@ library:
   id: "electric-sound"
   type: album
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - {name: "Sonic Arts Union", role: artist, ref: sonic-arts-union}

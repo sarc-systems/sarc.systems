@@ -6,7 +6,7 @@ library:
   id: merzbow
   type: group
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - {name: "Masami Akita", role: founder, ref: masami-akita}

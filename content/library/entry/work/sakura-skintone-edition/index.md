@@ -7,7 +7,7 @@ library:
   id: sakura-skintone-edition
   type: album
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - name: "Susumu Yokota"

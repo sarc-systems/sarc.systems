@@ -7,7 +7,7 @@ library:
   id: 62-eulengasse
   type: album
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - name: "Pete Namlook"

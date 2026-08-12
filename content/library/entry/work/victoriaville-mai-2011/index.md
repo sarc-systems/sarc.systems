@@ -7,7 +7,7 @@ library:
   id: "victoriaville-mai-2011"
   type: album
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - {name: "Richard Pinhas", role: artist, ref: richard-pinhas}

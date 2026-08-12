@@ -6,7 +6,7 @@ library:
   id: ans-synthesizer
   type: instrument
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - {name: "Yevgeny Murzin", role: designer}

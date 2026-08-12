@@ -6,7 +6,7 @@ library:
   id: midi-polyphonic-expression
   type: protocol
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 subjects: [computation, instruments, language]
 

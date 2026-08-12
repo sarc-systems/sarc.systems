@@ -6,7 +6,7 @@ library:
   id: serialism
   type: concept
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - {name: "Arnold Schoenberg", role: researcher}

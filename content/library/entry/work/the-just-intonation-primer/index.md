@@ -7,7 +7,7 @@ library:
   id: the-just-intonation-primer
   type: book
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - name: "David B. Doty"

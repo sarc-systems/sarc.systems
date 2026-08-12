@@ -6,7 +6,7 @@ library:
   id: adrenalinn
   type: hardware
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - {name: "Roger Linn", role: designer, ref: roger-linn}

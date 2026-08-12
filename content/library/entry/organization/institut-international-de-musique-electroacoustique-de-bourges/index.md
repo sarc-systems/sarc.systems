@@ -6,7 +6,7 @@ library:
   id: institut-international-de-musique-electroacoustique-de-bourges
   type: organization
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 subjects: []
 

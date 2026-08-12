@@ -6,7 +6,7 @@ library:
   id: buchla-and-associates
   type: organization
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - {name: "Don Buchla", role: founder, ref: don-buchla}

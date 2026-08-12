@@ -7,7 +7,7 @@ library:
   id: biofeedback-and-the-arts
   type: book
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - name: "David Rosenboom"

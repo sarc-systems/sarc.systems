@@ -6,7 +6,7 @@ library:
   id: moog-music
   type: organization
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 subjects: [instruments]
 

@@ -7,7 +7,7 @@ library:
   id: bart
   type: album
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - {name: "Thomas Lehn", role: artist, ref: thomas-lehn}

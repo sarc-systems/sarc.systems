@@ -6,7 +6,7 @@ library:
   id: frequency-modulation
   type: concept
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - name: "John Chowning"

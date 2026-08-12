@@ -6,7 +6,7 @@ library:
   id: roland-corporation
   type: organization
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - {name: "Ikutaro Kakehashi", role: founder, ref: ikutaro-kakehashi}

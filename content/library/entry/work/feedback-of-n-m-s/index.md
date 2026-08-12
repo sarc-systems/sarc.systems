@@ -7,7 +7,7 @@ library:
   id: "feedback-of-n-m-s"
   type: album
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - {name: "Incapacitants", role: artist, ref: incapacitants}

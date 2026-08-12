@@ -6,7 +6,7 @@ library:
   id: din-sync
   type: protocol
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 subjects: [instruments, time]
 

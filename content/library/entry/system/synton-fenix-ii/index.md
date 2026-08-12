@@ -6,7 +6,7 @@ library:
   id: synton-fenix-ii
   type: instrument
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - name: "Bert Vermeulen"

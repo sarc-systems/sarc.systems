@@ -6,7 +6,7 @@ library:
   id: fairlight-instruments
   type: organization
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 subjects: [instruments]
 

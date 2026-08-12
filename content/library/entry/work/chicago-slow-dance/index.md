@@ -7,7 +7,7 @@ library:
   id: "chicago-slow-dance"
   type: album
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - {name: "George Lewis", role: artist, ref: george-lewis}

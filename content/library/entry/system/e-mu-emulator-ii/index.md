@@ -6,7 +6,7 @@ library:
   id: e-mu-emulator-ii
   type: instrument
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - name: "Dave Rossum"

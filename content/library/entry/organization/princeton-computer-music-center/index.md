@@ -6,7 +6,7 @@ library:
   id: princeton-computer-music-center
   type: organization
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - name: "Godfrey Winham"

@@ -6,7 +6,7 @@ library:
   id: les-ateliers-upic
   type: organization
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 subjects: [computation]
 

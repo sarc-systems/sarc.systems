@@ -6,7 +6,7 @@ library:
   id: music-v
   type: language
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - name: "Max Mathews"

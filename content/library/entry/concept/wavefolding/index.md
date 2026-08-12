@@ -6,7 +6,7 @@ library:
   id: wavefolding
   type: concept
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 subjects: [form, computation]
 

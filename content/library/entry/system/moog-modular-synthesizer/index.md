@@ -6,7 +6,7 @@ library:
   id: moog-modular-synthesizer
   type: instrument
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - name: "Robert Moog"

@@ -7,7 +7,7 @@ library:
   id: erosphere
   type: composition
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - {name: "François Bayle", role: composer, ref: francois-bayle}

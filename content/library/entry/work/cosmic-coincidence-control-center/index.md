@@ -7,7 +7,7 @@ library:
   id: "cosmic-coincidence-control-center"
   type: album
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - {name: "C.C.C.C.", role: artist, ref: cccc}

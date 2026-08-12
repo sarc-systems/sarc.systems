@@ -7,7 +7,7 @@ library:
   id: music-for-solo-performer
   type: composition
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - name: "Alvin Lucier"

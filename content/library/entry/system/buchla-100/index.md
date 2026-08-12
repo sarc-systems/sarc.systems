@@ -6,7 +6,7 @@ library:
   id: buchla-100
   type: instrument
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - name: "Don Buchla"

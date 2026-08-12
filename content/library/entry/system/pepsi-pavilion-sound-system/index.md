@@ -7,7 +7,7 @@ library:
   id: pepsi-pavilion-sound-system
   type: system
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - {name: "David Tudor", role: designer, ref: david-tudor}

@@ -6,7 +6,7 @@ library:
   id: university-of-illinois-experimental-music-studios
   type: organization
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - name: "Lejaren Hiller"

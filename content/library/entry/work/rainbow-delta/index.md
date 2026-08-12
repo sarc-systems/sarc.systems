@@ -7,7 +7,7 @@ library:
   id: rainbow-delta
   type: album
   sarc_work: false
-  collections: [research, music]
+  collections: [music]
 
 creators:
   - {name: "Patrick Gleeson", role: artist, ref: patrick-gleeson}
