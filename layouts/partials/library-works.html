@@ -31,15 +31,16 @@
       {{- if $credited -}}
         {{- $srcType := "" }}{{ with $p.Params.library }}{{ $srcType = .type }}{{ end -}}
         {{- $pCtx := partial "library-page-context.html" $p -}}
+        {{- $entry := dict "page" $p "coll" $pCtx.coll -}}
         {{- if in (slice "group" "organization") (index $pCtx.pt.typeOf $srcType) -}}
-          {{- $groups = $groups | append $p -}}
+          {{- $groups = $groups | append $entry -}}
         {{- else -}}
-          {{- $works = $works | append $p -}}
+          {{- $works = $works | append $entry -}}
         {{- end -}}
       {{- end -}}
     {{- end -}}
   {{- end -}}
-  {{- with (uniq $works) -}}
+  {{- with $works -}}
   <section class="library-relations" aria-labelledby="works-h">
     <h2 id="works-h" class="library-relations-head">Works in the Library</h2>
     <ul class="library-records">
@@ -47,7 +48,7 @@
     </ul>
   </section>
   {{- end -}}
-  {{- with (uniq $groups) -}}
+  {{- with $groups -}}
   <section class="library-relations" aria-labelledby="groups-h">
     <h2 id="groups-h" class="library-relations-head">Related Groups in the Library</h2>
     <ul class="library-records">

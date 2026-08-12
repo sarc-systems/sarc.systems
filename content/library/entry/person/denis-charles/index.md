@@ -1,0 +1,29 @@
+---
+title: "Denis Charles"
+summary: "Virgin Islands-born drummer whose loose, melodic pulse shaped early free jazz."
+
+library:
+  id: denis-charles
+  type: person
+  sarc_work: false
+  collections: [research, music]
+
+subjects: [instruments, time]
+
+images:
+  - file: "denis-charles.jpg"
+    alt: "Denis Charles"
+    role: portrait
+
+access:
+  - label: "Official website"
+    kind: website
+    url: "https://www.denischarles.com"
+
+related:
+  - {ref: cecil-taylor, relation: collaborator-of}
+
+draft: false
+---
+
+Denis Charles (1933-1998) was a drummer born in St. Croix whose loose, melodic sense of pulse made him an early and longtime collaborator in Cecil Taylor's groups, and a foundational voice in free jazz drumming. In 1963 he recorded live with [Steve Lacy](/library/research/steve-lacy/)'s Monk-repertoire quartet, released in 1975 as *[School Days](/library/research/school-days-1963/)*.

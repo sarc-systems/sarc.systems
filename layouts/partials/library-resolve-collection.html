@@ -1,21 +1,37 @@
 {{- /* Resolve which registered Collection (data/library/collections.yaml)
-       a Library page belongs to — either a Collection's own section index
-       page or one of its Entries — by longest-prefix match of the page's
+       a Library page belongs to — by longest-prefix match of the page's
        content-relative File.Path against each Collection's source.section
-       (adapter: hugo only). One resolution mechanism used everywhere a
-       Library template needs "which Collection is this" — see
+       (adapter: hugo only). This still works unmodified for a Collection's
+       own section index page (content/library/<collection>/_index.md — the
+       only thing left under a Collection's own source.section since Entry
+       storage became Collection-independent) and for a legacy Collection
+       that still stores its Entries path-derived (field-kit — deliberately
+       left on the old model, see CLAUDE.md/docs/library-v2.md). See
        docs/library-v2.md § 2.2/§ 3/§ 11.
 
        Call: {{ $coll := partial "library-resolve-collection.html" . }}
 
        Returns the matched Collection dict (data/library/collections.yaml
-       shape). The Library root itself (content/library/_index.md — depth 1
-       under content/library/, i.e. no Collection claims it) is not a row in
-       the registry — it's the implicit meta-Collection, not one of its own
-       children — so it resolves to a synthetic dict with
-       `source.adapter: "root"` instead. Fails the build for anything else
-       under the library section that no Collection's source.section
-       prefixes (a genuinely orphaned page). */ -}}
+       shape). Two pages never match a registry row's source.section by
+       path, by design, and get a synthetic dict instead:
+
+       - The Library root itself (content/library/_index.md) — the implicit
+         meta-Collection, not one of its own children — gets
+         `source.adapter: "root"`.
+       - A genuine Entry stored under the flat, Collection-independent
+         content/library/entry/ tree (identified by carrying
+         `library.collections` in front matter, not by which Collection(s)
+         it actually belongs to — that's a many-to-many fact this function
+         doesn't resolve at all, see library-entry-collections.html) gets
+         `source.adapter: "entry"` and no `vocabulary` key, so
+         library-vocab.html falls back to the shared default
+         data/library.yaml — correct today since research/manuals/music all
+         share one vocabulary; a documented limitation, not yet solved for
+         a future Collection with its own vocabulary participating in
+         multi-membership (see CLAUDE.md § Library "Vocabulary").
+
+       Fails the build for anything else under the library section that
+       matches neither (a genuinely orphaned page). */ -}}
 {{- $page := . -}}
 {{- $registry := hugo.Data.library.collections -}}
 {{- $coll := dict -}}
@@ -32,6 +48,8 @@
            `views` shape a registry row carries (data/library/collections.yaml),
            supplied here because the root is not a registry row. */ -}}
     {{- $coll = dict "id" "library" "title" $page.Title "color" "" "source" (dict "adapter" "root" "section" "library") "views" (dict "enabled" (slice "catalog") "default" "catalog") -}}
+  {{- else if $page.Params.library.collections -}}
+    {{- $coll = dict "id" "" "title" "" "color" "" "source" (dict "adapter" "entry") -}}
   {{- else -}}
     {{- errorf "library-resolve-collection.html: no Collection in data/library/collections.yaml matches %q" $page.File.Path -}}
   {{- end -}}

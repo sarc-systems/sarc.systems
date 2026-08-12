@@ -83,6 +83,38 @@
     production: true
   related: []
 
+# "music" — the first Collection built on top of the global Entry model:
+# membership comes from each Entry's own `library.collections` list (see
+# docs/library-v2.md's updated Entry/Collection section), never from
+# storage path. Shares research's vocabulary (data/library.yaml — no
+# `vocabulary` field) since it isn't introducing new specific types yet.
+# Registered here with zero members; membership is applied only after a
+# separate, explicit editorial audit — see todo files for that process.
+- id: music
+  title: Music
+  description: >
+    Composers, musicians, groups, recordings, compositions, instruments,
+    and musical institutions and practices that matter to SARC's own
+    research — a curated musical corpus, not every Entry that happens to
+    be capable of producing sound.
+  color: tabriz-blue
+  source:
+    adapter: hugo
+    section: library/music
+  views:
+    enabled: [catalog, images, map]
+    default: map
+  projections:
+    default: all
+    list:
+      - id: all
+        title: All Entries
+        views: [catalog, images, map]
+        default_view: catalog
+  build:
+    production: true
+  related: []
+
 # "field-kit" — the Library v2 genericity fixture (docs/library-v2.md § 14,
 # todo_libv2.txt "Genericity proof"). Non-production test data proving the
 # shared engine isn't hardcoded to SARC Research: its own independent

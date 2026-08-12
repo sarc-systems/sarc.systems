@@ -1,17 +1,26 @@
 {{- /* One unified catalog record — a ruled row (never a card), optionally with a
        square thumbnail from the entry's first image. Carries data-* for the
        client filter and a data-library-id for stable identity (future comments).
-       Context is the entry page. Hidden by filtering via the `hidden` attribute.
+       Hidden by filtering via the `hidden` attribute.
        data-type carries the broad PUBLIC type (person/group/.../work/…) —
        what the Type filter actually matches against — while the visible
        kicker text below still names the SPECIFIC type (Release, Composition,
-       …); see CLAUDE.md § Library "Public Type vs Specific Type". */ -}}
-{{- $ctx := partial "library-page-context.html" . -}}
-{{- $coll := $ctx.coll -}}
-{{- $lib := $ctx.lib -}}
-{{- $pt := $ctx.pt -}}
-{{- $id := .Params.library.id -}}
-{{- $type := .Params.library.type -}}
+       …); see CLAUDE.md § Library "Public Type vs Specific Type".
+
+       Call: {{ partial "library-record.html" (dict "page" . "coll" $coll) }}
+       ($coll — the Collection whose list this row is being rendered inside,
+       not necessarily "the" Collection this Entry belongs to: an Entry with
+       multiple memberships renders once per Collection's own Catalog, and
+       its Shelf badges must reflect THAT Collection's own Shelves. Passed
+       in explicitly rather than re-derived, same pattern already used by
+       library-image-index.html/library-filters.html.) */ -}}
+{{- $page := .page -}}
+{{- $coll := .coll -}}
+{{- $lib := partial "library-vocab.html" $coll -}}
+{{- $vocabName := $coll.vocabulary | default "library" -}}
+{{- $pt := partialCached "library-public-types.html" $lib (printf "library-public-types-%s" $vocabName) -}}
+{{- $id := $page.Params.library.id -}}
+{{- $type := $page.Params.library.type -}}
 {{- $publicType := index $pt.typeOf $type -}}
 
 {{- $typeLabel := "" -}}{{ range $lib.types }}{{ if eq .type $type }}{{ $typeLabel = .label }}{{ end }}{{ end -}}
@@ -20,12 +29,12 @@
        etc. Suppressed only in this catalog-list kicker, not on the single
        entry page's own Type row. */ -}}
 {{- if in (slice "person" "group") $type }}{{ $typeLabel = "" }}{{ end -}}
-{{- $subs := .Params.subjects | default slice -}}
+{{- $subs := $page.Params.subjects | default slice -}}
 {{- $subLabels := slice -}}
 {{- range $subs }}{{ $s := . }}{{ range $lib.subjects }}{{ if eq .subject $s }}{{ $subLabels = $subLabels | append .label }}{{ end }}{{ end }}{{ end -}}
 
-{{- $creators := trim (partial "library-creators.html" (dict "page" . "sep" ", ")) " " -}}
-{{- $year := "" -}}{{ with .Params.year }}{{ $year = string . }}{{ else }}{{ if not .Date.IsZero }}{{ $year = string .Date.Year }}{{ end }}{{ end -}}
+{{- $creators := trim (partial "library-creators.html" (dict "page" $page "sep" ", ")) " " -}}
+{{- $year := "" -}}{{ with $page.Params.year }}{{ $year = string . }}{{ else }}{{ if not $page.Date.IsZero }}{{ $year = string $page.Date.Year }}{{ end }}{{ end -}}
 
 {{- /* primary image (first) → thumbnail, resolved once by the shared partial so
        the Catalog list and the Images view can never process it differently.
@@ -33,18 +42,18 @@
        top-aligned against a row whose real height comes from the text
        column, never stretched to match it — a per-image `anchor` sets both
        the Fill focus and the CSS object-position. */ -}}
-{{- $thumb := partial "library-thumbnail.html" . -}}
+{{- $thumb := partial "library-thumbnail.html" $page -}}
 {{- /* Collection identity color (docs/library-v2.md § 7) — set only on a
        root Collection-summary record (content/library/<id>/_index.md's own
        library.color); never present on an ordinary catalog entry, so this
        is a no-op everywhere else. */ -}}
-{{- $collColor := .Params.library.color -}}
+{{- $collColor := $page.Params.library.color -}}
 {{- /* Shelf membership (docs/library-v2.md § 5) — data-shelves mirrors
        data-type/data-subjects exactly, read by the same client filter. */ -}}
-{{- $shelves := partial "library-entry-shelves.html" (dict "page" . "coll" $coll) -}}
+{{- $shelves := partial "library-entry-shelves.html" (dict "page" $page "coll" $coll) -}}
 <li class="library-record{{ if $thumb.has }} has-thumb{{ end }}{{ if $collColor }} has-collection-color{{ end }}" data-library-id="{{ $id }}" data-type="{{ $publicType }}" data-subjects="{{ delimit $subs " " }}" data-shelves="{{ delimit $shelves " " }}" data-has-image="{{ if $thumb.has }}true{{ else }}false{{ end }}"{{ with $collColor }} style="--collection-color: var(--colorplan-{{ . }});"{{ end }}>
   {{- with $thumb.has }}
-  <a class="library-record-thumb" href="{{ $.RelPermalink }}" tabindex="-1" aria-hidden="true">
+  <a class="library-record-thumb" href="{{ $page.RelPermalink }}" tabindex="-1" aria-hidden="true">
     <img src="{{ $thumb.url }}" srcset="{{ $thumb.url }} 1x, {{ $thumb.url2x }} 2x"
          style="object-position: {{ $thumb.pos }}" alt="{{ $thumb.alt }}" width="240" height="240" loading="lazy" decoding="async">
   </a>
@@ -55,11 +64,11 @@
       {{- with $typeLabel }}{{ . | upper }}{{ end -}}
       {{- if $year }} <span class="dot" aria-hidden="true">·</span> {{ $year }}{{ end -}}
     </p>
-    <p class="library-record-title"><a href="{{ .RelPermalink }}">{{ .Title }}</a></p>
-    {{- with .Params.summary }}<p class="library-record-annotation">{{ . }}</p>{{ end -}}
+    <p class="library-record-title"><a href="{{ $page.RelPermalink }}">{{ $page.Title }}</a></p>
+    {{- with $page.Params.summary }}<p class="library-record-annotation">{{ . }}</p>{{ end -}}
     {{- with $subLabels }}
     <p class="library-record-subjects">{{ range $i, $l := . }}{{ if $i }} <span class="dot" aria-hidden="true">·</span> {{ end }}{{ $l | upper }}{{ end }}</p>
     {{- end }}
-    {{ partial "library-access.html" . }}
+    {{ partial "library-access.html" $page }}
   </div>
 </li>

@@ -79,18 +79,22 @@ routine agent read.
 Whenever you write or touch an entry's body prose — a new entry, an
 expanded bio, even a one-line edit — and that prose names another entry
 that already exists in the Library, link it:
-`[Name](/library/research/<slug>/)` (Library v2 — Collection-flat URLs, see
-CLAUDE.md § Library and `docs/library-v2.md`; `research` is the only
-Collection today), plain markdown, no shortcode (see e.g.
-`content/library/research/person/jon-hassell/index.md` or
-`content/library/research/work/ask-the-ages/index.md` for the existing
-pattern). Entries are stored under `content/library/research/<public-type>/
-<slug>/index.md` but always publish flat within their Collection at
-`/library/research/<slug>/` — the link target is always the flat
-Collection-relative URL, never the folder path. Confirm the target actually
-exists first (`find content/library/research -maxdepth 2 -type d -name
-<slug>` or check the focused report section) — don't guess a slug. This is
-separate from `creators`/`related` refs (which drive the knowledge graph)
+`[Name](/library/entry/<slug>/)` (global canonical Entry URL — Entry
+storage/identity is Collection-independent, see CLAUDE.md § Library
+"Collection membership" and `docs/library-v2.md`; `research`, `manuals`,
+and `music` are the production Collections today, each a many-to-many
+membership on the Entry, never a URL prefix), plain markdown, no shortcode
+(see e.g. `content/library/entry/person/jon-hassell/index.md` or
+`content/library/entry/work/ask-the-ages/index.md` for the existing
+pattern). Entries are stored under `content/library/entry/<public-type>/
+<slug>/index.md` (grouped by public type only, never by Collection) but
+always publish at the flat, Collection-independent
+`/library/entry/<slug>/` — the link target is always this canonical URL,
+never a Collection-prefixed one and never the folder path. Confirm the
+target actually exists first (`find content/library/entry -maxdepth 2
+-type d -name <slug>` or check the focused report section) — don't guess a
+slug. This is separate from `creators`/`related` refs (which drive the
+knowledge graph)
 and doesn't replace them where a real relationship exists — it's just
 making sure a reader can click through from prose to an entry that's
 already sitting right there unlinked. Don't force it: only link a name

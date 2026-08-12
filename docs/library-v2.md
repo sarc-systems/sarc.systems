@@ -1,12 +1,36 @@
 # Library v2 — architecture
 
-Status: **design doc, phased implementation in progress.** This document is
-the source of truth for Library v2 terminology, schema, and invariants. It
-supersedes the single-Collection description of the Library in CLAUDE.md
-until the migration (Phase 4) lands, at which point CLAUDE.md's Library
-section is rewritten to match and this note is removed. Work order:
+Status: **design doc.** This document is the source of truth for Library v2
+terminology, schema, and invariants; CLAUDE.md's Library section is
+authoritative wherever the two now conflict (in particular for anything
+introduced by the global-Entry-identity migration below — CLAUDE.md's
+"Collection membership" subsection is the current word on it). Work order:
 `todo_libv2.txt` (repo root, not tracked in git — treat as the originating
 brief; this doc is the binding spec going forward).
+
+**Global Entry identity (post-Phase-6 migration).** The original phased plan
+below (§§1–14) shipped a Collection registry with THREE production-eligible
+Collections — `research` (the original corpus), `manuals` (split out of
+`research`), and the non-production `field-kit` genericity fixture — each
+still on the single-owning-Collection model this doc originally specified: a
+Hugo-adapter Entry's Collection was derived from its storage path, and
+`library.id` was unique per-Collection. A subsequent migration broke that
+exclusivity for `research`/`manuals` (and added `music` as a fourth
+Collection) so one canonical Entry can belong to several Collections at
+once — see CLAUDE.md § Library "Collection membership" for the current
+model: Entry storage moved to a flat, Collection-independent
+`content/library/entry/<public-type>/<slug>/index.md` publishing at
+`/library/entry/<slug>/`; membership is an editorial `library.collections:
+[...]` front-matter list, validated against the registry; `library.id` is
+now globally unique across that flat corpus. **`field-kit` was deliberately
+left out of this migration** — it still uses the exact single-owning-
+Collection, path-derived model described in §§2–4 below, on purpose, as a
+frozen non-production fixture; every place this doc says a Hugo-adapter
+Entry's Collection is "derived from the path" is still literally true for
+`field-kit`, just no longer true for `research`/`manuals`/`music`. Treat
+§§1, 2.2, 2.3, 4.1, and 10.3 below as describing that now-legacy model
+(still accurate for `field-kit`) rather than the current one — CLAUDE.md is
+authoritative for the current one.
 
 Decisions in this document were made against the *actual* current
 implementation (Hugo 0.121+, `hugo.Data.*`, the existing `library-*`
@@ -26,7 +50,7 @@ by design.
 |---|---|
 | **Library** | The site's `/library/` root. Itself a Collection (the meta-Collection) whose Entries describe other Collections. |
 | **Collection** | A bounded corpus of Entries with its own schema, Facets, Shelves, Projections, Views, source, and one Color Plan identity color. |
-| **Entry** | One thing in a Collection's corpus. Exactly one canonical owning Collection. May sit on any number of Shelves. May reference Entries in other Collections. |
+| **Entry** | One globally canonical thing. Belongs to one or more Collections (`library.collections`, editorial, many-to-many — see CLAUDE.md § Library "Collection membership"; `field-kit` alone still uses the original exactly-one-owning-Collection, path-derived model below). May sit on any number of Shelves per Collection it belongs to. May reference Entries in other Collections. |
 | **Shelf** | A named, persistent, possibly-overlapping selection of Entries within one Collection. Does not own Entries. |
 | **Filter** | A temporary user constraint (today: Type, Subject — Collection-defined facets in v2). |
 | **Facet** | A filterable field a Collection declares (e.g. Research: type/subject; a future Music collection: format/year/label/genre). |
@@ -50,67 +74,74 @@ Collection corpus → Shelves → Filters → (future: Search) → Focus set
 
 ### 2.1 URL scheme
 
+Superseded for `research`/`manuals`/`music` — see the note at the top of
+this document. Current scheme:
+
 ```
 /library/                          Library root (meta-Collection)
-/library/research/                 the "research" Collection (today's corpus)
-/library/research/<slug>/          a research Entry
-/library/<collection>/             a future Collection
-/library/<collection>/<slug>/      a future Collection's Entry
+/library/research/                 the "research" Collection's own Catalog
+/library/manuals/                  the "manuals" Collection's own Catalog
+/library/music/                    the "music" Collection's own Catalog
+/library/entry/<slug>/             any Entry's one canonical URL, regardless
+                                    of which Collection(s) it belongs to
+/library/field-kit/                the field-kit fixture (unchanged, below)
+/library/field-kit/<slug>/         a field-kit Entry (unchanged, below)
 ```
+
+The scheme originally specified here — `/library/<collection>/<slug>/` per
+Entry — is what `field-kit` still uses, unmigrated.
 
 **No aliases from the pre-v2 flat URLs** (`/library/<slug>/`). Confirmed with
 the site owner: the site is live but not linked or advertised anywhere yet,
 so existing URLs can move without redirects. Phase 4 is a plain `git mv`,
 not an alias-preserving migration.
 
-### 2.2 Storage convention
+### 2.2 Storage convention (legacy — `field-kit` only)
 
-Extends the existing public-type storage convention (source organization
-only, never encoded redundantly in the URL) by exactly one level:
+`field-kit`'s Entries still use exactly this convention, unmigrated:
 
 ```
 content/library/<collection>/<public-type>/<slug>/index.md
 ```
 
-e.g. `content/library/research/concept/feedback/index.md`.
+e.g. `content/library/field-kit/tool/tuning-fork-set/index.md`. Its
+Collection id is still **derived from the path** — the first path segment
+under `content/library/` — mirroring how `public_type` is derived from the
+*next* segment down, checked by `library-validate.html`'s storage-folder
+guard for exactly this Collection (see §9).
 
-A Hugo-adapter Collection's id is **derived from the path**, not from a
-front-matter field — `content/library/<collection>/...`, the first path
-segment under `content/library/`. This mirrors exactly how `public_type` is
-already derived from the *next* path segment down and checked by
-`library-validate.html`'s storage-folder guard (see §9). No new
-`library.collection` front-matter field is introduced; front-matter shape
-for individual Entries is otherwise **unchanged** (see §10.1).
+`research`/`manuals`/`music` Entries instead live at the flat, Collection-
+independent `content/library/entry/<public-type>/<slug>/index.md`, and
+declare membership explicitly via `library.collections: [...]` — see
+CLAUDE.md § Library "Collection membership" for the current model.
 
 ### 2.3 Permalinks
 
-Today's single rule:
-
-```toml
-[permalinks.page]
-  library = "/library/:contentbasename/"
-```
-
-becomes:
+The rule (`hugo.toml`), unchanged since it was first generalized:
 
 ```toml
 [permalinks.page]
   library = "/library/:sections[1]/:contentbasename/"
 ```
 
-`:sections[1]` is the path segment immediately under `content/library/` —
-i.e. the collection id — so `content/library/research/concept/feedback/index.md`
-→ `/library/research/feedback/`. This generalizes to any future Hugo-adapter
-Collection automatically: no per-collection permalink config needed. The
-public-type segment (`concept/`) is dropped from the URL exactly as it is
-today (editorial organization only).
+`:sections[1]` is a Hugo **section** token — it walks the section tree
+(directories with their own `_index.md`), not raw path segments — so it
+still resolves `field-kit`'s Entries to `/library/field-kit/<slug>/`
+exactly as originally specified here. `research`/`manuals`/`music` Entries
+now live under `content/library/entry/`, which has its own (non-rendered:
+`build: {render: never, list: never}`) `_index.md` purely so "entry" is a
+real section — the same token then resolves them to
+`/library/entry/<slug>/`. No per-Collection permalink config exists or is
+needed for either case. The public-type segment (`concept/`, `tool/`, …) is
+dropped from the URL in both cases — editorial organization only, never
+part of the address.
 
 The Library root itself (`/library/`) and each Collection's own root
-(`/library/research/`) are Hugo **section list pages** (`_index.md`), not
-covered by the `permalinks.page` rule above (that rule only applies to leaf
-bundles). `content/library/research/_index.md` carries `type: library` so it
-resolves to the same `layouts/library/list.html` / `list.json` templates as
-every other Collection and the root — see §4.
+(`/library/research/`, `/library/music/`, …) are Hugo **section list
+pages** (`_index.md`), not covered by the `permalinks.page` rule above
+(that rule only applies to leaf bundles). Each carries `type: library` so
+it resolves to the same `layouts/library/list.html` / `list.json`
+templates as every other Collection and the root — see §4.
 
 ---
 
@@ -157,14 +188,18 @@ Field notes:
   `library-collect.html` gathers entries (§5): a non-production Collection
   is simply excluded from the collected set when `hugo.IsProduction` is true.
 
-This file does not replace `data/library.yaml` — that remains the
-`research` Collection's own vocabulary (types, public_types, subjects,
-roles, relations, access kinds, rights). A future Collection with a
-different ontology gets its **own** vocabulary file (e.g.
-`data/library/music.yaml`), referenced from its registry entry. The
-registry itself only ever holds Collection-level metadata (identity, color,
-views, source, build), never a duplicate of a Collection's internal
-vocabulary.
+This file does not replace `data/library.yaml` — that remains the shared
+default vocabulary (types, public_types, subjects, roles, relations, access
+kinds, rights), used by `research` (no `vocabulary:` field), `manuals`, and
+`music` alike (both also unset — a deliberate, documented simplification
+for now, see CLAUDE.md § Library "Vocabulary"; a flat-tree Entry always
+resolves this shared vocabulary regardless of which of the three it belongs
+to). A Collection with a different ontology gets its **own** vocabulary
+file under `data/library/vocabularies/<name>.yaml`, referenced from its
+registry entry's `vocabulary:` field — `field-kit` is the one Collection
+that does this today. The registry itself only ever holds Collection-level
+metadata (identity, color, views, source, build), never a duplicate of a
+Collection's internal vocabulary.
 
 ---
 
@@ -197,18 +232,30 @@ the identical shape, so nothing downstream needs to know or care where the
 data came from. The browser (templates + JS) must never import a Hugo page
 object directly outside the adapter boundary (§8).
 
-### 4.1 Entry contract
+### 4.1 Entry contract — superseded for `research`/`manuals`/`music`
+
+The shape below (collection-local `id`, a singular `collection` field, a
+synthesized `{collection}:{id}` namespaced form for cross-Collection
+references) was never actually implemented for ref resolution — every real
+lookup (`library-creators.html`, `library-related.html`,
+`library-works.html`, `list.json`) always resolved `library.id` globally,
+site-wide, regardless of Collection. The subsequent migration made the
+*storage/identity* model match that reality instead of the other way
+round: `library.id` is now genuinely globally unique across the flat
+`research`/`manuals`/`music` corpus, and `collection` (singular) became
+`collections` (plural, an entry's actual membership list). Current shape
+(see CLAUDE.md § Library "Collection membership" / "JSON index"):
 
 ```jsonc
 {
-  "id": "david-tudor",                    // collection-local, stable, unique WITHIN the collection
-  "collection": "research",
+  "id": "david-tudor",                    // globally unique
+  "collections": ["research"],            // every Collection this Entry belongs to
   "title": "David Tudor",
-  "type": "person",                       // Collection-specific type
-  "public_type": "person",                // resolved via the Collection's own type→public_type map
+  "type": "person",
+  "public_type": "person",
   "summary": "…",
   "year": null,
-  "url": "/library/research/david-tudor/",
+  "url": "/library/entry/david-tudor/",   // one canonical URL regardless of membership
   "images": [ /* unchanged shape */ ],
   "creators": [ /* unchanged shape */ ],
   "subjects": [ /* unchanged shape */ ],
@@ -219,19 +266,8 @@ object directly outside the adapter boundary (§8).
 }
 ```
 
-`id` stays **collection-local** — today's `library.id` requirement
-(globally unique across the whole site) is relaxed to unique-within-collection.
-The fully namespaced id used for cross-Collection references and rendering
-(§4.3) is synthesized at read time as `"{collection}:{id}"` — it is never
-stored as a literal string in front matter. This matches the work order's
-"explicit namespaced references are sufficient for v2; do not build a
-separate global entity-reconciliation system."
-
-`type`/`public_type` split is unchanged in spirit from today
-(`library.type` → `public_type` via each Collection's own vocabulary and its
-own `library-public-types`-style resolver) — just no longer assumed to be
-*the* one global `data/library.yaml` vocabulary. `research`'s vocabulary
-(`data/library.yaml`) is unchanged.
+`field-kit` alone keeps the original shape (singular `collection`,
+collection-local id) — it was never migrated.
 
 ### 4.2 Relationships
 
@@ -239,29 +275,19 @@ Derived, not stored: one relationship per `creators[].ref` (`kind: creator`)
 and per `related[].ref` (`kind: related`), exactly as `library-map.js`
 already builds its edge list today (see §12) — this section documents that
 existing behavior as part of the normalized contract rather than changing
-it. A relationship's `target` may be a bare collection-local id (same
-Collection) or a fully namespaced id (`other-collection:slug`, §4.3).
+it. Refs are bare `library.id` values, resolved globally — see §4.3.
 
-### 4.3 Namespaced identity
+### 4.3 Namespaced identity — not implemented, and no longer planned
 
-```
-research:david-tudor
-serge:dusg
-music:discogs-release:12345
-manuals:serge-1976
-videos:phase-rotation
-```
-
-A cross-Collection relationship targets the canonical namespaced Entry id:
-
-```yaml
-related:
-  - {type: uses, target: serge:serge-modular}
-```
-
-No global entity-reconciliation system. An unresolvable cross-Collection
-reference is a **build warning**, not a build failure (§9) — the target
-Collection may not exist yet.
+This section originally specified a `{collection}:{id}` synthesized
+namespaced form for cross-Collection references. It was never built (every
+real ref-resolution call site always did a flat, global lookup by bare
+`library.id`), and the global-Entry-identity migration removes the need
+for it outright: since `library.id` is now genuinely unique across the
+whole `research`/`manuals`/`music` corpus, a bare id is already
+unambiguous everywhere — `ref: herbert-brun` is sufficient regardless of
+which Collection(s) the referencing and referenced Entries belong to. See
+CLAUDE.md § Library "Entry identity."
 
 ---
 
@@ -479,8 +505,11 @@ restructuring, not just extension — see §13). New/changed checks, all build
 failures unless noted:
 
 - Duplicate Collection `id` in `collections.yaml`.
-- Duplicate Entry `id` **within a Collection** (was: site-wide).
-- Missing/malformed namespaced id on a cross-Collection reference.
+- Duplicate Entry `id`, globally, across the flat `research`/`manuals`/
+  `music` corpus (superseded — see §4.1/§4.3 and CLAUDE.md § Library "Entry
+  identity"; `field-kit` alone still scopes this per-Collection).
+- Missing/invalid `library.collections` on a flat-tree Entry (superseded —
+  see §10.3): empty, names an unregistered Collection, or has a duplicate.
 - Unknown Collection referenced (root-level Collection relationships, §12.3).
 - Unknown Shelf id referenced by a `?shelf=` URL param or config.
 - Invalid Shelf `include`/`exclude` reference (an id that doesn't resolve
@@ -522,12 +551,15 @@ shelves: [staff-picks, core-references]
 
 Optional, top-level, same tier as `subjects` (§5.1).
 
-### 10.3 No new `library.collection` field
+### 10.3 `library.collections` — superseded
 
-Collection membership is derived from storage path for `adapter: hugo`
-Collections (§2.2) — not a front-matter field. A future non-Hugo-adapter
-Collection has no `content/library/...` bundle at all, so the question
-doesn't arise for it.
+This section originally specified that Collection membership was derived
+from storage path only, with no front-matter field for it. That's still
+literally true for `field-kit`, but no longer true in general: a flat-tree
+Entry (`research`/`manuals`/`music`) carries an explicit, editorial
+`library.collections: [id, ...]` list — many-to-many, validated against
+`data/library/collections.yaml`, order-independent. See CLAUDE.md § Library
+"Collection membership" for the current field shape and validation rules.
 
 ---
 
@@ -541,7 +573,7 @@ exposes, per the work order:
 ```jsonc
 {
   "id": "research",
-  "collection": "library",          // owning collection is the meta-collection itself
+  "collections": ["library"],       // owning collection is the meta-collection itself
   "public_type": "collection",      // a new public type, root-only
   "title": "SARC Research",
   "summary": "…",                   // from collections.yaml `description`

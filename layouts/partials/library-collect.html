@@ -1,7 +1,21 @@
-{{- /* Every published Entry belonging to ONE Collection: pages stored under
-       that Collection's own content subtree (content/library/<sectionPath>/…)
-       plus any page elsewhere on the site with `library.include: true` and a
-       matching (or, pre-v2-compatibly, absent) `library.collection`.
+{{- /* Every published Entry belonging to ONE Collection — the UNION of two
+       gathering mechanisms, so no per-Collection branching is needed here:
+
+       1. Path-derived (legacy): pages stored under this Collection's own
+          content subtree (content/<sectionPath>/…). Still correct and
+          load-bearing for `field-kit`, deliberately left on the old
+          single-owning-Collection storage model (see CLAUDE.md/
+          docs/library-v2.md) — for research/manuals/music this scan
+          naturally returns nothing, since their own sectionPath now
+          contains only their _index.md, no Entries.
+       2. Membership-derived (current): any published Entry under the flat
+          content/library/entry/ tree whose own `library.collections` list
+          names this Collection's id — see CLAUDE.md § Library "Collection
+          membership". For `field-kit` this naturally returns nothing,
+          since its Entries never set `library.collections`.
+
+       Plus any page elsewhere on the site with `library.include: true`
+       whose own `library.collections` names this Collection.
        Deduplicated by canonical page. Sorted by weight (when supplied) →
        sort_title → title. Call:
 
@@ -9,10 +23,8 @@
             (dict "ctx" . "sectionPath" "library/research" "collection" "research") }}
 
        `sectionPath` is the content-relative directory this Collection's
-       Hugo-adapter content lives under (see docs/library-v2.md § 2.2/§ 8) —
-       everything under content/<sectionPath>/ belongs to this Collection,
-       nothing outside it does, regardless of how many other Collections
-       also happen to sit under the top-level "library" Hugo section. */ -}}
+       own section index page (and, for a legacy Collection like
+       `field-kit`, its Entries too) lives under. */ -}}
 {{- $ctx := .ctx -}}
 {{- $sectionPath := .sectionPath -}}
 {{- $collectionId := .collection -}}
@@ -20,29 +32,35 @@
 
 {{- /* All library-ish content shares one top-level Hugo section ("library")
        regardless of Collection, however deep it's nested — .Section only
-       ever reflects the first path element under content/. So this is
-       still the right broad candidate pool; the path-prefix filter below is
-       what actually scopes it to one Collection. */ -}}
+       ever reflects the first path element under content/. */ -}}
 {{- $pool := where $ctx.Site.RegularPages "Section" "library" -}}
+
+{{- /* 1. Path-derived (field-kit only, in practice). */ -}}
 {{- $inSection := slice -}}
 {{- range $pool -}}
   {{- if hasPrefix .File.Path $prefix }}{{ $inSection = $inSection | append . }}{{ end -}}
 {{- end -}}
 
+{{- /* 2. Membership-derived (research/manuals/music, once they have
+          members): any flat-tree Entry naming this Collection. */ -}}
+{{- $entryPrefix := "library/entry/" -}}
+{{- $viaMembership := slice -}}
+{{- range $pool -}}
+  {{- if and (hasPrefix .File.Path $entryPrefix) (in (.Params.library.collections | default slice) $collectionId) -}}
+    {{- $viaMembership = $viaMembership | append . -}}
+  {{- end -}}
+{{- end -}}
+
 {{- /* Cross-site inclusion: a page anywhere else on the site with
-       `library.include: true` joins whichever Collection its own
-       `library.collection` names. Left unset, it defaults to this
-       Collection — the only behavior possible before a second Collection
-       exists (no included page sets this field yet; see
-       docs/library-v2.md § 8). */ -}}
+       `library.include: true` joins whichever Collection(s) its own
+       `library.collections` names. */ -}}
 {{- $included := where $ctx.Site.RegularPages "Params.library.include" true -}}
 {{- $includedHere := slice -}}
 {{- range $included -}}
-  {{- $c := $collectionId }}{{ with .Params.library.collection }}{{ $c = . }}{{ end -}}
-  {{- if eq $c $collectionId }}{{ $includedHere = $includedHere | append . }}{{ end -}}
+  {{- if in (.Params.library.collections | default slice) $collectionId }}{{ $includedHere = $includedHere | append . }}{{ end -}}
 {{- end -}}
 
-{{- $all := $inSection | union $includedHere -}}
+{{- $all := $inSection | union $viaMembership | union $includedHere -}}
 {{- /* stable ordering: 6-digit weight (default high) then sort_title|title */ -}}
 {{- $keyed := slice -}}
 {{- range $all -}}

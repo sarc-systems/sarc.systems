@@ -293,10 +293,16 @@
   // Collection's id to its own Colorplan color (data.collections, exported
   // by every Collection's own index.json — see list.json), so a boundary
   // node owned by a DIFFERENT Collection can draw a ring in that other
-  // Collection's color without a second fetch. Both stay empty/inert
-  // (drawing nothing extra) until an entry's own `collection` differs from
-  // currentCollectionId, which doesn't happen anywhere in the single-
-  // Collection research corpus today.
+  // Collection's color without a second fetch. An Entry can now belong to
+  // several Collections at once (CLAUDE.md § Library "Collection
+  // membership") — each node's own `collectionIds` (plural, from the JSON
+  // index's `collections` array) is checked for MEMBERSHIP, not equality;
+  // a node with no foreign membership draws no halo at all. When a node
+  // belongs to more than one Collection other than the one currently being
+  // viewed, only the FIRST foreign id's color is drawn — multiple
+  // simultaneous halo colors on one node would be a legibility regression
+  // this project's own restraint principle argues against (a deliberate
+  // simplification, not an oversight).
   var currentCollectionId = "";
   var collectionColors = {};
   var sel = { type: [], subject: [], shelf: [] };
@@ -463,7 +469,7 @@
         y: H / 2 + (rng() - 0.5) * H * 0.8,
         vx: 0, vy: 0,
         ownColor: e.color || null,
-        collectionId: e.collection || null
+        collectionIds: e.collections || []
       };
     });
     nodes = entries.map(function (e) { return nodeById[e.library_id]; });
@@ -1602,14 +1608,19 @@
   }
 
   // Cross-Collection boundary ring (docs/library-v2.md § 12.3): drawn around
-  // a node owned by a DIFFERENT Collection than the one this page's own Map
-  // belongs to, in that other Collection's own color — never the node's own
-  // fill/shape, which still reads its public type exactly as usual. A no-op
-  // whenever collectionId is unset/matches (every node in the single-
-  // Collection research corpus today).
+  // a node that belongs to at least one Collection OTHER than the one this
+  // page's own Map belongs to, in that foreign Collection's own color —
+  // never the node's own fill/shape, which still reads its public type
+  // exactly as usual. A no-op whenever the node's membership is empty or is
+  // entirely the current Collection.
   function drawCollectionHalo(ctx, n, p, scale, showImage, extraScale) {
-    if (!n.collectionId || !currentCollectionId || n.collectionId === currentCollectionId) return;
-    var color = collectionColors[n.collectionId];
+    if (!currentCollectionId || !n.collectionIds || !n.collectionIds.length) return;
+    var foreignId = null;
+    for (var i = 0; i < n.collectionIds.length; i++) {
+      if (n.collectionIds[i] !== currentCollectionId) { foreignId = n.collectionIds[i]; break; }
+    }
+    if (!foreignId) return;
+    var color = collectionColors[foreignId];
     if (!color) return;
     var half = nodeVisualHalfSize(n, scale, showImage, extraScale);
     ctx.save();

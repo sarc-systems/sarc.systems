@@ -1,15 +1,20 @@
 {{ define "body-class" }}library library-single{{ end }}
 
 {{ define "main" }}
-{{- /* This entry's own Collection root (e.g. /library/research/) — never a
-       bare hardcoded /library/, which is the meta-Collection root, not any
-       one Collection's own catalog/filters. See docs/library-v2.md § 13. */ -}}
-{{- $coll := partial "library-resolve-collection.html" . -}}
-{{- $collRoot := printf "/library/%s/" $coll.id -}}
-{{- /* This Collection's own vocabulary (docs/library-v2.md § 6.1/§ 14) —
-       never assume data/library.yaml, a future Collection may have its
-       own types/subjects entirely. */ -}}
-{{- $lib := partial "library-vocab.html" $coll -}}
+{{- /* An Entry's canonical page is Collection-independent — it may belong
+       to several Collections at once (CLAUDE.md § Library "Collection
+       membership"), so there is no single "this entry's Collection" to
+       breadcrumb into. $memberships is every registered Collection this
+       Entry actually belongs to (registry order); $filterRoot is a
+       pragmatic (not editorially "primary") choice of where the Type/
+       Subject/Origin metadata links below should point — the entry's
+       first listed membership's own Catalog, or nothing if it somehow has
+       none. */ -}}
+{{- $ctx := partial "library-page-context.html" . -}}
+{{- $lib := $ctx.lib -}}
+{{- $memberships := partial "library-entry-collections.html" . -}}
+{{- $filterRoot := "" -}}
+{{- with $memberships }}{{ $filterRoot = printf "/library/%s/" (index . 0).id }}{{ end -}}
 {{- $type := .Params.library.type -}}
 {{- $typeLabel := "" }}{{ range $lib.types }}{{ if eq .type $type }}{{ $typeLabel = .label }}{{ end }}{{ end -}}
 {{- $sarc := .Params.library.sarc_work -}}
@@ -27,11 +32,10 @@
 <article class="entry-full library-single" data-library-id="{{ .Params.library.id }}">
   <div class="wrap">
     <header class="entry-header">
-      {{- /* Same ?view=map&select=<library.id> deep-link as the "← Library"
-             nav at the foot of the page (see its own comment) — this
-             breadcrumb is the more prominent of the two "Library" links on
-             an entry page, so it gets the same treatment. */}}
-      <p class="eyebrow"><a href="{{ printf "%s?view=map&select=%s" $collRoot .Params.library.id | relURL }}">{{ $coll.title }}</a>{{ with $typeLabel }} <span class="dot" aria-hidden="true">·</span> {{ . }}{{ end }}</p>
+      {{- /* A plain link to the meta-Collection root — never a deep link
+             into any one membership, since a canonical Entry page stays
+             context-independent (CLAUDE.md § Library "Entry page"). */}}
+      <p class="eyebrow"><a href="{{ "/library/" | relURL }}">Library</a>{{ with $typeLabel }} <span class="dot" aria-hidden="true">·</span> {{ . }}{{ end }}</p>
       <h1 class="entry-full-title">{{ .Title }}</h1>
       {{- with .Params.summary }}<p class="entry-lede">{{ . }}</p>{{ end }}
     </header>
@@ -54,7 +58,10 @@
   <div class="wrap">
     {{- /* Core metadata — only rows that exist. */ -}}
     <dl class="entry-meta">
-      {{- with $typeLabel }}<div class="meta-row"><dt>Type</dt><dd><a href="{{ (printf "%s?type=%s" $collRoot $type) | relURL }}">{{ . }}</a></dd></div>{{ end }}
+      {{- with $memberships }}
+      <div class="meta-row"><dt>Collections</dt><dd>{{ range $i, $m := . }}{{ if $i }}<span class="dot" aria-hidden="true">·</span> {{ end }}<a href="{{ printf "/library/%s/" $m.id | relURL }}">{{ $m.title }}</a>{{ end }}</dd></div>
+      {{- end }}
+      {{- with $typeLabel }}<div class="meta-row"><dt>Type</dt><dd>{{ if $filterRoot }}<a href="{{ (printf "%s?type=%s" $filterRoot $type) | relURL }}">{{ . }}</a>{{ else }}{{ . }}{{ end }}</dd></div>{{ end }}
       {{- with $creatorsHTML }}<div class="meta-row"><dt>{{ $creatorLabel }}</dt><dd>{{ . | safeHTML }}</dd></div>{{ end }}
       {{- with $year }}<div class="meta-row"><dt>Year</dt><dd>{{ . }}</dd></div>{{ end }}
       {{- if not .Date.IsZero }}<div class="meta-row"><dt>Date</dt><dd><time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "02 January 2006" }}</time></dd></div>{{ end }}
@@ -69,9 +76,9 @@
       {{- with .Params.isbn }}<div class="meta-row"><dt>ISBN</dt><dd>{{ . }}</dd></div>{{ end }}
       {{- with .Params.doi }}<div class="meta-row"><dt>DOI</dt><dd>{{ . }}</dd></div>{{ end }}
       {{- with .Params.subjects }}
-      <div class="meta-row"><dt>Subjects</dt><dd class="meta-topics">{{ range $i, $s := . }}{{ if $i }}<span class="dot" aria-hidden="true">·</span> {{ end }}{{ $sl := $s }}{{ range $lib.subjects }}{{ if eq .subject $sl }}<a href="{{ (printf "%s?subject=%s" $collRoot $sl) | relURL }}">{{ .label }}</a>{{ end }}{{ end }}{{ end }}</dd></div>
+      <div class="meta-row"><dt>Subjects</dt><dd class="meta-topics">{{ range $i, $s := . }}{{ if $i }}<span class="dot" aria-hidden="true">·</span> {{ end }}{{ $sl := $s }}{{ range $lib.subjects }}{{ if eq .subject $sl }}{{ if $filterRoot }}<a href="{{ (printf "%s?subject=%s" $filterRoot $sl) | relURL }}">{{ .label }}</a>{{ else }}{{ .label }}{{ end }}{{ end }}{{ end }}{{ end }}</dd></div>
       {{- end }}
-      {{- if $sarc }}<div class="meta-row"><dt>Origin</dt><dd><a href="{{ (printf "%s?sarc=true" $collRoot) | relURL }}">SARC work</a></dd></div>{{ end }}
+      {{- if $sarc }}<div class="meta-row"><dt>Origin</dt><dd>{{ if $filterRoot }}<a href="{{ (printf "%s?sarc=true" $filterRoot) | relURL }}">SARC work</a>{{ else }}SARC work{{ end }}</dd></div>{{ end }}
     </dl>
 
     {{- /* Access actions — all rendered as equal (filled) buttons. */ -}}
@@ -115,12 +122,10 @@
     {{ partial "library-related.html" (dict "page" .) }}
 
     <nav class="entry-nav" aria-label="Library navigation">
-      {{- /* Deep-links back into the catalog with this entry selected — the
-             same ?view=map&select=<library.id> contract library-map.js reads
-             on load (see CLAUDE.md § Library "Map view" — Selection-Centered
-             Navigation). Explicit view=map even though Map is already the
-             default, so this keeps working if that default ever changes. */}}
-      <a class="entry-nav-prev" href="{{ printf "%s?view=map&select=%s" $collRoot .Params.library.id | relURL }}"><span class="entry-nav-dir">← {{ $coll.title }}</span></a>
+      {{- /* A plain link back to the meta-Collection root — see the eyebrow's
+             own comment above on why this stays context-independent rather
+             than deep-linking into any one membership's Map. */}}
+      <a class="entry-nav-prev" href="{{ "/library/" | relURL }}"><span class="entry-nav-dir">← Library</span></a>
     </nav>
   </div>
 </article>

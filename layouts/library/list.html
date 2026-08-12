@@ -38,7 +38,7 @@
   <h2 class="library-all-head" id="all-entries">All entries</h2>
   {{- with $entries }}
   <ul class="library-records" id="library-list">
-    {{ range . }}{{ partial "library-record.html" . }}{{ end }}
+    {{ range . }}{{ partial "library-record.html" (dict "page" . "coll" $coll) }}{{ end }}
   </ul>
   {{- /* Images/Map DOM is only emitted for Collections that enable those
          Views (data/library/collections.yaml `views.enabled`) — the Library

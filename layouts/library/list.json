@@ -89,9 +89,16 @@
          data registered under the "library" pseudo-collection id). */ -}}
   {{- $entryShelves := partial "library-entry-shelves.html" (dict "page" $p "coll" $coll) -}}
 
+  {{- /* Collection membership (CLAUDE.md § Library "Collection membership")
+         — a flat-tree Entry's own editorial library.collections list; a
+         root Collection-summary record or a legacy path-derived Entry
+         (field-kit) falls back to the single Collection whose list this
+         is ($coll.id), so the field stays uniformly plural. */ -}}
+  {{- $entryCollections := .Params.library.collections -}}
+  {{- if not $entryCollections }}{{ $entryCollections = slice $coll.id }}{{ end -}}
   {{- $rec := dict
       "library_id" $entryId
-      "collection" $coll.id
+      "collections" $entryCollections
       "color" (.Params.library.color | default "")
       "shelves" $entryShelves
       "title" .Title

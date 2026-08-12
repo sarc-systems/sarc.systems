@@ -1,0 +1,17 @@
+{{- /* Which Collections (data/library/collections.yaml) does ONE Entry
+       belong to? Many-to-many membership is editorial data
+       (Params.library.collections), never derived from storage path — see
+       CLAUDE.md § Library "Collection membership" and docs/library-v2.md.
+       Returns the matching Collection dicts, in registry order (front
+       matter order is editorial-only and must not affect rendering).
+
+       Call: {{ $memberships := partial "library-entry-collections.html" . }}
+       ($page — an Entry page, i.e. one with library.collections set) */ -}}
+{{- $page := . -}}
+{{- $ids := $page.Params.library.collections | default slice -}}
+{{- $registry := hugo.Data.library.collections -}}
+{{- $out := slice -}}
+{{- range $registry -}}
+  {{- if in $ids .id }}{{ $out = $out | append . }}{{ end -}}
+{{- end -}}
+{{- return $out -}}

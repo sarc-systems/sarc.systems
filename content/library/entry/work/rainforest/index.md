@@ -1,0 +1,58 @@
+---
+title: "Rainforest"
+summary: "David Tudor's series of works in which sounds are given physical form through resonating objects."
+year: 1968
+
+library:
+  id: rainforest
+  type: composition
+  sarc_work: false
+  collections: [research, music]
+
+creators:
+  - name: "David Tudor"
+    role: composer
+    ref: david-tudor
+
+subjects: [instruments, space]
+
+images:
+  - file: "rainforest-philadelphia-kids.jpg"
+    alt: "Two children listening to a Rainforest sculpture through long rods held to their ears"
+    credit: "Kira Perov"
+    source: "https://composers-inside-electronics.net/rainforest/rainforest/RAINFOREST_IV_files/Phila-Kids-compressed.jpg"
+    role: installation
+
+access:
+  - label: "Rainforest (1968)"
+    kind: bandcamp
+    url: "https://newworldrecords.bandcamp.com/track/rainforest-1968"
+  - label: "Rainforest (1969)"
+    kind: bandcamp
+    url: "https://newworldrecords.bandcamp.com/track/rainforest-1969"
+  - label: "Rainforest IV (1973, Stockholm)"
+    kind: bandcamp
+    url: "https://newworldrecords.bandcamp.com/track/rainforest-iv-1973-stockholm"
+  - label: "Rainforest IV (1973, Berlin)"
+    kind: bandcamp
+    url: "https://newworldrecords.bandcamp.com/track/rainforest-iv-1973-berlin"
+  - label: "Rainforest IV (UCSD, 1977, binaural)"
+    kind: bandcamp
+    url: "https://composersinsideelectronics.bandcamp.com/track/rainforest-iv-ucsd-1977-binaural"
+  - label: "Rainforest (1998)"
+    kind: bandcamp
+    url: "https://moderecords.bandcamp.com/album/rainforest-mode064"
+  - label: "Official work page"
+    kind: website
+    url: "https://davidtudor.org/Works/rainforest.html"
+  - label: "Revisit Rainforest in 360°"
+    kind: external-copy
+    url: "https://cdm.link/david-tudor-rainforest/"
+  - label: "The Evolution of David Tudor's Rainforest"
+    kind: external-copy
+    url: "https://www.moma.org/magazine/articles/166"
+
+draft: false
+---
+
+David Tudor's series of works in which sounds are given physical form through resonating objects.

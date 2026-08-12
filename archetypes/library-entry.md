@@ -7,6 +7,7 @@ library:
   id: "{{ .File.ContentBaseName }}"   # stable, unique id — don't reuse the title/URL
   type: ""                            # one of data/library.yaml types (book, person, manual, album, essay, website, …)
   sarc_work: false                    # true if produced by SARC
+  collections: []                     # one or more ids from data/library/collections.yaml, e.g. [research] or [research, music]
 
 # Who made it. `ref` (another entry's library.id) links the name and adds a
 # reverse "Works in the Library" on that entry; omit ref for a plain name.

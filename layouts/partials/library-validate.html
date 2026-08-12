@@ -6,10 +6,24 @@
        Per-Collection vocabularies (docs/library-v2.md § 6.1/§ 14): every
        check below that depends on a controlled vocabulary (type, subject,
        creator role, relation, access kind, rights) resolves EACH entry's
-       OWN Collection's vocabulary (library-vocab.html) rather than
-       assuming data/library.yaml globally — a future Collection with a
-       completely different vocabulary (e.g. the field-kit fixture) is
-       validated against its own rules, never SARC Research's. */ -}}
+       OWN vocabulary (library-vocab.html) rather than assuming
+       data/library.yaml globally — a future Collection with a completely
+       different vocabulary (e.g. the field-kit fixture) is validated
+       against its own rules, never SARC Research's.
+
+       Global Entry model (CLAUDE.md § Library "Collection membership"):
+       a Library-owned Entry is either (a) a genuine flat-tree Entry under
+       content/library/entry/, whose Collection membership is the editorial
+       `library.collections` list in its own front matter (validated below,
+       globally unique `library.id`, always the shared default vocabulary
+       today — research/manuals/music all share data/library.yaml), or
+       (b) a legacy path-derived Entry (field-kit only, deliberately left on
+       the old single-owning-Collection model) whose Collection is still
+       derived from storage path and whose id is unique only within that
+       one Collection. `$collectionsOf` below always holds a LIST per entry
+       (one element for a legacy path-derived Entry, one-or-more for a
+       flat-tree Entry) so every downstream check has one shape to work
+       with. */ -}}
 
 {{- /* Known platform/host names that identify WHERE an image was found, not
        WHO made it — a `credit` equal to one of these (case-insensitive) is a
@@ -115,27 +129,65 @@
   {{- if and .projections.default (not (in $projIds .projections.default)) }}{{ errorf "Library: Collection %q projections.default %q is not a known Projection id" $collId .projections.default }}{{ end -}}
 {{- end -}}
 
-{{- /* Resolve each entry's owning Collection id. adapter:hugo Collections
-       match by longest content-path prefix (source.section); cross-site
-       included pages use an explicit library.collection, defaulting to the
-       sole registered Collection while only one exists. */ -}}
-{{- $collectionOf := dict -}}
+{{- /* The shared default vocabulary (data/library.yaml, cache key "library")
+       every flat-tree Entry resolves regardless of which Collection(s) it
+       belongs to — research/manuals/music all use it unmodified today (see
+       CLAUDE.md § Library "Vocabulary"). Every adapter:hugo Collection
+       without its own `vocabulary:` override already computed this exact
+       dict above (as its own $vocabLib/$collPT) — recomputing it once more
+       here, explicitly, means flat-tree Entry validation never has to
+       assume any particular Collection happens to exist/be un-vocabularied. */ -}}
+{{- $defaultLib := hugo.Data.library -}}
+{{- $defaultPT := partialCached "library-public-types.html" $defaultLib "library-public-types-library" -}}
+{{- $defaultVocab := dict
+    "lib" $defaultLib
+    "pt" $defaultPT
+    "types" (slice) "subjects" (slice) "roles" $defaultLib.creator_roles "relations" $defaultLib.relation_types
+    "kinds" (slice) "okRights" $defaultLib.rights_hosted_ok "imgRights" $defaultLib.image_rights_status
+    "imgUseBasis" $defaultLib.image_use_basis -}}
+{{- $dTypes := slice }}{{ range $defaultLib.types }}{{ $dTypes = $dTypes | append .type }}{{ end -}}
+{{- $dSubjects := slice }}{{ range $defaultLib.subjects }}{{ $dSubjects = $dSubjects | append .subject }}{{ end -}}
+{{- $dKinds := slice }}{{ range $defaultLib.access_kinds }}{{ $dKinds = $dKinds | append .kind }}{{ end -}}
+{{- $defaultVocab = merge $defaultVocab (dict "types" $dTypes "subjects" $dSubjects "kinds" $dKinds) -}}
+
+{{- /* Collection membership. A flat-tree Entry (under content/library/entry/)
+       carries its own editorial `library.collections` list — validated here
+       against the registry, non-empty, no duplicates, and rejecting the
+       legacy singular `library.collection` field. A legacy path-derived
+       Entry (field-kit only) still resolves by longest content-path prefix,
+       exactly as before, wrapped in a one-element list so every downstream
+       check has one shape. Cross-site included pages use
+       `library.collections` the same way a flat-tree Entry does. */ -}}
+{{- $entryPrefix := "library/entry/" -}}
+{{- $collectionsOf := dict -}}
+{{- $isFlatTree := dict -}}
 {{- range $entries -}}
   {{- $page := . -}}
-  {{- $cid := "" }}{{ $bestLen := 0 -}}
-  {{- if eq $page.Section "library" -}}
+  {{- $flat := hasPrefix $page.File.Path $entryPrefix -}}
+  {{- $crossSite := ne $page.Section "library" -}}
+  {{- if or $flat $crossSite -}}
+    {{- $isFlatTree = merge $isFlatTree (dict $page.Path true) -}}
+    {{- if $page.Params.library.collection }}{{ errorf "Library: %q uses the legacy singular library.collection — use library.collections: [...] instead" $page.Path }}{{ end -}}
+    {{- $cids := $page.Params.library.collections | default slice -}}
+    {{- if not $cids }}{{ errorf "Library: %q has no library.collections (must name at least one Collection in data/library/collections.yaml)" $page.Path }}{{ end -}}
+    {{- $seenCid := slice -}}
+    {{- range $cids -}}
+      {{- if not (in $collIds .) }}{{ errorf "Library: %q library.collections names %q, which isn't a registered Collection in data/library/collections.yaml" $page.Path . }}{{ end -}}
+      {{- if in $seenCid . }}{{ errorf "Library: %q library.collections has duplicate entry %q" $page.Path . }}{{ end -}}
+      {{- $seenCid = $seenCid | append . -}}
+    {{- end -}}
+    {{- $collectionsOf = merge $collectionsOf (dict $page.Path $cids) -}}
+  {{- else -}}
+    {{- $isFlatTree = merge $isFlatTree (dict $page.Path false) -}}
+    {{- $cid := "" }}{{ $bestLen := 0 -}}
     {{- range $registry -}}
       {{- if and (eq .source.adapter "hugo") .source.section (hasPrefix $page.File.Path (printf "%s/" .source.section)) (gt (len .source.section) $bestLen) -}}
         {{- $cid = .id }}{{ $bestLen = len .source.section -}}
       {{- end -}}
     {{- end -}}
     {{- if not $cid }}{{ errorf "Library: %q is under the library section but doesn't match any Collection's source.section in data/library/collections.yaml" $page.Path }}{{ end -}}
-  {{- else -}}
-    {{- with $page.Params.library }}{{ $cid = .collection }}{{ end -}}
-    {{- if and (not $cid) (eq (len $registry) 1) }}{{ $cid = (index $registry 0).id }}{{ end -}}
-    {{- if not $cid }}{{ errorf "Library: cross-included page %q has no library.collection, and more than one Collection is registered — ambiguous" $page.Path }}{{ end -}}
+    {{- $collectionsOf = merge $collectionsOf (dict $page.Path (slice $cid)) -}}
   {{- end -}}
-  {{- $collectionOf = merge $collectionOf (dict $page.Path $cid) -}}
 {{- end -}}
 
 {{- /* Shelves (docs/library-v2.md § 5) — data/library/shelves/<id>.yaml per
@@ -160,7 +212,7 @@
     {{- $collId := .id -}}
     {{- $shelvesData := index (index hugo.Data.library.shelves | default dict) $collId | default slice -}}
     {{- $collIdsInThisCollection := slice -}}
-    {{- range $entries -}}{{ if eq (index $collectionOf .Path) $collId }}{{ with .Params.library.id }}{{ $collIdsInThisCollection = $collIdsInThisCollection | append . }}{{ end }}{{ end }}{{ end -}}
+    {{- range $entries -}}{{ if in (index $collectionsOf .Path) $collId }}{{ with .Params.library.id }}{{ $collIdsInThisCollection = $collIdsInThisCollection | append . }}{{ end }}{{ end }}{{ end -}}
     {{- $shelfIds := slice -}}
     {{- range $shelvesData -}}
       {{- $shelfId := .id -}}
@@ -186,32 +238,37 @@
   {{- end -}}
 {{- end -}}
 
-{{- /* Pre-pass: reference_id must be gone; collect library.id, detect dups
-       WITHIN each Collection (library.id is collection-local in v2, not
-       site-wide — see docs/library-v2.md § 4.1/§ 13). $ids stays a flat,
-       site-wide set for ref resolution below: explicit namespaced
-       cross-Collection refs (§ 4.3) aren't yet exercised by any real
-       content, so full compound-key ref resolution is deferred — bare
-       refs are unambiguous as long as no two Collections happen to reuse
-       the same bare id, which the fixture's ids are chosen to avoid. */ -}}
+{{- /* Pre-pass: reference_id must be gone; collect library.id, detect dups.
+       A flat-tree Entry's id is globally unique across the whole canonical
+       corpus (research/manuals/music together — CLAUDE.md § Library
+       "Entry identity"); a legacy path-derived Entry's id (field-kit only)
+       stays scoped to that one Collection, exactly as before, since it's
+       deliberately outside the global-identity model. $ids stays a flat,
+       site-wide set for ref resolution below — creators/related refs are
+       still resolved globally regardless of which id-scoping rule produced
+       them. */ -}}
 {{- $counts := dict }}{{ $ids := slice -}}
 {{- range $entries -}}
   {{- if .Params.reference_id }}{{ errorf "Library: %q still uses reference_id — migrate to library.id" .Path }}{{ end -}}
   {{- $id := "" }}{{ with .Params.library }}{{ $id = .id }}{{ end -}}
   {{- if not $id }}{{ errorf "Library: %q has no library.id (a stable unique id is required)" .Path -}}
   {{- else -}}
-    {{- $cid := index $collectionOf .Path -}}
-    {{- $key := printf "%s::%s" $cid $id -}}
+    {{- $key := printf "global::%s" $id -}}
+    {{- if not (index $isFlatTree .Path) -}}
+      {{- $cid := index (index $collectionsOf .Path) 0 -}}
+      {{- $key = printf "%s::%s" $cid $id -}}
+    {{- end -}}
     {{- $counts = merge $counts (dict $key (add (int (index $counts $key | default 0)) 1)) -}}
     {{- $ids = $ids | append $id -}}
   {{- end -}}
 {{- end -}}
-{{- range $key, $n := $counts }}{{ if gt $n 1 }}{{ $parts := split $key "::" }}{{ errorf "Library: duplicate library.id %q used by %d published entries in Collection %q" (index $parts 1) $n (index $parts 0) }}{{ end }}{{ end -}}
+{{- range $key, $n := $counts }}{{ if gt $n 1 }}{{ $parts := split $key "::" }}{{ errorf "Library: duplicate library.id %q used by %d published entries (scope: %q)" (index $parts 1) $n (index $parts 0) }}{{ end }}{{ end -}}
 {{- $ids = uniq $ids -}}
 
 {{- range $entries -}}
   {{- $page := . -}}
-  {{- $v := index $vocabByCollection (index $collectionOf $page.Path) -}}
+  {{- $v := $defaultVocab -}}
+  {{- if not (index $isFlatTree $page.Path) }}{{ $v = index $vocabByCollection (index (index $collectionsOf $page.Path) 0) }}{{ end -}}
   {{- $types := $v.types }}{{ $subjects := $v.subjects }}{{ $roles := $v.roles }}{{ $relations := $v.relations -}}
   {{- $kinds := $v.kinds }}{{ $okRights := $v.okRights }}{{ $imgRights := $v.imgRights }}{{ $imgUseBasis := $v.imgUseBasis -}}
   {{- $type := "" }}{{ with .Params.library }}{{ $type = .type }}{{ end -}}
@@ -301,40 +358,63 @@
   {{- end -}}
 {{- end -}}
 
-{{- /* Storage-folder / public-type check — Library-owned entries (physically
-       under content/library/, not a cross-included page elsewhere) must sit
-       under content/<collection's source.section>/<public-type>/<slug>/index.md,
-       where <public-type> is the entry's OWN derived public type per its
-       OWN Collection's vocabulary (never parsed back to override the
-       metadata — this only ever compares the folder name to that
-       Collection's own $pt.typeOf). The public-type folder's position in
-       the path depends on how many segments the entry's own Collection's
-       source.section occupies. Also catches an unknown top-level folder
-       under a Collection's own root (a typo, a stray non-entry directory)
-       since any entry inside one fails the "known public-type folder"
-       check below. See CLAUDE.md § Library "reorganize Library bundles by
-       public type" and docs/library-v2.md § 2.2/§ 9/§ 13. */ -}}
+{{- /* Storage-folder / public-type check. Two cases:
+
+       - A flat-tree Entry (content/library/entry/<public-type>/<slug>/
+         index.md — Collection-independent, see CLAUDE.md § Library
+         "Collection membership") must sit under a fixed depth-2 folder
+         matching its OWN derived public type per the shared default
+         vocabulary (research/manuals/music all share it).
+       - A legacy path-derived Entry (field-kit only) keeps the original
+         check unchanged: content/<collection's source.section>/
+         <public-type>/<slug>/index.md, public type per that Collection's
+         OWN vocabulary, depth depending on how many segments its
+         source.section occupies.
+
+       Also catches an unknown top-level folder under either root (a typo,
+       a stray non-entry directory) since any entry inside one fails the
+       "known public-type folder" check below. See CLAUDE.md § Library
+       "reorganize Library bundles by public type" and docs/library-v2.md
+       § 2.2/§ 9/§ 13. */ -}}
 {{- $sectionDepth := dict -}}
 {{- range $registry }}{{ if eq .source.adapter "hugo" }}{{ $sectionDepth = merge $sectionDepth (dict .id (len (split .source.section "/"))) }}{{ end }}{{ end -}}
+{{- $entryPermittedFolders := slice }}{{ range $defaultVocab.lib.public_types }}{{ $entryPermittedFolders = $entryPermittedFolders | append .public_type }}{{ end -}}
 {{- range (where $entries "Section" "library") -}}
   {{- $page := . -}}
-  {{- $cid := index $collectionOf $page.Path -}}
-  {{- $v := index $vocabByCollection $cid -}}
-  {{- $permittedFolders := slice }}{{ range $v.lib.public_types }}{{ $permittedFolders = $permittedFolders | append .public_type }}{{ end -}}
-  {{- $depth := index $sectionDepth $cid | default 1 -}}
-  {{- $section := "library" }}{{ range $registry }}{{ if eq .id $cid }}{{ $section = .source.section }}{{ end }}{{ end -}}
   {{- $parts := split $page.File.Path "/" -}}
-  {{- if lt (len $parts) (add $depth 3) -}}
-    {{- errorf "Library: %q is not stored under a public-type folder — expected content/%s/<type>/<slug>/index.md" $page.Path $section -}}
-  {{- else -}}
-    {{- $folder := index $parts $depth -}}
-    {{- if not (in $permittedFolders $folder) -}}
-      {{- errorf "Library: %q is stored under unknown top-level folder %q (allowed: %s)" $page.Path $folder (delimit $permittedFolders ", ") -}}
+  {{- $type := "" }}{{ with $page.Params.library }}{{ $type = .type }}{{ end -}}
+  {{- if index $isFlatTree $page.Path -}}
+    {{- /* library/entry/<public-type>/<slug>/index.md — folder at index 2 */ -}}
+    {{- if lt (len $parts) 5 -}}
+      {{- errorf "Library: %q is not stored under a public-type folder — expected content/library/entry/<type>/<slug>/index.md" $page.Path -}}
     {{- else -}}
-      {{- $type := "" }}{{ with .Params.library }}{{ $type = .type }}{{ end -}}
-      {{- $derivedPublic := index $v.pt.typeOf $type -}}
-      {{- if and $derivedPublic (ne $derivedPublic $folder) -}}
-        {{- errorf "Library: %q has library.type %q (derives to public type %q) but is stored under %q" $page.Path $type $derivedPublic $folder -}}
+      {{- $folder := index $parts 2 -}}
+      {{- if not (in $entryPermittedFolders $folder) -}}
+        {{- errorf "Library: %q is stored under unknown top-level folder %q (allowed: %s)" $page.Path $folder (delimit $entryPermittedFolders ", ") -}}
+      {{- else -}}
+        {{- $derivedPublic := index $defaultVocab.pt.typeOf $type -}}
+        {{- if and $derivedPublic (ne $derivedPublic $folder) -}}
+          {{- errorf "Library: %q has library.type %q (derives to public type %q) but is stored under %q" $page.Path $type $derivedPublic $folder -}}
+        {{- end -}}
+      {{- end -}}
+    {{- end -}}
+  {{- else -}}
+    {{- $cid := index (index $collectionsOf $page.Path) 0 -}}
+    {{- $v := index $vocabByCollection $cid -}}
+    {{- $permittedFolders := slice }}{{ range $v.lib.public_types }}{{ $permittedFolders = $permittedFolders | append .public_type }}{{ end -}}
+    {{- $depth := index $sectionDepth $cid | default 1 -}}
+    {{- $section := "library" }}{{ range $registry }}{{ if eq .id $cid }}{{ $section = .source.section }}{{ end }}{{ end -}}
+    {{- if lt (len $parts) (add $depth 3) -}}
+      {{- errorf "Library: %q is not stored under a public-type folder — expected content/%s/<type>/<slug>/index.md" $page.Path $section -}}
+    {{- else -}}
+      {{- $folder := index $parts $depth -}}
+      {{- if not (in $permittedFolders $folder) -}}
+        {{- errorf "Library: %q is stored under unknown top-level folder %q (allowed: %s)" $page.Path $folder (delimit $permittedFolders ", ") -}}
+      {{- else -}}
+        {{- $derivedPublic := index $v.pt.typeOf $type -}}
+        {{- if and $derivedPublic (ne $derivedPublic $folder) -}}
+          {{- errorf "Library: %q has library.type %q (derives to public type %q) but is stored under %q" $page.Path $type $derivedPublic $folder -}}
+        {{- end -}}
       {{- end -}}
     {{- end -}}
   {{- end -}}
@@ -356,9 +436,10 @@
       {{- $publicCounts := dict -}}
       {{- $specificCounts := dict -}}
       {{- range $entries -}}
-        {{- if eq (index $collectionOf .Path) $collId -}}
+        {{- if in (index $collectionsOf .Path) $collId -}}
           {{- $t := "" }}{{ with .Params.library }}{{ $t = .type }}{{ end -}}
-          {{- $p := index $v.pt.typeOf $t -}}
+          {{- $vv := $v }}{{ if index $isFlatTree .Path }}{{ $vv = $defaultVocab }}{{ end -}}
+          {{- $p := index $vv.pt.typeOf $t -}}
           {{- $publicCounts = merge $publicCounts (dict $p (add (int (index $publicCounts $p | default 0)) 1)) -}}
           {{- $specificCounts = merge $specificCounts (dict $t (add (int (index $specificCounts $t | default 0)) 1)) -}}
         {{- end -}}

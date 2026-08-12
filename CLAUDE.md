@@ -313,21 +313,29 @@ import mistakes and poor contrast without hand-editing the palette.
 
 ## Library
 
-> **Library v2 landed.** All six phases of the multi-Collection
-> architecture (Library as a meta-Collection, `research` as the first child
-> Collection, per-Collection vocabularies, Shelves, Projections, and a
-> non-production genericity fixture proving none of it is SARC-Research-
-> specific) are implemented — see `docs/library-v2.md` for the full target
-> architecture and terminology, and the "Library v2 — Collections, Shelves,
-> Projections" subsection below for a summary of what's new. The corpus
-> lives at `/library/research/`; `/library/` is the meta-Collection root.
-> **What's not yet cleaned up**: this section's older prose (Map view
-> internals, image handling, etc. — mostly unchanged in behavior by v2)
-> still contains scattered inline `/library/<slug>/`-style examples that
-> should read as `/library/research/<slug>/`, and doesn't yet weave
-> Shelves/Projections into every relevant paragraph — treat the new
-> subsection below and `docs/library-v2.md` as authoritative wherever they
-> conflict with older prose elsewhere in this section.
+> **Library v2 landed, then Entry identity went global.** All six phases of
+> the original multi-Collection architecture (Library as a meta-Collection,
+> `research` as the first child Collection, per-Collection vocabularies,
+> Shelves, Projections, and a non-production genericity fixture proving
+> none of it is SARC-Research-specific) are implemented — see
+> `docs/library-v2.md` for the full target architecture and terminology,
+> and the "Library v2 — Collections, Shelves, Projections" subsection below
+> for a summary of what's new. A subsequent migration then broke that
+> architecture's original assumption that every Entry has exactly one
+> owning Collection: an Entry's canonical storage/identity is now
+> Collection-independent, and it declares its membership in one or more
+> Collections explicitly — see "Collection membership" below, which is
+> authoritative over `docs/library-v2.md` wherever the two disagree.
+> Production Collections today: `research` (the original corpus),
+> `manuals`, and `music`; `field-kit` (non-production) is a **deliberate
+> exception** — it was left on the original one-Collection-per-Entry,
+> path-derived model, unmigrated, on purpose (see below). `/library/` is
+> the meta-Collection root. **What's not yet cleaned up**: this section's
+> older prose (Map view internals, image handling, etc. — mostly unchanged
+> in behavior by either migration) still doesn't weave Shelves/Projections/
+> multi-membership into every relevant paragraph — treat "Collection
+> membership" below as authoritative wherever it conflicts with older prose
+> elsewhere in this section.
 
 **Each Collection is one unified catalog of entries** — a growing research
 collection and small knowledge graph, not a set of shelves in the old sense
@@ -346,52 +354,90 @@ single source of truth for its own templates, filters, JSON index,
 archetype, and validation; a different Collection may have its own
 independent vocabulary instead (see "Library v2" below).
 
-**Collection-flat URLs, type-organized source.** (Library v2 — see
-`docs/library-v2.md` § 2.) Library-owned entries are stored at
-`content/library/<collection>/<public-type>/<slug>/index.md` — grouped
-first by owning Collection (`research` is the only production one; see
-"Library v2" below for the non-production `field-kit` fixture, which has
-its own, much smaller `public_types`), then, within `research`, into its
-eight `public_types` (person, group, organization, work, system, place,
-concept, event; see "Public Type vs Specific Type" below) purely for
-editorial navigability — but always **publish flat within their
-Collection**, at
-`/library/<collection>/<slug>/` (e.g. `/library/research/david-tudor/`):
-never `/library/<collection>/<public-type>/<slug>/`. This is source
-organization, not a second ontology or a change to the URL — do **not**
-encode type/subject into the published URL, and do **not** introduce public
-type-section pages (no `/library/research/person/`,
-`/library/research/work/`, etc. — a Collection's own catalog remains one
-unified list at its own root). The flattening is a Hugo `[permalinks]`
-config (`hugo.toml`, `library = "/library/:sections[1]/:contentbasename/"`)
-— `:sections[1]` is the Collection id (the path segment directly under
-`content/library/`), `:contentbasename` is the bundle's own directory name
-(its slug), not its title, so both stay stable across a title edit or
-Collection rename that doesn't change the Collection's own `id`. No type
-subfolder exists for `content/library/<collection>/<public-type>/` itself
-(no `_index.md` there) — Hugo generates a page only where one exists, so
-the type folders never produce their own list pages.
-`layouts/partials/library-validate.html` fails the build if an entry's
-storage folder doesn't match its derived public type, or sits under an
-unrecognized top-level folder within its Collection, or its Collection
-can't be resolved at all. Taxonomy changes (a specific-type edit that
-changes the derived public type) require moving the bundle to the new type
-folder via `git mv` — but never require changing the published URL, since
-neither the Collection nor the public-type folder appears in it. The
-Library **root** (`/library/`, with no Collection segment) is the
-meta-Collection itself — see `docs/library-v2.md` § 11 and "Library v2"
-below. It does not host Entries of its own the way `/library/research/`
-etc. do; its own "Entries" are Collection-summary records, one per
-production-eligible registered Collection.
+**Collection membership — global canonical Entry storage/identity, many-to-
+one no longer, many-to-many instead.** A Library-owned entry (`research`,
+`manuals`, or `music` — the three Collections on this model) is stored at
+`content/library/entry/<public-type>/<slug>/index.md` — grouped by public
+type only (person, group, organization, work, system, place, concept,
+event; see "Public Type vs Specific Type" below) purely for editorial
+navigability, **never by Collection**: storage no longer implies or limits
+which Collection(s) an entry belongs to. Every such entry publishes at one
+canonical, Collection-independent URL, `/library/entry/<slug>/` (e.g.
+`/library/entry/david-tudor/`) — never a Collection-prefixed one. Which
+Collection(s) an entry belongs to is purely editorial data, its own
+front-matter field:
 
-**Stable identity.** Every entry has a unique `library.id`, unique *within its
-Collection* (not the title, URL, slug, or path — entries may move; not
-site-wide, since Library v2 — a different Collection may reuse the same bare
-id, distinguished by its namespaced form `<collection>:<id>` for
-cross-Collection references, though that's not yet exercised by any real
-content). Relationships resolve through `library.id`. The old `reference_id`
-is gone; validation rejects it. `library.id` is exposed in markup
-(`<article data-library-id="…">`) so a future comment system can key to it.
+```yaml
+library:
+  id: david-tudor
+  type: person
+  collections: [research]          # or [research, music], etc.
+```
+
+`collections` names one or more ids from `data/library/collections.yaml`,
+validated (non-empty, no duplicates, every id must exist); order is
+editorial only and never affects behavior. Membership is **never derived**
+from type, subject, creator, title, filesystem directory, or the
+relationship graph — always this explicit list. Do not duplicate an entry
+into multiple content bundles to represent multi-Collection membership —
+one canonical bundle, `collections` naming everywhere it belongs. A
+Collection's own Catalog/Images/Map gathers its members by scanning for
+this field (`library-collect.html`), not by directory prefix.
+
+The flat URL is a Hugo `[permalinks]` config (`hugo.toml`,
+`library = "/library/:sections[1]/:contentbasename/"`) unchanged since
+Library v2 — `:sections[1]` is a Hugo *section* (a directory with its own
+`_index.md`), which is why entries live under `content/library/entry/`
+specifically: that directory has its own non-rendered `_index.md`
+(`build: {render: never, list: never}`) purely so "entry" is a real
+section and `:sections[1]` resolves to it, producing `/library/entry/
+<slug>/`. No type subfolder exists for `content/library/entry/<public-type>/`
+itself (no `_index.md` there) — Hugo generates a page only where one
+exists, so the type folders never produce their own list pages.
+`layouts/partials/library-validate.html` fails the build if an entry's
+storage folder doesn't match its derived public type, or its
+`library.collections` names an unregistered Collection or is empty.
+Taxonomy changes (a specific-type edit that changes the derived public
+type) require moving the bundle to the new type folder via `git mv` — but
+never require changing the published URL, since neither a Collection nor
+the public-type folder appears in it. A canonical entry page shows its
+memberships as plain metadata (`Collections → Research · Music`, each
+linking to that Collection's own root) — never one visually "primary"
+Collection, and never a query-string/JS trick to fake a contextual
+breadcrumb; the page itself stays fully context-independent regardless of
+where a visitor arrived from. The Library **root** (`/library/`, with no
+Collection segment) is the meta-Collection itself — see `docs/library-v2.md`
+§ 11 and "Library v2" below. It does not host Entries of its own the way
+`/library/research/` etc. do; its own "Entries" are Collection-summary
+records, one per production-eligible registered Collection.
+
+**`field-kit` is the one deliberate exception.** The non-production
+genericity fixture (below) was left entirely on the *original*
+Library v2 model — storage at `content/library/field-kit/<public-type>/
+<slug>/index.md`, one exclusively-owned Collection derived from that path,
+publishing at `/library/field-kit/<slug>/` — unmigrated, on purpose: it's
+a small, frozen, non-production fixture, and migrating it too would mix 8
+fictional entries into the same physical folders as real people/works for
+no benefit. `library-resolve-collection.html`/`library-collect.html`/
+`library-validate.html` all support both models simultaneously via a
+union, not a replacement, of the old path-derived mechanism and the new
+membership-list mechanism — this is not an inconsistency to "eventually
+fix," it's how `field-kit` stays a stable, working proof of the engine's
+genericity without being pulled into every future evolution of the
+production Collection model.
+
+**Stable identity.** Every entry stored under `content/library/entry/` has
+a `library.id` unique **globally**, across the whole `research`/`manuals`/
+`music` corpus together (not the title, URL, slug, or path — entries never
+move, since storage is Collection-independent). Relationships
+(`creators[].ref`, `related[].ref`) resolve through this bare `library.id`,
+globally, regardless of which Collection(s) either side belongs to — there
+is no namespaced `<collection>:<id>` form, and none is needed now that ids
+are genuinely unique site-wide. `field-kit`'s ids remain scoped to
+`field-kit` alone, isolated from the global corpus (consistent with it
+being unmigrated). The old `reference_id` is gone; validation rejects it.
+`library.id` is exposed in markup (`<article data-library-id="…">`) so a
+future comment system can key to it.
 
 **Library v2 — Collections, Shelves, Projections.** The Library is a
 *recursive modular collection browser*, not a single fixed corpus — see
@@ -402,17 +448,27 @@ detail that will drift less):
 - **Collection** — a bounded corpus with its own schema/vocabulary, Facets,
   Shelves, Projections, Views, source, and one stable Colorplan identity
   color. Registered in `data/library/collections.yaml`. `research` is the
-  original corpus, migrated in place; `field-kit` is a small non-production
-  fixture proving the engine holds for a genuinely different domain (see
-  below). A Collection's identity color shows as a left-rule accent on its
+  original corpus; `manuals` was split out of it; `music` is a curated
+  musical corpus built on the global Entry model (see "Collection
+  membership" above — all three share one flat Entry storage/identity, an
+  Entry choosing which it belongs to via `library.collections`);
+  `field-kit` is a small non-production fixture, deliberately left on the
+  original one-Collection-per-Entry model, proving the engine holds for a
+  genuinely different domain (see below). A Collection's identity color
+  shows as a left-rule accent on its
   Collection-summary Catalog card and as that Collection's own node fill on
   the root Map (`assets/js/library-map.js` prefers an entry's own declared
   `color` over the shared per-public-type color for exactly this reason) —
   never asserted as one dominant color over the Library root itself, which
   stays neutral.
-- **Per-Collection vocabulary** — `data/library.yaml` is `research`'s own
+- **Per-Collection vocabulary** — `data/library.yaml` is the shared default
   vocabulary (types, public_types, subjects, creator_roles, relation_types,
-  access_kinds, rights vocab), not a site-wide global one. A Collection
+  access_kinds, rights vocab) used by `research`, `manuals`, and `music`
+  alike (all three leave `vocabulary:` unset in the registry — a
+  deliberate simplification for now, since an Entry with memberships in
+  Collections that used genuinely different vocabularies is an unsolved
+  general problem; see "Collection membership" above), not necessarily a
+  site-wide global one. A Collection
   declaring `vocabulary: <name>` in its registry row gets an entirely
   independent vocabulary from `data/library/vocabularies/<name>.yaml`
   instead — different specific types, different (and not necessarily
@@ -459,13 +515,18 @@ detail that will drift less):
   with `make dev` — it deliberately never appears as a card on the Library
   root, in any environment, so it doesn't need to be mentally filtered out
   of the real catalog while browsing.
-- **Root Map cross-Collection halo** — a boundary node (an Entry rendered
-  on a Collection's Map but owned by a *different* Collection, via a
-  cross-Collection `creators[].ref`/`related[].ref`) draws an outer ring in
-  its owning Collection's color, on top of its own normal type-driven
-  fill/shape (`drawCollectionHalo()` in `library-map.js`). Implemented and
-  wired but currently inert — no content anywhere declares a real
-  cross-Collection reference yet.
+- **Root Map cross-Collection halo** — a boundary node (an Entry that
+  belongs to at least one Collection *other* than the one a given Map
+  belongs to — including, now, an Entry with real multi-Collection
+  membership, or a cross-Collection `creators[].ref`/`related[].ref` such
+  as the `manuals` Klein + Hummel UE-100 manual crediting the `research`
+  Klein + Hummel Organization) draws an outer ring in one foreign
+  Collection's color, on top of its own normal type-driven fill/shape
+  (`drawCollectionHalo()` in `library-map.js`, checking membership in
+  `collectionIds` rather than equality against a single value). When a
+  node has more than one foreign membership, only the first foreign
+  Collection's color is drawn — a deliberate simplification, not an
+  oversight.
 
 **Cross-site inclusion.** A canonical page elsewhere (a Label release, a Systems
 manual, a Studio doc) joins the catalog with `library: { include: true, id: … }`
@@ -1239,11 +1300,14 @@ commercial cards, cover
 grids, shadows, ratings, badges, hover-zoom, or streaming-service styling. Images
 are documentary, not decoration. Reuse the base shell/header/footer/type — don't
 fork the layout. One archetype: `archetypes/library-entry.md`
-(`hugo new --kind library-entry library/<public-type>/<slug>/index.md`, e.g.
-`library/person/misha-mengelberg/index.md` — the public type is source
-organization only and never appears in the published URL, see "Flat URLs,
-type-organized source" above). Moving/renaming a URL: add the old path under
-`aliases:`.
+(`hugo new --kind library-entry library/entry/<public-type>/<slug>/index.md`,
+e.g. `library/entry/person/misha-mengelberg/index.md` — the public type is
+source organization only and never appears in the published URL, and don't
+forget to set `library.collections` to the id(s) this entry belongs to, see
+"Collection membership" above). `field-kit` alone still uses
+`library/field-kit/<public-type>/<slug>/index.md` (no `collections` field —
+see the "deliberate exception" note above). Moving/renaming a URL: add the
+old path under `aliases:`.
 
 ## The SARC four-row mark
 
