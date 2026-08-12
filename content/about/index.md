@@ -4,8 +4,7 @@ summary: "The Studio for Advanced Research in Cybernetics (SARC)"
 ---
 
 **SARC** is an independent studio for the design, construction, and documentation of experimental systems
-— instruments, control structures, and computational processes made audible. Documentation is part of the
-work, not a record kept alongside it.
+— instruments, control structures, and computational processes made audible.
 
 ## This site
 
