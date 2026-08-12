@@ -34,7 +34,7 @@ access:
     url: "https://www.discogs.com/master/69376-Kraftwerk-Radioactivity"
 
 related:
-  - {ref: autobahn, relation: related-work}
+  - {ref: autobahn, relation: successor-to}
 
 draft: false
 ---

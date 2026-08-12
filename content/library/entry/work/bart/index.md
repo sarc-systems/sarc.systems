@@ -22,7 +22,6 @@ access:
   - {label: "Bandcamp", kind: bandcamp, url: "https://erstwhilerecords.bandcamp.com/album/bart"}
 
 related:
-  - {ref: rabbit-run, relation: related-work}
   - {ref: feldstaerken, relation: related-work}
 
 draft: false

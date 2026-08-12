@@ -21,7 +21,7 @@ access:
   - {label: "Bandcamp", kind: bandcamp, url: "https://urashima.bandcamp.com/album/green-wheels"}
 
 related:
-  - {ref: rainbow-electronics, relation: related-work}
+  - {ref: rainbow-electronics, relation: successor-to}
 draft: false
 ---
 

@@ -20,7 +20,7 @@ access:
   - {label: "Bandcamp", kind: bandcamp, url: "https://merzbow.bandcamp.com/album/pulse-demon-remaster-reissue"}
 
 related:
-  - {ref: magnesia-nova, relation: related-work}
+  - {ref: magnesia-nova, relation: successor-to}
 draft: false
 ---
 

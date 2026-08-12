@@ -34,7 +34,7 @@ access:
     url: "https://www.discogs.com/master/3112-Kraftwerk-Computerwelt"
 
 related:
-  - {ref: die-mensch-maschine, relation: related-work}
+  - {ref: die-mensch-maschine, relation: successor-to}
 
 draft: false
 ---

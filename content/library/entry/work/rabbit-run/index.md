@@ -23,7 +23,7 @@ access:
   - {label: "Bandcamp", kind: bandcamp, url: "https://erstwhilerecords.bandcamp.com/album/rabbit-run"}
 
 related:
-  - {ref: bart, relation: related-work}
+  - {ref: bart, relation: successor-to}
 
 draft: false
 ---

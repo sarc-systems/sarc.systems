@@ -22,7 +22,7 @@ access:
   - {label: "Discogs", kind: discogs, url: "https://www.discogs.com/release/1073955-Pete-Namlook-Klaus-Schulze-The-Dark-Side-Of-The-Moog"}
 
 related:
-  - {ref: mirage-klaus-schulze, relation: related-work}
+  - {ref: mirage-klaus-schulze, relation: successor-to}
 draft: false
 ---
 

@@ -22,7 +22,7 @@ access:
   - {label: "Discogs", kind: discogs, url: "https://www.discogs.com/release/4091293"}
 
 related:
-  - {ref: keio-line, relation: related-work}
+  - {ref: keio-line, relation: successor-to}
 draft: false
 ---
 

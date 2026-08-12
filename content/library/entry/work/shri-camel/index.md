@@ -34,7 +34,7 @@ access:
     url: "https://www.discogs.com/master/49959-Terry-Riley-Shri-Camel"
 
 related:
-  - {ref: don-cherry-terry-riley-koln-1975, relation: related-work}
+  - {ref: don-cherry-terry-riley-koln-1975, relation: successor-to}
 
 draft: false
 ---

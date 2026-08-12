@@ -37,7 +37,7 @@ access:
 
 related:
   - {ref: fax-records, relation: release-of}
-  - {ref: the-dark-side-of-the-moog, relation: related-work}
+  - {ref: the-dark-side-of-the-moog, relation: successor-to}
 
 draft: false
 ---

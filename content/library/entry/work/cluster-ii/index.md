@@ -22,7 +22,7 @@ access:
   - {label: "Discogs", kind: discogs, url: "https://www.discogs.com/master/9927-Cluster-Cluster-II"}
 
 related:
-  - {ref: cluster-71, relation: related-work}
+  - {ref: cluster-71, relation: successor-to}
 
 draft: false
 ---

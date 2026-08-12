@@ -34,7 +34,7 @@ access:
     url: "https://www.discogs.com/release/75547-Kraftwerk-Trans-Europa-Express"
 
 related:
-  - {ref: radioactivity, relation: related-work}
+  - {ref: radioactivity, relation: successor-to}
 
 draft: false
 ---

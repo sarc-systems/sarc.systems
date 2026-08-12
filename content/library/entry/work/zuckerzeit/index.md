@@ -22,7 +22,7 @@ access:
   - {label: "Discogs", kind: discogs, url: "https://www.discogs.com/master/9967-Cluster-Zuckerzeit"}
 
 related:
-  - {ref: cluster-ii, relation: related-work}
+  - {ref: cluster-ii, relation: successor-to}
 
 draft: false
 ---

@@ -20,8 +20,7 @@ images:
 access:
   - {label: "Discogs", kind: discogs, url: "https://www.discogs.com/master/30519-Kraftwerk-Ralf-Florian"}
 
-related:
-  - {ref: autobahn, relation: related-work}
+related: []
 
 draft: false
 ---

@@ -34,7 +34,7 @@ access:
     url: "https://richardpinhas.bandcamp.com/album/rhizosphere"
 
 related:
-  - {ref: victoriaville-mai-2011, relation: related-work}
+  - {ref: victoriaville-mai-2011, relation: successor-to}
 
 draft: false
 ---

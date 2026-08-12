@@ -22,7 +22,7 @@ access:
   - {label: "Bandcamp (Wewantsounds reissue)", kind: bandcamp, url: "https://wewantsounds.bandcamp.com/album/session-in-paris-vol-1-song-of-soil"}
 
 related:
-  - {ref: roundtrip-1977, relation: related-work}
+  - {ref: roundtrip-1977, relation: successor-to}
 
 draft: false
 ---

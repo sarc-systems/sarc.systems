@@ -21,7 +21,7 @@ access:
   - {label: "Bandcamp", kind: bandcamp, url: "https://urashima.bandcamp.com/album/rainbow-electronics"}
 
 related:
-  - {ref: acrid-acme-of-p16d4, relation: related-work}
+  - {ref: acrid-acme-of-p16d4, relation: successor-to}
 draft: false
 ---
 

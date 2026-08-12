@@ -21,7 +21,7 @@ access:
   - {label: "Discogs", kind: discogs, url: "https://www.discogs.com/master/29406-Klaus-Schulze-Mirage"}
 
 related:
-  - {ref: cyborg, relation: related-work}
+  - {ref: cyborg, relation: successor-to}
 
 draft: false
 ---

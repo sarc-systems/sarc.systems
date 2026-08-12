@@ -21,7 +21,7 @@ access:
   - {label: "Discogs", kind: discogs, url: "https://www.discogs.com/master/28971-Klaus-Schulze-Cyborg"}
 
 related:
-  - {ref: irrlicht, relation: related-work}
+  - {ref: irrlicht, relation: successor-to}
 
 draft: false
 ---

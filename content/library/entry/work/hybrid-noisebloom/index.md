@@ -21,7 +21,7 @@ access:
   - {label: "Bandcamp", kind: bandcamp, url: "https://urashima.bandcamp.com/album/hybrid-noisebloom"}
 
 related:
-  - {ref: pulse-demon, relation: related-work}
+  - {ref: pulse-demon, relation: successor-to}
 draft: false
 ---
 

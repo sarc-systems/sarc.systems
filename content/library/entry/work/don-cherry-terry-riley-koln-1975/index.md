@@ -32,8 +32,8 @@ access:
     url: "https://www.discogs.com/master/1019867-Terry-Riley-Don-Cherry-Live-K%C3%B6ln-1975"
 
 related:
-  - {ref: human-music, relation: related-work}
-  - {ref: persian-surgery-dervishes, relation: related-work}
+  - {ref: human-music, relation: successor-to}
+  - {ref: persian-surgery-dervishes, relation: successor-to}
 
 draft: false
 ---

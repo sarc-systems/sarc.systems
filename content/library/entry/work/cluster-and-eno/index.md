@@ -24,7 +24,7 @@ access:
 
 related:
   - {ref: after-the-heat, relation: related-work}
-  - {ref: zuckerzeit, relation: related-work}
+  - {ref: zuckerzeit, relation: successor-to}
 
 draft: false
 ---

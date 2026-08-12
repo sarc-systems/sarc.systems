@@ -22,7 +22,7 @@ access:
   - {label: "Discogs", kind: discogs, url: "https://www.discogs.com/master/2994-Kraftwerk-Autobahn"}
 
 related:
-  - {ref: ralf-und-florian, relation: related-work}
+  - {ref: ralf-und-florian, relation: successor-to}
 
 draft: false
 ---

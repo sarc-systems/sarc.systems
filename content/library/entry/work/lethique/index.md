@@ -40,7 +40,7 @@ access:
     url: "https://www.discogs.com/release/351914-Richard-Pinhas-LEthique"
 
 related:
-  - {ref: iceland-pinhas, relation: related-work}
+  - {ref: iceland-pinhas, relation: successor-to}
 
 draft: false
 ---

@@ -35,7 +35,7 @@ access:
 
 related:
   - {ref: ems-synthi-a, relation: made-with}
-  - {ref: tom-and-gerry, relation: related-work}
+  - {ref: tom-and-gerry, relation: successor-to}
 
 draft: false
 ---

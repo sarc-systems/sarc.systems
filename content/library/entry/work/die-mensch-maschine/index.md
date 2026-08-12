@@ -34,7 +34,7 @@ access:
     url: "https://www.discogs.com/release/116080-Kraftwerk-Die-MenschMaschine"
 
 related:
-  - {ref: trans-europa-express, relation: related-work}
+  - {ref: trans-europa-express, relation: successor-to}
 
 draft: false
 ---

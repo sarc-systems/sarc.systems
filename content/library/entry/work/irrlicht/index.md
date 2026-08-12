@@ -21,7 +21,7 @@ access:
   - {label: "Discogs", kind: discogs, url: "https://www.discogs.com/master/28952-Klaus-Schulze-Irrlicht"}
 
 related:
-  - {ref: electronic-meditation, relation: related-work}
+  - {ref: electronic-meditation, relation: successor-to}
 draft: false
 ---
 

@@ -37,8 +37,8 @@ access:
     url: "https://cuneiformrecords.bandcamp.com/album/keio-line"
 
 related:
-  - {ref: hybrid-noisebloom, relation: related-work}
-  - {ref: lethique, relation: related-work}
+  - {ref: hybrid-noisebloom, relation: successor-to}
+  - {ref: lethique, relation: successor-to}
 
 draft: false
 ---

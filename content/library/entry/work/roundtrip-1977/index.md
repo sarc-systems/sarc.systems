@@ -36,7 +36,7 @@ access:
     url: "https://transversales.bandcamp.com/album/roundtrip-1977"
 
 related:
-  - {ref: don-cherry-terry-riley-koln-1975, relation: related-work}
+  - {ref: don-cherry-terry-riley-koln-1975, relation: successor-to}
 
 draft: false
 ---
