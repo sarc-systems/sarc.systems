@@ -15,20 +15,24 @@
 //     not change for days," frequent enough that "if you're lucky" you
 //     catch one live.
 //   - RESET (a hard jump to black or white, discarding accumulated drift)
-//     watches PATTERN_WATCH_CELLS_RESET — the top two rows PLUS the two
-//     fastest cells of the third row, cells 0-9 (10 cells), a strict
+//     watches PATTERN_WATCH_CELLS_RESET — the top two rows PLUS the three
+//     fastest cells of the third row, cells 0-10 (11 cells), a strict
 //     superset of the drift cells — deliberately rarer than drift, so many
 //     drift steps normally happen between resets rather than resets firing
-//     at the same cadence as drift (the previous version of this table
+//     at the same cadence as drift (an earlier version of this table
 //     watched the same 8 cells for both, which was wrong: it made a full
 //     reset just as likely as an ordinary drift step).
 //
 // Checking all sixteen cells for either pattern would only ever fire once
 // per the full ~308-year 32-bit Gray-code cycle (the eight highest-order
 // cells are effectively frozen for centuries at human timescales) — see
-// clock-state.js's own comment. Ten cells is the next natural size up from
-// eight: enough slower to make a reset a genuinely rare event (weeks, not
-// days) while staying on a human-observable timescale rather than centuries.
+// clock-state.js's own comment. Each additional reset cell QUADRUPLES the
+// reset period, not doubles it (two more Gray-code bits per cell,
+// PATTERN_CYCLE_LEN = 2^(2*N_RESET + 1)): 10 cells gave ~27.4 days for a
+// specific colour to recur (~13.7 days for either), 11 gives ~109.7 days
+// (~54.9 days for either) — a genuinely rare event, dozens of drift steps
+// apart, while staying on a human-observable timescale rather than
+// centuries (12 cells would already be ~439/~219 days).
 //
 // Because the reset cells are a strict superset of the drift cells, and the
 // reset cells' own repeating period is a whole multiple of the drift cells'
@@ -47,8 +51,12 @@ var state = require(path.join(__dirname, "..", "assets", "js", "clock-state.js")
 var PATTERN_WATCH_CELLS_DRIFT = [0, 1, 2, 3, 4, 5, 6, 7];
 
 // Reset (black/white): a strict superset of the drift cells — the top two
-// rows plus the two fastest cells of the third row, cells 0-9.
-var PATTERN_WATCH_CELLS_RESET = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+// rows plus the three fastest cells of the third row, cells 0-10. Each added
+// cell here is 2 more bits of Gray-code state, so it QUADRUPLES the reset
+// period, not doubles it (PATTERN_CYCLE_LEN = 2^(2*N_RESET + 1)) — 11 cells
+// puts a specific color's recurrence at ~110 days (any reset, black or
+// white, at ~55 days), vs. 10 cells' ~27/~14 or 12 cells' ~439/~219.
+var PATTERN_WATCH_CELLS_RESET = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
 // LEFT = component B (falling, upper-left -> lower-right, "\" — leans left).
 // RIGHT = component A (rising, lower-left -> upper-right, "/" — leans right).
