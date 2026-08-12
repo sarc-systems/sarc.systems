@@ -12,7 +12,9 @@ subjects: []
 
 images: []
 
-access: []
+access:
+  - {label: "plunderphonics.com", kind: website, url: "https://www.plunderphonics.com"}
+  - {label: "Bandcamp", kind: bandcamp, url: "https://pfony.bandcamp.com/music"}
 
 related:
   - {ref: world-soundscape-project, relation: affiliated-with}

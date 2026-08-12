@@ -14,7 +14,8 @@ creators:
 
 subjects: [computation, time]
 
-images: []
+images:
+  - {file: "cover.jpg", alt: "Cover of Sequence of Earlier Heaven by Barry Truax", role: cover, source: "https://www.discogs.com/release/779873-Barry-Truax-Sequence-Of-Earlier-Heaven-Electroacoustic-And-Computer-Music", rights: {status: unknown}, use: {basis: identification, note: "Cover art used for identification."}}
 
 access:
   - {label: "Discogs", kind: discogs, url: "https://www.discogs.com/release/779873-Barry-Truax-Sequence-Of-Earlier-Heaven-Electroacoustic-And-Computer-Music"}

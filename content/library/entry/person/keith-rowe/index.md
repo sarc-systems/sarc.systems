@@ -13,7 +13,8 @@ creators: []
 
 subjects: [instruments]
 
-images: []
+images:
+  - {file: "portrait.jpg", alt: "Portrait of Keith Rowe", role: portrait, source: "https://www.tableoftheelements.org/keith-rowe", rights: {status: unknown}, use: {basis: identification, note: "Portrait used for identification; photographer not yet established."}}
 
 access: []
 

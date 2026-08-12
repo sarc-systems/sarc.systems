@@ -13,7 +13,8 @@ creators: []
 
 subjects: [instruments, feedback]
 
-images: []
+images:
+  - {file: "portrait.jpg", alt: "Black-and-white photograph of Toshimaru Nakamura carrying his mixing board", role: portrait, source: "https://www.xing.it/person/435/toshimaru_nakamura", rights: {status: unknown}, use: {basis: identification, note: "Portrait used for identification; photographer not established. Converted to black and white from the source color photograph."}}
 
 access: []
 

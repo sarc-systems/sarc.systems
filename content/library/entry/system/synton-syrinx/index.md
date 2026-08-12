@@ -21,7 +21,8 @@ creators:
 
 subjects: [instruments]
 
-images: []
+images:
+  - {file: "photo.jpg", alt: "Synton Syrinx analog synthesizer", role: photo, source: "https://www.vintagesynth.com/synton/syrinx", rights: {status: unknown}, use: {basis: identification, note: "Product photograph used for identification."}}
 
 access: []
 

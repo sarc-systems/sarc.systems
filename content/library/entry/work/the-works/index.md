@@ -17,7 +17,7 @@ creators:
 subjects: []
 
 images:
-  - {file: "cover.jpg", alt: "Cover of Solo Works: The '70s by Alvin Curran", role: cover, caption: "New World Records' Solo Works: The '70s compilation cover — The Works has no separate stand-alone release artwork.", source: "https://www.discogs.com/master/2136496-Alvin-Curran-The-Works", rights: {status: unknown}, use: {basis: identification, note: "Label cover art used for identification."}}
+  - {file: "cover.jpg", alt: "Cover of the 1980 Alvin Curran LP The Works", role: cover, caption: "Original 1980 vinyl LP release (Italy).", source: "https://www.discogs.com/release/1117936-Alvin-Curran-The-Works", rights: {status: unknown}, use: {basis: identification, note: "Cover art used for identification."}}
 
 access:
   - label: "Discogs"

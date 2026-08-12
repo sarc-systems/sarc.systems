@@ -16,7 +16,8 @@ creators:
 
 subjects: [instruments]
 
-images: []
+images:
+  - {file: "cover.jpg", alt: "Cover of Dresden / Venezia / Megaton by Gordon Mumma", role: cover, source: "https://www.discogs.com/release/484844-Gordon-Mumma-Dresden-Venezia-Megaton", rights: {status: unknown}, use: {basis: identification, note: "Cover art used for identification."}}
 
 access:
   - label: "Discogs"

@@ -13,7 +13,8 @@ creators:
 
 subjects: [computation]
 
-images: []
+images:
+  - {file: "logo.jpg", alt: "Cambridge Street Records logo", role: logo, source: "https://www.discogs.com/label/25445-Cambridge-Street-Records", rights: {status: unknown}, use: {basis: identification, note: "Label logo used for identification."}}
 
 access:
   - {label: "Cambridge Street Records", kind: website, url: "https://www.sfu.ca/~truax/csr.html"}

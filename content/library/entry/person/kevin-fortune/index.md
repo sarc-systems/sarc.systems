@@ -10,7 +10,8 @@ library:
 
 subjects: [instruments]
 
-images: []
+images:
+  - {file: "portrait.jpg", alt: "Black-and-white photograph of Kevin Fortune working at a Serge modular system", role: portrait, source: "https://www.ondarock.it/artista/kevin-brahenyfortune", rights: {status: unknown}, use: {basis: identification, note: "Portrait used for identification; photographer not established. Converted to black and white from the source color photograph."}}
 
 access:
   - label: "Bandcamp"
