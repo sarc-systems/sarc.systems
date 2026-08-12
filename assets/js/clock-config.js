@@ -46,41 +46,41 @@
   var TRANSITION_MS = 220; // 150-300ms recommended range
 
   // --- Theme-change rule -------------------------------------------------------
-  // Colour is driven by OBSERVING the visible rune pattern, not a timer: the
-  // clock watches its own eight fastest-changing cells (PATTERN_WATCH_CELLS —
-  // the top two rows, cells 0-7 row-major) and reacts to four specific
-  // configurations:
-  //   all LEFT strokes  (component B, falling "\"), no right -> next colour
-  //   all RIGHT strokes (component A, rising "/"),  no left  -> prev colour
-  //   no strokes at all (every watched cell REST)            -> jump to black
-  //   every watched cell shows BOTH strokes                  -> jump to white
+  // Colour is driven by OBSERVING the visible rune pattern, not a timer, and
+  // two DIFFERENT watched-cell sets deliberately give drift and reset two
+  // different frequencies (a reset must be rarer than an ordinary drift step
+  // — many drifts should happen between resets, not one-for-one):
+  //   - DRIFT: the eight fastest-changing cells (top two rows, cells 0-7)
+  //       all LEFT strokes  (component B, falling "\"), no right -> next colour
+  //       all RIGHT strokes (component A, rising "/"),  no left  -> prev colour
+  //   - RESET: a strict superset, the top two rows plus the two fastest
+  //     cells of the third row (cells 0-9)
+  //       no strokes at all (every watched cell REST)            -> jump to black
+  //       every watched cell shows BOTH strokes                  -> jump to white
   // ("Left"/"right" is a naming judgment call, not a geometric necessity —
   // swap PATTERN_LEFT_IS_B below if it reads backwards once seen live.)
   //
-  // Checking all sixteen cells for this would only ever fire once per the
-  // full ~308-year 32-bit Gray-code cycle (the eight highest cells are
-  // frozen for centuries at any human timescale) — watching just the eight
-  // fastest cells instead gives each of the four patterns an empirically
-  // verified average recurrence of ~1.7 days: rare enough that it "might not
-  // change for days," frequent enough that "if you're lucky" you catch one
-  // live. Because those eight cells depend only on the low 17 bits of the
-  // wrapped bar index, the whole sequence of trigger events repeats exactly
-  // every 2^17 = 131072 bars (~3.43 days) forever, so instead of scanning for
-  // matches at runtime, the full per-cycle event list is precomputed once and
-  // embedded below. Regenerate with `node scripts/generate-clock-pattern-events.js`
-  // if PATTERN_WATCH_CELLS or the left/right mapping above ever changes.
+  // Checking all sixteen cells for either pattern would only ever fire once
+  // per the full ~308-year 32-bit Gray-code cycle (the eight highest cells
+  // are frozen for centuries at any human timescale). Eight cells gives each
+  // drift pattern an empirically verified average recurrence of ~1.71 days:
+  // rare enough that it "might not change for days," frequent enough that
+  // "if you're lucky" you catch one live. Ten cells (a superset, so every
+  // reset bar is also a valid drift-cell state, just one the drift
+  // classifier's stricter all-A/all-B test never matches) makes a reset
+  // meaningfully rarer — ~27.4 days on average, roughly 16 drift steps
+  // between resets — while staying on a human-observable timescale rather
+  // than centuries. Because the reset cells' own repeating period is a whole
+  // multiple of the drift cells' period, one combined cycle (driven by the
+  // larger reset set) covers both: the whole sequence of trigger events
+  // repeats exactly every 2^21 = 2097152 bars (~54.86 days) forever, so
+  // instead of scanning for matches at runtime, the full per-cycle event
+  // list is precomputed once and embedded below. Regenerate with
+  // `node scripts/generate-clock-pattern-events.js` if either watch-cell set
+  // or the left/right mapping above ever changes.
   var PATTERN_LEFT_IS_B = true;
-  var PATTERN_CYCLE_LEN = 131072;
-  var PATTERN_EVENTS = [
-    { offset: 0, type: "black" },
-    { offset: 26214, type: "retreat" },
-    { offset: 43690, type: "white" },
-    { offset: 52428, type: "advance" },
-    { offset: 78643, type: "advance" },
-    { offset: 87381, type: "white" },
-    { offset: 104857, type: "retreat" },
-    { offset: 131071, type: "black" }
-  ];
+  var PATTERN_CYCLE_LEN = 2097152;
+  var PATTERN_EVENTS = [{"offset":0,"type":"black"},{"offset":26214,"type":"retreat"},{"offset":52428,"type":"advance"},{"offset":78643,"type":"advance"},{"offset":104857,"type":"retreat"},{"offset":157286,"type":"retreat"},{"offset":183500,"type":"advance"},{"offset":209715,"type":"advance"},{"offset":235929,"type":"retreat"},{"offset":288358,"type":"retreat"},{"offset":314572,"type":"advance"},{"offset":340787,"type":"advance"},{"offset":367001,"type":"retreat"},{"offset":419430,"type":"retreat"},{"offset":445644,"type":"advance"},{"offset":471859,"type":"advance"},{"offset":498073,"type":"retreat"},{"offset":550502,"type":"retreat"},{"offset":576716,"type":"advance"},{"offset":602931,"type":"advance"},{"offset":629145,"type":"retreat"},{"offset":681574,"type":"retreat"},{"offset":699050,"type":"white"},{"offset":707788,"type":"advance"},{"offset":734003,"type":"advance"},{"offset":760217,"type":"retreat"},{"offset":812646,"type":"retreat"},{"offset":838860,"type":"advance"},{"offset":865075,"type":"advance"},{"offset":891289,"type":"retreat"},{"offset":943718,"type":"retreat"},{"offset":969932,"type":"advance"},{"offset":996147,"type":"advance"},{"offset":1022361,"type":"retreat"},{"offset":1074790,"type":"retreat"},{"offset":1101004,"type":"advance"},{"offset":1127219,"type":"advance"},{"offset":1153433,"type":"retreat"},{"offset":1205862,"type":"retreat"},{"offset":1232076,"type":"advance"},{"offset":1258291,"type":"advance"},{"offset":1284505,"type":"retreat"},{"offset":1336934,"type":"retreat"},{"offset":1363148,"type":"advance"},{"offset":1389363,"type":"advance"},{"offset":1398101,"type":"white"},{"offset":1415577,"type":"retreat"},{"offset":1468006,"type":"retreat"},{"offset":1494220,"type":"advance"},{"offset":1520435,"type":"advance"},{"offset":1546649,"type":"retreat"},{"offset":1599078,"type":"retreat"},{"offset":1625292,"type":"advance"},{"offset":1651507,"type":"advance"},{"offset":1677721,"type":"retreat"},{"offset":1730150,"type":"retreat"},{"offset":1756364,"type":"advance"},{"offset":1782579,"type":"advance"},{"offset":1808793,"type":"retreat"},{"offset":1861222,"type":"retreat"},{"offset":1887436,"type":"advance"},{"offset":1913651,"type":"advance"},{"offset":1939865,"type":"retreat"},{"offset":1992294,"type":"retreat"},{"offset":2018508,"type":"advance"},{"offset":2044723,"type":"advance"},{"offset":2070937,"type":"retreat"},{"offset":2097151,"type":"black"}];
   // Exact Colorplan matches for the two jump targets (see data/colorplan.json).
   var PATTERN_BLACK_TOKEN = "ebony";       // #000000 — literally pure black
   var PATTERN_WHITE_TOKEN = "bright-white"; // #FCFCFB — closest to pure white

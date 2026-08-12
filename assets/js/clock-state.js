@@ -107,9 +107,11 @@
 
   // Theme selection is driven by OBSERVING the visible pattern, not a timer —
   // see clock-config.js's PATTERN_* constants and generate-clock-pattern-events.js
-  // for the full derivation. `clockState` is accepted (matching the original
-  // documented signature) but unused — the trigger events already fully
-  // encode the pattern condition, precomputed offline.
+  // for the full derivation, including why drift (advance/retreat) and reset
+  // (black/white) deliberately watch different-sized cell sets so a reset is
+  // meaningfully rarer than an ordinary drift step. `clockState` is accepted
+  // (matching the original documented signature) but unused — the trigger
+  // events already fully encode the pattern condition, precomputed offline.
   //
   // config.PATTERN_EVENTS is the fixed, exactly-repeating sequence of events
   // within one PATTERN_CYCLE_LEN-bar cycle (offset 0 is always a "black"
