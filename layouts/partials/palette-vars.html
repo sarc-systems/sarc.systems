@@ -8,6 +8,16 @@
          3. section            (.Section)
          4. default            (neutral SARC house colour)
 
+       Also resolves a SEPARATE --signal-wash custom property from
+       data/palette.yaml's `backgrounds` map (section-only, no page/project
+       override — it exists purely for the large low-opacity page-background
+       wash in layout.css's body.journal/body.library rules, deliberately
+       decoupled from --signal so that wash can be tuned for legibility
+       against the SARC Eternal Clock's randomized header/footer colour
+       without touching --signal's other jobs — nav/rules/links/index
+       markers/Map colour). Sections with no `backgrounds` entry emit
+       nothing for it; layout.css falls back to --signal in that case.
+
        Returns a value suitable for a style="" attribute, e.g.
        "--signal:var(--colorplan-cobalt);--signal-ink:var(--colorplan-cobalt);"
        Emits nothing extra when the resolved colour equals the site default
@@ -32,4 +42,11 @@
 {{- /* Only emit an override when it differs from the base default. */ -}}
 {{- if and $slug (ne $slug $pal.default) -}}
 --signal:var(--colorplan-{{ $slug }});--signal-ink:var(--colorplan-{{ $slug }});
+{{- end -}}
+
+{{- /* --signal-wash: section-only lookup in `backgrounds`. */ -}}
+{{- $washSlug := "" -}}
+{{- with .Section }}{{ with index $pal.backgrounds . }}{{ $washSlug = . }}{{ end }}{{ end -}}
+{{- if $washSlug -}}
+--signal-wash:var(--colorplan-{{ $washSlug }});
 {{- end -}}

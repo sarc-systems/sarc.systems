@@ -23,3 +23,20 @@ sections:
 # a system within the Systems department, but stays its own project for colour.
 projects:
   sarc-100: cobalt
+
+# Page-background wash per section — deliberately SEPARATE from `sections`
+# above. `sections` (slate/forest) still drives nav/rules/links/index markers/
+# Map colour; these two exist only for the large low-opacity body background
+# in layout.css (body.journal/body.library). Slate and forest are both cool,
+# dark accent colours — fine as small accents, but mixed faintly across a
+# whole page they read as a flat, slightly muddy grey that clashes with the
+# SARC Eternal Clock's randomized header/footer colour (assets/js/
+# clock-config.js — the header/footer can land on almost any of the 55
+# Colorplan colours at any time). China White and Powder Green are pale,
+# warm-leaning Colorplan paper tones close in lightness to the site's own
+# warm-white --paper, so they read as "a different stock of paper" rather
+# than a saturated colour field, and stay legible regardless of header
+# colour, while remaining clearly distinct from each other.
+backgrounds:
+  journal: china-white
+  library: powder-green

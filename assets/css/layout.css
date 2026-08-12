@@ -76,16 +76,26 @@
   .nav-menu ul { justify-content: flex-start; }
 }
 
-/* Journal pages carry a faint wash of the Journal's section colour, so the
-   reading area reads as distinct from the header/footer bands. Kept very low
-   (a coded signal, not a saturated colour field). Header/footer background is
-   no longer forced back to paper here — the SARC Eternal Clock is the sole
-   authority on header/footer colour site-wide now (see clock.css). */
-body.journal { background: color-mix(in srgb, var(--signal) 10%, var(--paper)); }
-
-/* Library pages carry the same faint section-colour wash (Forest). Same
-   restraint as the Journal — a coded signal, not a saturated field. */
-body.library { background: color-mix(in srgb, var(--signal) 8%, var(--paper)); }
+/* Journal/Library pages carry a pale wash so the reading area reads as
+   distinct from the header/footer bands. This intentionally reads through
+   --signal-wash (China White for Journal, Powder Green for Library — see
+   data/palette.yaml's `backgrounds` map), NOT --signal (Slate/Forest):
+   Slate/Forest are cool, dark accent colours, fine for nav/rules/links/Map
+   colour in small doses, but mixed faintly across a whole page they read as
+   a flat, slightly muddy grey that clashes with the SARC Eternal Clock's
+   randomized header/footer colour (assets/js/clock-config.js — the header/
+   footer can land on almost any of the 55 Colorplan colours at any time).
+   China White/Powder Green are pale, warm-leaning paper tones close in
+   lightness to the site's own warm-white --paper, so each section's wash
+   reads as "a different stock of paper," stays legible against any header
+   colour, and the two sections stay clearly distinct from each other.
+   Falls back to --signal for any future section that skips `backgrounds`.
+   Kept low-to-moderate (a coded signal, not a saturated colour field).
+   Header/footer background is no longer forced back to paper here — the
+   SARC Eternal Clock is the sole authority on header/footer colour
+   site-wide now (see clock.css). */
+body.journal { background: color-mix(in srgb, var(--signal-wash, var(--signal)) 45%, var(--paper)); }
+body.library { background: color-mix(in srgb, var(--signal-wash, var(--signal)) 45%, var(--paper)); }
 
 /* --- Generic page head --------------------------------------------------- */
 .page-head { padding: clamp(2rem, 6vw, 4rem) 0 1.6rem; }
