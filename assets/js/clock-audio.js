@@ -10,10 +10,18 @@
   if (!control) return;
 
   var NS = window.SARCClock;
-  if (!NS || !NS.config || !NS.state) return;
+  if (!NS || !NS.config || !NS.state || !NS.scores || !NS.synth) return;
 
   var config = NS.config;
   var state = NS.state;
+  var scoresModule = NS.scores;
+  var synth = NS.synth;
+
+  // Canonical score corpus — embedded inline by clock-scores-data.html,
+  // parsed once. See data/clock_scores.json / assets/js/clock-scores.js.
+  var scoresDataEl = document.getElementById("clock-scores-data");
+  var scoresData = scoresDataEl ? JSON.parse(scoresDataEl.textContent) : null;
+  if (!scoresData || !scoresData.scores) return;
 
   var STATE_OFF = "off", STATE_ARMED = "armed", STATE_ON = "on";
   // Screen-reader-only — the button shows no words, an icon only (see
@@ -77,37 +85,24 @@
     var cells = state.cellsFromState(grayState);
     var themeIndex = state.themeIndexForBar(barIndex, grayState);
     var theme = config.THEMES[themeIndex];
-    var score = config.SCORES[theme.token];
+    var score = scoresData.scores[theme.token];
     var cell = cells[i];
     return {
       cellIndex: i,
       a: !!cell.a,
       b: !!cell.b,
-      freqA: config.REFERENCE_FREQUENCY * score.a[i],
-      freqB: config.REFERENCE_FREQUENCY * score.b[i]
+      freqA: config.REFERENCE_FREQUENCY * scoresModule.ratioValue(score.a[i]),
+      freqB: config.REFERENCE_FREQUENCY * scoresModule.ratioValue(score.b[i])
     };
   }
 
   function buildGraph(Tone) {
-    var gain = new Tone.Gain(Tone.dbToGain(config.MASTER_GAIN_DB));
-    var limiter = new Tone.Limiter(config.LIMITER_THRESHOLD_DB);
-    gain.connect(limiter);
-    limiter.toDestination();
-
-    var envA = new Tone.AmplitudeEnvelope(config.ENVELOPE).connect(gain);
-    var envB = new Tone.AmplitudeEnvelope(config.ENVELOPE).connect(gain);
-
-    var oscA = new Tone.Oscillator(config.REFERENCE_FREQUENCY, "sine").connect(envA).start();
-    var oscB = new Tone.Oscillator(config.REFERENCE_FREQUENCY, "sine").connect(envB).start();
-
+    var voice = synth.buildVoiceGraph(Tone, config);
     var noteDuration = config.ENVELOPE.decay;
 
     var sequence = new Tone.Sequence(function (time, i) {
       var step = readStepAt(i, Date.now());
-      oscA.frequency.setValueAtTime(step.freqA, time);
-      oscB.frequency.setValueAtTime(step.freqB, time);
-      if (step.a) envA.triggerAttackRelease(noteDuration, time);
-      if (step.b) envB.triggerAttackRelease(noteDuration, time);
+      synth.triggerStep(voice, time, step.freqA, step.freqB, step.a, step.b, noteDuration);
 
       if (!reduceMotion.matches && (step.a || step.b)) {
         Tone.Draw.schedule(function () {
@@ -127,18 +122,14 @@
       }
     }, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], "16n");
 
-    return { gain: gain, limiter: limiter, envA: envA, envB: envB, oscA: oscA, oscB: oscB, sequence: sequence };
+    voice.sequence = sequence;
+    return voice;
   }
 
   function disposeGraph() {
     if (!graph) return;
     graph.sequence.dispose();
-    graph.oscA.dispose();
-    graph.oscB.dispose();
-    graph.envA.dispose();
-    graph.envB.dispose();
-    graph.gain.dispose();
-    graph.limiter.dispose();
+    synth.disposeVoiceGraph(graph);
     graph = null;
   }
 

@@ -21,7 +21,7 @@
   var STEP_SECONDS = CLOCK_SECONDS / STEPS_PER_BAR; // 0.14125
   var STEP_MS = CLOCK_MS / STEPS_PER_BAR; // 141.25
   var BPM = 240 / CLOCK_SECONDS; // 106.19469026548673
-  var REFERENCE_FREQUENCY = 512 / CLOCK_SECONDS; // 226.54867256637168 Hz — nine octaves above 1/2.26 Hz
+  var REFERENCE_FREQUENCY = 1024 / CLOCK_SECONDS; // 453.09734513274336 Hz — ten octaves above 1/2.26 Hz (doubled from the original 512/CLOCK_SECONDS)
 
   // --- Epoch -------------------------------------------------------------
   // Fixed UTC epoch. Deliberately isolated on its own line so it stays easy
@@ -94,8 +94,10 @@
   // not a curated subset — every slug, in the source table's own order.
   // Colour always resolves through var(--colorplan-<slug>) / -fg at render
   // time, never a raw hex, per CLAUDE.md — `hex` below is NOT used for
-  // rendering, only as deterministic input to the placeholder pitch scores
-  // below (see SCORES). (Regenerate slugs+hexes together with:
+  // rendering; it was formerly used as deterministic input to a placeholder
+  // pitch-score generator, now retired (see data/clock_scores.json /
+  // scripts/materialize-clock-scores.js) and kept only as an original-hex
+  // reference. (Regenerate slugs+hexes together with:
   // `node -e "const c=require('./data/colorplan.json').colors; console.log(JSON.stringify(c.map(x=>x.slug))); console.log(JSON.stringify(c.map(x=>x.hex)))"`
   // if data/colorplan.json is ever re-imported with a different colour set —
   // paste the two arrays into THEME_TOKENS/THEME_HEXES below, same order.)
@@ -132,58 +134,17 @@
   var PATTERN_BLACK_INDEX = THEMES.findIndex(function (t) { return t.token === PATTERN_BLACK_TOKEN; });
   var PATTERN_WHITE_INDEX = THEMES.findIndex(function (t) { return t.token === PATTERN_WHITE_TOKEN; });
 
-  // --- Pitch scores ----------------------------------------------------------
-  // PLACEHOLDER — clearly marked. One authored just-intonation-ish ratio
-  // palette (relative to REFERENCE_FREQUENCY), sampled into two 16-step lanes
-  // per theme. Lane parameters are derived from each theme's own RGB (its
-  // actual Colorplan hex, above) rather than an arbitrary index or a
-  // hand-written table — so a theme's sound is tied to its own colour, not
-  // to its incidental position in the list. Still fully deterministic, still
-  // gives every theme a distinct pair of lanes. Replacing this with a
-  // genuinely composed score later only means replacing SCORES below —
-  // clock/visual/audio scheduling never changes.
-  var RATIO_PALETTE = [
-    1, 9 / 8, 5 / 4, 4 / 3, 3 / 2, 5 / 3, 15 / 8, 2,
-    9 / 4, 5 / 2, 8 / 3, 3, 15 / 4, 4, 9 / 2, 5
-  ];
-
-  function placeholderLane(strideSteps, offsetSteps) {
-    var lane = [];
-    for (var i = 0; i < STEPS_PER_BAR; i++) {
-      var idx = ((i * strideSteps + offsetSteps) % RATIO_PALETTE.length + RATIO_PALETTE.length) % RATIO_PALETTE.length;
-      lane.push(RATIO_PALETTE[idx]);
-    }
-    return lane;
-  }
-
-  function hexToRgb(hex) {
-    var n = parseInt(hex.slice(1), 16);
-    return { r: (n >> 16) & 0xff, g: (n >> 8) & 0xff, b: n & 0xff };
-  }
-
-  // Derives [strideA, offsetA, strideB, offsetB] from a theme's own colour.
-  // Strides are forced odd (1,3,...,15) — coprime with RATIO_PALETTE's
-  // length (16), so each lane walks the full sixteen-entry palette instead
-  // of falling into a short repeating loop.
-  function placeholderScoreParams(hex) {
-    var rgb = hexToRgb(hex);
-    return [
-      (rgb.r % 8) * 2 + 1,
-      rgb.g % RATIO_PALETTE.length,
-      (rgb.b % 8) * 2 + 1,
-      (rgb.r + rgb.g + rgb.b) % RATIO_PALETTE.length
-    ];
-  }
-
-  var SCORES = {}; // keyed by theme token
-  THEMES.forEach(function (theme) {
-    var p = placeholderScoreParams(theme.hex);
-    SCORES[theme.token] = {
-      placeholder: true,
-      a: placeholderLane(p[0], p[1]),
-      b: placeholderLane(p[2], p[3])
-    };
-  });
+  // --- Pitch scores ------------------------------------------------------------
+  // Pitch material lives OUTSIDE this file now — see data/clock_scores.json
+  // (canonical, composer-authored exact-ratio data) and assets/js/clock-scores.js
+  // (ratio math + resolution). This file stays small and global (loaded on
+  // every page for the compact header clock) on purpose; score data is real
+  // weight (55 x 16 x 2 ratio strings) and is loaded only where it's actually
+  // used — /clock/ (production audio) and /clock/compose/ (the composer) —
+  // never bundled in here. See todo_clock.txt's "SCORE COMPOSITION TOOL"
+  // section for the full design and scripts/materialize-clock-scores.js for
+  // how the original RGB-derived placeholder generator that used to live here
+  // was converted into that file's initial (authored:false) content.
 
   // --- Envelope settings (per todo_clock.txt "Initial envelope range") -----
   var ENVELOPE = {
@@ -218,7 +179,6 @@
     PATTERN_BLACK_INDEX: PATTERN_BLACK_INDEX,
     PATTERN_WHITE_INDEX: PATTERN_WHITE_INDEX,
     THEMES: THEMES,
-    SCORES: SCORES,
     ENVELOPE: ENVELOPE,
     MASTER_GAIN_DB: MASTER_GAIN_DB,
     LIMITER_THRESHOLD_DB: LIMITER_THRESHOLD_DB,

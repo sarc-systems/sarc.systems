@@ -1,0 +1,250 @@
+/* clock-compose.css — /clock/compose/ only (a draft page, excluded from
+   production builds — see layouts/clock/compose.html). Concatenated into the
+   normal global site.css bundle like every other file in head.html's $order
+   (library.css is section-scoped the same way) — CSS-only weight on a route
+   nobody but the composer ever visits is a non-issue; only the SCORE DATA
+   itself is kept out of the global JS bundle (see clock-scores-data.html).
+
+   Colour: --clock-theme-bg/-fg is set directly on #cc-page by
+   clock-compose.js calling the SAME clock-theme.js applyTheme() the
+   production clock/site header use, for the currently SELECTED (not live)
+   colour — this is the tool's whole reason to exist: compose while looking
+   at and living inside the actual colour. */
+
+.clock-compose-page .site-header,
+.clock-compose-page .site-footer {
+  background: var(--paper);
+  color: var(--ink);
+}
+.clock-compose-page .wordmark,
+.clock-compose-page .nav-menu a,
+.clock-compose-page .footer-nav a,
+.clock-compose-page .footer-meta,
+.clock-compose-page .footer-meta a { color: var(--ink); }
+
+.cc-page {
+  max-width: none;
+  margin: 0 auto;
+  padding: clamp(1.25rem, 3vw, 2.5rem);
+  background: var(--clock-theme-bg, var(--paper));
+  color: var(--clock-theme-fg, var(--ink));
+  transition: background 300ms ease, color 300ms ease;
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
+}
+
+.cc-title { font-size: var(--t-lg); margin: 0; }
+.cc-dev-note {
+  font-family: var(--font-mono);
+  font-size: var(--t-xs);
+  max-width: 46rem;
+  opacity: 0.75;
+}
+.cc-dev-note code { font-family: inherit; }
+
+/* --- Toolbar ------------------------------------------------------------ */
+.cc-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  border-top: 1px solid currentColor;
+  border-bottom: 1px solid currentColor;
+  padding: 0.75rem 0;
+}
+.cc-transport { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem; }
+.cc-btn-group { display: inline-flex; gap: 0.25rem; }
+.cc-save-group { display: inline-flex; align-items: center; gap: 0.6rem; }
+
+.cc-btn {
+  font-family: var(--font-mono);
+  font-size: var(--t-xs);
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  background: transparent;
+  color: inherit;
+  border: 1px solid currentColor;
+  padding: 0.4em 0.7em;
+  cursor: pointer;
+  line-height: 1;
+}
+.cc-btn:hover { opacity: 0.75; }
+.cc-btn:focus-visible { outline: 2px solid currentColor; outline-offset: 2px; }
+/* Explicit (not currentColor) background/border here on purpose — currentColor
+   is a live reference to this same element's own `color`, so once `color` is
+   overridden below (to the swapped/inverted text tone) a background/border
+   that ALSO reads currentColor would resolve to that same swapped tone,
+   collapsing the whole button to one flat colour (invisible, light-on-light).
+   Pinning background/border to the fg var and only swapping `color` avoids that. */
+.cc-btn[aria-pressed="true"],
+.cc-btn.is-active {
+  background: var(--clock-theme-fg, var(--ink));
+  border-color: var(--clock-theme-fg, var(--ink));
+  color: var(--clock-theme-bg, var(--paper));
+}
+.cc-btn--play[data-playing="true"] {
+  background: var(--clock-theme-fg, var(--ink));
+  border-color: var(--clock-theme-fg, var(--ink));
+  color: var(--clock-theme-bg, var(--paper));
+}
+.cc-btn--primary { font-weight: 600; }
+
+.cc-unsaved-indicator {
+  font-family: var(--font-mono);
+  font-size: var(--t-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  opacity: 0.7;
+}
+
+.cc-status {
+  font-family: var(--font-mono);
+  font-size: var(--t-xs);
+  min-height: 1.2em;
+}
+.cc-status[data-tone="error"] { color: var(--colorplan-scarlet, #D02D30); }
+
+/* --- Live rune + selected-color readout ---------------------------------- */
+.cc-live-wrap { display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap; }
+.cc-live {
+  width: 6rem;
+  height: 6rem;
+  flex: 0 0 auto;
+  border: 1px solid currentColor;
+}
+.cc-selected-info {
+  display: grid;
+  grid-template-columns: auto auto;
+  gap: 0.15rem 0.6rem;
+  font-family: var(--font-mono);
+  font-size: var(--t-xs);
+  margin: 0;
+}
+.cc-selected-info dt { opacity: 0.65; }
+.cc-selected-info dd { margin: 0; }
+
+/* --- 16 x 2 pitch grid ---------------------------------------------------- */
+.cc-grid-wrap { overflow-x: auto; }
+.cc-grid {
+  border-collapse: collapse;
+  font-family: var(--font-mono);
+  font-size: var(--t-xs);
+  min-width: 100%;
+}
+.cc-grid th,
+.cc-grid td {
+  border: 1px solid currentColor;
+  padding: 0.35em 0.15em;
+  text-align: center;
+  white-space: nowrap;
+}
+.cc-grid thead th { font-weight: 400; opacity: 0.7; }
+.cc-grid .cc-row-label {
+  text-align: left;
+  padding-left: 0.5em;
+  font-weight: 600;
+  opacity: 0.85;
+  position: sticky;
+  left: 0;
+  background: var(--clock-theme-bg, var(--paper));
+}
+.cc-cell {
+  cursor: pointer;
+  min-width: 3.4em;
+  user-select: none;
+}
+.cc-cell:hover { background: color-mix(in srgb, currentColor 12%, transparent); }
+/* Explicit fg/bg vars, not currentColor — see the .cc-btn[aria-pressed] comment
+   above for why a currentColor background here would self-collapse once
+   `color` below is swapped. */
+.cc-cell.is-selected {
+  background: var(--clock-theme-fg, var(--ink));
+  color: var(--clock-theme-bg, var(--paper));
+  font-weight: 600;
+}
+.cc-cell.is-gate-active { outline: 2px solid currentColor; outline-offset: -2px; }
+.cc-cell.is-out-of-vocab::after { content: " *"; opacity: 0.6; }
+
+/* --- Copy/paste ------------------------------------------------------------ */
+.cc-copypaste { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+
+/* --- Palette overview ------------------------------------------------------ */
+.cc-palette-wrap { display: flex; flex-direction: column; gap: 0.6rem; }
+.cc-palette-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-family: var(--font-mono);
+  font-size: var(--t-xs);
+}
+.cc-palette {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(2.6rem, 1fr));
+  gap: 2px;
+  border: 1px solid currentColor;
+  padding: 2px;
+}
+.cc-swatch {
+  aspect-ratio: 1 / 1;
+  border: 1px solid rgba(0, 0, 0, 0.25);
+  cursor: pointer;
+  position: relative;
+  padding: 0;
+}
+.cc-swatch:focus-visible { outline: 2px solid var(--signal); outline-offset: 1px; z-index: 1; }
+.cc-swatch.is-selected { outline: 3px solid currentColor; outline-offset: -3px; z-index: 1; }
+/* Composition status — kept visually quiet (a small corner mark), per spec:
+   "Keep this indication visually quiet." */
+.cc-swatch::after {
+  content: "";
+  position: absolute;
+  right: 2px;
+  bottom: 2px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: 0;
+}
+.cc-swatch[data-cc-status="authored"]::after { opacity: 0.85; }
+.cc-swatch[data-cc-status="unsaved"]::after { opacity: 0.85; background: var(--colorplan-scarlet, #D02D30); }
+
+/* --- Pitch picker popover -------------------------------------------------- */
+.cc-picker {
+  position: fixed;
+  z-index: 20;
+  background: var(--paper);
+  color: var(--ink);
+  border: 1px solid var(--ink);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.25);
+  max-height: 60vh;
+  overflow-y: auto;
+  font-family: var(--font-mono);
+  font-size: var(--t-xs);
+}
+.cc-picker-inner { display: flex; flex-direction: column; }
+.cc-picker-option {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.35em 0.7em;
+  border: none;
+  border-bottom: 1px solid var(--rule);
+  background: transparent;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.cc-picker-option:last-child { border-bottom: none; }
+.cc-picker-option:hover,
+.cc-picker-option:focus-visible { background: var(--paper-2); }
+.cc-picker-option.is-current { font-weight: 600; }
+.cc-picker-option .cc-picker-category { opacity: 0.55; }
+.cc-picker-option[data-category="color"] .cc-picker-ratio { font-style: italic; }
+
+@media (max-width: 40rem) {
+  .cc-live-wrap { gap: 0.75rem; }
+  .cc-live { width: 4.5rem; height: 4.5rem; }
+}

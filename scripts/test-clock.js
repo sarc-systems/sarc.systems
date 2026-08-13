@@ -117,8 +117,8 @@ test("7. timing constants", function () {
   assert.strictEqual(config.CLOCK_MS, 2260);
   assert.ok(Math.abs(config.STEP_SECONDS - 0.14125) < 1e-12);
   assert.ok(Math.abs(config.BPM - 106.19469026548673) < 1e-9);
-  assert.ok(Math.abs(config.REFERENCE_FREQUENCY - 226.54867256637168) < 1e-9);
-  assert.strictEqual(config.REFERENCE_FREQUENCY, 512 / config.CLOCK_SECONDS);
+  assert.ok(Math.abs(config.REFERENCE_FREQUENCY - 453.09734513274336) < 1e-9);
+  assert.strictEqual(config.REFERENCE_FREQUENCY, 1024 / config.CLOCK_SECONDS);
 });
 
 test("7b. barIndexFromNow is a step function of elapsed CLOCK_MS", function () {
@@ -202,15 +202,23 @@ test("9e. the pattern repeats identically every PATTERN_CYCLE_LEN bars", functio
   });
 });
 
-// --- 10 & 11. Every theme has 16 positive finite ratios per lane -----------
+// --- 10 & 11. Every theme has a valid score corpus entry, resolvable ------
+// pitch material now lives in data/clock_scores.json (see
+// assets/js/clock-scores.js) — full corpus validation is
+// scripts/validate-clock-scores.js (`make clock-scores-validate`); this test
+// just checks the two files agree on the theme/color key set and that every
+// score resolves to sixteen positive finite frequencies per lane.
 test("10+11. every score has sixteen positive finite ratios per lane", function () {
+  var clockScores = require(path.join(__dirname, "..", "assets", "js", "clock-scores.js"));
+  var raw = require(path.join(__dirname, "..", "data", "clock_scores.json"));
   config.THEMES.forEach(function (theme) {
-    var score = config.SCORES[theme.token];
-    assert.ok(score, "missing score for theme " + theme.token);
+    var record = raw.scores[theme.token];
+    assert.ok(record, "missing score for theme " + theme.token);
+    var resolved = clockScores.resolveScore(record, config.REFERENCE_FREQUENCY);
     ["a", "b"].forEach(function (lane) {
-      assert.strictEqual(score[lane].length, 16, theme.token + "." + lane + " must have 16 entries");
-      score[lane].forEach(function (ratio) {
-        assert.ok(Number.isFinite(ratio) && ratio > 0, theme.token + "." + lane + " ratio must be positive finite, got " + ratio);
+      assert.strictEqual(record[lane].length, 16, theme.token + "." + lane + " must have 16 entries");
+      resolved[lane].forEach(function (freq) {
+        assert.ok(Number.isFinite(freq) && freq > 0, theme.token + "." + lane + " frequency must be positive finite, got " + freq);
       });
     });
   });

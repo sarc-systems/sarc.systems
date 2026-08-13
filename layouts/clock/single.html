@@ -54,10 +54,13 @@
     </button>
   </div>
 </section>
+{{- /* Canonical pitch data — see clock-scores-data.html. Page-scoped: this is
+       the ONLY page in production that loads it. */ -}}
+{{ partial "clock-scores-data.html" . }}
 {{ end }}
 
 {{ define "scripts" }}
-{{- range (slice "js/clock-tile-layout.js" "js/clock-audio.js") -}}
+{{- range (slice "js/clock-scores.js" "js/clock-synth.js" "js/clock-tile-layout.js" "js/clock-audio.js") -}}
   {{- with resources.Get . -}}
     {{- $js := . -}}
     {{- if hugo.IsProduction }}{{ $js = $js | minify }}{{ end -}}

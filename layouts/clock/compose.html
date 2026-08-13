@@ -1,0 +1,101 @@
+{{- /* /clock/compose/ — SARC Eternal Clock score composition tool. Dev-only:
+       draft:true in content/clock/compose/index.md means Hugo excludes this
+       page entirely from a build without -D (same mechanism the Library's
+       field-kit fixture uses — see CLAUDE.md § Library). `make check` builds
+       WITHOUT -D, so this route is provably absent from what ships; only
+       `make clock-compose` (which runs `hugo server -D`) ever serves it.
+       See todo_clock.txt's "SCORE COMPOSITION TOOL" section for the full
+       design and assets/js/clock-compose.js for the editor logic. */ -}}
+{{ define "body-class" }}clock clock-compose-page{{ end }}
+
+{{ define "main" }}
+{{- $tone := resources.Get "js/vendor/tone.15.0.4.min.js" | fingerprint -}}
+<section class="cc-page" id="cc-page" data-cc-bridge="http://127.0.0.1:8471" data-tone-src="{{ $tone.RelPermalink }}">
+  <h1 class="cc-title">Clock — Compose</h1>
+  <p class="cc-dev-note">
+    Development-only. Excluded from production builds (draft page) — never
+    linked, never shipped. Edits here are saved to
+    <code>data/clock_scores.json</code> by the local save bridge
+    (<code>make clock-compose</code>), which must be running for Save to work.
+  </p>
+
+  <div class="cc-toolbar">
+    <div class="cc-transport" role="group" aria-label="Playback">
+      <button type="button" class="cc-btn cc-btn--play" data-cc-play data-playing="false">Play</button>
+      <div class="cc-btn-group" role="group" aria-label="Playback mode">
+        <button type="button" class="cc-btn" data-cc-mode="both" aria-pressed="true">BOTH</button>
+        <button type="button" class="cc-btn" data-cc-mode="a" aria-pressed="false">A</button>
+        <button type="button" class="cc-btn" data-cc-mode="b" aria-pressed="false">B</button>
+        <button type="button" class="cc-btn" data-cc-mode="clock" aria-pressed="false">CLOCK</button>
+      </div>
+      <div class="cc-btn-group" role="group" aria-label="Audition speed">
+        <button type="button" class="cc-btn" data-cc-speed="0.25">&frac14;&times;</button>
+        <button type="button" class="cc-btn" data-cc-speed="0.5">&frac12;&times;</button>
+        <button type="button" class="cc-btn" data-cc-speed="1" aria-pressed="true">1&times;</button>
+      </div>
+    </div>
+    <div class="cc-save-group" role="group" aria-label="Save state">
+      <span class="cc-unsaved-indicator" id="cc-unsaved-indicator" hidden>unsaved</span>
+      <button type="button" class="cc-btn" data-cc-revert>Revert</button>
+      <button type="button" class="cc-btn cc-btn--primary" data-cc-save>Save</button>
+    </div>
+  </div>
+
+  <div class="cc-status" id="cc-status" role="status" aria-live="polite"></div>
+
+  <div class="cc-live-wrap">
+    <div class="cc-live" data-clock="compose" data-clock-grain="false" data-clock-label="Selected color — live Eternal Clock rune state"></div>
+    <dl class="cc-selected-info" id="cc-selected-info"></dl>
+  </div>
+
+  <div class="cc-grid-wrap">
+    <table class="cc-grid" id="cc-grid" aria-label="Sixteen-step, two-lane pitch score for the selected color"></table>
+  </div>
+
+  <div class="cc-copypaste" role="group" aria-label="Copy and paste">
+    <button type="button" class="cc-btn" data-cc-copy="score">Copy score</button>
+    <button type="button" class="cc-btn" data-cc-paste="score">Paste score</button>
+    <button type="button" class="cc-btn" data-cc-copy="a">Copy A</button>
+    <button type="button" class="cc-btn" data-cc-paste="a">Paste A</button>
+    <button type="button" class="cc-btn" data-cc-copy="b">Copy B</button>
+    <button type="button" class="cc-btn" data-cc-paste="b">Paste B</button>
+  </div>
+
+  <div class="cc-palette-wrap">
+    <div class="cc-palette-controls">
+      <button type="button" class="cc-btn" data-cc-prev title="Previous color in production rotation order">&larr; Prev</button>
+      <span id="cc-palette-position" class="cc-palette-position"></span>
+      <button type="button" class="cc-btn" data-cc-next title="Next color in production rotation order">Next &rarr;</button>
+    </div>
+    <div class="cc-palette" id="cc-palette" role="listbox" aria-label="ColorPlan clock palette, production rotation order"></div>
+  </div>
+
+  <div class="cc-picker" id="cc-picker" hidden>
+    <div class="cc-picker-inner" role="listbox" aria-label="Just-intonation pitch vocabulary" id="cc-picker-list"></div>
+  </div>
+</section>
+{{- /* Same canonical pitch data /clock/ uses — see clock-scores-data.html. */ -}}
+{{ partial "clock-scores-data.html" . }}
+{{- /* Colorplan's full 55-color table (name + slug), for display only — the
+       clock's own THEME_TOKENS/THEME_HEXES (assets/js/clock-config.js,
+       already global) remain the single source of truth for rotation ORDER;
+       this just resolves each token's official published name for the
+       palette overview and selected-color readout. */ -}}
+<script type="application/json" id="clock-compose-colorplan-data">{{ site.Data.colorplan.colors | jsonify | safeJS }}</script>
+{{ end }}
+
+{{ define "scripts" }}
+{{- range (slice "js/clock-scores.js" "js/clock-synth.js" "js/clock-compose.js") -}}
+  {{- with resources.Get . -}}
+    {{- /* Fingerprint even though this page never ships to production —
+           an unhashed URL is the same URL across every `hugo server`
+           restart, so the browser can (and did) keep serving a stale
+           cached clock-compose.js after an edit. Fingerprinting changes the
+           URL whenever the file's content changes, which busts that cache
+           the same way production's /clock/ page already does (see
+           layouts/clock/single.html) — this was simply missed here. */ -}}
+    {{- $js := . | fingerprint -}}
+    <script src="{{ $js.RelPermalink }}" defer></script>
+  {{- end -}}
+{{- end -}}
+{{ end }}

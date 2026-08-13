@@ -1,0 +1,9 @@
+{{- /* clock-scores-data.html — embeds the canonical Eternal Clock score
+       corpus (data/clock_scores.json) as inline JSON, exactly the
+       homepage-quotes-data pattern (see homepage-quote.html): no separate
+       fetch, no flash of missing content. Included ONLY on pages that
+       actually make sound with it — /clock/ (clock-audio.js) and
+       /clock/compose/ (clock-compose.js) — never in the global bundle. See
+       CLAUDE.md-adjacent design notes in todo_clock.txt: "Do not load score
+       data globally." */ -}}
+<script type="application/json" id="clock-scores-data">{{ site.Data.clock_scores | jsonify | safeJS }}</script>

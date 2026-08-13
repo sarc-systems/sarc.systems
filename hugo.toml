@@ -96,6 +96,14 @@ timeout = "60s"
 [permalinks]
   [permalinks.page]
     library = "/library/:sections[1]/:contentbasename/"
+    # content/clock-compose/index.md -> /clock/compose/. A separate content
+    # root (not content/clock/compose/) because content/clock/index.md is
+    # itself a LEAF page bundle — Hugo treats files nested under a leaf
+    # bundle's own directory as that bundle's page RESOURCES, not as their
+    # own pages, so a real page can't live at content/clock/compose/. Its
+    # own front matter sets type:"clock" + layout:"compose" so it still
+    # resolves through layouts/clock/compose.html like any other clock page.
+    clock-compose = "/clock/compose/"
 
 # ---------------------------------------------------------------------------
 # Outputs — home also emits RSS (full journal feed) alongside HTML.

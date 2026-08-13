@@ -3,7 +3,7 @@
 
 HUGO ?= hugo
 
-.PHONY: dev build check new-post deploy clean colorplan mark library-image-audit library-structural-report library-covers test-clock clock-pattern-events
+.PHONY: dev build check new-post deploy clean colorplan mark library-image-audit library-structural-report library-covers test-clock clock-pattern-events clock-scores-validate clock-compose-test clock-compose
 
 ## dev — local server with drafts and future-dated posts
 dev:
@@ -25,8 +25,26 @@ test-clock:
 clock-pattern-events:
 	node scripts/generate-clock-pattern-events.js
 
+## clock-scores-validate — validate the full data/clock_scores.json corpus
+## (scripts/validate-clock-scores.js). Read-only, no network calls.
+clock-scores-validate:
+	node scripts/validate-clock-scores.js
+
+## clock-compose-test — unit tests for the /clock/compose/ local save bridge
+## (scripts/test-clock-compose-server.js). No test runner, no npm dependency.
+clock-compose-test:
+	node scripts/test-clock-compose-server.js
+
+## clock-compose — start the /clock/compose/ composition editor: the local
+## save bridge (scripts/clock-compose-server.js, loopback-only, port 8471)
+## plus `hugo server -D` (drafts on, so the editor's own draft page serves).
+## One command instead of coordinating two terminals; `kill 0` in the trap
+## takes the save bridge down with the dev server on Ctrl-C.
+clock-compose:
+	@(trap 'kill 0' EXIT INT TERM; node scripts/clock-compose-server.js & $(HUGO) server -D -F --navigateToChanged; wait)
+
 ## check — production build plus validation and link checks
-check: build test-clock
+check: build test-clock clock-scores-validate clock-compose-test
 	@echo "==> Checking internal links and required outputs"
 	@test -f public/index.html        || { echo "FAIL: no index.html"; exit 1; }
 	@test -f public/index.xml         || { echo "FAIL: no RSS feed"; exit 1; }
