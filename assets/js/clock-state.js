@@ -105,51 +105,67 @@
     return nextBoundaryTimestamp(nowMs, epochMs) - nowMs;
   }
 
+  // Floor division for BigInts — BigInt's own `/` truncates toward zero, not
+  // toward -Infinity, so for negative `a` (bars before the epoch) plain `/`
+  // would round the wrong way. Used below to count how many COMPLETE
+  // PATTERN_CYCLE_LEN-bar cycles have elapsed as of barIndex.
+  function floorDivBigInt(a, b) {
+    var q = a / b;
+    if (a % b !== 0n && (a < 0n) !== (b < 0n)) q -= 1n;
+    return q;
+  }
+
   // Theme selection is driven by OBSERVING the visible pattern, not a timer —
   // see clock-config.js's PATTERN_* constants and generate-clock-pattern-events.js
-  // for the full derivation, including why drift (advance/retreat) and reset
-  // (black/white) deliberately watch different-sized cell sets so a reset is
-  // meaningfully rarer than an ordinary drift step. `clockState` is accepted
-  // (matching the original documented signature) but unused — the trigger
-  // events already fully encode the pattern condition, precomputed offline.
+  // for the full derivation. `clockState` is accepted (matching the original
+  // documented signature) but unused — the trigger events already fully
+  // encode the pattern condition, precomputed offline.
   //
-  // config.PATTERN_EVENTS is the fixed, exactly-repeating sequence of events
-  // within one PATTERN_CYCLE_LEN-bar cycle (offset 0 is always a "black"
-  // jump — trivially true since wrapping the bar index to a cycle boundary
-  // zeroes every bit the watched cells depend on, forcing them all to REST).
-  // Advance/retreat events accumulate as drift; a black/white event resets
-  // the baseline outright. Because every cycle nets exactly zero drift
-  // (config.PATTERN_EVENTS always contains equal advance/retreat counts) and
-  // always contains a "black" event at offset 0, the current theme index
-  // only ever depends on events within the CURRENT cycle up to the current
-  // offset — no multi-cycle history walk is needed.
+  // config.PATTERN_EVENTS is the fixed, exactly-repeating sequence of
+  // drift (advance/retreat) and cycle events within one PATTERN_CYCLE_LEN-bar
+  // cycle. A cycle event advances a rotation ANCHOR one step through THEMES
+  // (wrapping) and resets local drift to zero; drift wobbles +-1 around
+  // whichever theme the anchor currently is. Unlike drift (which always nets
+  // to exactly zero within one cycle — config.PATTERN_EVENTS always contains
+  // equal advance/retreat counts), cycle events do NOT net to zero: every
+  // occurrence moves the anchor forward, with no matching "move it back", so
+  // the anchor keeps walking through THEMES across however many complete
+  // cycles have actually elapsed since bar 0 — not just within the current
+  // cycle — which is what lets it genuinely visit the whole palette over
+  // time (a ~8.3-year lap through all 55 themes at the current cell-count
+  // tuning) rather than resetting every ~219 days.
   function themeIndexForBar(barIndex) {
     var cycleLen = BigInt(config.PATTERN_CYCLE_LEN);
-    var wrapped = ((barIndex % cycleLen) + cycleLen) % cycleLen; // guard: barIndex can be negative before the epoch
+    var fullCycles = floorDivBigInt(barIndex, cycleLen);
+    var wrapped = barIndex - fullCycles * cycleLen; // always in [0, cycleLen)
     var offset = Number(wrapped);
     var events = config.PATTERN_EVENTS;
 
-    var anchorOffset = 0;
-    var anchorType = "black";
-    var drift = 0;
+    var cycleEventsPerCycle = 0n;
     for (var i = 0; i < events.length; i++) {
-      var e = events[i];
+      if (events[i].type === "cycle") cycleEventsPerCycle += 1n;
+    }
+
+    var anchorOffset = 0;
+    var cycleEventsInPartialCycle = 0n;
+    var drift = 0;
+    for (var j = 0; j < events.length; j++) {
+      var e = events[j];
       if (e.offset > offset) break;
-      if (e.type === "black" || e.type === "white") {
+      if (e.type === "cycle") {
         anchorOffset = e.offset;
-        anchorType = e.type;
-        drift = 0; // reset — only events strictly after the new anchor count
+        cycleEventsInPartialCycle += 1n;
+        drift = 0;
       } else if (e.offset > anchorOffset) {
         if (e.type === "advance") drift += 1;
         else if (e.type === "retreat") drift -= 1;
       }
     }
 
-    var baseIndex = anchorType === "black" ? config.PATTERN_BLACK_INDEX : config.PATTERN_WHITE_INDEX;
-    var themeCount = config.THEMES.length;
-    var idx = (baseIndex + drift) % themeCount;
-    if (idx < 0) idx += themeCount;
-    return idx;
+    var totalCycleEvents = fullCycles * cycleEventsPerCycle + cycleEventsInPartialCycle;
+    var themeCount = BigInt(config.THEMES.length);
+    var idxBig = ((BigInt(config.PATTERN_ANCHOR_INDEX) + totalCycleEvents + BigInt(drift)) % themeCount + themeCount) % themeCount;
+    return Number(idxBig);
   }
 
   function themeForBar(barIndex, clockState) {

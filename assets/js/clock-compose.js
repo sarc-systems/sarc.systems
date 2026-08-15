@@ -384,7 +384,13 @@
   // transport loop AND single-cell/dyad audition, per "reuse the production
   // synth... should not otherwise have a different sonic character."
   function ensureAudio() {
+    // Synchronous, first — see clock-synth.js's unlockAudioContext for why
+    // this has to happen before loadTone()'s async script fetch (iOS
+    // Safari). Every caller of ensureAudio() below is itself a direct
+    // click/keydown handler, so this stays inside the gesture.
+    var unlockedContext = synth.unlockAudioContext();
     return loadTone().then(function (Tone) {
+      if (unlockedContext) Tone.setContext(unlockedContext);
       return Tone.start().then(function () {
         if (!audioGraph) {
           audioGraph = { Tone: Tone, voice: synth.buildVoiceGraph(Tone, config), sequence: null };

@@ -155,8 +155,14 @@ test("9. themeIndexForBar is deterministic", function () {
   assert.ok(a >= 0 && a < config.THEMES.length);
 });
 
-test("9b. bar 0 is always black (a fresh cycle always opens on a 'black' event)", function () {
-  assert.strictEqual(state.themeIndexForBar(0n), config.PATTERN_BLACK_INDEX);
+test("9b. bar 0 is deterministic and one step past the anchor", function () {
+  // Offset 0 is itself always a "cycle" event (wrapping the bar index to a
+  // cycle boundary zeroes every bit the watched cells depend on, forcing
+  // them all to REST — see generate-clock-pattern-events.js), so bar 0
+  // lands one cycle-advance past PATTERN_ANCHOR_INDEX, not exactly on it.
+  var count = config.THEMES.length;
+  var expected = ((config.PATTERN_ANCHOR_INDEX + 1) % count + count) % count;
+  assert.strictEqual(state.themeIndexForBar(0n), expected);
 });
 
 test("9c. theme index only changes exactly at a PATTERN_EVENTS offset, nowhere else", function () {
@@ -173,17 +179,14 @@ test("9c. theme index only changes exactly at a PATTERN_EVENTS offset, nowhere e
   }
 });
 
-test("9d. every advance/retreat/black/white event produces the expected transition", function () {
+test("9d. every advance/retreat event produces the expected transition", function () {
   var events = config.PATTERN_EVENTS;
   events.forEach(function (e) {
+    if (e.type !== "advance" && e.type !== "retreat") return; // "cycle" covered separately below
     var before = state.themeIndexForBar(BigInt(e.offset - 1 < 0 ? config.PATTERN_CYCLE_LEN - 1 : e.offset - 1));
     var at = state.themeIndexForBar(BigInt(e.offset));
     var count = config.THEMES.length;
-    if (e.type === "black") {
-      assert.strictEqual(at, config.PATTERN_BLACK_INDEX);
-    } else if (e.type === "white") {
-      assert.strictEqual(at, config.PATTERN_WHITE_INDEX);
-    } else if (e.type === "advance") {
+    if (e.type === "advance") {
       assert.strictEqual(at, ((before + 1) % count + count) % count);
     } else if (e.type === "retreat") {
       assert.strictEqual(at, ((before - 1) % count + count) % count);
@@ -191,15 +194,53 @@ test("9d. every advance/retreat/black/white event produces the expected transiti
   });
 });
 
-test("9e. the pattern repeats identically every PATTERN_CYCLE_LEN bars", function () {
+test("9d2. every cycle event advances the rotation anchor by exactly one step, independent of prior drift", function () {
+  // Re-derives the expected index straight from PATTERN_EVENTS (plain array
+  // filtering, not by calling internal helpers) as an independent
+  // cross-check on themeIndexForBar's own cycle/drift bookkeeping.
+  var events = config.PATTERN_EVENTS;
+  var count = config.THEMES.length;
+  var cycleOffsets = events.filter(function (e) { return e.type === "cycle"; }).map(function (e) { return e.offset; });
+  cycleOffsets.forEach(function (offset, k) {
+    var expected = ((config.PATTERN_ANCHOR_INDEX + (k + 1)) % count + count) % count;
+    assert.strictEqual(state.themeIndexForBar(BigInt(offset)), expected,
+      "cycle event #" + k + " at offset " + offset + " should land on anchor+" + (k + 1));
+  });
+});
+
+test("9e. moving forward N full cycles shifts the theme index by N * cycleEventsPerCycle (not a repeat)", function () {
   var cycleLen = BigInt(config.PATTERN_CYCLE_LEN);
+  var count = config.THEMES.length;
+  var cycleEventsPerCycle = config.PATTERN_EVENTS.filter(function (e) { return e.type === "cycle"; }).length;
   [0n, 1n, 26214n, 87381n, 131071n].forEach(function (offset) {
     var here = state.themeIndexForBar(offset);
     var nextCycle = state.themeIndexForBar(offset + cycleLen);
     var farCycle = state.themeIndexForBar(offset + cycleLen * 1000n);
-    assert.strictEqual(nextCycle, here);
-    assert.strictEqual(farCycle, here);
+    assert.strictEqual(nextCycle, ((here + cycleEventsPerCycle) % count + count) % count);
+    assert.strictEqual(farCycle, ((here + cycleEventsPerCycle * 1000) % count + count) % count);
   });
+});
+
+test("9f. every one of the 55 themes is eventually visited (the whole point of removing the black/white reset)", function () {
+  var cycleLen = BigInt(config.PATTERN_CYCLE_LEN);
+  var count = config.THEMES.length;
+  var cycleOffsets = config.PATTERN_EVENTS.filter(function (e) { return e.type === "cycle"; }).map(function (e) { return e.offset; });
+  var perCycle = cycleOffsets.length;
+  var seen = {};
+  // Sample every cycle-event across enough elapsed cycles to guarantee full
+  // coverage (count/perCycle cycles is the theoretical minimum; a few extra
+  // for margin) — exercises the real multi-cycle BigInt bookkeeping in
+  // themeIndexForBar, not just mod-count arithmetic in isolation.
+  var totalEventsNeeded = count + perCycle;
+  for (var k = 0; k < totalEventsNeeded; k++) {
+    var cycleNum = BigInt(Math.floor(k / perCycle));
+    var withinCycleOffset = BigInt(cycleOffsets[k % perCycle]);
+    var bar = cycleNum * cycleLen + withinCycleOffset;
+    seen[state.themeIndexForBar(bar)] = true;
+  }
+  for (var idx = 0; idx < count; idx++) {
+    assert.ok(seen[idx], "theme index " + idx + " (" + config.THEMES[idx].token + ") was never visited");
+  }
 });
 
 // --- 10 & 11. Every theme has a valid score corpus entry, resolvable ------
@@ -233,15 +274,12 @@ test("12. every theme token resolves in the Colorplan data source", function () 
   config.THEMES.forEach(function (theme) {
     assert.ok(slugs[theme.token], "theme token \"" + theme.token + "\" not found in data/colorplan.json");
   });
-  assert.ok(slugs[config.PATTERN_BLACK_TOKEN], "PATTERN_BLACK_TOKEN not found in data/colorplan.json");
-  assert.ok(slugs[config.PATTERN_WHITE_TOKEN], "PATTERN_WHITE_TOKEN not found in data/colorplan.json");
+  assert.ok(slugs[config.PATTERN_ANCHOR_TOKEN], "PATTERN_ANCHOR_TOKEN not found in data/colorplan.json");
 });
 
-test("12b. PATTERN_BLACK_INDEX/PATTERN_WHITE_INDEX resolve within THEMES", function () {
-  assert.ok(config.PATTERN_BLACK_INDEX >= 0, "PATTERN_BLACK_TOKEN not found in THEMES");
-  assert.ok(config.PATTERN_WHITE_INDEX >= 0, "PATTERN_WHITE_TOKEN not found in THEMES");
-  assert.strictEqual(config.THEMES[config.PATTERN_BLACK_INDEX].token, config.PATTERN_BLACK_TOKEN);
-  assert.strictEqual(config.THEMES[config.PATTERN_WHITE_INDEX].token, config.PATTERN_WHITE_TOKEN);
+test("12b. PATTERN_ANCHOR_INDEX resolves within THEMES", function () {
+  assert.ok(config.PATTERN_ANCHOR_INDEX >= 0, "PATTERN_ANCHOR_TOKEN not found in THEMES");
+  assert.strictEqual(config.THEMES[config.PATTERN_ANCHOR_INDEX].token, config.PATTERN_ANCHOR_TOKEN);
 });
 
 test("12c. every embedded THEME_HEXES value matches data/colorplan.json (catches transcription slips)", function () {

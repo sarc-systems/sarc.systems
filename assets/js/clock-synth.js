@@ -58,9 +58,34 @@
     }
   }
 
+  // --- Shared AudioContext unlock (iOS Safari) --------------------------------
+  // iOS Safari only unlocks an AudioContext if it's created/resumed
+  // SYNCHRONOUSLY within the same call stack as a user gesture (a click/tap
+  // handler). Both clock-audio.js and clock-compose.js lazily fetch Tone.js
+  // itself over the network on first activation — that fetch is async, so by
+  // the time Tone.js has loaded and would normally call Tone.start()
+  // (== context.resume()), the gesture is gone and iOS silently refuses to
+  // unlock. Desktop browsers don't enforce this as strictly, which is why it
+  // worked everywhere else. Fix: call this as the very first synchronous
+  // statement inside the click/tap handler, BEFORE starting Tone's async
+  // load — it creates (once) and resumes a raw AudioContext immediately,
+  // still inside the gesture. Once Tone.js has finished loading, hand it
+  // this same already-unlocked context via Tone.setContext(...) before
+  // building anything — Tone.start() then just confirms an already-running
+  // context instead of trying (too late) to unlock one itself.
+  var sharedAudioContext = null;
+  function unlockAudioContext() {
+    var Ctx = window.AudioContext || window.webkitAudioContext;
+    if (!Ctx) return null;
+    if (!sharedAudioContext) sharedAudioContext = new Ctx();
+    if (sharedAudioContext.state !== "running") sharedAudioContext.resume();
+    return sharedAudioContext;
+  }
+
   return {
     buildVoiceGraph: buildVoiceGraph,
     disposeVoiceGraph: disposeVoiceGraph,
-    triggerStep: triggerStep
+    triggerStep: triggerStep,
+    unlockAudioContext: unlockAudioContext
   };
 });

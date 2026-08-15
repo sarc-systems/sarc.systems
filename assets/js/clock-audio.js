@@ -144,9 +144,13 @@
   }
 
   function start() {
+    // Synchronous, first — see clock-synth.js's unlockAudioContext for why
+    // this has to happen before loadTone()'s async script fetch (iOS Safari).
+    var unlockedContext = synth.unlockAudioContext();
     setControlState(STATE_ARMED);
     loadTone().then(function (Tone) {
       if (soundState !== STATE_ARMED) return; // stopped again before Tone finished loading
+      if (unlockedContext) Tone.setContext(unlockedContext);
       return Tone.start().then(function () {
         if (soundState !== STATE_ARMED) return;
         Tone.Transport.bpm.value = config.BPM;
