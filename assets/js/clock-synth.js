@@ -58,34 +58,64 @@
     }
   }
 
-  // --- Shared AudioContext unlock (iOS Safari) --------------------------------
-  // iOS Safari only unlocks an AudioContext if it's created/resumed
-  // SYNCHRONOUSLY within the same call stack as a user gesture (a click/tap
-  // handler). Both clock-audio.js and clock-compose.js lazily fetch Tone.js
-  // itself over the network on first activation — that fetch is async, so by
-  // the time Tone.js has loaded and would normally call Tone.start()
-  // (== context.resume()), the gesture is gone and iOS silently refuses to
-  // unlock. Desktop browsers don't enforce this as strictly, which is why it
-  // worked everywhere else. Fix: call this as the very first synchronous
-  // statement inside the click/tap handler, BEFORE starting Tone's async
-  // load — it creates (once) and resumes a raw AudioContext immediately,
-  // still inside the gesture. Once Tone.js has finished loading, hand it
-  // this same already-unlocked context via Tone.setContext(...) before
-  // building anything — Tone.start() then just confirms an already-running
-  // context instead of trying (too late) to unlock one itself.
-  var sharedAudioContext = null;
-  function unlockAudioContext() {
-    var Ctx = window.AudioContext || window.webkitAudioContext;
-    if (!Ctx) return null;
-    if (!sharedAudioContext) sharedAudioContext = new Ctx();
-    if (sharedAudioContext.state !== "running") sharedAudioContext.resume();
-    return sharedAudioContext;
+  // --- Loading Tone.js synchronously (iOS Safari) -----------------------------
+  // iOS Safari only unlocks an AudioContext if it's resumed SYNCHRONOUSLY
+  // within the same call stack as a user gesture (a click/tap handler). Both
+  // clock-audio.js and clock-compose.js load Tone.js lazily, on first sound
+  // activation — a normal `<script src>` + onload is asynchronous (a real
+  // network fetch, at minimum a new task), so by the time it resolves and
+  // Tone.start() would normally run, the gesture is gone and iOS silently
+  // refuses to unlock.
+  //
+  // An earlier version tried creating a separate AudioContext synchronously
+  // and later handing it to Tone via Tone.setContext(...) once Tone.js had
+  // finished loading. That doesn't work with this Tone.js build: Tone.
+  // Destination/Tone.Transport are created EAGERLY the moment the script
+  // itself is parsed/executed (before any onload callback runs, so before
+  // any code here ever gets a chance to intervene), permanently bound to
+  // whichever context existed at that instant — Tone.setContext() only
+  // affects *subsequently* created objects, so Destination/Transport stay on
+  // Tone's own auto-created (and, on iOS, still-locked) context forever.
+  // Symptom: everything LOOKS like it's playing (Transport "started", oscil-
+  // lators running, no errors) because Tone.js never throws on a
+  // cross-context connection or transport mismatch — it just silently
+  // produces no sound, on every browser, not only iOS.
+  //
+  // The actual fix: make the Tone.js script itself available SYNCHRONOUSLY,
+  // so its own module-evaluation (and therefore its own default
+  // Destination/Transport/context creation) happens inside the gesture's own
+  // call stack — no separate context needed, nothing to adopt afterward.
+  // Blocking XHR is deprecated for ordinary use but is exactly the tool for
+  // this: it's the one loading primitive that's genuinely synchronous.
+  // Skips integrity verification (SRI needs a real <script> tag) — acceptable
+  // here since this is same-origin, HTTPS, and already content-hashed in its
+  // own fingerprinted URL, not a third-party/CDN load.
+  var tonePromise = null;
+  function loadToneSync(src) {
+    if (window.Tone) return Promise.resolve(window.Tone);
+    if (tonePromise) return tonePromise;
+    tonePromise = new Promise(function (resolve, reject) {
+      try {
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", src, false); // false = synchronous
+        xhr.send(null);
+        if (xhr.status !== 200 && xhr.status !== 0) {
+          reject(new Error("Tone.js request failed: " + xhr.status));
+          return;
+        }
+        (0, eval)(xhr.responseText); // global eval — Tone's UMD wrapper sets window.Tone
+        resolve(window.Tone);
+      } catch (err) {
+        reject(err);
+      }
+    });
+    return tonePromise;
   }
 
   return {
     buildVoiceGraph: buildVoiceGraph,
     disposeVoiceGraph: disposeVoiceGraph,
     triggerStep: triggerStep,
-    unlockAudioContext: unlockAudioContext
+    loadToneSync: loadToneSync
   };
 });

@@ -81,7 +81,6 @@
   var playSpeed = 1;
   var isPlaying = false;
   var audioGraph = null; // { Tone, voice, sequence }
-  var toneLoadPromise = null;
 
   // --- DOM ----------------------------------------------------------------------
   var el = {
@@ -364,33 +363,21 @@
   });
 
   // --- Audio: shared graph --------------------------------------------------------
-  function loadTone() {
-    if (window.Tone) return Promise.resolve(window.Tone);
-    if (toneLoadPromise) return toneLoadPromise;
-    var src = page.getAttribute("data-tone-src");
-    toneLoadPromise = new Promise(function (resolve, reject) {
-      var script = document.createElement("script");
-      script.src = src;
-      script.onload = function () { resolve(window.Tone); };
-      script.onerror = reject;
-      document.head.appendChild(script);
-    });
-    return toneLoadPromise;
-  }
-
   // Ensures Tone is loaded, the AudioContext is running (requires a user
   // gesture — every call path here is itself inside a click/keydown
   // handler), and one persistent voice graph exists — reused by the
   // transport loop AND single-cell/dyad audition, per "reuse the production
   // synth... should not otherwise have a different sonic character."
   function ensureAudio() {
-    // Synchronous, first — see clock-synth.js's unlockAudioContext for why
-    // this has to happen before loadTone()'s async script fetch (iOS
-    // Safari). Every caller of ensureAudio() below is itself a direct
-    // click/keydown handler, so this stays inside the gesture.
-    var unlockedContext = synth.unlockAudioContext();
-    return loadTone().then(function (Tone) {
-      if (unlockedContext) Tone.setContext(unlockedContext);
+    // synth.loadToneSync loads via blocking XHR + eval (not a <script> tag)
+    // specifically so Tone.js's own module evaluation — and therefore its
+    // own default Destination/Transport/context creation — happens inside
+    // THIS synchronous call, still within whatever click/keydown gesture
+    // called ensureAudio(). See clock-synth.js's own comment for why a
+    // separately-created-then-adopted context doesn't work with this
+    // Tone.js build (Destination/Transport silently stay bound to the wrong
+    // context, producing no sound with no errors, on every browser).
+    return synth.loadToneSync(page.getAttribute("data-tone-src")).then(function (Tone) {
       return Tone.start().then(function () {
         if (!audioGraph) {
           audioGraph = { Tone: Tone, voice: synth.buildVoiceGraph(Tone, config), sequence: null };

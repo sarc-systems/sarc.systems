@@ -36,7 +36,6 @@
   };
 
   var soundState = STATE_OFF;
-  var toneLoadPromise = null;
   var graph = null; // { oscA, oscB, envA, envB, gain, limiter, sequence }
   var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 
@@ -47,23 +46,6 @@
     control.setAttribute("aria-pressed", next === STATE_OFF ? "false" : "true");
   }
   setControlState(STATE_OFF);
-
-  function loadTone() {
-    if (window.Tone) return Promise.resolve(window.Tone);
-    if (toneLoadPromise) return toneLoadPromise;
-    var src = control.getAttribute("data-tone-src");
-    var integrity = control.getAttribute("data-tone-integrity");
-    toneLoadPromise = new Promise(function (resolve, reject) {
-      var script = document.createElement("script");
-      script.src = src;
-      if (integrity) script.integrity = integrity;
-      script.crossOrigin = "anonymous";
-      script.onload = function () { resolve(window.Tone); };
-      script.onerror = reject;
-      document.head.appendChild(script);
-    });
-    return toneLoadPromise;
-  }
 
   // The /clock/ page tiles many identical large instances (all showing the
   // same live state) rather than one — every one of them should pulse
@@ -144,13 +126,14 @@
   }
 
   function start() {
-    // Synchronous, first — see clock-synth.js's unlockAudioContext for why
-    // this has to happen before loadTone()'s async script fetch (iOS Safari).
-    var unlockedContext = synth.unlockAudioContext();
     setControlState(STATE_ARMED);
-    loadTone().then(function (Tone) {
+    // Synchronous load (blocking XHR + eval, not a <script> tag) — see
+    // clock-synth.js's loadToneSync for why: iOS Safari only unlocks an
+    // AudioContext when it's resumed within the same synchronous call stack
+    // as this click, and Tone.js's own Destination/Transport get bound to
+    // whatever context exists the instant its script is evaluated.
+    synth.loadToneSync(control.getAttribute("data-tone-src")).then(function (Tone) {
       if (soundState !== STATE_ARMED) return; // stopped again before Tone finished loading
-      if (unlockedContext) Tone.setContext(unlockedContext);
       return Tone.start().then(function () {
         if (soundState !== STATE_ARMED) return;
         Tone.Transport.bpm.value = config.BPM;
@@ -169,8 +152,11 @@
 
         setControlState(STATE_ON);
       });
-    }).catch(function () {
-      // Loading/starting failed (e.g. blocked audio context) — fail closed.
+    }).catch(function (err) {
+      // Loading/starting failed (e.g. blocked audio context) — fail closed,
+      // but still surface it: a silent catch here previously made real bugs
+      // indistinguishable from an ordinary blocked-autoplay rejection.
+      console.error("[clock-audio] sound activation failed:", err);
       disposeGraph();
       setControlState(STATE_OFF);
     });

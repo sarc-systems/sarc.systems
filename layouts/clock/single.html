@@ -47,9 +47,13 @@
            clock-audio.js swaps the icon and the visually-hidden label
            together as sound state changes; this is just the pre-JS/initial
            OFF state so there's no flash of missing content. */ -}}
+    {{- /* No integrity attribute here — clock-synth.js's loadToneSync loads
+           this via blocking XHR + eval (not a <script> tag), which SRI can't
+           attach to; see that file's own comment for why that's an
+           acceptable trade-off (same-origin, HTTPS, already
+           content-hashed in this fingerprinted URL). */ -}}
     <button type="button" class="clock-sound-control" data-clock-sound data-state="off" aria-pressed="false"
-            data-tone-src="{{ $tone.RelPermalink }}"
-            {{- if hugo.IsProduction }} data-tone-integrity="{{ $tone.Data.Integrity }}"{{ end }}>
+            data-tone-src="{{ $tone.RelPermalink }}">
       {{ partial "icon.html" "volume-off" }}<span class="visually-hidden">Sound off</span>
     </button>
   </div>
